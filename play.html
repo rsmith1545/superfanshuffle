@@ -155,7 +155,7 @@ function mark(good){
 function flash(good,label){
   app.classList.remove('st-correct','st-pass'); app.classList.add(good?'st-correct':'st-pass');
   var cd=document.getElementById('card'); cd.textContent=label; var anim=good?'heroPop':'zoomIn'; cd.classList.remove('zoomIn','heroPop'); void cd.offsetWidth; cd.classList.add(anim);
-  setTimeout(function(){ if(playing){ app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); void cd.offsetWidth; cd.classList.add('flyIn'); } }, good?620:550);
+  setTimeout(function(){ if(playing){ app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); } }, good?620:550);
 }
 function startGame(){
   order=shuffle(DECK.slice()); idx=0; results=[]; score=0; timeLeft=60; armed=true; playing=true;
@@ -164,7 +164,7 @@ function startGame(){
   var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing'); tEl0.textContent=fmt(timeLeft);
   document.body.classList.add('lock-ls'); tryLockLandscape();
   current=newCard();
-  var cd=document.getElementById('card'); cd.classList.remove('zoomIn','flyIn','heroPop'); void cd.offsetWidth; cd.classList.add('flyIn');
+  var cd=document.getElementById('card'); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn');
   tHandle=setInterval(function(){
     timeLeft--;
     var tEl=document.getElementById('timer'); tEl.textContent=fmt(timeLeft);
@@ -177,7 +177,7 @@ function endGame(){
   var tEl=document.getElementById('timer'); tEl.classList.remove('pulsing'); tEl.textContent='0:00';
   sndBuzzer();
   app.classList.remove('st-correct','st-pass'); app.classList.add('st-timeup');
-  var cd=document.getElementById('card'); cd.textContent="TIME'S UP"; cd.classList.remove('zoomIn','flyIn','heroPop'); void cd.offsetWidth; cd.classList.add('flyIn');
+  var cd=document.getElementById('card'); cd.textContent="TIME'S UP"; cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn');
   navigator.vibrate&&navigator.vibrate([130,70,130]);
   setTimeout(function(){ app.classList.remove('st-timeup'); document.body.classList.remove('lock-ls'); tryUnlock(); buildRecap(); show('sEnd'); }, 1800);
 }
