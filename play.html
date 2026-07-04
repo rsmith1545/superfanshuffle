@@ -226,8 +226,9 @@ window.addEventListener('orientationchange', function(){ setTimeout(checkOrienta
 window.addEventListener('resize', checkOrientation);
 
 /* ---------- buttons ---------- */
-document.getElementById('startBtn').onclick=function(){ initAudio(); requestPerm(function(ok){ ready(); }); };
-document.getElementById('againBtn').onclick=function(){ initAudio(); ready(); };
+function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
+document.getElementById('startBtn').onclick=function(){ goFullscreen(); initAudio(); requestPerm(function(ok){ ready(); }); };
+document.getElementById('againBtn').onclick=function(){ goFullscreen(); initAudio(); ready(); };
 
 /* ---------- debug ---------- */
 var dbgOn=false;

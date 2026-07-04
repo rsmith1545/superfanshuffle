@@ -211,6 +211,8 @@ document.getElementById('ov').addEventListener('click',function(e){if(e.target.i
  var isIOS=/iP(hone|ad|od)/.test(ua) && !window.MSStream;
  if(isIOS && !standalone){ var hint=document.getElementById('iosHint'); hint.style.display='block'; setTimeout(function(){hint.style.display='none';}, 9000); }
 })();
+function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
+document.addEventListener('click', function(){ goFullscreen(); }, {once:true});
 render();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
