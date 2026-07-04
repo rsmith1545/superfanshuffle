@@ -152,7 +152,7 @@ function mark(good){
   if(good){ score++; document.getElementById('score').textContent=score; }
   flash(good, good?'CORRECT':'PASS');
   good?sndBell():sndPass();
-  navigator.vibrate&&navigator.vibrate(good?60:30);
+  buzz(good?[0,45,40,110]:[0,90]);
 }
 function flash(good,label){
   app.classList.remove('st-correct','st-pass'); app.classList.add(good?'st-correct':'st-pass');
@@ -180,7 +180,7 @@ function endGame(){
   sndBuzzer();
   app.classList.remove('st-correct','st-pass'); app.classList.add('st-timeup');
   var cd=document.getElementById('card'); cd.textContent="TIME'S UP"; cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn');
-  navigator.vibrate&&navigator.vibrate([130,70,130]);
+  buzz([160,80,160,80,220]);
   setTimeout(function(){ app.classList.remove('st-timeup'); document.body.classList.remove('lock-ls'); tryUnlock(); buildRecap(); show('sEnd'); }, 1800);
 }
 function buildRecap(){
@@ -213,14 +213,14 @@ function startCountdown(){
   big.style.display='none';
   gr.style.display='block'; gr.classList.add('pulsing');
   sndFanfare();
-  navigator.vibrate&&navigator.vibrate(50);
+  buzz([0,60]);
   setTimeout(function(){
     gr.classList.remove('pulsing'); gr.style.display='none';
-    big.style.display=''; var n=3; big.textContent=n; popEl(big); sndBeep(); navigator.vibrate&&navigator.vibrate(40);
+    big.style.display=''; var n=3; big.textContent=n; popEl(big); sndBeep(); buzz([0,35]);
     var iv=setInterval(function(){
       n--;
       if(n<=0){ clearInterval(iv); startGame(); }
-      else { big.textContent=n; popEl(big); sndBeep(); navigator.vibrate&&navigator.vibrate(40); }
+      else { big.textContent=n; popEl(big); sndBeep(); buzz([0,35]); }
     }, 850);
   }, 1300);
 }
@@ -228,8 +228,9 @@ window.addEventListener('orientationchange', function(){ setTimeout(checkOrienta
 window.addEventListener('resize', checkOrientation);
 
 /* ---------- buttons ---------- */
+function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
-document.getElementById('startBtn').onclick=function(){ goFullscreen(); initAudio(); requestPerm(function(ok){ ready(); }); };
+document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); initAudio(); requestPerm(function(ok){ ready(); }); };
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); initAudio(); ready(); };
 
 /* ---------- debug ---------- */
