@@ -13,11 +13,11 @@
 <style>
  :root{--purple:#2a1257;--cyan:#57e6ff;--mag:#ff5cf0;--green:#20e468;--orange:#ff9d2e;--disp:'Bebas Neue','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif;}
  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
- html,body{height:100%;overflow:hidden;font-family:var(--body);background:#160a2c;color:#eafcff;user-select:none;-webkit-user-select:none}
- #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background-color:var(--purple);background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);box-shadow:inset 0 0 0 4px rgba(87,230,255,.85),inset 0 0 26px rgba(87,230,255,.28);transition:background-color .14s,box-shadow .14s}
- #app.st-correct{background-color:var(--green);box-shadow:inset 0 0 0 5px rgba(255,255,255,.95),inset 0 0 64px rgba(255,255,255,.55)}
- #app.st-pass{background-color:var(--orange);box-shadow:inset 0 0 0 4px rgba(255,255,255,.85),inset 0 0 34px rgba(255,255,255,.30)}
- #app.st-timeup{background-color:#e01e4a;box-shadow:inset 0 0 0 4px rgba(255,255,255,.85),inset 0 0 34px rgba(255,0,80,.4)}
+ html,body{height:100%;overflow:hidden;font-family:var(--body);background:#000;color:#eafcff;user-select:none;-webkit-user-select:none}
+ #app{position:fixed;inset:16px;border-radius:40px;overflow:hidden;border:8px solid rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background-color:var(--purple);background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);box-shadow:0 0 28px rgba(87,230,255,.5),inset 0 0 26px rgba(87,230,255,.3);transition:background-color .14s,box-shadow .14s,border-color .14s}
+ #app.st-correct{background-color:var(--green);border-color:#fff;box-shadow:0 0 48px rgba(255,255,255,.7),inset 0 0 72px rgba(255,255,255,.5)}
+ #app.st-pass{background-color:var(--orange);box-shadow:0 0 26px rgba(255,255,255,.35),inset 0 0 42px rgba(255,255,255,.28)}
+ #app.st-timeup{background-color:#e01e4a;box-shadow:0 0 28px rgba(255,0,80,.5),inset 0 0 42px rgba(255,0,80,.4)}
  @media (orientation:portrait){ body.lock-ls #app{ inset:auto; top:100%; left:0; width:100vh; height:100vw; transform-origin:left top; transform:rotate(-90deg); } }
  .screen{display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;width:100%;height:100%}
  .screen.on{display:flex}
@@ -52,6 +52,8 @@
  .pulsing{animation:pulse .7s ease-in-out infinite}
  .pop{animation:pop .5s cubic-bezier(.2,1.5,.4,1)}
  .zoomIn{animation:cardIn .5s cubic-bezier(.2,1.25,.4,1)}
+ @keyframes flyIn{0%{transform:translateX(66%) scale(.9);opacity:0}55%{transform:translateX(-7%) scale(1.05);opacity:1}78%{transform:translateX(3%) scale(.99)}100%{transform:translateX(0) scale(1);opacity:1}}
+ .flyIn{animation:flyIn .55s cubic-bezier(.25,1.25,.4,1)}
  @keyframes heroPop{0%{transform:scale(.35);opacity:0}45%{transform:scale(1.34);opacity:1}72%{transform:scale(.95)}100%{transform:scale(1)}}
  .heroPop{animation:heroPop .62s cubic-bezier(.2,1.5,.35,1)}
 </style></head>
@@ -153,7 +155,7 @@ function mark(good){
 function flash(good,label){
   app.classList.remove('st-correct','st-pass'); app.classList.add(good?'st-correct':'st-pass');
   var cd=document.getElementById('card'); cd.textContent=label; var anim=good?'heroPop':'zoomIn'; cd.classList.remove('zoomIn','heroPop'); void cd.offsetWidth; cd.classList.add(anim);
-  setTimeout(function(){ if(playing){ app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','heroPop'); void cd.offsetWidth; cd.classList.add('zoomIn'); } }, good?620:550);
+  setTimeout(function(){ if(playing){ app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); void cd.offsetWidth; cd.classList.add('flyIn'); } }, good?620:550);
 }
 function startGame(){
   order=shuffle(DECK.slice()); idx=0; results=[]; score=0; timeLeft=60; armed=true; playing=true;
@@ -162,7 +164,7 @@ function startGame(){
   var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing'); tEl0.textContent=fmt(timeLeft);
   document.body.classList.add('lock-ls'); tryLockLandscape();
   current=newCard();
-  var cd=document.getElementById('card'); cd.classList.remove('zoomIn'); void cd.offsetWidth; cd.classList.add('zoomIn');
+  var cd=document.getElementById('card'); cd.classList.remove('zoomIn','flyIn','heroPop'); void cd.offsetWidth; cd.classList.add('flyIn');
   tHandle=setInterval(function(){
     timeLeft--;
     var tEl=document.getElementById('timer'); tEl.textContent=fmt(timeLeft);
@@ -175,7 +177,7 @@ function endGame(){
   var tEl=document.getElementById('timer'); tEl.classList.remove('pulsing'); tEl.textContent='0:00';
   sndBuzzer();
   app.classList.remove('st-correct','st-pass'); app.classList.add('st-timeup');
-  var cd=document.getElementById('card'); cd.textContent="TIME'S UP"; cd.classList.remove('zoomIn'); void cd.offsetWidth; cd.classList.add('zoomIn');
+  var cd=document.getElementById('card'); cd.textContent="TIME'S UP"; cd.classList.remove('zoomIn','flyIn','heroPop'); void cd.offsetWidth; cd.classList.add('flyIn');
   navigator.vibrate&&navigator.vibrate([130,70,130]);
   setTimeout(function(){ app.classList.remove('st-timeup'); document.body.classList.remove('lock-ls'); tryUnlock(); buildRecap(); show('sEnd'); }, 1800);
 }
