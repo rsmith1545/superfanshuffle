@@ -15,7 +15,7 @@
  :root{--purple:#2a1257;--cyan:#57e6ff;--mag:#ff5cf0;--green:#20e468;--orange:#ff9d2e;--disp:'Bebas Neue','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif;}
  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
  html,body{height:100%;overflow:hidden;font-family:var(--body);background:#000;color:#eafcff;user-select:none;-webkit-user-select:none}
- #app{position:fixed;inset:16px;border-radius:40px;overflow:hidden;border:8px solid rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background-color:var(--purple);background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);box-shadow:0 0 28px rgba(87,230,255,.5),inset 0 0 26px rgba(87,230,255,.3);transition:background-color .14s,box-shadow .14s,border-color .14s}
+ #app{position:fixed;top:calc(16px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));border-radius:40px;overflow:hidden;border:8px solid rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background-color:var(--purple);background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);box-shadow:0 0 28px rgba(87,230,255,.5),inset 0 0 26px rgba(87,230,255,.3);transition:background-color .14s,box-shadow .14s,border-color .14s}
  #app.st-correct{background-color:var(--green);border-color:#fff;box-shadow:0 0 48px rgba(255,255,255,.7),inset 0 0 72px rgba(255,255,255,.5)}
  #app.st-pass{background-color:var(--orange);box-shadow:0 0 26px rgba(255,255,255,.35),inset 0 0 42px rgba(255,255,255,.28)}
  #app.st-timeup{background-color:#e01e4a;box-shadow:0 0 28px rgba(255,0,80,.5),inset 0 0 42px rgba(255,0,80,.4)}
@@ -133,6 +133,20 @@ function requestPerm(cb){
 /* ---------- sound (Web Audio, no files) — distinct per event ---------- */
 var AC=null;
 function initAudio(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){} }
+/* iOS unlock: keep a near-silent looping media element playing so the audio
+   session becomes "playback" — this lets Web Audio sound through even when the
+   iPhone ring/silent switch is set to silent. Must be triggered by a user tap. */
+var _silentEl=null;
+function _silentWav(){ var sr=8000,n=Math.floor(sr*0.4),buf=new ArrayBuffer(44+n*2),dv=new DataView(buf);
+  function ws(o,s){for(var i=0;i<s.length;i++)dv.setUint8(o+i,s.charCodeAt(i));}
+  ws(0,'RIFF');dv.setUint32(4,36+n*2,true);ws(8,'WAVE');ws(12,'fmt ');dv.setUint32(16,16,true);
+  dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sr,true);dv.setUint32(28,sr*2,true);
+  dv.setUint16(32,2,true);dv.setUint16(34,16,true);ws(36,'data');dv.setUint32(40,n*2,true);
+  var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);
+  return 'data:audio/wav;base64,'+btoa(s); }
+function unlockAudio(){ initAudio();
+  try{ if(!_silentEl){ _silentEl=new Audio(_silentWav()); _silentEl.loop=true; _silentEl.volume=0.001; _silentEl.setAttribute('playsinline',''); }
+    var p=_silentEl.play(); if(p&&p.catch)p.catch(function(){}); }catch(e){} }
 function tone(freq,dur,type,vol,when){ if(!AC) return; var t0=AC.currentTime+(when||0); var o=AC.createOscillator(),g=AC.createGain(); o.type=type||'sine'; o.frequency.value=freq; g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(vol||0.3,t0+0.008); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur); o.connect(g); g.connect(AC.destination); o.start(t0); o.stop(t0+dur+0.04); }
 function sndBell(){ initAudio(); if(!AC) return; var t0=AC.currentTime; [[784,0.95,0.34],[1568,0.75,0.16],[2352,0.55,0.07]].forEach(function(p){ var o=AC.createOscillator(),g=AC.createGain(); o.type='sine'; o.frequency.value=p[0]; g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(p[2],t0+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t0+p[1]); o.connect(g); g.connect(AC.destination); o.start(t0); o.stop(t0+p[1]+0.05); }); }
 function sndPass(){ initAudio(); tone(240,0.14,'sawtooth',0.28,0); tone(150,0.26,'sawtooth',0.28,0.08); }
@@ -230,8 +244,8 @@ window.addEventListener('resize', checkOrientation);
 /* ---------- buttons ---------- */
 function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
-document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); initAudio(); requestPerm(function(ok){ ready(); }); };
-document.getElementById('againBtn').onclick=function(){ goFullscreen(); initAudio(); ready(); };
+document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); }); };
+document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
 
 /* ---------- debug ---------- */
 var dbgOn=false;
