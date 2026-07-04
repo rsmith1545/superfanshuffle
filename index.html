@@ -136,13 +136,14 @@ function coverHTML(v,big){
 }
 function vaultCard(v){
  var pct=Math.round(v.shuffled/v.total*100);
- return '<div class="vault" onclick="openVault(\''+v.id+'\')">'+coverHTML(v)
+ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)
   +'<div class="vname">'+v.name+'</div><div class="vvol">VOL. '+v.vol+'</div>'
   +'<div class="prog"><i style="width:'+pct+'%"></i></div>'
   +'<div class="pgt">'+v.shuffled+' / '+v.total+' shuffled</div></div>';
 }
 function byId(id){for(var i=0;i<VAULTS.length;i++)if(VAULTS[i].id===id)return VAULTS[i];}
 
+function pickVault(id){ if(id==='gracie'){ location.href='/play.html?vault=gracie'; } else { openVault(id); } }
 function render(){
  var app=document.getElementById('app'), h='';
  var feat=byId('taylor');
