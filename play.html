@@ -154,7 +154,7 @@ function mark(good){
 }
 function flash(good,label){
   app.classList.remove('st-correct','st-pass'); app.classList.add(good?'st-correct':'st-pass');
-  var cd=document.getElementById('card'); cd.textContent=label; var anim=good?'heroPop':'zoomIn'; cd.classList.remove('zoomIn','heroPop'); void cd.offsetWidth; cd.classList.add(anim);
+  var cd=document.getElementById('card'); cd.textContent=label; cd.classList.remove('zoomIn','flyIn','heroPop');
   setTimeout(function(){ if(playing){ app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); } }, good?620:550);
 }
 function startGame(){
