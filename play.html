@@ -15,11 +15,13 @@
  :root{--purple:#2a1257;--cyan:#57e6ff;--mag:#ff5cf0;--green:#20e468;--orange:#ff9d2e;--disp:'Bebas Neue','Arial Narrow',sans-serif;--body:'Barlow',system-ui,sans-serif;}
  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
  html,body{height:100%;overflow:hidden;font-family:var(--body);background:#000;color:#eafcff;user-select:none;-webkit-user-select:none}
- #app{position:fixed;top:calc(16px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));border-radius:40px;overflow:hidden;border:8px solid rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background-color:var(--purple);background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);box-shadow:0 0 28px rgba(87,230,255,.5),inset 0 0 26px rgba(87,230,255,.3);transition:background-color .14s,box-shadow .14s,border-color .14s}
+ #app{position:absolute;top:calc(16px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));border-radius:40px;overflow:hidden;border:8px solid rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background-color:var(--purple);background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);box-shadow:0 0 28px rgba(87,230,255,.5),inset 0 0 26px rgba(87,230,255,.3);transition:background-color .14s,box-shadow .14s,border-color .14s}
  #app.st-correct{background-color:var(--green);border-color:#fff;box-shadow:0 0 48px rgba(255,255,255,.7),inset 0 0 72px rgba(255,255,255,.5)}
  #app.st-pass{background-color:var(--orange);box-shadow:0 0 26px rgba(255,255,255,.35),inset 0 0 42px rgba(255,255,255,.28)}
  #app.st-timeup{background-color:#e01e4a;box-shadow:0 0 28px rgba(255,0,80,.5),inset 0 0 42px rgba(255,0,80,.4)}
- @media (orientation:portrait){ body.lock-ls #app{ inset:auto; top:100%; left:0; width:100vh; height:100vw; transform-origin:left top; transform:rotate(-90deg); } }
+ #stage{position:fixed;inset:0}
+ /* iOS standalone PWAs can't physically rotate; while the device stays portrait during play, fake landscape by rotating the whole stage about its centre. Rotation lives here, the card's spring animation lives on #app, so they no longer fight (card stays centred). */
+ @media (orientation:portrait){ body.lock-ls #stage{ top:50%; left:50%; width:100vh; height:100vw; transform:translate(-50%,-50%) rotate(-90deg); } body.lock-ls #app{ top:22px; right:22px; bottom:22px; left:22px; } }
  .screen{display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;width:100%;height:100%}
  .screen.on{display:flex}
  h1{font-family:var(--disp);font-size:17vmin;letter-spacing:2px;line-height:.86;text-transform:uppercase}
@@ -33,8 +35,8 @@
  #card{font-family:var(--disp);font-size:18vmin;color:#eafcff;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 14px rgba(87,230,255,.55),2px 3px 0 rgba(0,0,0,.45);line-height:.98;padding:0 14px;max-width:96vw}
  #big{font-family:var(--disp);font-size:34vmin;color:#fff;line-height:1;text-shadow:0 0 22px rgba(87,230,255,.6),3px 4px 0 rgba(0,0,0,.4)}
  #timer{font-family:var(--disp);font-size:11vmin;color:#eafcff;letter-spacing:2px;text-shadow:0 0 10px rgba(87,230,255,.5),2px 2px 0 rgba(0,0,0,.4)}
- #score{position:fixed;top:14px;right:20px;font-family:var(--disp);font-size:8vmin;color:var(--cyan);letter-spacing:1px;text-shadow:0 0 10px rgba(87,230,255,.6)}
- #hint{position:fixed;bottom:12px;left:0;right:0;font-size:3.4vmin;color:rgba(255,255,255,.8);letter-spacing:.5px}
+ #score{position:absolute;top:14px;right:20px;font-family:var(--disp);font-size:8vmin;color:var(--cyan);letter-spacing:1px;text-shadow:0 0 10px rgba(87,230,255,.6)}
+ #hint{position:absolute;bottom:12px;left:0;right:0;font-size:3.4vmin;color:rgba(255,255,255,.8);letter-spacing:.5px}
  /* debug */
  #dbg{position:fixed;bottom:6px;left:6px;font:12px/1.4 monospace;color:#0f0;background:rgba(0,0,0,.55);padding:6px 8px;border-radius:6px;display:none;text-align:left;z-index:9}
  #dbgBtn{position:fixed;top:8px;left:8px;font:11px monospace;color:#aaa;background:rgba(0,0,0,.4);border:1px solid #555;border-radius:6px;padding:4px 7px;z-index:10}
@@ -61,6 +63,7 @@
 <body>
 <button id="dbgBtn">debug</button>
 <div id="dbg"></div>
+<div id="stage">
 <div id="app">
   <!-- START -->
   <div class="screen on" id="sStart">
@@ -88,6 +91,7 @@
     <ul id="recap"></ul>
     <button class="btn" id="againBtn">Play Again</button>
   </div>
+</div>
 </div>
 <script>
 /* ---------- sample deck (placeholder — content TBD) ---------- */
@@ -124,10 +128,12 @@ function onMotion(e){
 function onOrient(e){ beta=e.beta||0; gamma=e.gamma||0; if(!haveMotion){ /* fallback: no devicemotion */ gz=(beta/90)*9.8; evalTilt(); } if(awaitingLandscape) checkOrientation(); dbgTick(); }
 
 function attach(){ window.addEventListener('devicemotion',onMotion); window.addEventListener('deviceorientation',onOrient); }
+var permGranted=false;
 function requestPerm(cb){
+  if(permGranted){ attach(); cb(true); return; }
   var need=(typeof DeviceMotionEvent!=='undefined' && typeof DeviceMotionEvent.requestPermission==='function');
-  if(need){ DeviceMotionEvent.requestPermission().then(function(r){ if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission){DeviceOrientationEvent.requestPermission().catch(function(){});} attach(); cb(r==='granted'); }).catch(function(){ attach(); cb(false); }); }
-  else { attach(); cb(true); }
+  if(need){ DeviceMotionEvent.requestPermission().then(function(r){ if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission){DeviceOrientationEvent.requestPermission().catch(function(){});} permGranted=(r==='granted'); attach(); cb(r==='granted'); }).catch(function(){ attach(); cb(false); }); }
+  else { permGranted=true; attach(); cb(true); }
 }
 
 /* ---------- sound (Web Audio, no files) — distinct per event ---------- */
@@ -228,6 +234,7 @@ function checkOrientation(){ if(awaitingLandscape && isLandscape()){ awaitingLan
 function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 function startCountdown(){
   if(counting) return; counting=true;
+  document.body.classList.add('lock-ls');
   document.getElementById('rotateMsg').style.display='none';
   var gr=document.getElementById('getReady'), big=document.getElementById('big');
   big.style.display='none';
