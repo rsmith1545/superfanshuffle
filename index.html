@@ -42,9 +42,9 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .vinyl{position:absolute;right:-42px;top:50%;transform:translateY(-50%);width:120px;height:120px;border-radius:50%;
  background:radial-gradient(circle at 50% 50%,#111 20%,#000 21%,#1a1a1a 22% 34%,#000 35% 37%,#222 38% 60%,#000 61%);box-shadow:0 0 0 2px rgba(255,255,255,.06)}
 .vinyl:after{content:"";position:absolute;inset:44px;border-radius:50%;background:var(--mag);opacity:.9}
-.cover .art{position:relative;z-index:2;font-weight:900;font-size:19px;line-height:1.05;padding:0 10px;text-shadow:0 2px 6px rgba(0,0,0,.5)}
+.cover .art{position:absolute;left:0;right:0;bottom:0;z-index:2;font-weight:800;font-size:15.5px;line-height:1.12;padding:22px 10px 9px;color:#fff;text-align:left;background:linear-gradient(to top,rgba(0,0,0,.85) 42%,rgba(0,0,0,0));text-shadow:0 1px 3px rgba(0,0,0,.8)}
 .badge{position:absolute;top:8px;left:8px;z-index:3;font-size:9px;font-weight:800;letter-spacing:.5px;padding:3px 7px;border-radius:20px;text-transform:uppercase}
-.badge.free{background:var(--free);color:#04240f}.badge.prem{background:var(--prem);color:#3a2a00}
+.badge.free{background:var(--mag);color:#2a0020}.badge.prem{background:var(--prem);color:#3a2a00}
 .trial{position:absolute;bottom:8px;right:8px;z-index:3;font-size:9px;font-weight:700;background:rgba(0,0,0,.55);padding:3px 7px;border-radius:20px;color:#fff}
 /* featured */
 .feat{display:flex;gap:14px;background:linear-gradient(120deg,rgba(255,92,240,.14),rgba(87,230,255,.10));border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px}
@@ -73,11 +73,12 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:24px;font-size:13px;font-weight:700;z-index:95;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center}
 .toast.on{opacity:.95}
 .note{text-align:center;color:var(--dim);font-size:10.5px;margin:16px;line-height:1.5}
+.cover.seeallc{background:rgba(87,230,255,.06);border:2px dashed rgba(87,230,255,.45);font-family:var(--disp);font-size:19px;letter-spacing:1px;color:var(--cyan);text-shadow:0 0 8px rgba(87,230,255,.5);padding:0 12px}
 /* bottom nav */
 .bnav{position:fixed;bottom:0;left:0;right:0;z-index:80;display:flex;background:rgba(16,8,36,.96);border-top:1px solid rgba(255,255,255,.1);backdrop-filter:blur(6px)}
-.bnav button{flex:1;background:none;border:none;color:var(--dim);font-family:var(--body);font-weight:700;font-size:11.5px;letter-spacing:.5px;padding:9px 0 11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bnav button{flex:1;background:none;border:none;color:#8b849c;font-family:var(--body);font-weight:700;font-size:11.5px;letter-spacing:.5px;padding:9px 0 11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
 .bnav button .ic{font-size:20px}
-.bnav button.on{color:#fff}
+.bnav button.on{color:var(--cyan);text-shadow:0 0 8px rgba(87,230,255,.55)}
 .bnav button.on .ic{filter:drop-shadow(0 0 7px var(--cyan))}
 #installBtn{display:none;position:fixed;left:50%;bottom:74px;transform:translateX(-50%);z-index:85;
  font-family:var(--disp);font-size:20px;letter-spacing:1.5px;padding:11px 26px;border:2px solid var(--cyan);border-radius:40px;
@@ -133,6 +134,13 @@ var VAULTS=[
  {id:'kendrick', name:'Kendrick Lamar', edition:'music', genre:'Hip-Hop', badge:'prem', c:['#2a1a12','#5a3a22'], dark:1},
  {id:'doja', name:'Doja Cat', edition:'music', genre:'Hip-Hop', badge:'free', trial:4, c:['#3a1c4a','#7a3aa0'], dark:1},
  {id:'tyler', name:'Tyler, the Creator', edition:'music', genre:'Hip-Hop', badge:'prem', c:['#d8e04a','#eef08a'], dark:0},
+ {id:'nirvana', name:'Nirvana', edition:'music', genre:'Alt & Grunge', badge:'prem', c:['#c9d24a','#eef08a'], dark:0},
+ {id:'pearljam', name:'Pearl Jam', edition:'music', genre:'Alt & Grunge', badge:'prem', c:['#7a2a2a','#a85a3a'], dark:1},
+ {id:'foo', name:'Foo Fighters', edition:'music', genre:'Alt & Grunge', badge:'free', trial:5, c:['#3a3a44','#6a6a78'], dark:1},
+ {id:'rhcp', name:'Red Hot Chili Peppers', edition:'music', genre:'Alt & Grunge', badge:'prem', c:['#8b1e1e','#d33a2a'], dark:1},
+ {id:'smashing', name:'Smashing Pumpkins', edition:'music', genre:'Alt & Grunge', badge:'prem', c:['#2a2a3a','#5a4a6a'], dark:1},
+ {id:'soundgarden', name:'Soundgarden', edition:'music', genre:'Alt & Grunge', badge:'prem', c:['#3a2a1a','#7a5a2a'], dark:1},
+ {id:'oasis', name:'Oasis', edition:'music', genre:'Alt & Grunge', badge:'free', trial:3, c:['#1a3a5a','#3a6a9a'], dark:1},
  /* ---- generic non-IP dev placeholders for hidden editions ---- */
  {id:'mv_a', name:'Sample Vault A', edition:'movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_b', name:'Sample Vault B', edition:'movies', badge:'free', trial:3, c:['#2a3a6e','#4a6aa0'], dark:1},
@@ -150,7 +158,7 @@ function coverHTML(v){
  var badge=v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>';
  var trial=(v.badge==='free'&&v.trial)?'<div class="trial">'+v.trial+' days left</div>':'';
  return '<div class="cover" style="background:'+grad+'">'+badge+trial+'<div class="vinyl"></div>'
-   +'<div class="art" style="color:'+tc+'">'+v.name+'</div></div>';
+   +'<div class="art">'+v.name+'</div></div>';
 }
 function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'</div>'; }
 
@@ -179,9 +187,12 @@ function storeHTML(){
    +'<button class="cta" onclick="pickVault(\''+feat.id+'\')">Open Vault</button></div></div>'; }
  /* charts */
  if(ed==='music'){
-   ['Pop','Rock','Hip-Hop'].forEach(function(g){
+   ['Pop','Rock','Alt & Grunge','Hip-Hop'].forEach(function(g){
      var gv=vaults.filter(function(v){return v.genre===g;});
-     if(gv.length) h+='<h2>Top in '+g+'</h2><div class="row">'+gv.map(tileHTML).join('')+'</div>';
+     if(gv.length<3) return;                        /* thin/empty shelves do NOT render (intended) */
+     var tiles=gv.map(tileHTML).join('');
+     if(gv.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+g+' — coming soon\')"><div class="cover seeallc">See All '+g+' \u25B8</div></div>'; }
+     h+='<h2>Top in '+g+'</h2><div class="row">'+tiles+'</div>';
    });
  } else {
    h+='<h2>Sample Vaults</h2><div class="row">'+vaults.map(tileHTML).join('')+'</div>';
