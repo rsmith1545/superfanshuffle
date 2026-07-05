@@ -1,0 +1,9 @@
+{
+  "appId": "com.hutchdesign.superfanshuffle",
+  "appName": "SuperFan Shuffle",
+  "webDir": "www",
+  "ios": { "contentInset": "never" },
+  "plugins": {
+    "StatusBar": { "overlaysWebView": true, "style": "DARK" }
+  }
+}

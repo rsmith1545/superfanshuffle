@@ -1,0 +1,23 @@
+{
+  "name": "superfanshuffle",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SuperFan Shuffle — native shell (Capacitor) around the web game",
+  "scripts": {
+    "build:web": "node scripts/build-web.js",
+    "ios:add": "npm run build:web && npx cap add ios",
+    "ios:sync": "npm run build:web && npx cap sync ios",
+    "ios:open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/status-bar": "^6.0.1",
+    "@capacitor/screen-orientation": "^6.0.2",
+    "@capacitor/haptics": "^6.0.1",
+    "@capacitor/keep-awake": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}
