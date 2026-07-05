@@ -176,7 +176,7 @@ function flash(good,label){
 function startGame(){
   order=shuffle(DECK.slice()); idx=0; results=[]; score=0; timeLeft=60; armed=true; playing=true;
   document.getElementById('score').textContent='0';
-  show('sGame'); app.classList.remove('st-correct','st-pass'); sndGo();
+  show('sGame'); app.classList.remove('st-correct','st-pass'); sndGo(); requestWake();
   var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing'); tEl0.textContent=fmt(timeLeft);
   document.body.classList.add('lock-ls'); tryLockLandscape();
   current=newCard();
@@ -189,7 +189,7 @@ function startGame(){
   }, 1000);
 }
 function endGame(){
-  playing=false; clearInterval(tHandle);
+  playing=false; clearInterval(tHandle); releaseWake();
   var tEl=document.getElementById('timer'); tEl.classList.remove('pulsing'); tEl.textContent='0:00';
   sndBuzzer();
   app.classList.remove('st-correct','st-pass'); app.classList.add('st-timeup');
@@ -204,6 +204,12 @@ function buildRecap(){
 }
 function tryLockLandscape(){ try{ if(screen.orientation&&screen.orientation.lock){ screen.orientation.lock('landscape').catch(function(){}); } }catch(e){} }
 function tryUnlock(){ try{ if(screen.orientation&&screen.orientation.unlock){ screen.orientation.unlock(); } }catch(e){} }
+/* ---------- keep the screen awake during play (Wake Lock API: Android Chrome + iOS 16.4+) ---------- */
+var _wake=null;
+function requestWake(){ try{ if('wakeLock' in navigator){ navigator.wakeLock.request('screen').then(function(w){ _wake=w; if(_wake&&_wake.addEventListener){ _wake.addEventListener('release',function(){ _wake=null; }); } }).catch(function(){}); } }catch(e){} }
+function releaseWake(){ try{ if(_wake&&_wake.release){ _wake.release(); } }catch(e){} _wake=null; }
+/* the OS drops the lock when the tab is backgrounded; re-grab it on return if still playing */
+document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible' && playing && !_wake){ requestWake(); } });
 
 /* ---------- ready: wait for portrait -> landscape, then 3-2-1 ---------- */
 var awaitingLandscape=false, counting=false;
