@@ -300,7 +300,15 @@ function exSearch(){
  door.style.display='none';
  res.innerHTML='<h2>Results</h2><div class="row" style="flex-wrap:wrap">'+hits.map(tileHTML).join('')+'</div>';
 }
-function myVaultsHTML(){ return '<div class="emptyv"><div class="big">No Vaults Yet</div><p>Unlock a vault in Play and it lands here — your collection, ready to shuffle anytime.</p></div>'; }
+/* owned vaults (payments not wired yet — seed one so the full owned round + report card is playable) */
+var OWNED=['taylor'];
+function playOwned(id){ var v=byId(id); if(v) location.href=launchURL(v)+'&mode=full'; }
+function ownedTile(v){ return '<div class="vault" onclick="playOwned(\''+v.id+'\')">'+coverHTML(v,true)+'</div>'; }
+function myVaultsHTML(){
+ var owned=OWNED.map(byId).filter(Boolean);
+ if(!owned.length) return '<div class="emptyv"><div class="big">No Vaults Yet</div><p>Unlock a vault in Play and it lands here — your collection, ready to shuffle anytime.</p></div>';
+ return '<h2 style="margin-top:8px">Your Vaults</h2><div class="note" style="text-align:left;margin:0 2px 10px">Owned — tap to play the full round, then see your Superfan tier.</div><div class="row" style="flex-wrap:wrap">'+owned.map(ownedTile).join('')+'</div>';
+}
 function render(){
  var v=curView;
  document.getElementById('app').innerHTML = v==='play'?playHTML() : v==='explore'?exploreHTML() : myVaultsHTML();
