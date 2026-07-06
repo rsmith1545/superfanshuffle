@@ -59,6 +59,24 @@
  .flyIn{animation:flyIn .55s cubic-bezier(.25,1.25,.4,1)}
  @keyframes heroPop{0%{transform:scale(.35);opacity:0}45%{transform:scale(1.34);opacity:1}72%{transform:scale(.95)}100%{transform:scale(1)}}
  .heroPop{animation:heroPop .62s cubic-bezier(.2,1.5,.35,1)}
+ /* UNLOCK WALL */
+ .wallTaste{font-family:var(--disp);font-size:6.4vw;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;opacity:.92;text-shadow:0 0 14px rgba(87,230,255,.6)}
+ .wallHead{font-family:var(--disp);font-size:11vw;line-height:.9;letter-spacing:1px;text-transform:uppercase;color:var(--mag);text-shadow:0 0 20px rgba(255,92,240,.75),2px 3px 0 rgba(0,0,0,.4)}
+ .btn.buy{border-color:var(--mag);background:linear-gradient(90deg,rgba(87,230,255,.16),rgba(255,92,240,.24));box-shadow:0 0 22px rgba(255,92,240,.55),inset 0 0 16px rgba(255,92,240,.25);color:#fff;font-size:6.2vw;text-shadow:0 0 10px rgba(255,92,240,.6)}
+ .wallRow{display:flex;gap:26px;margin-top:4px}
+ .wlink{color:rgba(255,255,255,.78);font-size:3.9vw;font-weight:700;text-decoration:none;cursor:pointer;letter-spacing:.3px}
+ .wlink:active{color:#fff}
+ /* REPORT CARD */
+ #tierHero{font-family:var(--disp);font-size:14vw;line-height:.86;text-transform:uppercase;letter-spacing:1px}
+ #tierName{font-size:4.2vw;color:rgba(255,255,255,.85);max-width:82vw;line-height:1.25;margin-top:-4px}
+ .rScore{font-size:5vw;color:#eafcff}.rScore b{color:var(--cyan)}
+ .btn.share{font-size:5.6vw;border-color:var(--cyan)}
+ .btn.again{font-size:5.4vw;border-color:rgba(255,255,255,.5);box-shadow:none;color:#eafcff;text-shadow:none;background:rgba(255,255,255,.06)}
+ #crossSell{margin:-4px 0}
+ .xsell{display:inline-block;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:9px 15px;font-size:3.7vw;font-weight:700;cursor:pointer}
+ .xsell b{color:var(--mag)}
+ .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:24px;font-size:14px;font-weight:700;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:86%;text-align:center}
+ .toast.on{opacity:.96}
 </style></head>
 <body>
 <button id="dbgBtn">debug</button>
@@ -84,23 +102,47 @@
     <div id="card">—</div>
     <div id="timer">1:00</div>
   </div>
-  <!-- END -->
-  <div class="screen" id="sEnd">
-    <h1 style="font-size:9vw">Time!</h1>
-    <div class="sub">You got <b id="finalScore">0</b></div>
+  <!-- UNLOCK WALL (end of the 5-question preview — never reaches the report card) -->
+  <div class="screen" id="sWall">
+    <div class="wallTaste">That’s the taste</div>
+    <div class="wallHead">Unlock the Vault</div>
+    <div class="sub">You’ve played the first <b>5</b> of <b id="wallName">this vault</b>. The full shuffle — songs, lyrics &amp; lore — keeps going.</div>
+    <button class="btn buy" id="wallBuy">Unlock full vault · $0.99</button>
+    <div class="wallRow">
+      <a class="wlink" id="wallBack">‹ Back to store</a>
+      <a class="wlink" id="wallDemo">See the full round ›</a>
+    </div>
+  </div>
+  <!-- REPORT CARD (end of a full, owned round — owner-only) -->
+  <div class="screen" id="sReport">
+    <div id="tierHero">SUPERFAN</div>
+    <div id="tierName"></div>
+    <div class="rScore">You got <b id="rScoreN">0</b></div>
     <ul id="recap"></ul>
-    <button class="btn" id="againBtn">Play Again</button>
+    <button class="btn share" id="shareBtn">Share</button>
+    <div id="crossSell"></div>
+    <button class="btn again" id="againBtn">Play Again</button>
   </div>
 </div>
 </div>
+<div class="toast" id="toast"></div>
 <script>
 /* ---------- sample deck (placeholder — content TBD) ---------- */
 var DECK=["Bohemian Rhapsody","Sweet Child O' Mine","Billie Jean","Don't Stop Believin'","Wonderwall","Smells Like Teen Spirit","Poker Face","Mr. Brightside","Hotel California","Rolling in the Deep","Under Pressure","Africa","Take On Me","Uptown Funk","Purple Rain","Livin' on a Prayer","Bad Guy","Shake It Off","Hey Jude","Seven Nation Army","Stairway to Heaven","Dancing Queen","Wannabe","Zombie","Creep","Toxic","Umbrella","Blinding Lights","Hips Don't Lie","Yeah!"];
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 
+/* ---------- launch params: preview (5 free questions) vs owned full round ---------- */
+var Q=new URLSearchParams(location.search);
+var VAULT_ID=Q.get('vault')||'';
+var VAULT_NAME=Q.get('n')||'this vault';
+var PREVIEW=Q.get('mode')!=='full';   // default = 5-question preview; ?mode=full = owned round → report card
+var MAX_Q=5;
+
 /* ---------- screens ---------- */
 var app=document.getElementById('app');
-function show(id){['sStart','sReady','sGame','sEnd'].forEach(function(s){document.getElementById(s).classList.toggle('on',s===id);});}
+function show(id){['sStart','sReady','sGame','sWall','sReport'].forEach(function(s){document.getElementById(s).classList.toggle('on',s===id);});}
+var tHandle2=null;
+function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(tHandle2); tHandle2=setTimeout(function(){ t.classList.remove('on'); }, 2600); }
 
 /* ---------- tilt engine (gravity z-axis = screen facing down/up, orientation-agnostic) ---------- */
 var TH=7.4, NEUTRAL=3.2;         // trigger + re-arm thresholds (tune via debug)
@@ -165,11 +207,14 @@ function sndBuzzer(){ initAudio(); tone(160,0.6,'sawtooth',0.36,0); tone(168,0.6
 /* ---------- game loop ---------- */
 function fmt(t){ var m=Math.floor(t/60), sec=t%60; return m+':'+(sec<10?'0':'')+sec; }
 var playing=false, idx=0, order=[], results=[], score=0, timeLeft=60, tHandle=null;
+var qCount=0, ended=false, previewSafety=null;
 function newCard(){ if(idx>=order.length){ order=shuffle(DECK.slice()); idx=0; } var w=order[idx++]; document.getElementById('card').textContent=w; return w; }
 var current='';
 function mark(good){
   results.push({w:current,good:good});
   if(good){ score++; document.getElementById('score').textContent=score; }
+  qCount++;
+  if(PREVIEW){ document.getElementById('timer').textContent=Math.min(qCount+1,MAX_Q)+' / '+MAX_Q; }
   flash(good, good?'CORRECT':'PASS');
   good?sndBell():sndPass();
   buzz(good?[0,45,40,110]:[0,90]);
@@ -177,36 +222,79 @@ function mark(good){
 function flash(good,label){
   app.classList.remove('st-correct','st-pass'); app.classList.add(good?'st-correct':'st-pass');
   var cd=document.getElementById('card'); cd.textContent=label; cd.classList.remove('zoomIn','flyIn','heroPop');
-  setTimeout(function(){ if(playing){ app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); } }, good?620:550);
+  var last = PREVIEW && qCount>=MAX_Q;
+  setTimeout(function(){ if(!playing) return;
+    if(last){ endPreview(); return; }
+    app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }, good?620:550);
 }
 function startGame(){
-  order=shuffle(DECK.slice()); idx=0; results=[]; score=0; timeLeft=60; armed=true; playing=true;
+  order=shuffle(DECK.slice()); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
   document.getElementById('score').textContent='0';
   show('sGame'); app.classList.remove('st-correct','st-pass'); sndGo(); requestWake();
-  var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing'); tEl0.textContent=fmt(timeLeft);
+  var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing');
   document.body.classList.add('lock-ls'); tryLockLandscape();
   current=newCard();
   var cd=document.getElementById('card'); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn');
-  tHandle=setInterval(function(){
-    timeLeft--;
-    var tEl=document.getElementById('timer'); tEl.textContent=fmt(timeLeft);
-    if(timeLeft<=10 && timeLeft>0){ tEl.classList.add('pulsing'); sndClock(timeLeft%2===0); }
-    if(timeLeft<=0){ endGame(); }
-  }, 1000);
+  if(PREVIEW){
+    tEl0.textContent='1 / '+MAX_Q;                 // 5-question taste: counter, no clock
+    previewSafety=setTimeout(endPreview, 120000);   // safety exit if they never tilt
+  } else {
+    tEl0.textContent=fmt(timeLeft);
+    tHandle=setInterval(function(){
+      timeLeft--;
+      var tEl=document.getElementById('timer'); tEl.textContent=fmt(timeLeft);
+      if(timeLeft<=10 && timeLeft>0){ tEl.classList.add('pulsing'); sndClock(timeLeft%2===0); }
+      if(timeLeft<=0){ endGame(); }
+    }, 1000);
+  }
+}
+/* preview ends at the unlock wall — never the report card */
+function endPreview(){
+  if(ended) return; ended=true;
+  playing=false; clearTimeout(previewSafety); releaseWake();
+  app.classList.remove('st-correct','st-pass','st-timeup','flyIn');
+  document.body.classList.remove('lock-ls'); tryUnlock();
+  document.getElementById('wallName').textContent=VAULT_NAME;
+  sndFanfare();
+  show('sWall');
 }
 function endGame(){
+  if(ended) return; ended=true;
   playing=false; clearInterval(tHandle); releaseWake();
   var tEl=document.getElementById('timer'); tEl.classList.remove('pulsing'); tEl.textContent='0:00';
   sndBuzzer();
   app.classList.remove('st-correct','st-pass'); app.classList.add('st-timeup');
   var cd=document.getElementById('card'); cd.textContent="TIME'S UP"; cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn');
   buzz([160,80,160,80,220]);
-  setTimeout(function(){ app.classList.remove('st-timeup'); document.body.classList.remove('lock-ls'); tryUnlock(); buildRecap(); show('sEnd'); }, 1800);
+  setTimeout(function(){ app.classList.remove('st-timeup'); document.body.classList.remove('lock-ls'); tryUnlock(); buildReport(); show('sReport'); }, 1800);
 }
-function buildRecap(){
-  document.getElementById('finalScore').textContent=score;
+/* tier verdict = the payoff (hero); score is support */
+var TIERS=[
+ {min:20,name:'SuperFan', tag:'Certified. You ARE the fandom.',      col:'#ffd24a'},
+ {min:14,name:'Pro',      tag:'Serious fandom — barely broke a sweat.',col:'#57e6ff'},
+ {min:9, name:'Casual',   tag:'Solid fan. You know the hits.',         col:'#20e468'},
+ {min:5, name:'Beginner', tag:'Warming up. Plenty of room to grow.',   col:'#ff9d2e'},
+ {min:0, name:'Imposter', tag:'Are you even a fan? Run it back.',       col:'#ff5c7a'}
+];
+function tierFor(s){ for(var i=0;i<TIERS.length;i++){ if(s>=TIERS[i].min) return TIERS[i]; } return TIERS[TIERS.length-1]; }
+function buildReport(){
+  var t=tierFor(score);
+  var hero=document.getElementById('tierHero'); hero.textContent=t.name; hero.style.color=t.col; hero.style.textShadow='0 0 22px '+t.col+',2px 3px 0 rgba(0,0,0,.4)';
+  hero.classList.remove('heroPop'); void hero.offsetWidth; hero.classList.add('heroPop');
+  document.getElementById('tierName').textContent=t.tag;
+  document.getElementById('rScoreN').textContent=score;
   var ul=document.getElementById('recap'); ul.innerHTML='';
-  results.forEach(function(r){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.textContent=(r.good?'\u2713 ':'\u2717 ')+r.w; ul.appendChild(li); });
+  results.forEach(function(r){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.textContent=(r.good?'✓ ':'✗ ')+r.w; ul.appendChild(li); });
+  var xs=document.getElementById('crossSell');
+  xs.innerHTML='<span class="xsell" id="xsBtn">Want more '+VAULT_NAME+' questions? · <b>$0.99</b></span>';
+  document.getElementById('xsBtn').onclick=function(){ toast('More-questions pack — payments not wired yet'); };
+}
+function doShare(){
+  var t=tierFor(score);
+  var txt='I’m a '+t.name+' on SuperFan Shuffle'+(VAULT_NAME!=='this vault'?' — '+VAULT_NAME:'')+'! Scored '+score+'. Face the Music →';
+  var url='https://superfanshuffle.com';
+  if(navigator.share){ navigator.share({title:'SuperFan Shuffle',text:txt,url:url}).catch(function(){}); }
+  else { try{ navigator.clipboard.writeText(txt+' '+url); toast('Copied — paste it anywhere!'); }catch(e){ toast('Share: '+txt); } }
 }
 function tryLockLandscape(){ try{ if(screen.orientation&&screen.orientation.lock){ screen.orientation.lock('landscape').catch(function(){}); } }catch(e){} }
 function tryUnlock(){ try{ if(screen.orientation&&screen.orientation.unlock){ screen.orientation.unlock(); } }catch(e){} }
@@ -259,6 +347,12 @@ function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
 document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); }); };
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
+/* unlock wall */
+document.getElementById('wallBuy').onclick=function(){ toast('Checkout · $0.99 — payments not wired yet'); };
+document.getElementById('wallBack').onclick=function(){ location.href='/'; };
+document.getElementById('wallDemo').onclick=function(){ location.href='/play.html?mode=full'+(VAULT_ID?'&vault='+encodeURIComponent(VAULT_ID):'')+(VAULT_NAME!=='this vault'?'&n='+encodeURIComponent(VAULT_NAME):''); };
+/* report card */
+document.getElementById('shareBtn').onclick=doShare;
 
 /* ---------- debug ---------- */
 var dbgOn=false;
