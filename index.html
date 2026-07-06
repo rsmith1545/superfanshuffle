@@ -36,16 +36,26 @@ h2{font-family:var(--disp);font-size:23px;letter-spacing:1px;margin:20px 4px 8px
 h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;padding:2px 8px;border-radius:20px;background:rgba(255,92,240,.22);color:#ffd7f6;font-family:var(--body);font-weight:700}
 .row{display:flex;gap:13px;overflow-x:auto;padding:4px 4px 12px;scroll-snap-type:x mandatory}
 .row::-webkit-scrollbar{display:none}
-/* vault tile: square sleeve + record, NAME BELOW (legible), no counts, no countdown */
-.vault{flex:0 0 auto;width:146px;scroll-snap-align:start;cursor:pointer;transition:transform .12s}
+/* vault tile — Option B: accent sleeve + grooved record peeking from the right, big Bebas name ON the sleeve. No counts, no countdown. */
+.vault{flex:0 0 auto;width:150px;scroll-snap-align:start;cursor:pointer;transition:transform .12s}
 .vault:active{transform:scale(.96)}
-.cover{position:relative;height:146px;border-radius:16px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.45)}
-.vinyl{position:absolute;right:-40px;top:50%;transform:translateY(-50%);width:118px;height:118px;border-radius:50%;
- background:radial-gradient(circle at 50% 50%,#111 20%,#000 21%,#1a1a1a 22% 34%,#000 35% 37%,#222 38% 60%,#000 61%);box-shadow:0 0 0 2px rgba(255,255,255,.06)}
-.vinyl:after{content:"";position:absolute;inset:44px;border-radius:50%;background:var(--mag);opacity:.9}
+.cover{position:relative;height:178px;border-radius:16px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.45)}
+/* grooved, glossy record half-tucked behind the sleeve edge */
+.rec{position:absolute;top:16px;right:-42px;width:120px;height:120px;border-radius:50%;z-index:1;
+ background:repeating-radial-gradient(circle at 50% 50%,#0d0d0d 0 2.5px,#242424 2.5px 5px),#0d0d0d;
+ box-shadow:-6px 6px 16px rgba(0,0,0,.42)}
+.rec:before{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(120deg,rgba(255,255,255,.22),rgba(255,255,255,0) 46%)}
+.rec .spin{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:var(--mag);box-shadow:0 0 0 3px #0d0d0d}
+/* bottom scrim keeps the white name legible on light sleeves (a sleeve vignette — NOT a band across the record) */
+.cover:after{content:"";position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(to top,rgba(0,0,0,.52),rgba(0,0,0,0) 90%);pointer-events:none;z-index:1}
 .badge{position:absolute;top:8px;left:8px;z-index:3;font-size:9px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:20px;text-transform:uppercase}
 .badge.free{background:var(--mag);color:#2a0020}.badge.prem{background:var(--prem);color:#3a2a00}
-.vname{margin:8px 2px 0;font-weight:800;font-size:13px;line-height:1.12;color:#fff}
+.vname2{position:absolute;left:12px;bottom:11px;right:50px;z-index:2;font-family:var(--disp);color:#fff;font-size:27px;letter-spacing:.6px;line-height:.9;text-shadow:0 2px 6px rgba(0,0,0,.55)}
+/* featured + sheet reuse the sleeve art but show the name in text beside it, so no name-scrim and a smaller record */
+.feat .cover:after,.shead .cover:after{display:none}
+.feat .cover .rec{top:10px;right:-40px;width:108px;height:108px}
+.shead .cover .rec{top:8px;right:-26px;width:60px;height:60px}
+.shead .cover .rec .spin{width:9px;height:9px;box-shadow:0 0 0 2px #0d0d0d}
 .seeallc{display:flex;align-items:center;justify-content:center;background:rgba(87,230,255,.06);border:2px dashed rgba(87,230,255,.45);font-family:var(--disp);font-size:19px;letter-spacing:1px;color:var(--cyan);text-shadow:0 0 8px rgba(87,230,255,.5);padding:0 12px;text-align:center}
 /* featured — whole card is the tap target, no button */
 .feat{display:flex;gap:14px;background:linear-gradient(120deg,rgba(176,106,255,.16),rgba(255,92,240,.10));border:1.5px solid var(--accent);border-radius:18px;padding:14px;cursor:pointer;box-shadow:0 0 26px -8px var(--accent);transition:transform .12s}
@@ -174,13 +184,15 @@ var BEST_OF=['taylor','kendrick','nirvana','queen','dmb','olivia'];
 var RECENTLY_ADDED=['chappell','soundgarden','zach','gratefuldead','jackjohnson'];
 var CAT_ORDER=['Best Of','Pop','Hip-Hop & R&B','Country','Alt & Grunge','Classic Rock','Singer-Songwriter · Jam · Indie'];
 
-/* tile art: sleeve + record + badge; NAME BELOW (not on the record) */
-function coverHTML(v){
- var grad='linear-gradient(135deg,'+v.c[0]+','+v.c[1]+')';
+/* tile art — Option B: accent sleeve + record peeking right + badge; big Bebas name ON the sleeve.
+   withName=true bakes the name onto the sleeve (grid tiles); featured/sheet pass false and show the name in text beside. */
+function coverHTML(v,withName){
+ var grad='linear-gradient(155deg,'+v.c[0]+','+v.c[1]+')';
  var badge=v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>';
- return '<div class="cover" style="background:'+grad+'">'+badge+'<div class="vinyl"></div></div>';
+ var nm=withName?'<div class="vname2">'+v.name+'</div>':'';
+ return '<div class="cover" style="background:'+grad+'">'+badge+'<div class="rec"><i class="spin"></i></div>'+nm+'</div>';
 }
-function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
+function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v,true)+'</div>'; }
 function shelf(title,arr,minN){ if(arr.length < (minN||3)) return ''; var tiles=arr.map(tileHTML).join(''); if(arr.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+title.replace(/'/g,"")+' — coming soon\')"><div class="cover seeallc">See All '+title+' ▸</div></div>'; } return '<h2>'+title+'</h2><div class="row">'+tiles+'</div>'; }
 
 /* ===== views: Play (home) · Explore · My Vaults ===== */
@@ -245,16 +257,4 @@ document.getElementById('ov').addEventListener('click',function(e){if(e.target.i
 (function(){
  var standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
  if(standalone) return;
- var deferred=null, btn=document.getElementById('installBtn');
- window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferred=e; btn.style.display='block'; });
- btn.addEventListener('click', function(){ if(!deferred) return; btn.style.display='none'; deferred.prompt(); deferred.userChoice.then(function(){ deferred=null; }); });
- window.addEventListener('appinstalled', function(){ btn.style.display='none'; toast('Installed! Launch it from your home screen.'); });
- var ua=navigator.userAgent||''; var isIOS=/iP(hone|ad|od)/.test(ua) && !window.MSStream;
- if(isIOS && !standalone){ var hint=document.getElementById('iosHint'); hint.style.display='block'; setTimeout(function(){hint.style.display='none';}, 9000); }
-})();
-function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
-document.addEventListener('click', function(){ goFullscreen(); }, {once:true});
-render();
-</script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
-</body></html>
+ var deferred=null, btn=document.getElementById
