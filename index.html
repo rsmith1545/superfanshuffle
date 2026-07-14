@@ -48,6 +48,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .cover{position:relative;width:116px;height:116px;border-radius:16px;background:linear-gradient(155deg,rgba(150,110,220,.22),rgba(85,55,150,.12));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.08);box-shadow:5px 8px 18px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06)}
 .cover .obj{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:9px;filter:drop-shadow(2px 4px 6px rgba(0,0,0,.42))}
 .cover .obj.cassette{transform:rotate(-15deg) scale(1.05)}
+.cover .obj.named{padding:4px}
 .badge{position:absolute;top:7px;left:7px;z-index:3;font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:3px 7px;border-radius:20px;text-transform:uppercase}
 .badge.free{background:var(--mag);color:#2a0020}.badge.prem{background:var(--prem);color:#3a2a00}
 .vname{margin-top:7px;font-family:var(--disp);font-size:16px;letter-spacing:.4px;line-height:.95;color:#f3eaff;text-align:center;text-transform:uppercase;padding:0 2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -232,9 +233,13 @@ var ERA={queen:'vinyl',ledzep:'vinyl',bowie:'vinyl',stones:'vinyl',thewho:'vinyl
  pearljam:'cd',foo:'cd',smashing:'cd',oasis:'cd',dmb:'cd',jackjohnson:'cd',
  taylor:'neon',gracie:'neon',chappell:'neon',sabrina:'neon',olivia:'neon',jcole:'neon',kendrick:'neon',doja:'neon',tyler:'neon',zach:'neon',wallen:'neon',combs:'neon',frank:'neon',menzingers:'neon'};
 function eraOf(v){ return ERA[v.id]||'neon'; }
+/* Per-vault tile art: the era object with the artist's name typeset ON it (marker on the
+   cassette tape, letterpress on the vinyl label, printed on the phone's glass). Falls back to
+   the shared era object for any vault whose tile hasn't been generated yet (CD era). */
 function coverHTML(v){
  var e=eraOf(v), badge=v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>';
- return '<div class="cover">'+badge+'<img class="obj'+(e==='cassette'?' cassette':'')+'" src="obj-'+e+'.png" alt="" draggable="false"></div>';
+ return '<div class="cover">'+badge+'<img class="obj named" src="tile-'+v.id+'.png" alt="" draggable="false"'
+  +' onerror="this.onerror=null;this.className=\'obj'+(e==='cassette'?' cassette':'')+'\';this.src=\'obj-'+e+'.png\';"></div>';
 }
 function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
 var TRENDING=['taylor','wallen','chappell','kendrick','zach','olivia','nirvana','queen','sabrina','combs'];
