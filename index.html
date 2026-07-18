@@ -291,7 +291,7 @@ function playHTML(){
  var freeV=vaults.filter(function(v){return v.badge==='free';});
  if(freeV.length){ h+='<h2>Free This Week <span class="pill">5-question taste</span></h2><div class="row">'+freeV.map(tileHTML).join('')+'</div>'; }
  if(ed==='music'){
-   var feat=byId('taylor');
+   var feat=byId('taylorswift');
    h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
      +'<div class="fmeta"><div class="k">'+feat.name+'</div><div class="s">How deep does your fandom go?</div><div class="go">Tap to open ▸</div></div></div>';
    h+=rankedShelf('Trending Now', TRENDING.map(byId));
@@ -343,7 +343,7 @@ function exSearch(){
  res.innerHTML='<h2>Results</h2><div class="row" style="flex-wrap:wrap">'+hits.map(tileHTML).join('')+'</div>';
 }
 /* owned vaults (payments not wired yet — seed one so the full owned round + report card is playable) */
-var OWNED=['taylor'];
+var OWNED=['taylorswift'];
 function playOwned(id){ var v=byId(id); if(v) location.href=launchURL(v)+'&mode=full'; }
 function ownedTile(v){ return '<div class="vault" onclick="playOwned(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
 function myVaultsHTML(){
