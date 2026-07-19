@@ -327,7 +327,8 @@ function byId(id){for(var i=0;i<VAULTS.length;i++)if(VAULTS[i].id===id)return VA
 /* curated shelves */
 var BEST_OF=["taylorswift", "eminem", "nirvana", "queen", "dmb", "morganwallen"];
 var RECENTLY_ADDED=["zachbryan", "morganwallen", "shaboozey", "laineywilson", "ellalangley"];
-var CAT_ORDER=['Best Of','Pop','Hip-Hop & R&B','Country','Alt & Grunge','Classic Rock','Singer-Songwriter · Jam · Indie'];
+var CAT_ORDER=['Pop','Country','Hip-Hop & R&B','Alt & Grunge','Classic Rock','Singer-Songwriter · Jam · Indie'];
+var CAT_LABEL={'Pop':'Pop','Country':'Country','Hip-Hop & R&B':'Hip-Hop','Alt & Grunge':'Alt & Hard Rock','Classic Rock':'Classic Rock','Singer-Songwriter · Jam · Indie':'Folk · Jam · Indie'};
 
 /* tile art — Option B: accent sleeve + record peeking right + badge; big Bebas name ON the sleeve.
    withName=true bakes the name onto the sleeve (grid tiles); featured/sheet pass false and show the name in text beside. */
@@ -336,15 +337,15 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
 /* Per-vault tile art: the era object with the artist's name typeset ON it (marker on the
    cassette tape, letterpress on the vinyl label, printed on the phone's glass). Falls back to
    the shared era object for any vault whose tile hasn't been generated yet (CD era). */
-function coverHTML(v){
+function coverHTML(v,label){
  var e=eraOf(v);
- if(e==='neon') return streamTileHTML(v);
+ if(e==='neon') return streamTileHTML(v,label);
  var badge=v.badge==='free'?'<div class="badge free">Free</div>':'';
  var fill=(e==='cd');
  return '<div class="cover'+(fill?' cdcover':'')+'">'+badge+'<img class="obj named'+(fill?' cdfill':'')+'" src="tile-'+v.id+'.png?v=5" alt="" draggable="false"'
   +' onerror="this.onerror=null;this.className=\'obj'+(e==='cassette'?' cassette':'')+'\';this.src=\'obj-'+e+'.png?v=5\';"></div>';
 }
-function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
+function tileHTML(v,label){ label=label||v.name; return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v,label)+'<div class="vname">'+label+'</div></div>'; }
 var TRENDING=["taylorswift", "arianagrande", "edsheeran", "eminem", "rihanna"];
 /* overall-Kworb rank -> tier color (palette cycles every 10). 1-3 podium, 4+ Superfan */
 var PAL10=[['#C99E4A','201,158,74'],['#C4C8CC','196,200,204'],['#A87042','168,112,66'],['#36B0AC','54,176,172'],['#C43E3E','196,62,62'],['#E07A5F','224,122,95'],['#5B8A5B','91,138,91'],['#7FB3D5','127,179,213'],['#F4F4F6','244,244,246'],['#D9A3B3','217,163,179']];
@@ -353,7 +354,10 @@ function rankOf(v){ var n=RANKN[v.id]||99, p=PAL10[(n-1)%10]; var lab=n===1?'GOL
 var SFSCTL='<svg viewBox="0 0 24 24" class="c"><path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M4 4l16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'+'<svg viewBox="0 0 24 24" class="c"><path d="M7 5v14M19 5L9 12l10 7V5z" fill="currentColor"/></svg>'+'<span class="scplay"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/><rect x="13.6" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/></svg></span>'+'<svg viewBox="0 0 24 24" class="c"><path d="M17 5v14M5 5l10 7L5 19V5z" fill="currentColor"/></svg>'+'<svg viewBox="0 0 24 24" class="c"><path d="M4 8a5 5 0 015-5h7l-2-2M20 16a5 5 0 01-5 5H8l2 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var PLAYSVG='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
 function sBadge(v){ return v.badge==='free'?'<div class="badge free">Free</div>':''; }
-function streamTileHTML(v){ var rk=rankOf(v); var n=RANKN[v.id]||99; var pill=n<=3?'<div class="scpill">'+rk.lab+'</div>':''; return '<div class="cover scard" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+pill+'<div class="scart"><div class="scghost">'+v.name.toUpperCase()+'</div></div>'+'<div class="scname">'+v.name+'</div><div class="scsong">Greatest Hits</div>'+'<div class="scbar"><span></span></div><div class="scctl">'+SFSCTL+'</div></div>'; }
+function hashStr(s){var x=5381;for(var i=0;i<s.length;i++)x=((x*33)^s.charCodeAt(i))>>>0;return x;}
+var FUN=[['#FF4FA3','255,79,163'],['#37E0FF','55,224,255'],['#9BE23B','155,226,59'],['#FF8A3D','255,138,61'],['#A56BFF','165,107,255'],['#2DD4BF','45,212,191'],['#FF5CF0','255,92,240'],['#FFC53D','255,197,61'],['#FF6B5E','255,107,94'],['#5AA9FF','90,169,255'],['#3DDB84','61,219,132'],['#C86BFF','200,107,255']];
+function colorOf(v){var p=FUN[hashStr(v.id)%FUN.length];return {acc:p[0],tint:p[1]};}
+function streamTileHTML(v,label){ var rk=colorOf(v); var nm=label||v.name; return '<div class="cover scard" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+'<div class="scart"><div class="scghost">'+v.name.toUpperCase()+'</div></div>'+'<div class="scname">'+nm+'</div><div class="scsong">Greatest Hits</div>'+'<div class="scbar"><span></span></div><div class="scctl">'+SFSCTL+'</div></div>'; }
 function streamMiniHTML(v){ var rk=rankOf(v); return '<div class="cover scover" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+'<div class="sghost">'+v.name.toUpperCase()+'</div><div class="spill">'+rk.lab+'</div><div class="splay">'+PLAYSVG+'</div></div>'; }
 function streamCardHTML(v){ var rk=rankOf(v);
  return '<div class="scard2" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'
@@ -381,6 +385,7 @@ function trendingShelf(){
 function rankTile(v,i){ return '<div class="rank"><span class="num">'+i+'</span><div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div></div>'; }
 function rankedShelf(title,arr){ arr=arr.filter(Boolean).slice(0,10); if(arr.length<3) return ''; var t=arr.map(function(v,ix){return rankTile(v,ix+1);}).join(''); return '<h2>'+title+'</h2><div class="row rrow">'+t+'</div>'; }
 function shelf(title,arr,minN){ if(arr.length < (minN||3)) return ''; var tiles=arr.map(tileHTML).join(''); if(arr.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+title.replace(/'/g,"")+' — coming soon\')"><div class="cover seeallc">See All '+title+' ▸</div></div>'; } return '<h2>'+title+'</h2><div class="row">'+tiles+'</div>'; }
+function numShelf(title,arr){ if(arr.length<1) return ''; var tiles=arr.map(function(v,i){return tileHTML(v,(i+1)+'. '+v.name);}).join(''); if(arr.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+title.replace(/'/g,"")+' — coming soon\')"><div class="cover seeallc">See All '+title+' ▸</div></div>'; } return '<h2>'+title+'</h2><div class="row">'+tiles+'</div>'; }
 
 /* ===== views: Play (home) · Explore · My Vaults ===== */
 var curEdition='music', curView='play';
@@ -396,15 +401,13 @@ function playHTML(){
  var ed=curEdition, h=tabsHTML();
  var vaults=VAULTS.filter(function(v){return v.edition===ed;});
  var freeV=vaults.filter(function(v){return v.badge==='free';});
- if(freeV.length){ h+='<h2>Free This Week <span class="pill">5-question taste</span></h2><div class="row">'+freeV.map(tileHTML).join('')+'</div>'; }
+ if(freeV.length){ h+='<h2>Try for Free <span class="pill">5-question taste</span></h2><div class="row">'+freeV.map(function(v){return tileHTML(v);}).join('')+'</div>'; }
  if(ed==='music'){
+   h+=shelf('Party Vaults', BEST_OF.map(byId), 1);
    var feat=byId('taylorswift');
    h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
      +'<div class="fmeta"><div class="k">'+feat.name+'</div><div class="s">How deep does your fandom go?</div><div class="go">Tap to open ▸</div></div></div>';
-   h+=trendingShelf();
-   h+=shelf('Recently Added', RECENTLY_ADDED.map(byId), 1);
-   h+=shelf('Best Of', BEST_OF.map(byId), 3);
-   CAT_ORDER.forEach(function(cat){ if(cat==='Best Of') return; h+=shelf(cat, vaults.filter(function(v){return v.cat===cat;}), 1); });
+   CAT_ORDER.forEach(function(cat){ h+=numShelf(CAT_LABEL[cat]||cat, vaults.filter(function(v){return v.cat===cat;})); });
  } else {
    var placeholders=vaults.filter(function(v){return v.badge!=='free';});
    if(freeV.length===0 && placeholders.length===0){ h+='<div class="note">Coming soon.</div>'; }
