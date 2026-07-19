@@ -53,6 +53,8 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .cover .obj{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:9px;filter:drop-shadow(2px 4px 6px rgba(0,0,0,.42))}
 .cover .obj.cassette{transform:rotate(-15deg) scale(1.05)}
 .cover .obj.named{padding:4px}
+.cover.cdcover{overflow:hidden}
+.cover .obj.cdfill{padding:0;object-fit:cover}
 .badge{position:absolute;top:7px;left:7px;z-index:3;font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:3px 7px;border-radius:20px;text-transform:uppercase}
 .badge.free{background:var(--mag);color:#2a0020}.badge.prem{background:var(--prem);color:#3a2a00}
 .vname{margin-top:7px;font-family:var(--disp);font-size:16px;letter-spacing:.4px;line-height:.95;color:#f3eaff;text-align:center;text-transform:uppercase;padding:0 2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -63,9 +65,9 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .rank .vault{position:relative;z-index:1}
 .seeallc{display:flex;align-items:center;justify-content:center;background:rgba(87,230,255,.06);border:2px dashed rgba(87,230,255,.45);border-radius:16px;font-family:var(--disp);font-size:18px;letter-spacing:1px;color:var(--cyan);text-shadow:0 0 8px rgba(87,230,255,.5);padding:0 12px;text-align:center}
 /* compact STREAM tile (approved vault-card look, tier-recolored) for the Most-Played carousel */
-.scover{position:relative;width:116px;height:116px;border-radius:16px;overflow:hidden;background:radial-gradient(120% 90% at 30% 12%,rgba(var(--tint),.5),rgba(var(--tint),.14) 55%,rgba(16,10,32,.72) 100%);box-shadow:5px 8px 18px rgba(0,0,0,.42),inset 0 0 0 1.5px rgba(var(--tint),.55)}
+.scover{position:relative;width:116px;height:116px;border-radius:16px;overflow:hidden;background:radial-gradient(135% 108% at 50% 0%,rgba(var(--tint),.66),rgba(var(--tint),.30) 60%,rgba(var(--tint),.16) 100%);box-shadow:5px 8px 18px rgba(0,0,0,.42),inset 0 0 0 1.5px rgba(var(--tint),.55)}
 .scover .sapp{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:7px;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.1)}
-.scover .sghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px 8px 0;font-family:var(--disp);font-size:24px;line-height:.86;letter-spacing:1px;color:rgba(255,255,255,.17)}
+.scover .sghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:2px 10px 18px;font-family:var(--disp);font-size:25px;line-height:.9;letter-spacing:1px;color:rgba(255,255,255,.34)}
 .scover .spill{position:absolute;bottom:7px;left:9px;font-family:var(--disp);letter-spacing:2px;font-size:9px;color:var(--acc);text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .scover .splay{position:absolute;bottom:6px;right:7px;width:23px;height:23px;border-radius:50%;background:rgba(251,246,234,.93);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1.5px rgba(var(--tint),.65)}
 .scover .splay svg{width:11px;height:11px;color:#1a1206}
@@ -297,7 +299,8 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    the shared era object for any vault whose tile hasn't been generated yet (CD era). */
 function coverHTML(v){
  var e=eraOf(v), badge=v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>';
- return '<div class="cover">'+badge+'<img class="obj named" src="tile-'+v.id+'.png" alt="" draggable="false"'
+ var fill=(e==='cd');
+ return '<div class="cover'+(fill?' cdcover':'')+'">'+badge+'<img class="obj named'+(fill?' cdfill':'')+'" src="tile-'+v.id+'.png" alt="" draggable="false"'
   +' onerror="this.onerror=null;this.className=\'obj'+(e==='cassette'?' cassette':'')+'\';this.src=\'obj-'+e+'.png\';"></div>';
 }
 function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
@@ -306,7 +309,6 @@ var TRENDING=["taylorswift", "arianagrande", "edsheeran", "eminem", "rihanna"];
 var RANKS=[{acc:'#C99E4A',tint:'201,158,74',lab:'GOLD VAULT'},{acc:'#C4C8CC',tint:'196,200,204',lab:'SILVER VAULT'},{acc:'#A87042',tint:'168,112,66',lab:'BRONZE VAULT'},{acc:'#36B0AC',tint:'54,176,172',lab:'SUPERFAN VAULT'},{acc:'#C43E3E',tint:'196,62,62',lab:'SUPERFAN VAULT'}];
 function streamCoverHTML(v,rk){
  return '<div class="scover" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'
-  +'<img class="sapp" src="/apple-touch-icon-v2.png" alt="">'
   +'<div class="sghost">'+v.name.toUpperCase()+'</div>'
   +'<div class="spill">'+rk.lab+'</div>'
   +'<div class="splay"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/><rect x="13.6" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/></svg></div>'
