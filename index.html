@@ -101,16 +101,16 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .scover2 .sstrip .spx{width:15px;height:15px;opacity:1}
 .brow .scover2 .sghost,.brow .scover2 .spill2,.brow .scover2 .sstrip{display:none}
 .cover.scard{overflow:hidden;background:radial-gradient(120% 75% at 50% -8%,rgba(var(--tint),.5),rgba(var(--tint),0) 62%),linear-gradient(180deg,rgba(var(--tint),.16) 0%,#160f0a 52%,#0c0906 100%);box-shadow:5px 8px 18px rgba(0,0,0,.5)}
-.scard .scart{position:relative;height:64px;margin:5px 5px 0;border-radius:9px;overflow:hidden;background:radial-gradient(120% 95% at 30% 12%,rgba(var(--tint),.42),rgba(var(--tint),.12) 55%,rgba(20,15,6,.5) 100%)}
-.scard .scghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px 6px 0;font-family:var(--disp);font-size:15px;line-height:.85;letter-spacing:.5px;color:rgba(255,255,255,.3)}
-.scard .scpill{position:absolute;bottom:4px;left:7px;font-family:var(--disp);letter-spacing:1.5px;font-size:7px;color:var(--acc)}
-.scard .scname{font-family:var(--body);font-weight:800;font-size:12px;line-height:1.02;color:#fdf9f0;margin:5px 8px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.scard .scsong{font-size:8.5px;font-weight:600;color:rgba(240,235,225,.6);margin:1px 8px 0}
-.scard .scbar{position:relative;height:3px;border-radius:3px;background:rgba(255,255,255,.16);margin:6px 8px 0}
+.scard .scart{position:relative;height:70px;margin:0;overflow:hidden;background:radial-gradient(120% 110% at 30% 10%,rgba(var(--tint),.44),rgba(var(--tint),.13) 55%,rgba(20,15,6,.5) 100%)}
+.scard .scghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 8px 0;font-family:var(--disp);font-size:16px;line-height:.85;letter-spacing:.5px;color:rgba(255,255,255,.3)}
+.scard .scpill{position:absolute;top:7px;left:7px;z-index:3;font-family:var(--disp);letter-spacing:1.5px;font-size:8px;color:var(--acc);background:rgba(8,4,16,.55);padding:2px 7px;border-radius:10px}
+.scard .scname{font-family:var(--body);font-weight:800;font-size:12.5px;line-height:1.02;color:#fdf9f0;margin:4px 9px 0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scard .scsong{font-size:8.5px;font-weight:600;color:rgba(240,235,225,.6);margin:1px 9px 0;text-align:left}
+.scard .scbar{position:relative;height:3px;border-radius:3px;background:rgba(255,255,255,.16);margin:5px 9px 0}
 .scard .scbar span{position:absolute;left:0;top:0;bottom:0;width:42%;border-radius:3px;background:linear-gradient(90deg,var(--acc),#ff3fb4)}
-.scard .scctl{display:flex;align-items:center;justify-content:space-between;margin:6px 9px 6px}
+.scard .scctl{display:flex;align-items:center;justify-content:space-between;margin:5px 10px 10px}
 .scard .scctl .c{width:12px;height:12px;color:#f2ecdf;opacity:.9;flex:0 0 auto}
-.scard .scplay{width:26px;height:26px;border-radius:50%;background:#fbf6ea;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.scard .scplay{width:24px;height:24px;border-radius:50%;background:#fbf6ea;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .scard .scplay svg{width:12px;height:12px;color:#1a1206}
 .brow .scard .scname,.brow .scard .scsong,.brow .scard .scbar,.brow .scard .scctl,.brow .scard .scghost,.brow .scard .scpill{display:none}
 .brow .scard .scart{height:100%;margin:0;border-radius:10px}
@@ -353,7 +353,7 @@ function rankOf(v){ var n=RANKN[v.id]||99, p=PAL10[(n-1)%10]; var lab=n===1?'GOL
 var SFSCTL='<svg viewBox="0 0 24 24" class="c"><path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M4 4l16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'+'<svg viewBox="0 0 24 24" class="c"><path d="M7 5v14M19 5L9 12l10 7V5z" fill="currentColor"/></svg>'+'<span class="scplay"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/><rect x="13.6" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/></svg></span>'+'<svg viewBox="0 0 24 24" class="c"><path d="M17 5v14M5 5l10 7L5 19V5z" fill="currentColor"/></svg>'+'<svg viewBox="0 0 24 24" class="c"><path d="M4 8a5 5 0 015-5h7l-2-2M20 16a5 5 0 01-5 5H8l2 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var PLAYSVG='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
 function sBadge(v){ return v.badge==='free'?'<div class="badge free">Free</div>':''; }
-function streamTileHTML(v){ var rk=rankOf(v); return '<div class="cover scard" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+'<div class="scart"><div class="scghost">'+v.name.toUpperCase()+'</div><div class="scpill">'+rk.lab+'</div></div>'+'<div class="scname">'+v.name+'</div><div class="scsong">Greatest Hits</div>'+'<div class="scbar"><span></span></div><div class="scctl">'+SFSCTL+'</div></div>'; }
+function streamTileHTML(v){ var rk=rankOf(v); var n=RANKN[v.id]||99; var pill=n<=3?'<div class="scpill">'+rk.lab+'</div>':''; return '<div class="cover scard" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+pill+'<div class="scart"><div class="scghost">'+v.name.toUpperCase()+'</div></div>'+'<div class="scname">'+v.name+'</div><div class="scsong">Greatest Hits</div>'+'<div class="scbar"><span></span></div><div class="scctl">'+SFSCTL+'</div></div>'; }
 function streamMiniHTML(v){ var rk=rankOf(v); return '<div class="cover scover" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+'<div class="sghost">'+v.name.toUpperCase()+'</div><div class="spill">'+rk.lab+'</div><div class="splay">'+PLAYSVG+'</div></div>'; }
 function streamCardHTML(v){ var rk=rankOf(v);
  return '<div class="scard2" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'
