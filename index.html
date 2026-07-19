@@ -65,7 +65,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .rank .vault{position:relative;z-index:1}
 .seeallc{display:flex;align-items:center;justify-content:center;background:rgba(87,230,255,.06);border:2px dashed rgba(87,230,255,.45);border-radius:16px;font-family:var(--disp);font-size:18px;letter-spacing:1px;color:var(--cyan);text-shadow:0 0 8px rgba(87,230,255,.5);padding:0 12px;text-align:center}
 /* compact STREAM tile (approved vault-card look, tier-recolored) for the Most-Played carousel */
-.scover{position:relative;width:116px;height:116px;border-radius:16px;overflow:hidden;background:radial-gradient(135% 108% at 50% 0%,rgba(var(--tint),.66),rgba(var(--tint),.30) 60%,rgba(var(--tint),.16) 100%);box-shadow:5px 8px 18px rgba(0,0,0,.42),inset 0 0 0 1.5px rgba(var(--tint),.55)}
+.cover.scover{overflow:hidden;background:radial-gradient(135% 108% at 50% 0%,rgba(var(--tint),.66),rgba(var(--tint),.30) 60%,rgba(var(--tint),.16) 100%);box-shadow:5px 8px 18px rgba(0,0,0,.42),inset 0 0 0 1.5px rgba(var(--tint),.55)}
 .scover .sapp{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:7px;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.1)}
 .scover .sghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:2px 10px 18px;font-family:var(--disp);font-size:25px;line-height:.9;letter-spacing:1px;color:rgba(255,255,255,.34)}
 .scover .spill{position:absolute;bottom:7px;left:9px;font-family:var(--disp);letter-spacing:2px;font-size:9px;color:var(--acc);text-shadow:0 1px 3px rgba(0,0,0,.6)}
@@ -75,6 +75,24 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .brtile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(87,230,255,.06);border:2px dashed rgba(87,230,255,.45);border-radius:16px;color:var(--cyan);text-shadow:0 0 8px rgba(87,230,255,.5)}
 .brtile svg{width:30px;height:30px}
 .brtile span{font-family:var(--disp);font-size:16px;letter-spacing:1px;line-height:.9;text-align:center}
+/* full STREAM vault card (approved mockup, tile-sized, tier-recolored) */
+.vault.vstream{width:150px}
+.scard2{width:150px;border-radius:16px;padding:0 0 8px;overflow:hidden;background:radial-gradient(120% 80% at 50% -6%,rgba(var(--tint),.5),rgba(var(--tint),0) 60%),linear-gradient(180deg,rgba(var(--tint),.14) 0%,#140e08 55%,#0b0803 100%);box-shadow:5px 8px 18px rgba(0,0,0,.45),inset 0 0 0 1px rgba(var(--tint),.28)}
+.s2art{position:relative;height:96px;margin:6px 6px 0;border-radius:11px;overflow:hidden;background:radial-gradient(120% 90% at 30% 15%,rgba(var(--tint),.42),rgba(var(--tint),.12) 55%,rgba(20,15,6,.5) 100%);box-shadow:inset 0 0 0 1px rgba(var(--tint),.24)}
+.s2art .badge{top:6px;left:6px}
+.s2ghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 6px 0;font-family:var(--disp);font-size:19px;line-height:.85;letter-spacing:1px;color:rgba(255,255,255,.34)}
+.s2pill{position:absolute;bottom:6px;left:8px;font-family:var(--disp);letter-spacing:2px;font-size:8px;color:var(--acc);text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.s2artist{font-family:var(--body);font-weight:800;font-size:13.5px;line-height:1.05;color:#fdf9f0;margin:7px 9px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s2song{font-size:10px;font-weight:600;color:rgba(240,235,225,.6);margin:1px 9px 0}
+.s2bar{position:relative;height:3px;border-radius:3px;background:rgba(255,255,255,.16);margin:9px 9px 0}
+.s2fill{position:absolute;left:0;top:0;bottom:0;width:42%;border-radius:3px;background:linear-gradient(90deg,var(--acc),#ff3fb4)}
+.s2knob{position:absolute;left:42%;top:50%;width:7px;height:7px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);box-shadow:0 0 5px rgba(255,255,255,.8)}
+.s2ctl{display:flex;align-items:center;justify-content:space-between;margin:9px 11px 2px}
+.s2ctl .c{width:14px;height:14px;color:#f2ecdf;opacity:.9}
+.s2play{width:32px;height:32px;border-radius:50%;background:#fbf6ea;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 0 0 1.5px rgba(var(--tint),.55)}
+.s2play svg{width:15px;height:15px;color:#1a1206;margin-left:1px}
+/* browse rows: mini stream swatch shows just the tinted chip */
+.brow .scover .sghost,.brow .scover .spill,.brow .scover .splay{display:none}
 /* featured — whole card is the tap target, no button */
 .feat{display:flex;gap:14px;background:linear-gradient(120deg,rgba(176,106,255,.16),rgba(255,92,240,.10));border:1.5px solid var(--accent);border-radius:18px;padding:14px;cursor:pointer;box-shadow:0 0 26px -8px var(--accent);transition:transform .12s}
 .feat:active{transform:scale(.985)}
@@ -298,27 +316,36 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    cassette tape, letterpress on the vinyl label, printed on the phone's glass). Falls back to
    the shared era object for any vault whose tile hasn't been generated yet (CD era). */
 function coverHTML(v){
- var e=eraOf(v), badge=v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>';
- var fill=(e==='cd');
+ var e=eraOf(v);
+ if(e==='neon') return streamMiniHTML(v);
+ var badge=v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>';
+ var fill=(e==='cd'||e==='cassette');
  return '<div class="cover'+(fill?' cdcover':'')+'">'+badge+'<img class="obj named'+(fill?' cdfill':'')+'" src="tile-'+v.id+'.png" alt="" draggable="false"'
   +' onerror="this.onerror=null;this.className=\'obj'+(e==='cassette'?' cassette':'')+'\';this.src=\'obj-'+e+'.png\';"></div>';
 }
-function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
+function tileHTML(v){ var inner=(eraOf(v)==='neon')?streamCardHTML(v):(coverHTML(v)+'<div class="vname">'+v.name+'</div>'); return '<div class="vault'+(eraOf(v)==='neon'?' vstream':'')+'" onclick="pickVault(\''+v.id+'\')">'+inner+'</div>'; }
 var TRENDING=["taylorswift", "arianagrande", "edsheeran", "eminem", "rihanna"];
-/* rank tier palette (locked): 1 Gold 2 Silver 3 Bronze 4 Teal 5 Crimson. acc=glow, tint=rgb */
-var RANKS=[{acc:'#C99E4A',tint:'201,158,74',lab:'GOLD VAULT'},{acc:'#C4C8CC',tint:'196,200,204',lab:'SILVER VAULT'},{acc:'#A87042',tint:'168,112,66',lab:'BRONZE VAULT'},{acc:'#36B0AC',tint:'54,176,172',lab:'SUPERFAN VAULT'},{acc:'#C43E3E',tint:'196,62,62',lab:'SUPERFAN VAULT'}];
-function streamCoverHTML(v,rk){
- return '<div class="scover" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'
-  +'<div class="sghost">'+v.name.toUpperCase()+'</div>'
-  +'<div class="spill">'+rk.lab+'</div>'
-  +'<div class="splay"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/><rect x="13.6" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/></svg></div>'
-  +'</div>';
+/* overall-Kworb rank -> tier color (palette cycles every 10). 1-3 podium, 4+ Superfan */
+var PAL10=[['#C99E4A','201,158,74'],['#C4C8CC','196,200,204'],['#A87042','168,112,66'],['#36B0AC','54,176,172'],['#C43E3E','196,62,62'],['#E07A5F','224,122,95'],['#5B8A5B','91,138,91'],['#7FB3D5','127,179,213'],['#F4F4F6','244,244,246'],['#D9A3B3','217,163,179']];
+var RANKN={"taylorswift": 1, "arianagrande": 2, "edsheeran": 3, "eminem": 4, "rihanna": 5, "billieeilish": 6, "brunomars": 7, "postmalone": 8, "coldplay": 9, "dualipa": 10, "ladygaga": 11, "maroon5": 12, "beyonce": 13, "morganwallen": 14, "harrystyles": 15, "queen": 16, "onedirection": 17, "adele": 18, "katyperry": 19, "selenagomez": 20, "beatles": 21, "rhcp": 22, "zachbryan": 23, "lukecombs": 24, "metallica": 25, "justintimberlake": 26, "fleetwoodmac": 27, "nirvana": 28, "greenday": 29, "stones": 30, "chrisstapleton": 31, "ccr": 32, "oasis": 33, "biggie": 34, "bonjovi": 35, "bowie": 36, "u2": 37, "foo": 38, "ledzeppelin": 39, "billyjoel": 40, "lukebryan": 41, "springsteen": 42, "eagles": 43, "pearljam": 44, "jasonaldean": 45, "jellyroll": 46, "timmcgraw": 47, "kennychesney": 48, "codyjohnson": 49, "smashingpumpkins": 50, "carrieunderwood": 51, "hendrix": 52, "ellalangley": 53, "shaboozey": 54, "tompetty": 55, "thewho": 56, "laineywilson": 57, "stp": 58, "gratefuldead": 59, "dmb": 60, "faithhill": 61, "ate": 62, "fthc": 63, "newpopqueens": 64};
+function rankOf(v){ var n=RANKN[v.id]||99, p=PAL10[(n-1)%10]; var lab=n===1?'GOLD VAULT':n===2?'SILVER VAULT':n===3?'BRONZE VAULT':'SUPERFAN VAULT'; return {acc:p[0],tint:p[1],lab:lab}; }
+var PLAYSVG='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+function sBadge(v){ return v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>'; }
+function streamMiniHTML(v){ var rk=rankOf(v); return '<div class="cover scover" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+'<div class="sghost">'+v.name.toUpperCase()+'</div><div class="spill">'+rk.lab+'</div><div class="splay">'+PLAYSVG+'</div></div>'; }
+function streamCardHTML(v){ var rk=rankOf(v);
+ return '<div class="scard2" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'
+  +'<div class="s2art">'+sBadge(v)+'<div class="s2ghost">'+v.name.toUpperCase()+'</div><div class="s2pill">'+rk.lab+'</div></div>'
+  +'<div class="s2artist">'+v.name+'</div><div class="s2song">Greatest Hits</div>'
+  +'<div class="s2bar"><div class="s2fill"></div><div class="s2knob"></div></div>'
+  +'<div class="s2ctl">'
+    +'<svg viewBox="0 0 24 24" class="c"><path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M4 4l16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    +'<svg viewBox="0 0 24 24" class="c"><path d="M7 5v14M19 5L9 12l10 7V5z" fill="currentColor"/></svg>'
+    +'<span class="s2play">'+PLAYSVG+'</span>'
+    +'<svg viewBox="0 0 24 24" class="c"><path d="M17 5v14M5 5l10 7L5 19V5z" fill="currentColor"/></svg>'
+    +'<svg viewBox="0 0 24 24" class="c"><path d="M4 8a5 5 0 015-5h7l-2-2M20 16a5 5 0 01-5 5H8l2 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  +'</div></div>';
 }
-function trendingTile(v,i){
- var rk=RANKS[i-1]||RANKS[4];
- var cover=(eraOf(v)==='neon')?streamCoverHTML(v,rk):coverHTML(v);
- return '<div class="rank"><span class="num">'+i+'</span><div class="vault" onclick="pickVault(\''+v.id+'\')">'+cover+'<div class="vname">'+v.name+'</div></div></div>';
-}
+function trendingTile(v,i){ var inner=(eraOf(v)==='neon')?streamCardHTML(v):(coverHTML(v)+'<div class="vname">'+v.name+'</div>'); return '<div class="rank"><span class="num">'+i+'</span><div class="vault'+(eraOf(v)==='neon'?' vstream':'')+'" onclick="pickVault(\''+v.id+'\')">'+inner+'</div></div>'; }
 function browseRankTile(){
  return '<div class="rank"><div class="vault" onclick="setView(\'browse\')"><div class="cover brtile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span>Browse<br>all</span></div><div class="vname">All Vaults</div></div></div>';
 }
