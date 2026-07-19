@@ -49,12 +49,12 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 /* vault tile — photoreal era-object on a translucent purple frosted container; artist name rendered below. */
 .vault{flex:0 0 auto;width:150px;scroll-snap-align:start;cursor:pointer;transition:transform .12s}
 .vault:active{transform:scale(.95)}
-.cover{position:relative;width:150px;height:150px;border-radius:16px;background:linear-gradient(155deg,rgba(150,110,220,.22),rgba(85,55,150,.12));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.08);box-shadow:5px 8px 18px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06)}
+.cover{position:relative;width:150px;height:150px;border-radius:16px;background:transparent}
 .cover .obj{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:9px;filter:drop-shadow(2px 4px 6px rgba(0,0,0,.42))}
 .cover .obj.cassette{transform:rotate(-15deg) scale(1.05)}
 .cover .obj.named{padding:4px}
 .cover.cdcover{overflow:hidden}
-.cover .obj.cdfill{padding:0;object-fit:cover}
+.cover .obj.cdfill{padding:0;object-fit:cover;object-position:left center}
 .badge{position:absolute;top:7px;left:7px;z-index:3;font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:3px 7px;border-radius:20px;text-transform:uppercase}
 .badge.free{background:var(--mag);color:#2a0020}.badge.prem{background:var(--prem);color:#3a2a00}
 .vname{margin-top:7px;font-family:var(--disp);font-size:16px;letter-spacing:.4px;line-height:.95;color:#f3eaff;text-align:center;text-transform:uppercase;padding:0 2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -100,10 +100,24 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .scover2 .sstrip svg{width:13px;height:13px;color:#f2ecdf;opacity:.88;flex:0 0 auto}
 .scover2 .sstrip .spx{width:15px;height:15px;opacity:1}
 .brow .scover2 .sghost,.brow .scover2 .spill2,.brow .scover2 .sstrip{display:none}
+.cover.scard{overflow:hidden;background:radial-gradient(120% 75% at 50% -8%,rgba(var(--tint),.5),rgba(var(--tint),0) 62%),linear-gradient(180deg,rgba(var(--tint),.16) 0%,#160f0a 52%,#0c0906 100%);box-shadow:5px 8px 18px rgba(0,0,0,.5)}
+.scard .scart{position:relative;height:64px;margin:5px 5px 0;border-radius:9px;overflow:hidden;background:radial-gradient(120% 95% at 30% 12%,rgba(var(--tint),.42),rgba(var(--tint),.12) 55%,rgba(20,15,6,.5) 100%)}
+.scard .scghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px 6px 0;font-family:var(--disp);font-size:15px;line-height:.85;letter-spacing:.5px;color:rgba(255,255,255,.3)}
+.scard .scpill{position:absolute;bottom:4px;left:7px;font-family:var(--disp);letter-spacing:1.5px;font-size:7px;color:var(--acc)}
+.scard .scname{font-family:var(--body);font-weight:800;font-size:12px;line-height:1.02;color:#fdf9f0;margin:5px 8px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scard .scsong{font-size:8.5px;font-weight:600;color:rgba(240,235,225,.6);margin:1px 8px 0}
+.scard .scbar{position:relative;height:3px;border-radius:3px;background:rgba(255,255,255,.16);margin:6px 8px 0}
+.scard .scbar span{position:absolute;left:0;top:0;bottom:0;width:42%;border-radius:3px;background:linear-gradient(90deg,var(--acc),#ff3fb4)}
+.scard .scctl{display:flex;align-items:center;justify-content:space-between;margin:6px 9px 6px}
+.scard .scctl .c{width:12px;height:12px;color:#f2ecdf;opacity:.9;flex:0 0 auto}
+.scard .scplay{width:26px;height:26px;border-radius:50%;background:#fbf6ea;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.scard .scplay svg{width:12px;height:12px;color:#1a1206}
+.brow .scard .scname,.brow .scard .scsong,.brow .scard .scbar,.brow .scard .scctl,.brow .scard .scghost,.brow .scard .scpill{display:none}
+.brow .scard .scart{height:100%;margin:0;border-radius:10px}
 /* featured — whole card is the tap target, no button */
 .feat{display:flex;gap:14px;background:linear-gradient(120deg,rgba(176,106,255,.16),rgba(255,92,240,.10));border:1.5px solid var(--accent);border-radius:18px;padding:14px;cursor:pointer;box-shadow:0 0 26px -8px var(--accent);transition:transform .12s}
 .feat:active{transform:scale(.985)}
-.feat .cover{height:120px;width:120px;flex:0 0 auto}
+.feat .cover{height:150px;width:150px;flex:0 0 auto}
 .feat .fmeta{display:flex;flex-direction:column;justify-content:center;gap:5px}
 .feat .fmeta .k{font-family:var(--disp);font-size:30px;letter-spacing:.5px;line-height:1;color:#fff}
 .feat .fmeta .s{color:var(--dim);font-size:12.5px;font-weight:600}
@@ -325,10 +339,10 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
 function coverHTML(v){
  var e=eraOf(v);
  if(e==='neon') return streamTileHTML(v);
- var badge=v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>';
+ var badge=v.badge==='free'?'<div class="badge free">Free</div>':'';
  var fill=(e==='cd');
- return '<div class="cover'+(fill?' cdcover':'')+'">'+badge+'<img class="obj named'+(fill?' cdfill':'')+'" src="tile-'+v.id+'.png" alt="" draggable="false"'
-  +' onerror="this.onerror=null;this.className=\'obj'+(e==='cassette'?' cassette':'')+'\';this.src=\'obj-'+e+'.png\';"></div>';
+ return '<div class="cover'+(fill?' cdcover':'')+'">'+badge+'<img class="obj named'+(fill?' cdfill':'')+'" src="tile-'+v.id+'.png?v=5" alt="" draggable="false"'
+  +' onerror="this.onerror=null;this.className=\'obj'+(e==='cassette'?' cassette':'')+'\';this.src=\'obj-'+e+'.png?v=5\';"></div>';
 }
 function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
 var TRENDING=["taylorswift", "arianagrande", "edsheeran", "eminem", "rihanna"];
@@ -336,18 +350,10 @@ var TRENDING=["taylorswift", "arianagrande", "edsheeran", "eminem", "rihanna"];
 var PAL10=[['#C99E4A','201,158,74'],['#C4C8CC','196,200,204'],['#A87042','168,112,66'],['#36B0AC','54,176,172'],['#C43E3E','196,62,62'],['#E07A5F','224,122,95'],['#5B8A5B','91,138,91'],['#7FB3D5','127,179,213'],['#F4F4F6','244,244,246'],['#D9A3B3','217,163,179']];
 var RANKN={"taylorswift": 1, "arianagrande": 2, "edsheeran": 3, "eminem": 4, "rihanna": 5, "billieeilish": 6, "brunomars": 7, "postmalone": 8, "coldplay": 9, "dualipa": 10, "ladygaga": 11, "maroon5": 12, "beyonce": 13, "morganwallen": 14, "harrystyles": 15, "queen": 16, "onedirection": 17, "adele": 18, "katyperry": 19, "selenagomez": 20, "beatles": 21, "rhcp": 22, "zachbryan": 23, "lukecombs": 24, "metallica": 25, "justintimberlake": 26, "fleetwoodmac": 27, "nirvana": 28, "greenday": 29, "stones": 30, "chrisstapleton": 31, "ccr": 32, "oasis": 33, "biggie": 34, "bonjovi": 35, "bowie": 36, "u2": 37, "foo": 38, "ledzeppelin": 39, "billyjoel": 40, "lukebryan": 41, "springsteen": 42, "eagles": 43, "pearljam": 44, "jasonaldean": 45, "jellyroll": 46, "timmcgraw": 47, "kennychesney": 48, "codyjohnson": 49, "smashingpumpkins": 50, "carrieunderwood": 51, "hendrix": 52, "ellalangley": 53, "shaboozey": 54, "tompetty": 55, "thewho": 56, "laineywilson": 57, "stp": 58, "gratefuldead": 59, "dmb": 60, "faithhill": 61, "ate": 62, "fthc": 63, "newpopqueens": 64};
 function rankOf(v){ var n=RANKN[v.id]||99, p=PAL10[(n-1)%10]; var lab=n===1?'GOLD VAULT':n===2?'SILVER VAULT':n===3?'BRONZE VAULT':'SUPERFAN VAULT'; return {acc:p[0],tint:p[1],lab:lab}; }
+var SFSCTL='<svg viewBox="0 0 24 24" class="c"><path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M4 4l16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'+'<svg viewBox="0 0 24 24" class="c"><path d="M7 5v14M19 5L9 12l10 7V5z" fill="currentColor"/></svg>'+'<span class="scplay"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/><rect x="13.6" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/></svg></span>'+'<svg viewBox="0 0 24 24" class="c"><path d="M17 5v14M5 5l10 7L5 19V5z" fill="currentColor"/></svg>'+'<svg viewBox="0 0 24 24" class="c"><path d="M4 8a5 5 0 015-5h7l-2-2M20 16a5 5 0 01-5 5H8l2 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var PLAYSVG='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
-function sBadge(v){ return v.badge==='free'?'<div class="badge free">Free</div>':'<div class="badge prem">Premium</div>'; }
-function streamTileHTML(v){ var rk=rankOf(v);
- return '<div class="cover scover2" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)
-  +'<div class="sghost">'+v.name.toUpperCase()+'</div><div class="spill2">'+rk.lab+'</div>'
-  +'<div class="sstrip">'
-   +'<svg viewBox="0 0 24 24"><path d="M16 4h4v4M20 4l-6 6M4 20l6-6M16 20h4v-4M4 4l16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-   +'<svg viewBox="0 0 24 24"><path d="M7 5v14M19 5L9 12l10 7V5z" fill="currentColor"/></svg>'
-   +'<svg viewBox="0 0 24 24" class="spx"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>'
-   +'<svg viewBox="0 0 24 24"><path d="M17 5v14M5 5l10 7L5 19V5z" fill="currentColor"/></svg>'
-   +'<svg viewBox="0 0 24 24"><path d="M4 8a5 5 0 015-5h7l-2-2M20 16a5 5 0 01-5 5H8l2 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-  +'</div></div>'; }
+function sBadge(v){ return v.badge==='free'?'<div class="badge free">Free</div>':''; }
+function streamTileHTML(v){ var rk=rankOf(v); return '<div class="cover scard" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+'<div class="scart"><div class="scghost">'+v.name.toUpperCase()+'</div><div class="scpill">'+rk.lab+'</div></div>'+'<div class="scname">'+v.name+'</div><div class="scsong">Greatest Hits</div>'+'<div class="scbar"><span></span></div><div class="scctl">'+SFSCTL+'</div></div>'; }
 function streamMiniHTML(v){ var rk=rankOf(v); return '<div class="cover scover" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+'<div class="sghost">'+v.name.toUpperCase()+'</div><div class="spill">'+rk.lab+'</div><div class="splay">'+PLAYSVG+'</div></div>'; }
 function streamCardHTML(v){ var rk=rankOf(v);
  return '<div class="scard2" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'
