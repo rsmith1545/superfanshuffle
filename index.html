@@ -62,6 +62,17 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .rank .num{position:absolute;left:-30px;bottom:-4px;z-index:0;font-family:var(--disp);font-size:92px;line-height:.8;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.5);text-shadow:0 2px 10px rgba(0,0,0,.55);pointer-events:none}
 .rank .vault{position:relative;z-index:1}
 .seeallc{display:flex;align-items:center;justify-content:center;background:rgba(87,230,255,.06);border:2px dashed rgba(87,230,255,.45);border-radius:16px;font-family:var(--disp);font-size:18px;letter-spacing:1px;color:var(--cyan);text-shadow:0 0 8px rgba(87,230,255,.5);padding:0 12px;text-align:center}
+/* compact STREAM tile (approved vault-card look, tier-recolored) for the Most-Played carousel */
+.scover{position:relative;width:116px;height:116px;border-radius:16px;overflow:hidden;background:radial-gradient(120% 90% at 30% 12%,rgba(var(--tint),.5),rgba(var(--tint),.14) 55%,rgba(16,10,32,.72) 100%);box-shadow:5px 8px 18px rgba(0,0,0,.42),inset 0 0 0 1.5px rgba(var(--tint),.55)}
+.scover .sapp{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:7px;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.1)}
+.scover .sghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px 8px 0;font-family:var(--disp);font-size:24px;line-height:.86;letter-spacing:1px;color:rgba(255,255,255,.17)}
+.scover .spill{position:absolute;bottom:7px;left:9px;font-family:var(--disp);letter-spacing:2px;font-size:9px;color:var(--acc);text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.scover .splay{position:absolute;bottom:6px;right:7px;width:23px;height:23px;border-radius:50%;background:rgba(251,246,234,.93);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1.5px rgba(var(--tint),.65)}
+.scover .splay svg{width:11px;height:11px;color:#1a1206}
+/* Browse tile at the end of the carousel */
+.brtile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(87,230,255,.06);border:2px dashed rgba(87,230,255,.45);border-radius:16px;color:var(--cyan);text-shadow:0 0 8px rgba(87,230,255,.5)}
+.brtile svg{width:30px;height:30px}
+.brtile span{font-family:var(--disp);font-size:16px;letter-spacing:1px;line-height:.9;text-align:center}
 /* featured — whole card is the tap target, no button */
 .feat{display:flex;gap:14px;background:linear-gradient(120deg,rgba(176,106,255,.16),rgba(255,92,240,.10));border:1.5px solid var(--accent);border-radius:18px;padding:14px;cursor:pointer;box-shadow:0 0 26px -8px var(--accent);transition:transform .12s}
 .feat:active{transform:scale(.985)}
@@ -291,6 +302,30 @@ function coverHTML(v){
 }
 function tileHTML(v){ return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
 var TRENDING=["taylorswift", "arianagrande", "edsheeran", "eminem", "rihanna"];
+/* rank tier palette (locked): 1 Gold 2 Silver 3 Bronze 4 Teal 5 Crimson. acc=glow, tint=rgb */
+var RANKS=[{acc:'#C99E4A',tint:'201,158,74',lab:'GOLD VAULT'},{acc:'#C4C8CC',tint:'196,200,204',lab:'SILVER VAULT'},{acc:'#A87042',tint:'168,112,66',lab:'BRONZE VAULT'},{acc:'#36B0AC',tint:'54,176,172',lab:'SUPERFAN VAULT'},{acc:'#C43E3E',tint:'196,62,62',lab:'SUPERFAN VAULT'}];
+function streamCoverHTML(v,rk){
+ return '<div class="scover" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'
+  +'<img class="sapp" src="/apple-touch-icon-v2.png" alt="">'
+  +'<div class="sghost">'+v.name.toUpperCase()+'</div>'
+  +'<div class="spill">'+rk.lab+'</div>'
+  +'<div class="splay"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/><rect x="13.6" y="5" width="3.4" height="14" rx="1.2" fill="currentColor"/></svg></div>'
+  +'</div>';
+}
+function trendingTile(v,i){
+ var rk=RANKS[i-1]||RANKS[4];
+ var cover=(eraOf(v)==='neon')?streamCoverHTML(v,rk):coverHTML(v);
+ return '<div class="rank"><span class="num">'+i+'</span><div class="vault" onclick="pickVault(\''+v.id+'\')">'+cover+'<div class="vname">'+v.name+'</div></div></div>';
+}
+function browseRankTile(){
+ return '<div class="rank"><div class="vault" onclick="setView(\'browse\')"><div class="cover brtile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span>Browse<br>all</span></div><div class="vname">All Vaults</div></div></div>';
+}
+function trendingShelf(){
+ var arr=TRENDING.map(byId).filter(Boolean).slice(0,5);
+ if(arr.length<3) return '';
+ var t=arr.map(function(v,ix){return trendingTile(v,ix+1);}).join('')+browseRankTile();
+ return '<h2>Trending Now</h2><div class="row rrow">'+t+'</div>';
+}
 function rankTile(v,i){ return '<div class="rank"><span class="num">'+i+'</span><div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div></div>'; }
 function rankedShelf(title,arr){ arr=arr.filter(Boolean).slice(0,10); if(arr.length<3) return ''; var t=arr.map(function(v,ix){return rankTile(v,ix+1);}).join(''); return '<h2>'+title+'</h2><div class="row rrow">'+t+'</div>'; }
 function shelf(title,arr,minN){ if(arr.length < (minN||3)) return ''; var tiles=arr.map(tileHTML).join(''); if(arr.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+title.replace(/'/g,"")+' — coming soon\')"><div class="cover seeallc">See All '+title+' ▸</div></div>'; } return '<h2>'+title+'</h2><div class="row">'+tiles+'</div>'; }
@@ -314,7 +349,7 @@ function playHTML(){
    var feat=byId('taylorswift');
    h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
      +'<div class="fmeta"><div class="k">'+feat.name+'</div><div class="s">How deep does your fandom go?</div><div class="go">Tap to open ▸</div></div></div>';
-   h+=rankedShelf('Trending Now', TRENDING.map(byId));
+   h+=trendingShelf();
    h+=shelf('Recently Added', RECENTLY_ADDED.map(byId), 1);
    h+=shelf('Best Of', BEST_OF.map(byId), 3);
    CAT_ORDER.forEach(function(cat){ if(cat==='Best Of') return; h+=shelf(cat, vaults.filter(function(v){return v.cat===cat;}), 1); });
