@@ -168,6 +168,12 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:24px;font-size:13px;font-weight:700;z-index:95;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center}
 .toast.on{opacity:.95}
 .note{text-align:center;color:var(--dim);font-size:10.5px;margin:16px;line-height:1.5}
+.legal-footer{margin:34px 8px 20px;padding:18px 10px 10px;border-top:1px solid rgba(255,255,255,.10);text-align:center;color:#8f83aa;font-size:10.5px;line-height:1.55}
+.legal-footer button,.purchase-legal{border:0;background:none;color:#b9a8e0;text-decoration:underline;text-underline-offset:3px;font:inherit;cursor:pointer}
+.legal-footer .links{display:block;margin-top:8px;color:#a99abd;font-weight:700;letter-spacing:.25px}
+.purchase-legal{display:block;width:100%;margin:10px auto -3px;font-size:10.5px;line-height:1.4;text-align:center}
+.legal-card{text-align:left;padding-top:6px}.legal-card h3{font-family:var(--disp);font-size:28px;letter-spacing:1px;color:#fff;margin:0 32px 12px 0}
+.legal-card p{color:#c9bde0;font-size:12.5px;line-height:1.55;margin:0 0 12px}.legal-card .legal-small{font-size:11px;color:#9185a9}
 .emptyv{text-align:center;color:var(--dim);padding:60px 22px}
 .emptyv .big{font-family:var(--disp);font-size:34px;color:#fff;letter-spacing:1px}
 .emptyv p{margin-top:8px;font-size:13px;max-width:340px;margin-left:auto;margin-right:auto;line-height:1.5}
@@ -444,6 +450,10 @@ function renderMiniTabs(){
  var el=document.getElementById('miniTabs'); if(!el) return;
  el.innerHTML=EDITIONS.filter(editionVisible).map(function(e){return '<button class="'+(e.id===curEdition?'on':'')+'" onclick="setEditionFromBar(\''+e.id+'\')">'+e.label+'</button>';}).join('');
 }
+function legalFooterHTML(){
+ return '<footer class="legal-footer">SuperFan Shuffle is an independent fan-trivia game and is not affiliated with or endorsed by any featured artist, label, studio, league or rights holder.'
+  +'<span class="links">© 2026 SuperFan Shuffle · <button onclick="openLegal()">Legal &amp; Credits</button></span></footer>';
+}
 function playHTML(){
  var ed=curEdition, h=tabsHTML();
  var vaults=VAULTS.filter(function(v){return v.edition===ed;});
@@ -461,7 +471,7 @@ function playHTML(){
    else { h+='<h2>Sample Vaults</h2><div class="row">'+placeholders.map(tileHTML).join('')+'</div>';
           h+='<div class="note">'+(ed==='sports'?'Sports':'Film &amp; TV')+' edition — dev scaffolding. Generic placeholders; real content ships later behind the Firebase flag with IP guardrails.</div>'; }
  }
- return h;
+ return h+legalFooterHTML();
 }
 /* ---- Explore: vault search + the CYC gold cross-sell doorway ---- */
 var CYC_URL='https://crownyourchampion.com';
@@ -550,8 +560,16 @@ function openVault(id){
    +'<div class="rules">Phone on your forehead — the crowd shouts clues. Tilt <span class="g">down</span> when you get it, <span class="o">up</span> to pass. First <b>5 are free</b>.</div>'
    +'<button class="buybtn ghost" onclick="tryFree(\''+v.id+'\')">▶ Play 5 free</button>'
    +'<button class="buybtn" onclick="buy(\''+v.id+'\')">Unlock the full vault · $0.99</button>'
+   +'<button class="purchase-legal" onclick="openLegal()">Unofficial fan-trivia content. No affiliation or endorsement implied.</button>'
    +'</div>';
  document.getElementById('sheet').innerHTML=g; document.getElementById('ov').classList.add('on');
+}
+function openLegal(){
+ var g='<div class="vcard legal-card"><button class="xbtn" onclick="closeOv()">×</button><h3>Legal &amp; Credits</h3>'
+  +'<p>SuperFan Shuffle is an independent fan-trivia game and is not affiliated with or endorsed by any featured artist, record label, publisher, studio, league, team or other rights holder.</p>'
+  +'<p>Artist, album, film, television, sports and other names or related marks remain the property of their respective owners. Their appearance identifies the subject of trivia content and does not imply sponsorship or endorsement.</p>'
+  +'<p class="legal-small">SuperFan Shuffle does not play copyrighted music or present continuous lyric passages. © 2026 SuperFan Shuffle.</p></div>';
+ document.getElementById('sheet').innerHTML=g;document.getElementById('ov').classList.add('on');
 }
 function closeOv(){document.getElementById('ov').classList.remove('on');}
 function tryFree(id){ var v=byId(id); if(v) location.href=launchURL(v); }
