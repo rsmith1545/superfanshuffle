@@ -21,14 +21,26 @@ body{overflow-y:auto;padding:0 0 80px}
 .wrap{max-width:820px;margin:0 auto;padding:0 16px}
 /* dark chrome header framing the lighter content */
 header{padding:16px 16px 8px;text-align:center;background:var(--chrome);box-shadow:0 6px 18px rgba(0,0,0,.35)}
-/* The banner artwork matches this wide mobile ratio, keeping the complete sign visible
-   without the aggressive cover crop used by the original, taller logo image. */
-header#topbar{padding:0;overflow:hidden;position:relative;text-align:center;display:flex;align-items:center;justify-content:center;height:clamp(116px,37vw,158px);flex:0 0 auto;background:radial-gradient(120% 100% at 50% 0%,#2a1747,#1c0f38 70%,#150a2c)}
+:root{--fullscreen-top:0px}
+html.fullscreen-active{--fullscreen-top:24px}
+/* Large first-impression brand stage. Safe-area space keeps the sign below an iPhone's
+   camera island; Android gets an equivalent inset after the page enters fullscreen. */
+header#topbar{padding:calc(env(safe-area-inset-top,0px) + var(--fullscreen-top)) 0 0;overflow:hidden;position:relative;text-align:center;display:flex;align-items:center;justify-content:center;height:calc(clamp(190px,50vw,228px) + env(safe-area-inset-top,0px) + var(--fullscreen-top));flex:0 0 auto;background:radial-gradient(120% 100% at 50% 0%,#2a1747,#1c0f38 70%,#150a2c);transition:height .18s ease,padding .18s ease}
 .neon{position:relative;width:100%;height:100%;margin:0 auto;line-height:0}
 .neon img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
 .neon .neon-unlit{position:absolute;inset:0;height:100%;width:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity .07s linear}
+.hero-tag{position:absolute;z-index:3;left:50%;bottom:12px;transform:translateX(-50%);white-space:nowrap;font-size:clamp(18px,5.2vw,25px);line-height:1;font-style:italic;font-weight:800;color:#d9fbff;letter-spacing:.2px;text-shadow:0 0 7px rgba(87,230,255,.95),0 0 15px rgba(87,230,255,.48)}
 header#topbar:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(21,10,44,.55),rgba(21,10,44,0) 12%,rgba(21,10,44,0) 88%,rgba(21,10,44,.55))}
 header#topbar:after{content:"";position:absolute;left:0;right:0;bottom:0;height:18px;z-index:2;pointer-events:none;background:linear-gradient(to bottom,rgba(63,38,128,0),#3f2680)}
+/* Netflix-style compact identity and edition switcher after the hero scrolls away. */
+#brandBar{position:fixed;z-index:80;top:0;left:0;right:0;min-height:56px;padding:calc(env(safe-area-inset-top,0px) + var(--fullscreen-top) + 7px) 12px 7px;display:flex;align-items:center;gap:9px;background:linear-gradient(to bottom,rgba(13,5,29,.96),rgba(21,10,44,.78));border-bottom:1px solid rgba(176,106,255,.28);box-shadow:0 8px 22px rgba(0,0,0,.28);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);transform:translateY(-115%);opacity:0;pointer-events:none;transition:transform .2s ease,opacity .2s ease,padding .18s ease}
+body.brandbar-on #brandBar{transform:translateY(0);opacity:1;pointer-events:auto}
+.mini-brand{width:92px;height:36px;flex:0 0 92px;border:0;background:transparent;padding:0;overflow:hidden;border-radius:6px;cursor:pointer}
+.mini-brand img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.mini-tabs{display:flex;align-items:center;justify-content:flex-end;gap:5px;min-width:0;flex:1}
+.mini-tabs button{font-family:var(--disp);font-size:13px;line-height:1;letter-spacing:.5px;white-space:nowrap;color:#d6ccec;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:7px 8px;cursor:pointer}
+.mini-tabs button.on{color:#12002a;background:var(--accent);border-color:transparent;box-shadow:0 0 12px -2px var(--accent)}
+@media(max-width:370px){.mini-brand{width:78px;flex-basis:78px}.mini-tabs{gap:3px}.mini-tabs button{font-size:12px;padding:7px 6px}}
 .logo{display:inline-block;border:3px solid var(--mag);border-radius:22px;padding:8px 20px 11px;
  box-shadow:0 0 18px rgba(255,92,240,.55),inset 0 0 18px rgba(255,92,240,.25)}
 .logo b{display:block;font-family:var(--disp);letter-spacing:1px;line-height:.82;font-size:11.5vw;max-width:100%;transform:skewX(-6deg)}
@@ -238,7 +250,12 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
     <img class="neon-lit" src="sfs-neon-mobile-lit.webp" alt="SuperFan Shuffle — Face the Music.">
     <img class="neon-unlit" id="neonUnlit" src="sfs-neon-mobile-unlit.webp" alt="" aria-hidden="true">
   </div>
+  <div class="hero-tag">Face the Music.</div>
 </header>
+<div id="brandBar" aria-label="SuperFan Shuffle editions">
+  <button class="mini-brand" onclick="setView('play');window.scrollTo(0,0)" aria-label="SuperFan Shuffle home"><img src="sfs-neon-mobile-lit.webp" alt=""></button>
+  <div class="mini-tabs" id="miniTabs"></div>
+</div>
 <div class="wrap" id="app"></div>
 
 <button id="installBtn">📲 Install App</button>
@@ -413,12 +430,17 @@ function numShelf(title,arr){ if(arr.length<1) return ''; var tiles=arr.map(func
 /* ===== views: Play (home) · Explore · My Vaults ===== */
 var curEdition='music', curView='play';
 function setEdition(id){ curEdition=id; var e=edById(id); if(e) document.documentElement.style.setProperty('--accent', e.accent); render(); window.scrollTo(0,0); }
+function setEditionFromBar(id){ curView='play'; setEdition(id); }
 function setView(v){ curView=v; render(); window.scrollTo(0,0); }
 function tabsHTML(){
  var vis=EDITIONS.filter(editionVisible); if(vis.length<=1) return '';
  var h='<div class="tabs">';
  vis.forEach(function(e){ h+='<button class="'+(e.id===curEdition?'on':'')+'" onclick="setEdition(\''+e.id+'\')">'+e.label+'</button>'; });
  return h+'</div>';
+}
+function renderMiniTabs(){
+ var el=document.getElementById('miniTabs'); if(!el) return;
+ el.innerHTML=EDITIONS.filter(editionVisible).map(function(e){return '<button class="'+(e.id===curEdition?'on':'')+'" onclick="setEditionFromBar(\''+e.id+'\')">'+e.label+'</button>';}).join('');
 }
 function playHTML(){
  var ed=curEdition, h=tabsHTML();
@@ -502,6 +524,7 @@ function myVaultsHTML(){
 function render(){
  var v=curView;
  document.getElementById('app').innerHTML = v==='play'?playHTML() : v==='browse'?browseHTML() : myVaultsHTML();
+ renderMiniTabs();
  document.getElementById('nav-play').className    = v==='play'?'on':'';
  document.getElementById('nav-browse').className  = v==='browse'?'on':'';
  document.getElementById('nav-vaults').className  = v==='vaults'?'on':'';
@@ -548,7 +571,14 @@ document.getElementById('ov').addEventListener('click',function(e){if(e.target.i
 })();
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
 document.addEventListener('click', function(){ goFullscreen(); }, {once:true});
+function fullscreenState(){ document.documentElement.classList.toggle('fullscreen-active',!!(document.fullscreenElement||document.webkitFullscreenElement)); }
+document.addEventListener('fullscreenchange',fullscreenState);
+document.addEventListener('webkitfullscreenchange',fullscreenState);
+function brandBarState(){ var hero=document.getElementById('topbar'); var cutoff=hero?Math.max(100,hero.offsetHeight-64):140; document.body.classList.toggle('brandbar-on',window.scrollY>cutoff); }
+window.addEventListener('scroll',brandBarState,{passive:true});
+window.addEventListener('resize',brandBarState);
 render();
+brandBarState();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script>
