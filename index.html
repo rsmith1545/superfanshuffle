@@ -251,6 +251,58 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .brow .scard .scart{height:100%;margin:0;border-radius:10px}
 .cover.artcover{overflow:hidden;background:#0c0906}
 .artcover .artimg{width:100%;height:100%;object-fit:cover;display:block}
+/* ===== Vault open v4: zoom-in + flip; front=album art, back=v4 sheet ===== */
+#sheet{max-width:390px!important}
+.flipwrap{width:100%;max-width:360px;height:min(88vh,680px);perspective:1400px;opacity:0;transform:scale(.6);transition:opacity .28s ease, transform .42s cubic-bezier(.2,1.12,.3,1)}
+.flipwrap.in{opacity:1;transform:scale(1)}
+.flipcard{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.3,.85,.35,1)}
+.flipwrap.flipped .flipcard{transform:rotateY(180deg)}
+.flipface{position:absolute;inset:0;border-radius:26px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 26px 66px rgba(0,0,0,.62)}
+.flipbackface{transform:rotateY(180deg);overflow:visible}
+.ffront{position:absolute;inset:0;background:linear-gradient(180deg,#241645,#180d33)}
+.ffront .ffart{width:100%;height:100%;object-fit:cover;display:block}
+.ffront .ffname{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:var(--disp);font-size:48px;line-height:.88;letter-spacing:1px;color:#fff;background:radial-gradient(120% 80% at 50% 0%,rgba(var(--tint),.55),rgba(var(--tint),.14) 58%,#160f0a)}
+/* back = v4 sheet + sample-card fan */
+.vkback{position:absolute;inset:0;display:flex;align-items:flex-end;padding:0}
+.vkfan{position:absolute;left:0;right:0;top:0;height:0;z-index:1;display:flex;justify-content:center;pointer-events:none;opacity:0;transform:translateY(-24px);transition:opacity .5s ease .2s, transform .5s cubic-bezier(.2,1,.3,1) .2s}
+.flipwrap.flipped .vkfan{opacity:1;transform:none}
+.vksamp{width:158px;height:82px;border-radius:12px;position:absolute;top:44px;background:repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 6px),linear-gradient(160deg,#3b2c74,#2a1d5c);border:2.5px solid #eef0f8;box-shadow:0 -6px 20px rgba(0,0,0,.55),0 0 12px rgba(238,240,248,.25);display:flex;align-items:center;justify-content:center;padding:8px 12px;text-align:center}
+.vksamp .q{font-size:14px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;line-height:1.15;color:#fff;text-shadow:0 0 8px rgba(239,234,255,.8)}
+.vksamp .typ{position:absolute;top:5px;left:9px;font-size:7.5px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.vksamp .smp{position:absolute;bottom:4px;right:9px;font-size:6.5px;letter-spacing:.2em;color:rgba(185,174,224,.55);font-weight:800}
+.vksamp.vs1{transform:translateX(-88px) rotate(-7deg)} .vksamp.vs1 .typ{color:var(--cyan)}
+.vksamp.vs2{transform:translateY(-16px) rotate(1.5deg);z-index:1} .vksamp.vs2 .typ{color:var(--mag)}
+.vksamp.vs3{transform:translateX(88px) rotate(6deg)} .vksamp.vs3 .typ{color:#f0d060}
+.vksheet{width:100%;max-height:100%;overflow-y:auto;background:linear-gradient(175deg,#3b2c74,#251a52 60%);border:2px solid var(--artist);border-radius:24px;padding:20px 18px 18px;box-shadow:0 -12px 40px rgba(0,0,0,.6),0 0 42px var(--artist-glow),inset 0 1px 0 rgba(255,255,255,.12);position:relative;z-index:2}
+.vktop{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.vktile{width:64px;height:64px;border-radius:14px;flex:none;position:relative;overflow:hidden;background:linear-gradient(160deg,var(--artist),#0e3a35);box-shadow:0 6px 14px rgba(0,0,0,.5)}
+.vktile img{width:100%;height:100%;object-fit:cover;display:block}
+.vktile .screen{position:absolute;left:7px;right:7px;top:8px;height:24px;border-radius:5px;background:#05050a;color:var(--artist);display:flex;align-items:center;justify-content:center;font-size:6.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:0 3px}
+.vktile .keys{position:absolute;left:0;right:0;bottom:8px;display:flex;gap:4px;justify-content:center}
+.vktile .keys i{width:6px;height:6px;border-radius:50%}
+.vktile .keys i:nth-child(odd){background:var(--cyan)} .vktile .keys i:nth-child(even){background:var(--mag)}
+.vktop h1{font-size:23px;font-weight:900;letter-spacing:.01em;line-height:1.02;color:#fff}
+.vktop .qcount{font-size:12px;color:var(--dim);margin-top:3px}
+.vkclose{margin-left:auto;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:var(--dim);flex:none;align-self:flex-start;cursor:pointer}
+.vkdesc{font-size:14px;line-height:1.45;color:var(--dim);margin-bottom:12px}
+.vkdesc b{color:var(--ink,#efeaff)}
+.vkhowto{font-size:12.5px;line-height:1.5;color:var(--dim);margin:0 0 14px;text-align:center}
+.vkrh{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+.vkrh h2{font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:#fff}
+.vkrsub{font-size:11px;color:var(--dim);margin-bottom:10px;font-style:italic}
+.vkmode{display:flex;align-items:center;gap:11px;border:1.5px solid rgba(255,255,255,.12);border-radius:14px;padding:10px 12px;margin-bottom:8px;cursor:pointer;background:rgba(0,0,0,.15);transition:border-color .15s,background .15s}
+.vkmode .dots{display:flex;gap:3px;flex:none;width:30px}
+.vkmode .dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.15)}
+.vkmode .dots i.f{background:var(--mag);box-shadow:0 0 5px rgba(240,79,208,.6)}
+.vkmode .m-name{font-size:14px;font-weight:900;letter-spacing:.04em;color:#fff}
+.vkmode .m-rule{font-size:11.5px;color:var(--dim);margin-top:1px;line-height:1.3}
+.vkmode .tag{margin-left:auto;flex:none;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:12px;background:rgba(70,185,107,.2);color:#46b96b;border:1px solid rgba(70,185,107,.5)}
+.vkmode.sel{border-color:var(--cyan);background:rgba(63,216,240,.08);box-shadow:0 0 12px rgba(63,216,240,.18)}
+.vkmode.sel .m-name{color:var(--cyan)}
+.vkbtn{display:block;width:100%;text-align:center;border-radius:32px;border:none;cursor:pointer;font-weight:900;padding:15px;font-size:16px}
+.vkbtn.play{color:var(--ink,#efeaff);background:transparent;border:2px solid var(--cyan);box-shadow:0 0 14px rgba(63,216,240,.35);margin-bottom:11px}
+.vkbtn.unlock{color:#1c1032;background:linear-gradient(90deg,#6fe6f8,var(--mag));box-shadow:0 0 18px rgba(240,79,208,.4)}
+.vksheet .purchase-legal{margin-top:12px}
 </style></head>
 <body>
 <header id="topbar">
@@ -545,33 +597,40 @@ function render(){
 /* vault tap: free → 5-question taste; paid → fly-in detail card */
 function launchURL(v){ return '/play.html?vault='+encodeURIComponent(v.id)+'&n='+encodeURIComponent(v.name); }
 function pickVault(id){ var v=byId(id); if(!v) return; if(v.badge==='free'){ location.href=launchURL(v); } else { openVault(id); } }
+function vkSel(el){ var p=el.parentNode; var ms=p.querySelectorAll('.vkmode'); for(var i=0;i<ms.length;i++) ms[i].classList.remove('sel'); el.classList.add('sel'); }
+function flipFront(v){ if(ART[v.id]) return '<div class="ffront"><img class="ffart" src="'+ART[v.id]+'?v=1" alt=""></div>'; var rk=colorOf(v); return '<div class="ffront" style="--acc:'+rk.acc+';--tint:'+rk.tint+'"><div class="ffname">'+v.name.toUpperCase()+'</div></div>'; }
 function openVault(id){
  var v=byId(id); if(!v) return;
- var chip=v.badge==='free'?'<span class="vchip free">Free</span>':'<span class="vchip prem">Premium</span>';
- var g='<div class="vcard">'
-   +'<button class="xbtn" onclick="closeOv()">×</button>'
-   +'<div class="vtop">'+coverHTML(v)+'<div><b>'+v.name+'</b>'+chip+'</div></div>'
-   +'<p class="ublurb" style="margin:13px 2px 4px">One shuffle, everything mixed — songs, lyrics &amp; lore flowing together. Play the first <b>5 free</b>, then unlock the rest.</p>'
-   +'<div class="samples">'
-     +'<div class="scard s-song"><i>🎵</i><b>Song</b><span>Name the track</span></div>'
-     +'<div class="scard s-lore"><i>💬</i><b>Lore</b><span>Deep-cut trivia</span></div>'
-     +'<div class="scard s-alb"><i>💿</i><b>Album</b><span>Which record?</span></div>'
-   +'</div>'
-   +'<div class="rules">Phone on your forehead — the crowd shouts clues. Tilt <span class="g">down</span> when you get it, <span class="o">up</span> to pass. First <b>5 are free</b>.</div>'
-   +'<button class="buybtn ghost" onclick="tryFree(\''+v.id+'\')">▶ Play 5 free</button>'
-   +'<button class="buybtn" onclick="buy(\''+v.id+'\')">Unlock the full vault · $0.99</button>'
+ var rk=colorOf(v); var d=SDATA[v.id]||{song:'Songs',last:v.name.split(' ').pop(),album:'Albums'};
+ var tile = ART[v.id] ? '<div class="vktile"><img src="'+ART[v.id]+'?v=1" alt=""></div>'
+                      : '<div class="vktile" style="--artist:'+rk.acc+'"><div class="screen">'+v.name+'</div><div class="keys"><i></i><i></i><i></i><i></i></div></div>';
+ var fan='<div class="vkfan">'
+   +'<div class="vksamp vs1"><div class="typ">♪ Song</div><div class="q">'+d.song+'</div><div class="smp">Sample</div></div>'
+   +'<div class="vksamp vs2"><div class="typ">💬 Lore</div><div class="q">'+d.last+'</div><div class="smp">Sample</div></div>'
+   +'<div class="vksamp vs3"><div class="typ">💿 Album</div><div class="q">'+d.album+'</div><div class="smp">Sample</div></div>'
+   +'</div>';
+ var sheet='<div class="vksheet">'
+   +'<div class="vktop">'+tile+'<div><h1>'+v.name+'</h1><div class="qcount">First 5 free</div></div><div class="vkclose" onclick="closeOv()">✕</div></div>'
+   +'<p class="vkdesc">One shuffle, everything mixed — songs, deep cuts &amp; album lore. <b>How deep does your fandom go?</b></p>'
+   +'<div class="vkhowto">Phone on your forehead — the crowd shouts the clues.</div>'
+   +'<div class="vkrh"><h2>House Rules</h2></div><p class="vkrsub">Pick one before you start. We can\'t hear you humming — your friends can.</p>'
+   +'<div class="vkmode sel" onclick="vkSel(this)"><div class="dots"><i class="f"></i><i></i><i></i></div><div class="m-copy"><div class="m-name">Beginner</div><div class="m-rule">Anything goes — hum it, sing it, quote it, describe it.</div></div></div>'
+   +'<div class="vkmode" onclick="vkSel(this)"><div class="dots"><i class="f"></i><i class="f"></i><i></i></div><div class="m-copy"><div class="m-name">Casual</div><div class="m-rule">No humming or singing. Lyrics &amp; facts only.</div></div><span class="tag">Most groups</span></div>'
+   +'<div class="vkmode" onclick="vkSel(this)"><div class="dots"><i class="f"></i><i class="f"></i><i class="f"></i></div><div class="m-copy"><div class="m-name">Superfan</div><div class="m-rule">Lyrics only — and nothing from the chorus. Prove it.</div></div></div>'
+   +'<button class="vkbtn play" onclick="tryFree(\''+v.id+'\')">▶&nbsp; Play 5 free</button>'
+   +'<button class="vkbtn unlock" onclick="buy(\''+v.id+'\')">Unlock the full vault · $0.99</button>'
    +'<button class="purchase-legal" onclick="openLegal()">Unofficial fan-trivia content. No affiliation or endorsement implied.</button>'
    +'</div>';
- document.getElementById('sheet').innerHTML=g; document.getElementById('ov').classList.add('on');
+ var back='<div class="vkback" style="--artist:'+rk.acc+';--artist-glow:rgba('+rk.tint+',.55)">'+fan+sheet+'</div>';
+ var html='<div class="flipwrap"><div class="flipcard"><div class="flipface flipfront">'+flipFront(v)+'</div><div class="flipface flipbackface">'+back+'</div></div></div>';
+ var host=document.getElementById('sheet'); host.innerHTML=html;
+ document.getElementById('ov').classList.add('on');
+ var wrap=host.querySelector('.flipwrap');
+ requestAnimationFrame(function(){ wrap.classList.add('in'); });
+ setTimeout(function(){ if(wrap) wrap.classList.add('flipped'); }, 520);
 }
-function openLegal(){
- var g='<div class="vcard legal-card"><button class="xbtn" onclick="closeOv()">×</button><h3>Legal &amp; Credits</h3>'
-  +'<p>SuperFan Shuffle is an independent fan-trivia game and is not affiliated with or endorsed by any featured artist, record label, publisher, studio, league, team or other rights holder.</p>'
-  +'<p>Artist, album, film, television, sports and other names or related marks remain the property of their respective owners. Their appearance identifies the subject of trivia content and does not imply sponsorship or endorsement.</p>'
-  +'<p class="legal-small">SuperFan Shuffle does not play copyrighted music or present continuous lyric passages. © 2026 SuperFan Shuffle.</p></div>';
- document.getElementById('sheet').innerHTML=g;document.getElementById('ov').classList.add('on');
-}
-function closeOv(){document.getElementById('ov').classList.remove('on');}
+function closeOv(){ var ov=document.getElementById('ov'); ov.classList.remove('on'); var w=ov.querySelector('.flipwrap'); if(w){ w.classList.remove('flipped'); w.classList.remove('in'); } }
+
 function tryFree(id){ var v=byId(id); if(v) location.href=launchURL(v); }
 function buy(id){ var v=byId(id); toast('Checkout: '+(v?v.name:'vault')+' · $0.99 — payments not wired yet'); }
 var tHandle;
