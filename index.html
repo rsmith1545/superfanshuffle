@@ -253,7 +253,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .artcover .artimg{width:100%;height:100%;object-fit:cover;display:block}
 /* ===== Vault open v4: zoom-in + flip; front=album art, back=v4 sheet ===== */
 #sheet{max-width:390px!important}
-.flipwrap{width:100%;max-width:360px;height:min(88vh,680px);perspective:1400px;opacity:0;transform:scale(.6);transition:opacity .28s ease, transform .42s cubic-bezier(.2,1.12,.3,1)}
+.flipwrap{width:100%;max-width:360px;height:min(84vh,640px);perspective:1400px;opacity:0;transform:scale(.6);transition:opacity .28s ease, transform .42s cubic-bezier(.2,1.12,.3,1)}
 .flipwrap.in{opacity:1;transform:scale(1)}
 .flipcard{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.3,.85,.35,1)}
 .flipwrap.flipped .flipcard{transform:rotateY(180deg)}
@@ -263,8 +263,8 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .ffront .ffart{width:100%;height:100%;object-fit:cover;display:block}
 .ffront .ffname{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:var(--disp);font-size:48px;line-height:.88;letter-spacing:1px;color:#fff;background:radial-gradient(120% 80% at 50% 0%,rgba(var(--tint),.55),rgba(var(--tint),.14) 58%,#160f0a)}
 /* back = v4 sheet + sample-card fan */
-.vkback{position:absolute;inset:0;display:flex;align-items:flex-end;padding:0}
-.vkfan{position:absolute;left:0;right:0;top:0;height:0;z-index:1;display:flex;justify-content:center;pointer-events:none;opacity:0;transform:translateY(-24px);transition:opacity .5s ease .2s, transform .5s cubic-bezier(.2,1,.3,1) .2s}
+.vkback{position:absolute;inset:0}
+.vkfan{position:absolute;left:0;right:0;top:4px;height:0;z-index:1;display:flex;justify-content:center;pointer-events:none;opacity:0;transform:translateY(-24px);transition:opacity .5s ease .2s, transform .5s cubic-bezier(.2,1,.3,1) .2s}
 .flipwrap.flipped .vkfan{opacity:1;transform:none}
 .vksamp{width:158px;height:82px;border-radius:12px;position:absolute;top:44px;background:repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 6px),linear-gradient(160deg,#3b2c74,#2a1d5c);border:2.5px solid #eef0f8;box-shadow:0 -6px 20px rgba(0,0,0,.55),0 0 12px rgba(238,240,248,.25);display:flex;align-items:center;justify-content:center;padding:8px 12px;text-align:center}
 .vksamp .q{font-size:14px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;line-height:1.15;color:#fff;text-shadow:0 0 8px rgba(239,234,255,.8)}
@@ -273,7 +273,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .vksamp.vs1{transform:translateX(-88px) rotate(-7deg)} .vksamp.vs1 .typ{color:var(--cyan)}
 .vksamp.vs2{transform:translateY(-16px) rotate(1.5deg);z-index:1} .vksamp.vs2 .typ{color:var(--mag)}
 .vksamp.vs3{transform:translateX(88px) rotate(6deg)} .vksamp.vs3 .typ{color:#f0d060}
-.vksheet{width:100%;max-height:100%;overflow-y:auto;background:linear-gradient(175deg,#3b2c74,#251a52 60%);border:2px solid var(--artist);border-radius:24px;padding:20px 18px 18px;box-shadow:0 -12px 40px rgba(0,0,0,.6),0 0 42px var(--artist-glow),inset 0 1px 0 rgba(255,255,255,.12);position:relative;z-index:2}
+.vksheet{position:absolute;top:100px;left:0;right:0;bottom:0;overflow-y:auto;background:linear-gradient(175deg,#3b2c74,#251a52 60%);border:2px solid var(--artist);border-radius:24px;padding:20px 18px 18px;box-shadow:0 -12px 40px rgba(0,0,0,.6),0 0 42px var(--artist-glow),inset 0 1px 0 rgba(255,255,255,.12);z-index:2}
 .vktop{display:flex;align-items:center;gap:14px;margin-bottom:12px}
 .vktile{width:64px;height:64px;border-radius:14px;flex:none;position:relative;overflow:hidden;background:linear-gradient(160deg,var(--artist),#0e3a35);box-shadow:0 6px 14px rgba(0,0,0,.5)}
 .vktile img{width:100%;height:100%;object-fit:cover;display:block}
