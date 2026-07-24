@@ -267,29 +267,27 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .vkback{position:relative}
 .vkfan{position:absolute;left:0;right:0;top:0;height:0;z-index:1;display:flex;justify-content:center;pointer-events:none}
 
-.vksamp{width:158px;height:88px;border-radius:12px;position:absolute;top:-78px;opacity:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 6px),linear-gradient(160deg,#33246b,#201548);border:2.5px solid #eef0f8;box-shadow:0 8px 22px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:8px 12px;text-align:center;transition:transform .55s cubic-bezier(.2,1.1,.3,1),opacity .4s ease}
-.vksamp .q{font-size:14px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;line-height:1.15;color:#fff;text-shadow:0 0 8px rgba(239,234,255,.8)}
+.vksamp{width:124px;height:94px;border-radius:12px;position:absolute;top:-84px;opacity:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 6px),linear-gradient(160deg,#33246b,#201548);border:2px solid #eef0f8;box-shadow:0 8px 22px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:18px 9px 10px;text-align:center;transition:transform .55s cubic-bezier(.2,1.1,.3,1),opacity .4s ease}
+.vksamp .q{font-size:10px;font-weight:900;letter-spacing:.01em;text-transform:uppercase;line-height:1.12;color:#fff;text-shadow:0 0 6px rgba(239,234,255,.7);overflow-wrap:anywhere}
 .vksamp .typ{position:absolute;top:5px;left:9px;font-size:7.5px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
-.vksamp .smp{position:absolute;bottom:4px;right:9px;font-size:6.5px;letter-spacing:.2em;color:rgba(185,174,224,.55);font-weight:800}
+.vksamp .smp{position:absolute;bottom:3px;right:7px;font-size:6px;letter-spacing:.15em;color:rgba(185,174,224,.5);font-weight:800}
 .vksamp.vs1 .typ{color:var(--cyan)}
 .vksamp.vs2 .typ{color:var(--mag)}
 .vksamp.vs3{transform:translateX(88px) rotate(6deg)} .vksamp.vs3 .typ{color:#f0d060}
-.vksamp.vs1{transform:translateX(-84px) translateY(72px) rotate(-8deg);z-index:1}
-.vksamp.vs2{transform:translateX(0) translateY(72px) rotate(0deg);z-index:2}
-.vksamp.vs3{transform:translateX(52px) translateY(72px) rotate(7deg);z-index:3}
+.vksamp.vs1{transform:translateX(-96px) translateY(74px) rotate(-6deg);z-index:1}
+.vksamp.vs2{transform:translateX(0) translateY(74px) rotate(1deg);z-index:2}
+.vksamp.vs3{transform:translateX(96px) translateY(74px) rotate(6deg);z-index:3}
 .flipwrap.fanpop .vksamp{opacity:1}
-.flipwrap.fanpop .vksamp.vs1{transform:translateX(-84px) rotate(-8deg)}
-.flipwrap.fanpop .vksamp.vs2{transform:translateX(0) translateY(-20px) rotate(0deg)}
-.flipwrap.fanpop .vksamp.vs3{transform:translateX(52px) rotate(7deg)}
+.flipwrap.fanpop .vksamp.vs1{transform:translateX(-96px) rotate(-6deg)}
+.flipwrap.fanpop .vksamp.vs2{transform:translateX(0) translateY(-8px) rotate(1deg)}
+.flipwrap.fanpop .vksamp.vs3{transform:translateX(96px) rotate(6deg)}
 .flipwrap.shuffled .vksamp.vs1{animation:shuffS1 .8s cubic-bezier(.4,0,.4,1)}
 .flipwrap.shuffled .vksamp.vs2{animation:shuffS2 .8s cubic-bezier(.4,0,.4,1)}
 .flipwrap.shuffled .vksamp.vs3{animation:shuffS3 .8s cubic-bezier(.4,0,.4,1)}
-.vksamp.vs2 .typ{left:8px;right:8px;text-align:center}
-.vksamp.vs3 .typ{left:auto;right:9px}
 .v5legal{font-size:8px;line-height:1.35;letter-spacing:.06em;text-transform:uppercase;text-align:center;font-weight:600;color:#a2938a;margin:0 6px 12px;cursor:pointer}
-@keyframes shuffS1{0%,100%{transform:translateX(-84px) rotate(-8deg)}50%{transform:translateX(52px) rotate(7deg);z-index:6}}
-@keyframes shuffS3{0%,100%{transform:translateX(52px) rotate(7deg)}50%{transform:translateX(-84px) rotate(-8deg)}}
-@keyframes shuffS2{0%,100%{transform:translateX(0) translateY(-20px) rotate(0deg)}50%{transform:translateX(0) translateY(-28px) rotate(-4deg) scale(1.05)}}
+@keyframes shuffS1{0%,100%{transform:translateX(-96px) rotate(-6deg)}50%{transform:translateX(96px) rotate(6deg);z-index:6}}
+@keyframes shuffS3{0%,100%{transform:translateX(96px) rotate(6deg)}50%{transform:translateX(-96px) rotate(-6deg)}}
+@keyframes shuffS2{0%,100%{transform:translateX(0) translateY(-8px) rotate(1deg)}50%{transform:translateX(0) translateY(-16px) rotate(-3deg) scale(1.05)}}
 
 .vksheet{position:relative;z-index:2;background:linear-gradient(175deg,#3b2c74,#251a52 60%);border:2px solid var(--artist);border-radius:24px;padding:20px 18px 18px;box-shadow:0 -12px 40px rgba(0,0,0,.6),0 0 42px var(--artist-glow),inset 0 1px 0 rgba(255,255,255,.12)}
 .vktop{display:flex;align-items:center;gap:14px;margin-bottom:12px}
