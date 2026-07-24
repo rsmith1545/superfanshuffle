@@ -250,7 +250,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .brow .scard .gcard,.brow .scard .scname,.brow .scard .scbar,.brow .scard .scctl{display:none}
 .brow .scard .scart{height:100%;margin:0;border-radius:10px}
 .cover.artcover{overflow:hidden;background:#0c0906}
-.artcover .artimg{width:100%;height:100%;object-fit:contain;display:block}
+.artcover .artimg{width:100%;height:100%;object-fit:cover;display:block}
 /* ===== Vault open v4: zoom-in + flip; front=album art, back=v4 sheet ===== */
 #sheet{max-width:390px!important}
 .flipwrap{width:100%;max-width:376px;perspective:1400px;opacity:0;transform:scale(.62);transition:opacity .3s ease, transform .72s cubic-bezier(.22,1,.32,1)}
@@ -261,7 +261,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .flipfront{position:absolute;inset:0;overflow:hidden;border-radius:26px}
 .flipbackface{position:relative;transform:rotateY(180deg);overflow:visible}
 .ffront{position:absolute;inset:0;background:linear-gradient(180deg,#241645,#180d33)}
-.ffront .ffart{width:100%;height:100%;object-fit:cover;display:block}
+.ffront .ffart{width:100%;height:100%;object-fit:contain;display:block}
 .ffront .ffname{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:var(--disp);font-size:48px;line-height:.88;letter-spacing:1px;color:#fff;background:radial-gradient(120% 80% at 50% 0%,rgba(var(--tint),.55),rgba(var(--tint),.14) 58%,#160f0a)}
 /* back = v4 sheet + sample-card fan */
 .vkback{position:relative}
@@ -274,19 +274,22 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .vksamp.vs1 .typ{color:var(--cyan)}
 .vksamp.vs2 .typ{color:var(--mag)}
 .vksamp.vs3{transform:translateX(88px) rotate(6deg)} .vksamp.vs3 .typ{color:#f0d060}
-.vksamp.vs1{transform:translateX(-88px) translateY(64px) rotate(-7deg)}
-.vksamp.vs2{transform:translateY(64px) rotate(1.5deg);z-index:1}
-.vksamp.vs3{transform:translateX(88px) translateY(64px) rotate(6deg)}
+.vksamp.vs1{transform:translateX(-84px) translateY(72px) rotate(-8deg);z-index:1}
+.vksamp.vs2{transform:translateX(0) translateY(72px) rotate(0deg);z-index:2}
+.vksamp.vs3{transform:translateX(52px) translateY(72px) rotate(7deg);z-index:3}
 .flipwrap.fanpop .vksamp{opacity:1}
-.flipwrap.fanpop .vksamp.vs1{transform:translateX(-88px) rotate(-7deg)}
-.flipwrap.fanpop .vksamp.vs2{transform:translateY(-16px) rotate(1.5deg)}
-.flipwrap.fanpop .vksamp.vs3{transform:translateX(88px) rotate(6deg)}
+.flipwrap.fanpop .vksamp.vs1{transform:translateX(-84px) rotate(-8deg)}
+.flipwrap.fanpop .vksamp.vs2{transform:translateX(0) translateY(-20px) rotate(0deg)}
+.flipwrap.fanpop .vksamp.vs3{transform:translateX(52px) rotate(7deg)}
 .flipwrap.shuffled .vksamp.vs1{animation:shuffS1 .8s cubic-bezier(.4,0,.4,1)}
 .flipwrap.shuffled .vksamp.vs2{animation:shuffS2 .8s cubic-bezier(.4,0,.4,1)}
 .flipwrap.shuffled .vksamp.vs3{animation:shuffS3 .8s cubic-bezier(.4,0,.4,1)}
-@keyframes shuffS1{0%,100%{transform:translateX(-88px) rotate(-7deg)}50%{transform:translateX(88px) rotate(7deg);z-index:6}}
-@keyframes shuffS3{0%,100%{transform:translateX(88px) rotate(6deg)}50%{transform:translateX(-88px) rotate(-6deg)}}
-@keyframes shuffS2{0%,100%{transform:translateY(-16px) rotate(1.5deg)}50%{transform:translateY(-22px) rotate(-4deg) scale(1.05)}}
+.vksamp.vs2 .typ{left:8px;right:8px;text-align:center}
+.vksamp.vs3 .typ{left:auto;right:9px}
+.v5legal{font-size:8px;line-height:1.35;letter-spacing:.06em;text-transform:uppercase;text-align:center;font-weight:600;color:#a2938a;margin:0 6px 12px;cursor:pointer}
+@keyframes shuffS1{0%,100%{transform:translateX(-84px) rotate(-8deg)}50%{transform:translateX(52px) rotate(7deg);z-index:6}}
+@keyframes shuffS3{0%,100%{transform:translateX(52px) rotate(7deg)}50%{transform:translateX(-84px) rotate(-8deg)}}
+@keyframes shuffS2{0%,100%{transform:translateX(0) translateY(-20px) rotate(0deg)}50%{transform:translateX(0) translateY(-28px) rotate(-4deg) scale(1.05)}}
 
 .vksheet{position:relative;z-index:2;background:linear-gradient(175deg,#3b2c74,#251a52 60%);border:2px solid var(--artist);border-radius:24px;padding:20px 18px 18px;box-shadow:0 -12px 40px rgba(0,0,0,.6),0 0 42px var(--artist-glow),inset 0 1px 0 rgba(255,255,255,.12)}
 .vktop{display:flex;align-items:center;gap:14px;margin-bottom:12px}
@@ -333,7 +336,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .v5cats{display:flex;gap:6px}
 .v5cat{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--artist)}
 .v5cat svg{width:22px;height:22px}
-.v5cat span{font-family:var(--body);font-weight:800;font-size:8.5px;letter-spacing:.4px;text-transform:uppercase;color:#e7dccf}
+.v5cat span{font-family:var(--body);font-weight:800;font-size:8.5px;letter-spacing:.4px;text-transform:uppercase;color:#e7dccf;text-align:center;line-height:1.05}
 .v5play{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;margin:14px 0 0;padding:13px;border-radius:16px;border:2px solid var(--artist);background:rgba(var(--tint),.14);box-shadow:0 0 20px var(--artist-glow);cursor:pointer}
 .v5big{font-family:var(--disp);font-size:30px;letter-spacing:2px;color:#fff;line-height:.9}
 .v5sub{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--artist);text-transform:uppercase}
@@ -507,10 +510,10 @@ function sBadge(v){ return v.badge==='free'?'<div class="badge free">Free</div>'
 function hashStr(s){var x=5381;for(var i=0;i<s.length;i++)x=((x*33)^s.charCodeAt(i))>>>0;return x;}
 var FUN=[['#FF4FA3','255,79,163'],['#37E0FF','55,224,255'],['#9BE23B','155,226,59'],['#FF8A3D','255,138,61'],['#A56BFF','165,107,255'],['#2DD4BF','45,212,191'],['#FF5CF0','255,92,240'],['#FFC53D','255,197,61'],['#FF6B5E','255,107,94'],['#5AA9FF','90,169,255'],['#3DDB84','61,219,132'],['#C86BFF','200,107,255']];
 var COLORMAP={"taylorswift": ["#D9A3B3", "217,163,179"], "arianagrande": ["#E07A5F", "224,122,95"], "edsheeran": ["#36B0AC", "54,176,172"], "rihanna": ["#7FB3D5", "127,179,213"], "billieeilish": ["#F4F4F6", "244,244,246"], "brunomars": ["#E07A5F", "224,122,95"], "postmalone": ["#7FB3D5", "127,179,213"], "coldplay": ["#C99E4A", "201,158,74"], "dualipa": ["#C4C8CC", "196,200,204"], "ladygaga": ["#C99E4A", "201,158,74"], "maroon5": ["#C43E3E", "196,62,62"], "beyonce": ["#D9A3B3", "217,163,179"], "harrystyles": ["#C4C8CC", "196,200,204"], "onedirection": ["#A87042", "168,112,66"], "adele": ["#E07A5F", "224,122,95"], "katyperry": ["#7FB3D5", "127,179,213"], "selenagomez": ["#F4F4F6", "244,244,246"], "justintimberlake": ["#D9A3B3", "217,163,179"], "newpopqueens": ["#C4C8CC", "196,200,204"], "eminem": ["#F4F4F6", "244,244,246"], "biggie": ["#36B0AC", "54,176,172"], "morganwallen": ["#5B8A5B", "91,138,91"], "zachbryan": ["#F4F4F6", "244,244,246"], "lukecombs": ["#36B0AC", "54,176,172"], "chrisstapleton": ["#E07A5F", "224,122,95"], "lukebryan": ["#7FB3D5", "127,179,213"], "jasonaldean": ["#C99E4A", "201,158,74"], "jellyroll": ["#C43E3E", "196,62,62"], "timmcgraw": ["#C4C8CC", "196,200,204"], "kennychesney": ["#A87042", "168,112,66"], "codyjohnson": ["#D9A3B3", "217,163,179"], "carrieunderwood": ["#C99E4A", "201,158,74"], "ellalangley": ["#D9A3B3", "217,163,179"], "shaboozey": ["#5B8A5B", "91,138,91"], "laineywilson": ["#E07A5F", "224,122,95"], "faithhill": ["#7FB3D5", "127,179,213"], "rhcp": ["#C43E3E", "196,62,62"], "metallica": ["#A87042", "168,112,66"], "nirvana": ["#5B8A5B", "91,138,91"], "greenday": ["#C43E3E", "196,62,62"], "oasis": ["#E07A5F", "224,122,95"], "foo": ["#A87042", "168,112,66"], "pearljam": ["#5B8A5B", "91,138,91"], "smashingpumpkins": ["#C43E3E", "196,62,62"], "stp": ["#A87042", "168,112,66"], "ate": ["#5B8A5B", "91,138,91"], "queen": ["#7FB3D5", "127,179,213"], "beatles": ["#C99E4A", "201,158,74"], "fleetwoodmac": ["#C43E3E", "196,62,62"], "stones": ["#C4C8CC", "196,200,204"], "ccr": ["#A87042", "168,112,66"], "bonjovi": ["#C43E3E", "196,62,62"], "bowie": ["#D9A3B3", "217,163,179"], "u2": ["#5B8A5B", "91,138,91"], "ledzeppelin": ["#A87042", "168,112,66"], "billyjoel": ["#F4F4F6", "244,244,246"], "springsteen": ["#36B0AC", "54,176,172"], "eagles": ["#E07A5F", "224,122,95"], "hendrix": ["#7FB3D5", "127,179,213"], "tompetty": ["#C99E4A", "201,158,74"], "thewho": ["#5B8A5B", "91,138,91"], "gratefuldead": ["#C43E3E", "196,62,62"], "dmb": ["#C4C8CC", "196,200,204"], "fthc": ["#A87042", "168,112,66"]};
-var SDATA={"taylorswift": {"song": "Shake It Off", "album": "1989", "last": "Swift"}, "arianagrande": {"song": "7 Rings", "album": "Thank U, Next", "last": "Grande"}, "edsheeran": {"song": "Shape of You", "album": "÷ Divide", "last": "Sheeran"}, "rihanna": {"song": "Umbrella", "album": "Good Girl Gone Bad", "last": "Rihanna"}, "billieeilish": {"song": "Bad Guy", "album": "When We Fall Asleep", "last": "Eilish"}, "brunomars": {"song": "24K Magic", "album": "24K Magic", "last": "Mars"}, "postmalone": {"song": "Circles", "album": "Hollywood's Bleeding", "last": "Malone"}, "dualipa": {"song": "Levitating", "album": "Future Nostalgia", "last": "Lipa"}, "ladygaga": {"song": "Bad Romance", "album": "The Fame Monster", "last": "Gaga"}, "beyonce": {"song": "Single Ladies", "album": "Sasha Fierce", "last": "Knowles"}, "harrystyles": {"song": "As It Was", "album": "Harry's House", "last": "Styles"}, "onedirection": {"song": "Story of My Life", "album": "Midnight Memories", "last": "Direction"}, "adele": {"song": "Rolling in the Deep", "album": "21", "last": "Adkins"}, "katyperry": {"song": "Firework", "album": "Teenage Dream", "last": "Perry"}, "selenagomez": {"song": "Lose You to Love Me", "album": "Rare", "last": "Gomez"}, "newpopqueens": {"song": "Feather", "album": "Coronation", "last": "Queens"}, "morganwallen": {"song": "Last Night", "album": "One Thing at a Time", "last": "Wallen"}, "zachbryan": {"song": "Revival", "album": "American Heartbreak", "last": "Bryan"}, "lukecombs": {"song": "Beautiful Crazy", "album": "This One's for You", "last": "Combs"}, "chrisstapleton": {"song": "Tennessee Whiskey", "album": "Traveller", "last": "Stapleton"}, "lukebryan": {"song": "Country Girl", "album": "Tailgates & Tanlines", "last": "Bryan"}, "jasonaldean": {"song": "Dirt Road Anthem", "album": "My Kinda Party", "last": "Aldean"}, "jellyroll": {"song": "Need a Favor", "album": "Whitsitt Chapel", "last": "Roll"}, "codyjohnson": {"song": "'Til You Can't", "album": "Human", "last": "Johnson"}, "carrieunderwood": {"song": "Before He Cheats", "album": "Some Hearts", "last": "Underwood"}, "ellalangley": {"song": "You Look Like You Love Me", "album": "Hungover", "last": "Langley"}, "shaboozey": {"song": "A Bar Song", "album": "Where I've Been", "last": "Shaboozey"}, "laineywilson": {"song": "Heart Like a Truck", "album": "Bell Bottom Country", "last": "Wilson"}};
+var SDATA={"dmb":{"song":"Ants Marching","lore":"Charlottesville, VA","album":"Under the Table and Dreaming","last":"Matthews"},"taylorswift": {"song": "Shake It Off", "album": "1989", "last": "Swift"}, "arianagrande": {"song": "7 Rings", "album": "Thank U, Next", "last": "Grande"}, "edsheeran": {"song": "Shape of You", "album": "÷ Divide", "last": "Sheeran"}, "rihanna": {"song": "Umbrella", "album": "Good Girl Gone Bad", "last": "Rihanna"}, "billieeilish": {"song": "Bad Guy", "album": "When We Fall Asleep", "last": "Eilish"}, "brunomars": {"song": "24K Magic", "album": "24K Magic", "last": "Mars"}, "postmalone": {"song": "Circles", "album": "Hollywood's Bleeding", "last": "Malone"}, "dualipa": {"song": "Levitating", "album": "Future Nostalgia", "last": "Lipa"}, "ladygaga": {"song": "Bad Romance", "album": "The Fame Monster", "last": "Gaga"}, "beyonce": {"song": "Single Ladies", "album": "Sasha Fierce", "last": "Knowles"}, "harrystyles": {"song": "As It Was", "album": "Harry's House", "last": "Styles"}, "onedirection": {"song": "Story of My Life", "album": "Midnight Memories", "last": "Direction"}, "adele": {"song": "Rolling in the Deep", "album": "21", "last": "Adkins"}, "katyperry": {"song": "Firework", "album": "Teenage Dream", "last": "Perry"}, "selenagomez": {"song": "Lose You to Love Me", "album": "Rare", "last": "Gomez"}, "newpopqueens": {"song": "Feather", "album": "Coronation", "last": "Queens"}, "morganwallen": {"song": "Last Night", "album": "One Thing at a Time", "last": "Wallen"}, "zachbryan": {"song": "Revival", "album": "American Heartbreak", "last": "Bryan"}, "lukecombs": {"song": "Beautiful Crazy", "album": "This One's for You", "last": "Combs"}, "chrisstapleton": {"song": "Tennessee Whiskey", "album": "Traveller", "last": "Stapleton"}, "lukebryan": {"song": "Country Girl", "album": "Tailgates & Tanlines", "last": "Bryan"}, "jasonaldean": {"song": "Dirt Road Anthem", "album": "My Kinda Party", "last": "Aldean"}, "jellyroll": {"song": "Need a Favor", "album": "Whitsitt Chapel", "last": "Roll"}, "codyjohnson": {"song": "'Til You Can't", "album": "Human", "last": "Johnson"}, "carrieunderwood": {"song": "Before He Cheats", "album": "Some Hearts", "last": "Underwood"}, "ellalangley": {"song": "You Look Like You Love Me", "album": "Hungover", "last": "Langley"}, "shaboozey": {"song": "A Bar Song", "album": "Where I've Been", "last": "Shaboozey"}, "laineywilson": {"song": "Heart Like a Truck", "album": "Bell Bottom Country", "last": "Wilson"}};
 var ART={grunge90s:'art-grunge90s.jpg',taylorswift:'art-taylorswift.jpg',dmb:'art-dmb.jpg'};
 function colorOf(v){var p=COLORMAP[v.id]||['#37E0FF','55,224,255'];return {acc:p[0],tint:p[1]};}
-function streamTileHTML(v,label){ var rk=colorOf(v); var d=SDATA[v.id]||{song:'Greatest Hits',album:'Hits',last:v.name.split(' ').pop()}; return '<div class="cover scard" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+'<div class="scart">'+'<div class="gcard gsong"><div class="typ">♪ Song</div><div class="q">'+d.song+'</div></div>'+'<div class="gcard glore"><div class="typ">💬 Lore</div><div class="q">'+d.last+'</div></div>'+'<div class="gcard galbum"><div class="typ">💿 Album</div><div class="q">'+d.album+'</div></div>'+'</div>'+'<div class="scname">'+v.name+'</div>'+'<div class="scbar"><span></span></div><div class="scctl">'+SFSCTL+'</div></div>'; }
+function streamTileHTML(v,label){ var rk=colorOf(v); var d=SDATA[v.id]||{song:'Greatest Hits',album:'Hits',lore:'',last:v.name.split(' ').pop()}; return '<div class="cover scard" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+'<div class="scart">'+'<div class="gcard gsong"><div class="typ">🎵 Song</div><div class="q">'+d.song+'</div></div>'+'<div class="gcard glore"><div class="typ">📖 Lore</div><div class="q">'+d.last+'</div></div>'+'<div class="gcard galbum"><div class="typ">💿 Album</div><div class="q">'+d.album+'</div></div>'+'</div>'+'<div class="scname">'+v.name+'</div>'+'<div class="scbar"><span></span></div><div class="scctl">'+SFSCTL+'</div></div>'; }
 function streamMiniHTML(v){ var rk=rankOf(v); return '<div class="cover scover" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'+sBadge(v)+'<div class="sghost">'+v.name.toUpperCase()+'</div><div class="spill">'+rk.lab+'</div><div class="splay">'+PLAYSVG+'</div></div>'; }
 function streamCardHTML(v){ var rk=rankOf(v);
  return '<div class="scard2" style="--acc:'+rk.acc+';--tint:'+rk.tint+'">'
@@ -669,15 +672,15 @@ function openVault(id){
  var poster = ART[v.id] ? '<div class="v5poster"><img src="'+ART[v.id]+'?v=2" alt=""></div>'
                         : '<div class="v5poster v5noart"><span>'+v.name.toUpperCase()+'</span></div>';
  var fan='<div class="vkfan">'
-   +'<div class="vksamp vs1"><div class="typ">♪ Song</div><div class="q">'+d.song+'</div><div class="smp">Sample</div></div>'
-   +'<div class="vksamp vs2"><div class="typ">💬 Lore</div><div class="q">'+d.last+'</div><div class="smp">Sample</div></div>'
+   +'<div class="vksamp vs1"><div class="typ">🎵 Song</div><div class="q">'+d.song+'</div><div class="smp">Sample</div></div>'
+   +'<div class="vksamp vs2"><div class="typ">📖 Lore</div><div class="q">'+(d.lore||d.last||'')+'</div><div class="smp">Sample</div></div>'
    +'<div class="vksamp vs3"><div class="typ">💿 Album</div><div class="q">'+d.album+'</div><div class="smp">Sample</div></div>'
    +'</div>';
  var sheet='<div class="vksheet v5sheet">'
-   +'<button class="vkclose" onclick="closeOv()">✕</button>'
+   +'<button class="vkclose" onclick="closeOv()">✕</button>'+'<div class="v5legal" onclick="openLegal()">Unofficial fan-created content. Not affiliated with or endorsed by the artist.</div>'
    +'<div class="v5main">'+poster
      +'<div class="v5head"><div class="v5title">'+v.name+'</div><div class="v5tier">Superfan Vault</div>'
-     +'<p class="v5blurb">One shuffle. Everything mixed — songs, deep cuts &amp; album lore. <b>How deep does your fandom go?</b></p>'
+     +'<p class="v5blurb">One shuffle. Songs, albums, lore, and deep cuts&mdash;for fans who know there&rsquo;s more to every artist than the hits.</p>'
      +'<div class="v5cats"><div class="v5cat">'+IC_SONG+'<span>Songs</span></div><div class="v5cat">'+IC_ALB+'<span>Albums</span></div><div class="v5cat">'+IC_LORE+'<span>Lore</span></div><div class="v5cat">'+IC_DEEP+'<span>Deep Cuts</span></div></div>'
      +'</div></div>'
    +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">▶ PLAY</span><span class="v5sub" id="v5sub">Standard Edition · Beginner Rules</span></button>'
@@ -692,7 +695,7 @@ function openVault(id){
        +'<button class="v5cl" id="cl-Casual" onclick="selClue(\'Casual\')"><b>Casual</b><span>No humming or singing.</span></button>'
        +'<button class="v5cl" id="cl-Superfan" onclick="selClue(\'Superfan\')"><b>Superfan</b><span>Lyrics only, no chorus.</span></button></div>'
    +'</div>'
-   +'<button class="purchase-legal" onclick="openLegal()">Unofficial fan-trivia content. No affiliation or endorsement implied.</button>'
+   
    +'</div>';
  var back='<div class="vkback" style="--artist:'+rk.acc+';--artist-glow:rgba('+rk.tint+',.5);--tint:'+rk.tint+'">'+fan+sheet+'</div>';
  var html='<div class="flipwrap"><div class="flipcard"><div class="flipface flipfront">'+flipFront(v)+'</div><div class="flipface flipbackface">'+back+'</div></div></div>';
