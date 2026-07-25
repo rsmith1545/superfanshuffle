@@ -359,6 +359,26 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .v5cl.sel b{color:var(--cyan)}
 </style></head>
 <body>
+<!-- FULL-SCREEN INTRO (shows every app open: brand card -> how-to-play -> store) -->
+<div id="introOv" class="on" aria-label="Welcome to SuperFan Shuffle">
+  <div class="introSlide cur" id="introS1"><img src="intro-card.jpg?v=1" alt="Everyone's a superfan of something"></div>
+  <div class="introSlide" id="introS2"><img src="howto-play.jpg?v=1" alt="Tilt up to pass, tilt down for correct"></div>
+</div>
+<style>
+#introOv{position:fixed;inset:0;z-index:100000;background:#0b0714;display:none}
+#introOv.on{display:block}
+.introSlide{position:absolute;inset:0;display:none;cursor:pointer}
+.introSlide.cur{display:block}
+.introSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+</style>
+<script>
+(function(){
+  var ov=document.getElementById('introOv'),s1=document.getElementById('introS1'),s2=document.getElementById('introS2');
+  function go2(){ s1.classList.remove('cur'); s2.classList.add('cur'); }
+  function done(){ ov.classList.remove('on'); }
+  s1.addEventListener('click',go2); s2.addEventListener('click',done);
+})();
+</script>
 <header id="topbar">
   <div class="neon">
     <img class="neon-lit" src="sfs-neon-mobile-lit.webp" alt="SuperFan Shuffle — Face the Music.">
