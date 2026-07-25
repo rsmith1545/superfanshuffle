@@ -363,18 +363,16 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 <div id="introOv" class="on" aria-label="Welcome to SuperFan Shuffle">
   <div class="introSlide cur" id="introS1"><img src="intro-card.jpg?v=1" alt="Everyone's a superfan of something"></div>
   <div class="introSlide" id="introS2">
-    <img class="s2bg" src="howto-play.jpg?v=2" alt="How to play">
+    <img class="s2bg" src="howto-play.jpg?v=3" alt="How to play">
     <div class="tiltDemo">
       <div class="tGroup pass">
-        <svg class="cArrow" viewBox="0 0 90 52"><path d="M12 46 Q 45 2 78 46" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"/><path d="M45 5 l-11 17 l22 0 z" fill="currentColor"/></svg>
-        <div class="tPhone"><div class="tScreen"><span class="word">PASS</span></div></div>
+        <div class="tRow"><svg class="fArrow l" viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg><div class="tPhone"><div class="tScreen"><span class="word">PASS</span></div></div><svg class="fArrow r" viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></div>
         <div class="tSub">Tilt <b>UP</b> to Pass</div>
       </div>
       <div class="tBolt">⚡</div>
       <div class="tGroup correct">
         <div class="tSub">Tilt <b>DOWN</b> for Correct</div>
-        <div class="tPhone"><div class="tScreen"><span class="word">CORRECT</span></div></div>
-        <svg class="cArrow" viewBox="0 0 90 52"><path d="M12 46 Q 45 2 78 46" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"/><path d="M45 5 l-11 17 l22 0 z" fill="currentColor"/></svg>
+        <div class="tRow"><svg class="fArrow l" viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg><div class="tPhone"><div class="tScreen"><span class="word">CORRECT</span></div></div><svg class="fArrow r" viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></div>
       </div>
     </div>
   </div>
@@ -385,27 +383,33 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .introSlide{position:absolute;inset:0;display:none;cursor:pointer}
 .introSlide.cur{display:block}
 .introSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-.s2bg{z-index:0;object-position:60% 48%}
-.tiltDemo{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6vh;padding-top:12vh}
+.s2bg{z-index:0;object-position:50% 50%}
+.tiltDemo{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh;padding-top:15vh}
 .tGroup{display:flex;flex-direction:column;align-items:center;gap:1.1vh}
-.cArrow{width:16vw;max-width:74px;height:auto;display:block}
-.pass .cArrow{color:#ffb43a;filter:drop-shadow(0 0 9px rgba(245,150,25,.85));animation:bobUp 1.6s ease-in-out infinite}
-.correct .cArrow{color:#5ef07e;transform:scaleY(-1);filter:drop-shadow(0 0 9px rgba(45,215,90,.85));animation:bobDown 1.6s ease-in-out infinite}
-.tPhone{width:50vw;max-width:224px;aspect-ratio:2/1;border-radius:20px;padding:6px;background:linear-gradient(160deg,#15151d,#0a0a10);border:2.5px solid rgba(255,255,255,.16);transform-style:preserve-3d}
+.tRow{display:flex;align-items:center;gap:3vw}
+.fArrow{width:8.5vw;max-width:40px;height:auto}
+.fArrow.r{transform:scaleX(-1)}
+.pass .fArrow{animation:bobUp 1.6s ease-in-out infinite}
+.pass .fArrow.r{animation:bobUpR 1.6s ease-in-out infinite}
+.correct .fArrow{transform:scaleY(-1);animation:bobDn 1.6s ease-in-out infinite}
+.correct .fArrow.r{transform:scale(-1,-1);animation:bobDnR 1.6s ease-in-out infinite}
+.tPhone{width:48vw;max-width:216px;aspect-ratio:2/1;border-radius:20px;padding:6px;background:linear-gradient(160deg,#15151d,#0a0a10);border:2.5px solid rgba(255,255,255,.16);transform-style:preserve-3d}
 .pass .tPhone{border-color:rgba(245,165,45,.95);box-shadow:0 0 32px 5px rgba(245,150,25,.7),inset 0 0 12px rgba(0,0,0,.7);animation:rockUp 1.9s ease-in-out infinite}
 .correct .tPhone{border-color:rgba(60,230,110,.95);box-shadow:0 0 32px 5px rgba(45,215,90,.7),inset 0 0 12px rgba(0,0,0,.7);animation:rockDown 1.9s ease-in-out infinite}
 .tScreen{width:100%;height:100%;border-radius:14px;display:flex;align-items:center;justify-content:center}
 .pass .tScreen{background:radial-gradient(120% 130% at 50% -10%,#ffb43a,#e8720f)}
 .correct .tScreen{background:radial-gradient(120% 130% at 50% -10%,#5ef07e,#22a844)}
-.tScreen .word{font-family:'Bebas Neue',var(--disp,sans-serif);font-size:9vw;line-height:1;letter-spacing:2px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.tScreen .word{font-family:'Bebas Neue',var(--disp,sans-serif);font-size:8.5vw;line-height:1;letter-spacing:2px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.4)}
 .tSub{font-family:var(--body,sans-serif);font-size:3.7vw;color:#fff;opacity:.95}
 .tSub b{font-weight:900}
 .pass .tSub b{color:#ffb43a} .correct .tSub b{color:#5ef07e}
 .tBolt{font-size:5.5vw;filter:drop-shadow(0 0 10px rgba(180,110,255,.8));animation:boltPulse 1.9s ease-in-out infinite}
 @keyframes rockUp{0%,100%{transform:perspective(680px) rotateX(9deg)}50%{transform:perspective(680px) rotateX(-19deg)}}
 @keyframes rockDown{0%,100%{transform:perspective(680px) rotateX(-9deg)}50%{transform:perspective(680px) rotateX(19deg)}}
-@keyframes bobUp{0%,100%{transform:translateY(5px)}50%{transform:translateY(-9px)}}
-@keyframes bobDown{0%,100%{transform:scaleY(-1) translateY(5px)}50%{transform:scaleY(-1) translateY(-9px)}}
+@keyframes bobUp{0%,100%{transform:translateY(4px)}50%{transform:translateY(-8px)}}
+@keyframes bobUpR{0%,100%{transform:scaleX(-1) translateY(4px)}50%{transform:scaleX(-1) translateY(-8px)}}
+@keyframes bobDn{0%,100%{transform:scaleY(-1) translateY(4px)}50%{transform:scaleY(-1) translateY(-8px)}}
+@keyframes bobDnR{0%,100%{transform:scale(-1,-1) translateY(4px)}50%{transform:scale(-1,-1) translateY(-8px)}}
 @keyframes boltPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
 </style>
 <script>
