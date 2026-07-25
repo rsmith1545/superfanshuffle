@@ -77,14 +77,28 @@
  .xsell b{color:var(--mag)}
  .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:24px;font-size:14px;font-weight:700;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:86%;text-align:center}
  .toast.on{opacity:.96}
+.introScr{padding:0;gap:12px;position:relative;background:#0d0618;cursor:pointer}
+.introScr img.introBg{max-width:100%;max-height:82vh;object-fit:contain;display:block;border-radius:6px}
+.introScr .introHint{position:absolute;bottom:2.5%;left:0;right:0;text-align:center;font-family:var(--body);font-size:3.4vw;letter-spacing:1px;color:rgba(255,255,255,.55);text-transform:uppercase;pointer-events:none}
+#introOkWrap{margin-top:2px}
 </style></head>
 <body>
 <button id="dbgBtn">debug</button>
 <div id="dbg"></div>
 <div id="stage">
 <div id="app">
+  <!-- INTRO 1: brand card -->
+  <div class="screen on introScr" id="sIntro1">
+    <img class="introBg" src="intro-card.jpg?v=1" alt="Everyone's a superfan of something">
+    <div class="introHint">Tap to continue</div>
+  </div>
+  <!-- INTRO 2: how to play (tilt tutorial) -->
+  <div class="screen introScr" id="sIntro2">
+    <img class="introBg" src="howto-play.jpg?v=1" alt="Tilt up to pass, tilt down for correct">
+    <div id="introOkWrap"><button class="btn" id="introOk2">Got it &rarr;</button></div>
+  </div>
   <!-- START -->
-  <div class="screen on" id="sStart">
+  <div class="screen" id="sStart">
     <h1><span class="l1">SuperFan</span><br><span class="l2">Shuffle</span></h1>
     <div class="sub">Hold the phone to your forehead.<br><b>Tilt DOWN</b> when you get it • <b>Tilt UP</b> to pass.</div>
     <button class="btn" id="startBtn">Tap to Play</button>
@@ -140,7 +154,7 @@ var MAX_Q=5;
 
 /* ---------- screens ---------- */
 var app=document.getElementById('app');
-function show(id){['sStart','sReady','sGame','sWall','sReport'].forEach(function(s){document.getElementById(s).classList.toggle('on',s===id);});}
+function show(id){['sIntro1','sIntro2','sStart','sReady','sGame','sWall','sReport'].forEach(function(s){document.getElementById(s).classList.toggle('on',s===id);});}
 var tHandle2=null;
 function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(tHandle2); tHandle2=setTimeout(function(){ t.classList.remove('on'); }, 2600); }
 
@@ -345,7 +359,10 @@ window.addEventListener('resize', checkOrientation);
 /* ---------- buttons ---------- */
 function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
-document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); }); };
+function startFlow(){ goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); }); }
+document.getElementById('startBtn').onclick=startFlow;
+document.getElementById('sIntro1').onclick=function(){ show('sIntro2'); };
+document.getElementById('sIntro2').onclick=startFlow;
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
 /* unlock wall */
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · $0.99 — payments not wired yet'); };
