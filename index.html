@@ -362,7 +362,22 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 <!-- FULL-SCREEN INTRO (shows every app open: brand card -> how-to-play -> store) -->
 <div id="introOv" class="on" aria-label="Welcome to SuperFan Shuffle">
   <div class="introSlide cur" id="introS1"><img src="intro-card.jpg?v=1" alt="Everyone's a superfan of something"></div>
-  <div class="introSlide" id="introS2"><img src="howto-play.jpg?v=1" alt="Tilt up to pass, tilt down for correct"></div>
+  <div class="introSlide" id="introS2">
+    <img class="s2bg" src="howto-play.jpg?v=2" alt="How to play">
+    <div class="tiltDemo">
+      <div class="tRow pass">
+        <div class="tArrow up">⬆</div>
+        <div class="tPhone"><div class="tScreen"><span class="ar">⬆</span></div></div>
+        <div class="tLab"><b>PASS</b><i>Tilt <u>UP</u> to Pass</i></div>
+      </div>
+      <div class="tBolt">⚡</div>
+      <div class="tRow correct">
+        <div class="tLab"><b>CORRECT</b><i>Tilt <u>DOWN</u> for Correct</i></div>
+        <div class="tPhone"><div class="tScreen"><span class="ar">⬇</span></div></div>
+        <div class="tArrow down">⬇</div>
+      </div>
+    </div>
+  </div>
 </div>
 <style>
 #introOv{position:fixed;inset:0;z-index:100000;background:#0b0714;display:none}
@@ -370,6 +385,32 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .introSlide{position:absolute;inset:0;display:none;cursor:pointer}
 .introSlide.cur{display:block}
 .introSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.s2bg{z-index:0}
+.tiltDemo{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.4vh;padding-top:11vh}
+.tRow{display:flex;align-items:center;gap:3.5vw}
+.tRow.correct{margin-top:.5vh}
+.tPhone{width:26vw;max-width:118px;aspect-ratio:1/2;border-radius:18px;padding:5px;background:linear-gradient(160deg,#15151d,#0a0a10);border:2px solid rgba(255,255,255,.16);transform-style:preserve-3d}
+.pass .tPhone{border-color:rgba(245,165,45,.95);box-shadow:0 0 30px 5px rgba(245,150,25,.7),inset 0 0 12px rgba(0,0,0,.7);animation:rockUp 1.8s ease-in-out infinite}
+.correct .tPhone{border-color:rgba(60,230,110,.95);box-shadow:0 0 30px 5px rgba(45,215,90,.7),inset 0 0 12px rgba(0,0,0,.7);animation:rockDown 1.8s ease-in-out infinite}
+.tScreen{width:100%;height:100%;border-radius:13px;display:flex;align-items:center;justify-content:center;background-image:radial-gradient(120% 80% at 50% -10%,rgba(255,255,255,.35),transparent 60%)}
+.pass .tScreen{background-color:#ef8a12;background-image:radial-gradient(120% 80% at 50% -10%,rgba(255,225,150,.55),transparent 60%)}
+.correct .tScreen{background-color:#2fb84c;background-image:radial-gradient(120% 80% at 50% -10%,rgba(200,255,190,.5),transparent 60%)}
+.tScreen .ar{font-size:14vw;line-height:1;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.45)}
+.tArrow{font-size:9vw;line-height:1;filter:drop-shadow(0 0 10px currentColor)}
+.pass .tArrow{color:#ffb43a;animation:bobUp 1.8s ease-in-out infinite}
+.correct .tArrow{color:#5ef07e;animation:bobDown 1.8s ease-in-out infinite}
+.tLab{display:flex;flex-direction:column;justify-content:center;min-width:34vw}
+.tLab b{font-family:'Bebas Neue',var(--disp,sans-serif);font-size:8.5vw;line-height:.9;letter-spacing:1px}
+.tLab i{font-family:var(--body,sans-serif);font-style:normal;font-size:3.6vw;color:#fff;margin-top:2px;opacity:.92}
+.tLab u{text-decoration:none;font-weight:800}
+.pass .tLab b{color:#ffb43a;text-shadow:0 0 14px rgba(245,150,25,.7)} .pass .tLab u{color:#ffb43a}
+.correct .tLab b{color:#5ef07e;text-shadow:0 0 14px rgba(45,215,90,.7)} .correct .tLab u{color:#5ef07e}
+.tBolt{font-size:6vw;filter:drop-shadow(0 0 10px rgba(180,110,255,.8));animation:boltPulse 1.8s ease-in-out infinite}
+@keyframes rockUp{0%,100%{transform:perspective(620px) rotateX(8deg)}50%{transform:perspective(620px) rotateX(-18deg)}}
+@keyframes rockDown{0%,100%{transform:perspective(620px) rotateX(-8deg)}50%{transform:perspective(620px) rotateX(18deg)}}
+@keyframes bobUp{0%,100%{transform:translateY(4px)}50%{transform:translateY(-10px)}}
+@keyframes bobDown{0%,100%{transform:translateY(-4px)}50%{transform:translateY(10px)}}
+@keyframes boltPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
 </style>
 <script>
 (function(){
