@@ -61,7 +61,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 /* vault tile — photoreal era-object on a translucent purple frosted container; artist name rendered below. */
 .vault{flex:0 0 auto;width:150px;scroll-snap-align:start;cursor:pointer;transition:transform .12s}
 .vault:active{transform:scale(.95)}
-.cover{position:relative;width:150px;height:198px;border-radius:16px;background:transparent}
+.cover{position:relative;width:150px;height:198px;border-radius:16px;background:transparent}.sptile{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;border:3px solid var(--s);background:var(--p);color:var(--t);padding:12px 9px;box-shadow:5px 8px 18px rgba(0,0,0,.45)}.sptile .spcity{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.4px;line-height:1.1;opacity:.95}.sptile .spteam{font-family:var(--disp);font-size:24px;line-height:.94;letter-spacing:.5px;text-transform:uppercase;margin:4px 2px 9px;overflow-wrap:anywhere}.sptile .splbl{font-family:var(--body);font-size:9px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;opacity:.82;border-top:1px solid currentColor;padding-top:6px}.brow .sptile{padding:0}.brow .sptile>*{display:none}
 .cover .obj{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:9px;filter:drop-shadow(2px 4px 6px rgba(0,0,0,.42))}
 .cover .obj.cassette{transform:rotate(-15deg) scale(1.05)}
 .cover .obj.named{padding:4px}
@@ -449,7 +449,7 @@ var DEV_PREVIEW=true;
 var EDITIONS=[
  {id:'music',  label:'Music',     enabled:true,  accent:'#b06aff'},
  {id:'filmtv', label:'Film & TV', enabled:false, accent:'#ffc24a'},
- {id:'sports', label:'Sports',    enabled:false, accent:'#ff9d2e'}
+ {id:'sports', label:'Sports',    enabled:true,  accent:'#ff9d2e'}
 ];
 function editionVisible(e){ return e.enabled || DEV_PREVIEW; }
 function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)return EDITIONS[i];}
@@ -526,14 +526,138 @@ var VAULTS=[
  {id:'fthc', name:"Frank Turner", edition:'music', cat:'Singer-Songwriter · Jam · Indie', bk:'fthc', badge:'prem', c:['#1f3d2a','#4a6b4a'], dark:1},
  {id:'grunge90s', name:"90s Grunge", edition:'music', cat:'Party', bk:null, badge:'prem', c:['#2a3a3a','#5a7a7a'], dark:1},
  /* --- Sports edition: one LIVE free seed + generic placeholders --- */
- {id:'shuffle85', name:"The '85 Shuffle", edition:'sports', cat:'', badge:'free', c:['#0b2265','#c83803'], dark:1},
- {id:'sp_a', name:'Sample Vault A', edition:'sports', cat:'', badge:'prem', c:['#3a2a1a','#7a5a2a'], dark:1},
- {id:'sp_b', name:'Sample Vault B', edition:'sports', cat:'', badge:'prem', c:['#2a3a1a','#5a7a3a'], dark:1},
  /* --- Film & TV edition: generic placeholders only --- */
  {id:'ft_a', name:'Sample Vault A', edition:'filmtv', cat:'', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'ft_b', name:'Sample Vault B', edition:'filmtv', cat:'', badge:'free', c:['#2a3a6e','#4a6aa0'], dark:1},
  {id:'ft_c', name:'Sample Vault C', edition:'filmtv', cat:'', badge:'prem', c:['#5a2a5e','#8a4a8e'], dark:1}
 ];
+var SPORTS=[
+{id:"fo-arizona-cardinals",name:"Arizona Cardinals",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#97233F","#000000"],sp:{p:"#97233F",s:"#000000",t:"#FFB612",city:"Arizona",team:"Cardinals"}},
+{id:"fo-atlanta-falcons",name:"Atlanta Falcons",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#A71930","#000000"],sp:{p:"#A71930",s:"#000000",t:"#A5ACAF",city:"Atlanta",team:"Falcons"}},
+{id:"fo-baltimore-ravens",name:"Baltimore Ravens",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#241773","#000000"],sp:{p:"#241773",s:"#000000",t:"#9E7C0C",city:"Baltimore",team:"Ravens"}},
+{id:"fo-buffalo-bills",name:"Buffalo Bills",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#00338D","#C60C30"],sp:{p:"#00338D",s:"#C60C30",t:"#FFFFFF",city:"Buffalo",team:"Bills"}},
+{id:"fo-carolina-panthers",name:"Carolina Panthers",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#0085CA","#101820"],sp:{p:"#0085CA",s:"#101820",t:"#000000",city:"Carolina",team:"Panthers"}},
+{id:"fo-chicago-bears",name:"Chicago Bears",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#0B162A","#C83803"],sp:{p:"#0B162A",s:"#C83803",t:"#FFFFFF",city:"Chicago",team:"Bears"}},
+{id:"fo-cincinnati-bengals",name:"Cincinnati Bengals",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#FB4F14","#000000"],sp:{p:"#FB4F14",s:"#000000",t:"#FFFFFF",city:"Cincinnati",team:"Bengals"}},
+{id:"fo-cleveland-browns",name:"Cleveland Browns",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#311D00","#FF3C00"],sp:{p:"#311D00",s:"#FF3C00",t:"#FFFFFF",city:"Cleveland",team:"Browns"}},
+{id:"fo-dallas-cowboys",name:"Dallas Cowboys",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#003594","#869397"],sp:{p:"#003594",s:"#869397",t:"#FFFFFF",city:"Dallas",team:"Cowboys"}},
+{id:"fo-denver-broncos",name:"Denver Broncos",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#FB4F14","#002244"],sp:{p:"#FB4F14",s:"#002244",t:"#FFFFFF",city:"Denver",team:"Broncos"}},
+{id:"fo-detroit-lions",name:"Detroit Lions",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#0076B6","#B0B7BC"],sp:{p:"#0076B6",s:"#B0B7BC",t:"#000000",city:"Detroit",team:"Lions"}},
+{id:"fo-green-bay-packers",name:"Green Bay Packers",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#203731","#FFB612"],sp:{p:"#203731",s:"#FFB612",t:"#FFFFFF",city:"Green Bay",team:"Packers"}},
+{id:"fo-houston-texans",name:"Houston Texans",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#03202F","#A71930"],sp:{p:"#03202F",s:"#A71930",t:"#FFFFFF",city:"Houston",team:"Texans"}},
+{id:"fo-indianapolis-colts",name:"Indianapolis Colts",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#002C5F","#A2AAAD"],sp:{p:"#002C5F",s:"#A2AAAD",t:"#FFFFFF",city:"Indianapolis",team:"Colts"}},
+{id:"fo-jacksonville-jaguars",name:"Jacksonville Jaguars",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#101820","#D7A22A"],sp:{p:"#101820",s:"#D7A22A",t:"#FFFFFF",city:"Jacksonville",team:"Jaguars"}},
+{id:"fo-kansas-city-chiefs",name:"Kansas City Chiefs",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#E31837","#FFB81C"],sp:{p:"#E31837",s:"#FFB81C",t:"#FFFFFF",city:"Kansas City",team:"Chiefs"}},
+{id:"fo-las-vegas-raiders",name:"Las Vegas Raiders",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#000000","#A5ACAF"],sp:{p:"#000000",s:"#A5ACAF",t:"#FFFFFF",city:"Las Vegas",team:"Raiders"}},
+{id:"fo-los-angeles-rams",name:"Los Angeles Rams",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#003594","#FFA300"],sp:{p:"#003594",s:"#FFA300",t:"#FFFFFF",city:"Los Angeles",team:"Rams"}},
+{id:"fo-los-angeles-chargers",name:"Los Angeles Chargers",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#0080C6","#FFC20E"],sp:{p:"#0080C6",s:"#FFC20E",t:"#002A5E",city:"Los Angeles",team:"Chargers"}},
+{id:"fo-miami-dolphins",name:"Miami Dolphins",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#008E97","#FC4C02"],sp:{p:"#008E97",s:"#FC4C02",t:"#000000",city:"Miami",team:"Dolphins"}},
+{id:"fo-minnesota-vikings",name:"Minnesota Vikings",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#4F2683","#FFC62F"],sp:{p:"#4F2683",s:"#FFC62F",t:"#FFFFFF",city:"Minnesota",team:"Vikings"}},
+{id:"fo-nashville-titans",name:"Nashville Titans",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#0C2340","#4B92DB"],sp:{p:"#0C2340",s:"#4B92DB",t:"#FFFFFF",city:"Nashville",team:"Titans"}},
+{id:"fo-new-england-patriots",name:"New England Patriots",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#002244","#C60C30"],sp:{p:"#002244",s:"#C60C30",t:"#B0B7BC",city:"New England",team:"Patriots"}},
+{id:"fo-new-orleans-saints",name:"New Orleans Saints",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#D3BC8D","#101820"],sp:{p:"#D3BC8D",s:"#101820",t:"#000000",city:"New Orleans",team:"Saints"}},
+{id:"fo-new-york-giants",name:"New York Giants",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#0B2265","#A71930"],sp:{p:"#0B2265",s:"#A71930",t:"#A5ACAF",city:"New York",team:"Giants"}},
+{id:"fo-new-york-jets",name:"New York Jets",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#125740","#000000"],sp:{p:"#125740",s:"#000000",t:"#FFFFFF",city:"New York",team:"Jets"}},
+{id:"fo-philadelphia-eagles",name:"Philadelphia Eagles",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#004C54","#A5ACAF"],sp:{p:"#004C54",s:"#A5ACAF",t:"#FFFFFF",city:"Philadelphia",team:"Eagles"}},
+{id:"fo-pittsburgh-steelers",name:"Pittsburgh Steelers",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#FFB612","#101820"],sp:{p:"#FFB612",s:"#101820",t:"#C60C30",city:"Pittsburgh",team:"Steelers"}},
+{id:"fo-san-francisco-49ers",name:"San Francisco 49ers",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#AA0000","#B3995D"],sp:{p:"#AA0000",s:"#B3995D",t:"#FFFFFF",city:"San Francisco",team:"49ers"}},
+{id:"fo-seattle-seahawks",name:"Seattle Seahawks",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#002244","#69BE28"],sp:{p:"#002244",s:"#69BE28",t:"#A5ACAF",city:"Seattle",team:"Seahawks"}},
+{id:"fo-tampa-bay-buccaneers",name:"Tampa Bay Buccaneers",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#D50A0A","#34302B"],sp:{p:"#D50A0A",s:"#34302B",t:"#FFFFFF",city:"Tampa Bay",team:"Buccaneers"}},
+{id:"fo-washington-commanders",name:"Washington Commanders",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#5A1414","#FFB612"],sp:{p:"#5A1414",s:"#FFB612",t:"#FFFFFF",city:"Washington",team:"Commanders"}},
+{id:"ba-atlanta-hawks",name:"Atlanta Hawks",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#E03A3E","#C1D32F"],sp:{p:"#E03A3E",s:"#C1D32F",t:"#26282A",city:"Atlanta",team:"Hawks"}},
+{id:"ba-boston-celtics",name:"Boston Celtics",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#007A33","#BA9653"],sp:{p:"#007A33",s:"#BA9653",t:"#000000",city:"Boston",team:"Celtics"}},
+{id:"ba-charlotte-hornets",name:"Charlotte Hornets",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#1D1160","#00788C"],sp:{p:"#1D1160",s:"#00788C",t:"#A1A1A4",city:"Charlotte",team:"Hornets"}},
+{id:"ba-chicago-bulls",name:"Chicago Bulls",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#CE1141","#000000"],sp:{p:"#CE1141",s:"#000000",t:"#FFFFFF",city:"Chicago",team:"Bulls"}},
+{id:"ba-cleveland-cavaliers",name:"Cleveland Cavaliers",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#860038","#041E42"],sp:{p:"#860038",s:"#041E42",t:"#FDBB30",city:"Cleveland",team:"Cavaliers"}},
+{id:"ba-dallas-mavericks",name:"Dallas Mavericks",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#00538C","#002B5E"],sp:{p:"#00538C",s:"#002B5E",t:"#B8C4CA",city:"Dallas",team:"Mavericks"}},
+{id:"ba-denver-nuggets",name:"Denver Nuggets",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#0E2240","#FEC524"],sp:{p:"#0E2240",s:"#FEC524",t:"#FFFFFF",city:"Denver",team:"Nuggets"}},
+{id:"ba-detroit-pistons",name:"Detroit Pistons",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#C8102E","#1D42BA"],sp:{p:"#C8102E",s:"#1D42BA",t:"#000000",city:"Detroit",team:"Pistons"}},
+{id:"ba-houston-rockets",name:"Houston Rockets",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#CE1141","#000000"],sp:{p:"#CE1141",s:"#000000",t:"#C4CED4",city:"Houston",team:"Rockets"}},
+{id:"ba-indianapolis-pacers",name:"Indianapolis Pacers",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#002D62","#FDBB30"],sp:{p:"#002D62",s:"#FDBB30",t:"#BEC0C2",city:"Indianapolis",team:"Pacers"}},
+{id:"ba-los-angeles-lakers",name:"Los Angeles Lakers",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#552583","#FDB927"],sp:{p:"#552583",s:"#FDB927",t:"#FFFFFF",city:"Los Angeles",team:"Lakers"}},
+{id:"ba-los-angeles-clippers",name:"Los Angeles Clippers",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#C8102E","#1D428A"],sp:{p:"#C8102E",s:"#1D428A",t:"#000000",city:"Los Angeles",team:"Clippers"}},
+{id:"ba-memphis-grizzlies",name:"Memphis Grizzlies",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#5D76A9","#12173F"],sp:{p:"#5D76A9",s:"#12173F",t:"#000000",city:"Memphis",team:"Grizzlies"}},
+{id:"ba-miami-heat",name:"Miami Heat",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#98002E","#F9A01B"],sp:{p:"#98002E",s:"#F9A01B",t:"#FFFFFF",city:"Miami",team:"Heat"}},
+{id:"ba-milwaukee-bucks",name:"Milwaukee Bucks",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#00471B","#EEE1C6"],sp:{p:"#00471B",s:"#EEE1C6",t:"#FFFFFF",city:"Milwaukee",team:"Bucks"}},
+{id:"ba-minnesota-timberwolves",name:"Minnesota Timberwolves",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#0C2340","#236192"],sp:{p:"#0C2340",s:"#236192",t:"#78BE21",city:"Minnesota",team:"Timberwolves"}},
+{id:"ba-new-orleans-pelicans",name:"New Orleans Pelicans",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#0C2340","#C8102E"],sp:{p:"#0C2340",s:"#C8102E",t:"#85714D",city:"New Orleans",team:"Pelicans"}},
+{id:"ba-new-york-knicks",name:"New York Knicks",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#006BB6","#F58426"],sp:{p:"#006BB6",s:"#F58426",t:"#FFFFFF",city:"New York",team:"Knicks"}},
+{id:"ba-new-york-nets",name:"New York Nets",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#000000","#FFFFFF"],sp:{p:"#000000",s:"#FFFFFF",t:"#707271",city:"New York",team:"Nets"}},
+{id:"ba-oklahoma-city-thunder",name:"Oklahoma City Thunder",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#007AC1","#EF3B24"],sp:{p:"#007AC1",s:"#EF3B24",t:"#FFFFFF",city:"Oklahoma City",team:"Thunder"}},
+{id:"ba-orlando-magic",name:"Orlando Magic",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#0077C0","#C4CED4"],sp:{p:"#0077C0",s:"#C4CED4",t:"#000000",city:"Orlando",team:"Magic"}},
+{id:"ba-philadelphia-76ers",name:"Philadelphia 76ers",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#006BB6","#ED174C"],sp:{p:"#006BB6",s:"#ED174C",t:"#FFFFFF",city:"Philadelphia",team:"76ers"}},
+{id:"ba-phoenix-suns",name:"Phoenix Suns",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#1D1160","#E56020"],sp:{p:"#1D1160",s:"#E56020",t:"#FFFFFF",city:"Phoenix",team:"Suns"}},
+{id:"ba-portland-trail-blazers",name:"Portland Trail Blazers",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#E03A3E","#000000"],sp:{p:"#E03A3E",s:"#000000",t:"#FFFFFF",city:"Portland",team:"Trail Blazers"}},
+{id:"ba-sacramento-kings",name:"Sacramento Kings",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#5A2D81","#63727A"],sp:{p:"#5A2D81",s:"#63727A",t:"#FFFFFF",city:"Sacramento",team:"Kings"}},
+{id:"ba-salt-lake-city-jazz",name:"Salt Lake City Jazz",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#002B5C","#00471B"],sp:{p:"#002B5C",s:"#00471B",t:"#F9A01B",city:"Salt Lake City",team:"Jazz"}},
+{id:"ba-san-antonio-spurs",name:"San Antonio Spurs",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#C4CED4","#000000"],sp:{p:"#C4CED4",s:"#000000",t:"#000000",city:"San Antonio",team:"Spurs"}},
+{id:"ba-san-francisco-golden-state-warriors",name:"San Francisco Golden State Warriors",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#1D428A","#FFC72C"],sp:{p:"#1D428A",s:"#FFC72C",t:"#FFFFFF",city:"San Francisco",team:"Golden State Warriors"}},
+{id:"ba-toronto-raptors",name:"Toronto Raptors",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#CE1141","#000000"],sp:{p:"#CE1141",s:"#000000",t:"#FFFFFF",city:"Toronto",team:"Raptors"}},
+{id:"ba-washington-wizards",name:"Washington Wizards",edition:"sports",cat:"Basketball",badge:"prem",dark:1,c:["#002B5C","#E31837"],sp:{p:"#002B5C",s:"#E31837",t:"#C4CED4",city:"Washington",team:"Wizards"}},
+{id:"ba-arizona-diamondbacks",name:"Arizona Diamondbacks",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#A71930","#E3D4AD"],sp:{p:"#A71930",s:"#E3D4AD",t:"#FFFFFF",city:"Arizona",team:"Diamondbacks"}},
+{id:"ba-atlanta-braves",name:"Atlanta Braves",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#CE1141","#13274F"],sp:{p:"#CE1141",s:"#13274F",t:"#FFFFFF",city:"Atlanta",team:"Braves"}},
+{id:"ba-baltimore-orioles",name:"Baltimore Orioles",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#DF4601","#000000"],sp:{p:"#DF4601",s:"#000000",t:"#FFFFFF",city:"Baltimore",team:"Orioles"}},
+{id:"ba-boston-red-sox",name:"Boston Red Sox",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#BD3039","#0C2340"],sp:{p:"#BD3039",s:"#0C2340",t:"#FFFFFF",city:"Boston",team:"Red Sox"}},
+{id:"ba-chicago-cubs",name:"Chicago Cubs",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#0E3386","#CC3433"],sp:{p:"#0E3386",s:"#CC3433",t:"#FFFFFF",city:"Chicago",team:"Cubs"}},
+{id:"ba-chicago-white-sox",name:"Chicago White Sox",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#27251F","#C4CED4"],sp:{p:"#27251F",s:"#C4CED4",t:"#FFFFFF",city:"Chicago",team:"White Sox"}},
+{id:"ba-cincinnati-reds",name:"Cincinnati Reds",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#C6011F","#000000"],sp:{p:"#C6011F",s:"#000000",t:"#FFFFFF",city:"Cincinnati",team:"Reds"}},
+{id:"ba-cleveland-guardians",name:"Cleveland Guardians",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#00385D","#E50022"],sp:{p:"#00385D",s:"#E50022",t:"#FFFFFF",city:"Cleveland",team:"Guardians"}},
+{id:"ba-dallas-rangers",name:"Dallas Rangers",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#003278","#C0111F"],sp:{p:"#003278",s:"#C0111F",t:"#FFFFFF",city:"Dallas",team:"Rangers"}},
+{id:"ba-denver-rockies",name:"Denver Rockies",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#333366","#C4CED4"],sp:{p:"#333366",s:"#C4CED4",t:"#FFFFFF",city:"Denver",team:"Rockies"}},
+{id:"ba-detroit-tigers",name:"Detroit Tigers",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#0C2340","#FA4616"],sp:{p:"#0C2340",s:"#FA4616",t:"#FFFFFF",city:"Detroit",team:"Tigers"}},
+{id:"ba-houston-astros",name:"Houston Astros",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#002D62","#EB6E1F"],sp:{p:"#002D62",s:"#EB6E1F",t:"#F4911E",city:"Houston",team:"Astros"}},
+{id:"ba-kansas-city-royals",name:"Kansas City Royals",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#004687","#BD9B60"],sp:{p:"#004687",s:"#BD9B60",t:"#FFFFFF",city:"Kansas City",team:"Royals"}},
+{id:"ba-los-angeles-dodgers",name:"Los Angeles Dodgers",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#005A9C","#EF3E42"],sp:{p:"#005A9C",s:"#EF3E42",t:"#FFFFFF",city:"Los Angeles",team:"Dodgers"}},
+{id:"ba-los-angeles-angels",name:"Los Angeles Angels",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#BA0021","#003263"],sp:{p:"#BA0021",s:"#003263",t:"#FFFFFF",city:"Los Angeles",team:"Angels"}},
+{id:"ba-miami-marlins",name:"Miami Marlins",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#00A3E0","#EF3340"],sp:{p:"#00A3E0",s:"#EF3340",t:"#000000",city:"Miami",team:"Marlins"}},
+{id:"ba-milwaukee-brewers",name:"Milwaukee Brewers",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#12284B","#FFC52F"],sp:{p:"#12284B",s:"#FFC52F",t:"#FFFFFF",city:"Milwaukee",team:"Brewers"}},
+{id:"ba-minnesota-twins",name:"Minnesota Twins",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#002B5C","#D31145"],sp:{p:"#002B5C",s:"#D31145",t:"#B9975B",city:"Minnesota",team:"Twins"}},
+{id:"ba-new-york-yankees",name:"New York Yankees",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#0C2340","#C4CED3"],sp:{p:"#0C2340",s:"#C4CED3",t:"#E4002B",city:"New York",team:"Yankees"}},
+{id:"ba-new-york-mets",name:"New York Mets",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#002D72","#FF5910"],sp:{p:"#002D72",s:"#FF5910",t:"#FFFFFF",city:"New York",team:"Mets"}},
+{id:"ba-oakland-athletics",name:"Oakland Athletics",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#003831","#EFB21E"],sp:{p:"#003831",s:"#EFB21E",t:"#A2AAAD",city:"Oakland",team:"Athletics"}},
+{id:"ba-philadelphia-phillies",name:"Philadelphia Phillies",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#E81828","#002D72"],sp:{p:"#E81828",s:"#002D72",t:"#FFFFFF",city:"Philadelphia",team:"Phillies"}},
+{id:"ba-pittsburgh-pirates",name:"Pittsburgh Pirates",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#27251F","#FDB827"],sp:{p:"#27251F",s:"#FDB827",t:"#FFFFFF",city:"Pittsburgh",team:"Pirates"}},
+{id:"ba-san-diego-padres",name:"San Diego Padres",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#2F241D","#FFC425"],sp:{p:"#2F241D",s:"#FFC425",t:"#FFFFFF",city:"San Diego",team:"Padres"}},
+{id:"ba-san-francisco-giants",name:"San Francisco Giants",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#FD5A1E","#27251F"],sp:{p:"#FD5A1E",s:"#27251F",t:"#000000",city:"San Francisco",team:"Giants"}},
+{id:"ba-seattle-mariners",name:"Seattle Mariners",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#0C2C56","#005C5C"],sp:{p:"#0C2C56",s:"#005C5C",t:"#C4CED4",city:"Seattle",team:"Mariners"}},
+{id:"ba-st-louis-cardinals",name:"St. Louis Cardinals",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#C41E3A","#0C2340"],sp:{p:"#C41E3A",s:"#0C2340",t:"#FEDB00",city:"St. Louis",team:"Cardinals"}},
+{id:"ba-tampa-bay-rays",name:"Tampa Bay Rays",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#092C5C","#8FBCE6"],sp:{p:"#092C5C",s:"#8FBCE6",t:"#F5D130",city:"Tampa Bay",team:"Rays"}},
+{id:"ba-toronto-blue-jays",name:"Toronto Blue Jays",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#134A8E","#1D2D5C"],sp:{p:"#134A8E",s:"#1D2D5C",t:"#FFFFFF",city:"Toronto",team:"Blue Jays"}},
+{id:"ba-washington-nationals",name:"Washington Nationals",edition:"sports",cat:"Baseball",badge:"prem",dark:1,c:["#AB0003","#14225A"],sp:{p:"#AB0003",s:"#14225A",t:"#FFFFFF",city:"Washington",team:"Nationals"}},
+{id:"ho-anaheim-ducks",name:"Anaheim Ducks",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#F47A38","#B9975B"],sp:{p:"#F47A38",s:"#B9975B",t:"#000000",city:"Anaheim",team:"Ducks"}},
+{id:"ho-boston-bruins",name:"Boston Bruins",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#FFB81C","#000000"],sp:{p:"#FFB81C",s:"#000000",t:"#000000",city:"Boston",team:"Bruins"}},
+{id:"ho-buffalo-sabres",name:"Buffalo Sabres",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#003087","#FFB81C"],sp:{p:"#003087",s:"#FFB81C",t:"#FFFFFF",city:"Buffalo",team:"Sabres"}},
+{id:"ho-calgary-flames",name:"Calgary Flames",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#C8102E","#F1BE48"],sp:{p:"#C8102E",s:"#F1BE48",t:"#000000",city:"Calgary",team:"Flames"}},
+{id:"ho-carolina-hurricanes",name:"Carolina Hurricanes",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#CC0000","#000000"],sp:{p:"#CC0000",s:"#000000",t:"#FFFFFF",city:"Carolina",team:"Hurricanes"}},
+{id:"ho-chicago-blackhawks",name:"Chicago Blackhawks",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#CF0A2C","#000000"],sp:{p:"#CF0A2C",s:"#000000",t:"#FFFFFF",city:"Chicago",team:"Blackhawks"}},
+{id:"ho-columbus-blue-jackets",name:"Columbus Blue Jackets",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#002654","#CE1126"],sp:{p:"#002654",s:"#CE1126",t:"#A4A9AD",city:"Columbus",team:"Blue Jackets"}},
+{id:"ho-dallas-stars",name:"Dallas Stars",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#006847","#8F8F8C"],sp:{p:"#006847",s:"#8F8F8C",t:"#FFFFFF",city:"Dallas",team:"Stars"}},
+{id:"ho-denver-avalanche",name:"Denver Avalanche",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#6F263D","#236192"],sp:{p:"#6F263D",s:"#236192",t:"#A2AAAD",city:"Denver",team:"Avalanche"}},
+{id:"ho-detroit-red-wings",name:"Detroit Red Wings",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#CE1126","#FFFFFF"],sp:{p:"#CE1126",s:"#FFFFFF",t:"#000000",city:"Detroit",team:"Red Wings"}},
+{id:"ho-edmonton-oilers",name:"Edmonton Oilers",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#041E42","#FF4C00"],sp:{p:"#041E42",s:"#FF4C00",t:"#FFFFFF",city:"Edmonton",team:"Oilers"}},
+{id:"ho-fl-panthers",name:"FL Panthers",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#041E42","#C8102E"],sp:{p:"#041E42",s:"#C8102E",t:"#B9975B",city:"FL",team:"Panthers"}},
+{id:"ho-las-vegas-golden-knights",name:"Las Vegas Golden Knights",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#B4975A","#333F42"],sp:{p:"#B4975A",s:"#333F42",t:"#000000",city:"Las Vegas",team:"Golden Knights"}},
+{id:"ho-los-angeles-kings",name:"Los Angeles Kings",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#111111","#A2AAAD"],sp:{p:"#111111",s:"#A2AAAD",t:"#FFFFFF",city:"Los Angeles",team:"Kings"}},
+{id:"ho-minnesota-wild",name:"Minnesota Wild",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#154734","#A6192E"],sp:{p:"#154734",s:"#A6192E",t:"#EAAA00",city:"Minnesota",team:"Wild"}},
+{id:"ho-montreal-canadiens",name:"Montreal Canadiens",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#AF1E2D","#192168"],sp:{p:"#AF1E2D",s:"#192168",t:"#FFFFFF",city:"Montreal",team:"Canadiens"}},
+{id:"ho-nashville-predators",name:"Nashville Predators",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#FFB81C","#041E42"],sp:{p:"#FFB81C",s:"#041E42",t:"#000000",city:"Nashville",team:"Predators"}},
+{id:"ho-new-york-rangers",name:"New York Rangers",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#0038A8","#CE1126"],sp:{p:"#0038A8",s:"#CE1126",t:"#FFFFFF",city:"New York",team:"Rangers"}},
+{id:"ho-new-york-islanders",name:"New York Islanders",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#00539B","#F47D30"],sp:{p:"#00539B",s:"#F47D30",t:"#FFFFFF",city:"New York",team:"Islanders"}},
+{id:"ho-nj-devils",name:"NJ Devils",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#CE1126","#000000"],sp:{p:"#CE1126",s:"#000000",t:"#FFFFFF",city:"NJ",team:"Devils"}},
+{id:"ho-ottawa-senators",name:"Ottawa Senators",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#C52032","#C2912C"],sp:{p:"#C52032",s:"#C2912C",t:"#000000",city:"Ottawa",team:"Senators"}},
+{id:"ho-philadelphia-flyers",name:"Philadelphia Flyers",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#F74902","#000000"],sp:{p:"#F74902",s:"#000000",t:"#FFFFFF",city:"Philadelphia",team:"Flyers"}},
+{id:"ho-pittsburgh-penguins",name:"Pittsburgh Penguins",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#FCB514","#000000"],sp:{p:"#FCB514",s:"#000000",t:"#000000",city:"Pittsburgh",team:"Penguins"}},
+{id:"ho-salt-lake-city-utah-mammoth",name:"Salt Lake City Utah Mammoth",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#71AFE5","#010101"],sp:{p:"#71AFE5",s:"#010101",t:"#000000",city:"Salt Lake City",team:"Utah Mammoth"}},
+{id:"ho-san-jose-sharks",name:"San Jose Sharks",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#006D75","#EA7200"],sp:{p:"#006D75",s:"#EA7200",t:"#000000",city:"San Jose",team:"Sharks"}},
+{id:"ho-seattle-kraken",name:"Seattle Kraken",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#001628","#99D9D9"],sp:{p:"#001628",s:"#99D9D9",t:"#68A2B9",city:"Seattle",team:"Kraken"}},
+{id:"ho-st-louis-blues",name:"St. Louis Blues",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#002F87","#FCB514"],sp:{p:"#002F87",s:"#FCB514",t:"#FFFFFF",city:"St. Louis",team:"Blues"}},
+{id:"ho-tampa-bay-lightning",name:"Tampa Bay Lightning",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#002868","#FFFFFF"],sp:{p:"#002868",s:"#FFFFFF",t:"#FFFFFF",city:"Tampa Bay",team:"Lightning"}},
+{id:"ho-toronto-maple-leafs",name:"Toronto Maple Leafs",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#00205B","#FFFFFF"],sp:{p:"#00205B",s:"#FFFFFF",t:"#FFFFFF",city:"Toronto",team:"Maple Leafs"}},
+{id:"ho-vancouver-canucks",name:"Vancouver Canucks",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#00205B","#00843D"],sp:{p:"#00205B",s:"#00843D",t:"#FFFFFF",city:"Vancouver",team:"Canucks"}},
+{id:"ho-washington-capitals",name:"Washington Capitals",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#041E42","#C8102E"],sp:{p:"#041E42",s:"#C8102E",t:"#FFFFFF",city:"Washington",team:"Capitals"}},
+{id:"ho-winnipeg-jets",name:"Winnipeg Jets",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#041E42","#004C97"],sp:{p:"#041E42",s:"#004C97",t:"#FFFFFF",city:"Winnipeg",team:"Jets"}}
+];
+VAULTS=VAULTS.concat(SPORTS);
 function byId(id){for(var i=0;i<VAULTS.length;i++)if(VAULTS[i].id===id)return VAULTS[i];}
 /* curated shelves */
 var BEST_OF=["grunge90s", "taylorswift", "eminem", "nirvana", "queen", "dmb"];
@@ -551,6 +675,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
 function coverHTML(v,label){
  var e=eraOf(v);
  var badge=v.badge==='free'?'<div class="badge free">Free</div>':'';
+ if(v.sp) return '<div class="cover sptile" style="--p:'+v.sp.p+';--s:'+v.sp.s+';--t:'+v.sp.t+'">'+badge+'<div class="spcity">'+v.sp.city+'</div><div class="spteam">'+v.sp.team+'</div><div class="splbl">SuperFan Vault</div></div>';
  if(ART[v.id]) return '<div class="cover artcover">'+badge+'<img class="artimg" src="'+ART[v.id]+'?v=4" alt="" draggable="false"></div>';
  if(e==='neon') return streamTileHTML(v,label);
  return '<div class="cover cdcover">'+badge+'<img class="obj named cdfill" src="tile-'+v.id+'.png?v=7" alt="" draggable="false"'
@@ -620,6 +745,7 @@ function legalFooterHTML(){
  return '<footer class="legal-footer">SuperFan Shuffle is an independent fan-trivia game and is not affiliated with or endorsed by any featured artist, label, studio, league or rights holder.'
   +'<span class="links">© 2026 SuperFan Shuffle · <button onclick="openLegal()">Legal &amp; Credits</button></span></footer>';
 }
+function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(function(v){return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'</div>';}).join(''); return '<h2>'+title+'</h2><div class="row">'+t+'</div>'; }
 function playHTML(){
  var ed=curEdition, h=tabsHTML();
  var vaults=VAULTS.filter(function(v){return v.edition===ed;});
@@ -631,11 +757,13 @@ function playHTML(){
    h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
      +'<div class="fmeta"><div class="k">'+feat.name+'</div><div class="s">How deep does your fandom go?</div><div class="go">Tap to open ▸</div></div></div>';
    CAT_ORDER.forEach(function(cat){ h+=numShelf(CAT_LABEL[cat]||cat, vaults.filter(function(v){return v.cat===cat;})); });
+ } else if(ed==='sports'){
+   ['Football','Basketball','Baseball','Hockey'].forEach(function(lg){ h+=sportsShelf(lg, vaults.filter(function(v){return v.cat===lg;})); });
  } else {
    var placeholders=vaults.filter(function(v){return v.badge!=='free';});
    if(freeV.length===0 && placeholders.length===0){ h+='<div class="note">Coming soon.</div>'; }
    else { h+='<h2>Sample Vaults</h2><div class="row">'+placeholders.map(tileHTML).join('')+'</div>';
-          h+='<div class="note">'+(ed==='sports'?'Sports':'Film &amp; TV')+' edition — dev scaffolding. Generic placeholders; real content ships later behind the Firebase flag with IP guardrails.</div>'; }
+          h+='<div class="note">Film &amp; TV edition — dev scaffolding. Generic placeholders; real content ships later behind the Firebase flag with IP guardrails.</div>'; }
  }
  return h+legalFooterHTML();
 }
@@ -683,6 +811,8 @@ function browseList(q){
    h+='<div class="brcat">'+cat+' <span>'+g.length+'</span></div>';
    h+=g.map(browseRow).join('');
  });
+ var sports=VAULTS.filter(function(v){return v.edition==='sports'&&v.sp;});
+ ['Football','Basketball','Baseball','Hockey'].forEach(function(lg){ var g=sports.filter(function(v){return v.cat===lg&&(!q||v.name.toLowerCase().indexOf(q)>=0);}); if(!g.length) return; total+=g.length; h+='<div class="brcat">'+lg+' <span>'+g.length+'</span></div>'+g.map(browseRow).join(''); });
  if(!total) return '<div class="note">No vaults match that search.</div>';
  return h;
 }
