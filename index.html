@@ -363,19 +363,45 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 <!-- FULL-SCREEN INTRO (shows every app open: brand card -> how-to-play -> store) -->
 <div id="introOv" class="on" aria-label="Welcome to SuperFan Shuffle">
   <div class="introSlide cur" id="introS1"><img src="intro-card.jpg?v=1" alt="Everyone's a superfan of something"></div>
-  <div class="introSlide" id="introS2">
-    <img class="s2bg" src="howto-play.jpg?v=4" alt="How to play">
-    <div class="tiltDemo">
-      <div class="tGroup pass">
-        <div class="tRow"><svg class="fArrow l" viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg><div class="tPhone"><div class="tScreen"><span class="word">PASS</span></div></div><svg class="fArrow r" viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></div>
-        <div class="tSub">Tilt <b>UP</b> to Pass</div>
-      </div>
-      <div class="tBolt">⚡</div>
-      <div class="tGroup correct">
-        <div class="tSub">Tilt <b>DOWN</b> for Correct</div>
-        <div class="tRow"><svg class="fArrow l" viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg><div class="tPhone"><div class="tScreen"><span class="word">CORRECT</span></div></div><svg class="fArrow r" viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></div>
-      </div>
+  <div class="introSlide h2p" id="introS2">
+    <div class="h2pTop"><button class="h2pBack" id="h2pBack">&lsaquo;</button><button class="h2pSkip" id="h2pSkip">SKIP</button></div>
+    <div class="h2pHead"><span class="h2pLine"></span><h1>HOW TO PLAY</h1><span class="h2pLine"></span></div>
+    <p class="h2pSub">Everything you need to know to play.</p>
+
+    <div class="hpItem"><div class="hpIc pk">&#127925;</div><div class="hpTx"><b>YOU DON&rsquo;T NEED TO KNOW EVERY SONG TITLE.</b><p>If you know <i class="pk">anything</i> about the answer, you can give a great clue.</p></div></div>
+    <div class="hpItem"><div class="hpIc pu">&#128172;</div><div class="hpTx"><b>YOU CAN TALK.</b><p>This isn&rsquo;t old-school charades. You can say almost anything&mdash;just don&rsquo;t say the answer.</p></div></div>
+
+    <h2 class="hpH">GIVE CLUES HOWEVER YOU WANT.</h2>
+    <div class="hpClues">
+      <div class="hpClue"><div class="ci pk">&#127908;</div><b class="pk">SING IT</b><p>Lyrics, the chorus, even &ldquo;ba-ba-baaah&rdquo;.</p></div>
+      <div class="hpClue"><div class="ci cy">&#127925;</div><b class="cy">HUM IT</b><p>Carry the tune, let them fill in the words.</p></div>
+      <div class="hpClue"><div class="ci pu">&#128172;</div><b class="pu">DESCRIBE IT</b><p>Talk around the answer without saying it.</p></div>
+      <div class="hpClue"><div class="ci or">&#127917;</div><b class="or">ACT IT OUT</b><p>Old-school style, if that&rsquo;s your move.</p></div>
     </div>
+    <p class="hpMid">Use one&hellip; or all four. Whatever gets them there.</p>
+
+    <div class="hpSplit">
+      <div class="hpLeft">
+        <div class="hpItem"><div class="hpIc pu">&#128161;</div><div class="hpTx"><b>DON&rsquo;T KNOW THE EXACT TITLE?</b><p>Describe what you do know.</p></div></div>
+        <div class="hpChips"><span>It&rsquo;s by Queen&hellip;</span><span>They always close concerts with it&hellip;</span><span>It has &lsquo;love&rsquo; in the title&hellip;</span><span>It&rsquo;s from that 80s movie&hellip;</span></div>
+        <p class="hpNote">Half-remembered clues often lead to the right answer.</p>
+        <div class="hpItem"><div class="hpIc or">&#128260;</div><div class="hpTx"><b>STUCK? <span class="or">PASS.</span></b><p>Tilt up to pass and move on. There&rsquo;s no penalty, no shame. Passing is built into the game.</p></div></div>
+      </div>
+      <div class="hpRight"><div class="hpPhone pass"><div class="hpLbl">Tilt <b>UP</b> to Pass</div><div class="hpStage"><div class="hpRings"></div><span class="hpArr l"><svg viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></span><div class="hpDev"><div class="hpScr"><span class="hpBtn">PASS</span></div></div><span class="hpArr r"><svg viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></span></div></div></div>
+    </div>
+
+    <div class="hpBolt">&#9889;</div>
+
+    <div class="hpSplit">
+      <div class="hpLeft">
+        <div class="hpItem"><div class="hpIc gr">&#128227;</div><div class="hpTx"><b class="gr">IF YOU&rsquo;RE GUESSING&hellip;</b><p>Shout guesses fast and often. Wrong guesses often help the clue-giver get you to the right answer.</p></div></div>
+        <div class="hpItem"><div class="hpIc pk">&#11088;</div><div class="hpTx"><b class="pk">HAVE FUN.</b><p>The goal isn&rsquo;t being right&mdash;it&rsquo;s the trying. Laughing out loud is strongly preferred. &#128514;</p></div></div>
+      </div>
+      <div class="hpRight"><div class="hpPhone correct"><div class="hpStage"><div class="hpRings"></div><span class="hpArr l"><svg viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></span><div class="hpDev"><div class="hpScr"><span class="hpBtn">CORRECT</span></div></div><span class="hpArr r"><svg viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></span></div><div class="hpLbl">Tilt <b>DOWN</b> for Correct</div></div></div>
+    </div>
+
+    <div class="hpFoot"><div class="hpIc pu sm">&#8505;</div><p>Have questions? You can find more tips in the Help section inside the app.</p></div>
+  </div>
   </div>
 </div>
 <style>
@@ -408,13 +434,72 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 @keyframes tiltUp{0%,100%{transform:rotateX(20deg)}50%{transform:rotateX(-34deg)}}
 @keyframes tiltDown{0%,100%{transform:rotateX(-20deg)}50%{transform:rotateX(34deg)}}
 @keyframes boltPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
+/* ===== HOW TO PLAY (introS2) ===== */
+.h2p{display:none;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 40px;overflow-y:auto;-webkit-overflow-scrolling:touch;cursor:default;background:radial-gradient(120% 60% at 100% 0%,rgba(255,60,190,.10),transparent 55%),#0b0714;font-family:var(--body)}
+.introSlide.h2p.cur{display:block}
+.h2pTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.h2pBack,.h2pSkip{background:none;border:0;cursor:pointer;font-family:var(--body)}
+.h2pBack{color:#fff;font-size:30px;line-height:1;opacity:.85}
+.h2pSkip{color:#c58bff;font-weight:800;font-size:14px;letter-spacing:1.5px}
+.h2pHead{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:2px}
+.h2pHead h1{font-family:var(--disp);font-size:34px;letter-spacing:1px;color:#fff;margin:0;text-shadow:0 0 14px rgba(255,255,255,.25)}
+.h2pLine{height:2px;width:34px;background:linear-gradient(90deg,transparent,#ff4fd0);box-shadow:0 0 8px #ff4fd0}
+.h2pSub{text-align:center;color:#ff5cd6;font-weight:800;font-size:14px;margin:6px 0 22px}
+.hpItem{display:flex;gap:14px;align-items:flex-start;margin:0 0 18px}
+.hpIc{flex:0 0 auto;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid currentColor;box-shadow:0 0 14px -2px currentColor,inset 0 0 12px -6px currentColor}
+.hpIc.sm{width:34px;height:34px;font-size:15px}
+.hpTx b{display:block;color:#fff;font-size:15px;font-weight:800;letter-spacing:.3px;line-height:1.2;margin-bottom:4px}
+.hpTx p{margin:0;color:#c7bfe0;font-size:13.5px;line-height:1.45}
+.pk{color:#ff4fd0}.pu{color:#b06aff}.cy{color:#3fd8f0}.or{color:#ff9d2e}.gr{color:#3ce06a}
+.hpH{font-family:var(--disp);font-size:19px;letter-spacing:.5px;color:#fff;margin:26px 0 14px}
+.hpClues{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+.hpClue{position:relative;padding:0 4px}
+.hpClue+.hpClue::before{content:"";position:absolute;left:-4px;top:6px;bottom:20px;width:1px;background:rgba(255,255,255,.09)}
+.hpClue .ci{width:44px;height:44px;margin:0 auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid currentColor;box-shadow:0 0 12px -3px currentColor}
+.hpClue b{display:block;font-size:12.5px;letter-spacing:.5px;margin-bottom:5px}
+.hpClue p{margin:0;color:#c7bfe0;font-size:11.5px;line-height:1.35}
+.hpMid{text-align:center;color:#c7bfe0;font-size:12.5px;margin:14px 0 24px}
+.hpSplit{display:flex;gap:12px;align-items:center;border-top:1px solid rgba(255,255,255,.08);padding-top:20px}
+.hpLeft{flex:1 1 58%;min-width:0}
+.hpRight{flex:0 0 40%;display:flex;justify-content:center}
+.hpChips{display:flex;flex-wrap:wrap;gap:7px;margin:2px 0 10px}
+.hpChips span{font-size:11px;color:#c7bfe0;border:1px solid rgba(176,106,255,.4);border-radius:9px;padding:6px 9px;line-height:1.25;background:rgba(176,106,255,.06)}
+.hpNote{color:#9a90b8;font-size:12px;margin:0 0 18px}
+.hpBolt{text-align:center;font-size:24px;margin:6px 0;filter:drop-shadow(0 0 8px rgba(255,180,60,.8))}
+.hpFoot{display:flex;gap:12px;align-items:center;margin-top:26px;border:1px solid rgba(176,106,255,.28);border-radius:16px;padding:14px}
+.hpFoot p{margin:0;color:#c7bfe0;font-size:12.5px;line-height:1.4}
+/* tilting phones */
+.hpPhone{display:flex;flex-direction:column;align-items:center;gap:8px}
+.hpLbl{font-family:var(--body);font-size:13px;font-weight:700;color:#fff;text-align:center}
+.pass .hpLbl b{color:#ff9d2e}.correct .hpLbl b{color:#3ce06a}
+.hpStage{position:relative;display:flex;align-items:center;justify-content:center;padding:6px 0;perspective:600px}
+.hpRings{position:absolute;width:118px;height:118px;border-radius:50%;animation:hpPulse 2.4s ease-in-out infinite}
+.pass .hpRings{background:radial-gradient(circle,rgba(255,140,20,.45),rgba(255,140,20,.12) 45%,transparent 68%)}
+.correct .hpRings{background:radial-gradient(circle,rgba(45,215,90,.45),rgba(45,215,90,.12) 45%,transparent 68%)}
+.hpDev{position:relative;z-index:2;width:82px;height:132px;border-radius:18px;padding:5px;background:linear-gradient(160deg,#17171f,#0a0a10);border:2px solid rgba(255,255,255,.14);transform-style:preserve-3d}
+.pass .hpDev{border-color:rgba(255,165,45,.95);box-shadow:0 0 26px 3px rgba(255,150,25,.6);animation:hpTiltUp 2.4s ease-in-out infinite}
+.correct .hpDev{border-color:rgba(60,230,110,.95);box-shadow:0 0 26px 3px rgba(45,215,90,.6);animation:hpTiltDn 2.4s ease-in-out infinite}
+.hpScr{width:100%;height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.pass .hpScr{background:radial-gradient(120% 120% at 50% 0%,#ffb43a,#e8720f)}
+.correct .hpScr{background:radial-gradient(120% 120% at 50% 0%,#5ef07e,#22a844)}
+.hpBtn{font-family:var(--disp);font-size:16px;letter-spacing:1px;color:#fff;background:rgba(0,0,0,.18);border:1.5px solid rgba(255,255,255,.85);border-radius:8px;padding:5px 9px;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.hpArr{width:22px;flex:0 0 auto}.hpArr svg{width:100%;height:auto;filter:drop-shadow(0 0 4px rgba(255,255,255,.5))}
+.hpArr.r{transform:scaleX(-1)}
+.correct .hpArr{transform:scaleY(-1)}.correct .hpArr.r{transform:scale(-1,-1)}
+@keyframes hpTiltUp{0%,100%{transform:rotateX(14deg)}50%{transform:rotateX(-22deg)}}
+@keyframes hpTiltDn{0%,100%{transform:rotateX(-14deg)}50%{transform:rotateX(22deg)}}
+@keyframes hpPulse{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.08);opacity:1}}
+@media(max-width:360px){.hpClues{gap:4px}.hpClue p{font-size:10.5px}.hpRight{flex-basis:38%}.hpDev{width:74px;height:120px}}
+
 </style>
 <script>
 (function(){
   var ov=document.getElementById('introOv'),s1=document.getElementById('introS1'),s2=document.getElementById('introS2');
   function go2(){ s1.classList.remove('cur'); s2.classList.add('cur'); }
   function done(){ ov.classList.remove('on'); }
-  s1.addEventListener('click',go2); s2.addEventListener('click',done);
+  s1.addEventListener('click',go2);
+  var sk=document.getElementById('h2pSkip'); if(sk) sk.addEventListener('click',done);
+  var bk=document.getElementById('h2pBack'); if(bk) bk.addEventListener('click',function(){ s2.classList.remove('cur'); s1.classList.add('cur'); s2.scrollTop=0; });
 })();
 </script>
 <header id="topbar">
