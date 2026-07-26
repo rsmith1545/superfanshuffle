@@ -5,7 +5,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
-<meta name="theme-color" content="#150a2c">
+<meta name="theme-color" content="#000000">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle</title>
@@ -1142,8 +1142,8 @@ brandBarState();
    // 5) curtain fades in behind the lit sign
    at(ig+470, function(){ $('.splCurtain').classList.add('in'); });
    // 6) hold, then fade to onboarding (total ~3.0s)
-   at(2500,   function(){ A.stop(); sp.classList.add('gone'); });
-   at(3000,   function(){ if(sp&&sp.parentNode) sp.parentNode.removeChild(sp); });
+   at(3300,   function(){ A.stop(); sp.classList.add('gone'); });
+   at(3850,   function(){ if(sp&&sp.parentNode) sp.parentNode.removeChild(sp); });
  }
  // preload sprites, then run (keeps the opening frame pure black)
  var left=srcs.length, started=false;
