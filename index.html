@@ -372,8 +372,8 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 @keyframes ringIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.9)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 /* typewriter wipe reveal */
 @keyframes wipeR{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-.sp.super.reveal{opacity:1;animation:wipeR .36s steps(8) forwards}
-.sp.shuf.reveal{opacity:1;animation:wipeR .245s steps(7) forwards}
+.sp.super.reveal{opacity:1;animation:wipeR .55s steps(8) forwards}
+.sp.shuf.reveal{opacity:1;animation:wipeR .40s steps(7) forwards}
 .sp.u.fade{transition:opacity .3s ease .2s;opacity:0!important}
 /* ignite flicker (with 2 "failed" stutters, then lock) */
 @keyframes flick{0%{opacity:0}8%{opacity:.7}14%{opacity:0}26%{opacity:.95}34%{opacity:.15}48%{opacity:1}56%{opacity:.5}70%{opacity:1}100%{opacity:1}}
@@ -1121,7 +1121,7 @@ brandBarState();
    var hum=ac.createOscillator(); hum.type='sawtooth'; hum.frequency.value=58;
    var hg=ac.createGain(); hg.gain.value=.025; hum.connect(hg); hg.connect(master); hum.start();
    master.gain.linearRampToValueAtTime(.6, ac.currentTime+.35);
-   return {crackle:function(){ var o=ac.createOscillator(); o.type='square'; o.frequency.value=900+Math.random()*1100; var g=ac.createGain(); g.gain.value=0; o.connect(g); g.connect(master); var t=ac.currentTime; g.gain.setValueAtTime(.14,t); g.gain.exponentialRampToValueAtTime(.001,t+.09); o.start(t); o.stop(t+.1); },
+   return {crackle:function(){},
            stop:function(){ try{ master.gain.linearRampToValueAtTime(0,ac.currentTime+.4); setTimeout(function(){hum.stop();ac.close();},600);}catch(e){} } };
  }catch(e){ return {crackle:function(){},stop:function(){}}; } }
  function run(){
@@ -1129,22 +1129,21 @@ brandBarState();
    var T=[];
    function at(ms,fn){ T.push(setTimeout(fn,ms)); }
    // 1) black hold, then ring
-   at(260,function(){ $('.ring').classList.add('in'); A.crackle(); });
+   at(350, function(){ $('.ring').classList.add('in'); });
    // 2) SUPERFAN typewriter
-   at(430,function(){ $('.super').classList.add('reveal'); });
+   at(520, function(){ $('.super').classList.add('reveal'); });
    // 3) pause then SHUFFLE
-   at(430+360+80,function(){ $('.shuf').classList.add('reveal'); });
-   // 4) ignite
-   var ig=430+360+80+245+40;
-   at(ig,      function(){ $('.g1').classList.add('ig'); A.crackle(); });
-   at(ig+90,   function(){ A.crackle(); });
-   at(ig+160,  function(){ $('.g2').classList.add('ig'); A.crackle(); });
-   at(ig+340,  function(){ $('.g3').classList.add('ig'); A.crackle(); [].forEach.call(sp.querySelectorAll('.sp.u'),function(e){e.classList.add('fade');}); });
+   at(1190,function(){ $('.shuf').classList.add('reveal'); });
+   // 4) ignite (flicker, no beeps)
+   var ig=1640;
+   at(ig,     function(){ $('.g1').classList.add('ig'); });
+   at(ig+170, function(){ $('.g2').classList.add('ig'); });
+   at(ig+350, function(){ $('.g3').classList.add('ig'); [].forEach.call(sp.querySelectorAll('.sp.u'),function(e){e.classList.add('fade');}); });
    // 5) curtain fades in behind the lit sign
-   at(ig+520,  function(){ $('.splCurtain').classList.add('in'); });
-   // 6) hold, then fade to onboarding
-   at(ig+520+700+500, function(){ A.stop(); sp.classList.add('gone'); });
-   at(ig+520+700+500+520, function(){ if(sp&&sp.parentNode) sp.parentNode.removeChild(sp); });
+   at(ig+470, function(){ $('.splCurtain').classList.add('in'); });
+   // 6) hold, then fade to onboarding (total ~3.0s)
+   at(2500,   function(){ A.stop(); sp.classList.add('gone'); });
+   at(3000,   function(){ if(sp&&sp.parentNode) sp.parentNode.removeChild(sp); });
  }
  // preload sprites, then run (keeps the opening frame pure black)
  var left=srcs.length, started=false;
