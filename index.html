@@ -401,7 +401,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 <div id="introOv" class="on" aria-label="Welcome to SuperFan Shuffle">
   <div class="introSlide cur" id="introS1"><img src="intro-card.jpg?v=1" alt="Everyone&rsquo;s a superfan of something"></div>
   <div class="introSlide h2p" id="introS2">
-    <div class="h2pTop"><button class="h2pBack" id="h2pBack">&lsaquo;</button><button class="h2pSkip" id="h2pSkip">SKIP</button></div>
+    <div class="h2pInner">
     <div class="h2pHead"><span class="h2pLine"></span><h1>HOW TO PLAY</h1><span class="h2pLine"></span></div>
     <p class="h2pSub">Everything you need to know to play.</p>
     <div class="hpTwo">
@@ -431,6 +431,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
       </div>
     </div>
     <div class="hpFoot"><div class="hpIc pu sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></div><p>Have questions? You can find more tips in the Help section inside the app.</p></div>
+    </div>
   </div>
 </div>
 <style>
@@ -464,7 +465,8 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 @keyframes tiltDown{0%,100%{transform:rotateX(-20deg)}50%{transform:rotateX(34deg)}}
 @keyframes boltPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
 /* ===== HOW TO PLAY (introS2) ===== */
-.h2p{display:none;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 34px;overflow-y:auto;-webkit-overflow-scrolling:touch;cursor:default;background:radial-gradient(120% 55% at 100% 0%,rgba(255,60,190,.10),transparent 55%),#0a0710;font-family:var(--body)}
+.h2p{display:none;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;overflow:hidden;cursor:pointer;background:radial-gradient(120% 55% at 100% 0%,rgba(255,60,190,.10),transparent 55%),#0a0710;font-family:var(--body)}
+.h2pInner{transform-origin:top center;width:100%}
 .introSlide.h2p.cur{display:block}
 .h2pTop{display:flex;align-items:center;justify-content:space-between}
 .h2pBack,.h2pSkip{background:none;border:0;cursor:pointer;font-family:var(--body)}
@@ -473,17 +475,17 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .h2pHead{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:2px}
 .h2pHead h1{font-family:var(--disp);font-size:33px;letter-spacing:1px;color:#fff;margin:0;text-shadow:0 0 14px rgba(255,255,255,.22)}
 .h2pLine{height:2px;width:30px;background:linear-gradient(90deg,transparent,#ff4fd0);box-shadow:0 0 8px #ff4fd0}
-.h2pSub{text-align:center;color:#ff5cd6;font-weight:800;font-size:13.5px;margin:5px 0 20px}
+.h2pSub{text-align:center;color:#ff5cd6;font-weight:800;font-size:13.5px;margin:4px 0 14px}
 .pk{color:#ff4fd0}.pu{color:#b06aff}.cy{color:#3fd8f0}.or{color:#ff9d2e}.gr{color:#3ce06a}
 .hpTwo{display:flex;gap:12px}
 .hpTwo .hpItem{flex:1;margin-bottom:16px}
-.hpItem{display:flex;gap:11px;align-items:flex-start;margin:0 0 16px}
+.hpItem{display:flex;gap:11px;align-items:flex-start;margin:0 0 12px}
 .hpIc{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid currentColor;box-shadow:0 0 13px -2px currentColor,inset 0 0 11px -6px currentColor}
 .hpIc svg{width:22px;height:22px}
 .hpIc.sm{width:32px;height:32px}.hpIc.sm svg{width:16px;height:16px}
 .hpTx b{display:block;color:#fff;font-size:14.5px;font-weight:800;letter-spacing:.2px;line-height:1.2;margin-bottom:4px}
 .hpTx p{margin:0;color:#c7bfe0;font-size:13px;line-height:1.42}
-.hpH{font-family:var(--disp);font-size:18px;letter-spacing:.5px;color:#fff;margin:22px 0 14px}
+.hpH{font-family:var(--disp);font-size:18px;letter-spacing:.5px;color:#fff;margin:14px 0 10px}
 .hpClues{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
 .hpClue{position:relative;padding:0 3px}
 .hpClue+.hpClue::before{content:"";position:absolute;left:-4px;top:6px;bottom:22px;width:1px;background:rgba(255,255,255,.09)}
@@ -491,15 +493,15 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .hpClue .ci svg{width:22px;height:22px}
 .hpClue b{display:block;font-size:12.5px;letter-spacing:.5px;margin-bottom:5px}
 .hpClue p{margin:0;color:#c7bfe0;font-size:11px;line-height:1.32}
-.hpMid{text-align:center;color:#c7bfe0;font-size:12px;margin:14px 0 22px}
-.hpLower{display:flex;gap:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:18px}
+.hpMid{text-align:center;color:#c7bfe0;font-size:12px;margin:10px 0 14px}
+.hpLower{display:flex;gap:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
 .hpCol{flex:1;min-width:0}
 .hpChips{display:flex;flex-direction:column;gap:7px;margin:2px 0 10px}
 .hpChips span{font-size:11px;color:#c7bfe0;border:1px solid rgba(176,106,255,.4);border-radius:9px;padding:6px 9px;line-height:1.25;background:rgba(176,106,255,.06)}
 .hpNote{color:#9a90b8;font-size:11.5px;margin:0 0 18px}
-.hpFoot{display:flex;gap:12px;align-items:center;margin-top:22px;border:1px solid rgba(176,106,255,.28);border-radius:16px;padding:13px}
+.hpFoot{display:flex;gap:12px;align-items:center;margin-top:14px;border:1px solid rgba(176,106,255,.28);border-radius:14px;padding:11px}
 .hpFoot p{margin:0;color:#c7bfe0;font-size:12px;line-height:1.4}
-.hpPhone{margin:4px 0 20px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.hpPhone{margin:2px 0 14px;display:flex;flex-direction:column;align-items:center;gap:5px}
 .hpLbl{font-size:12px;font-weight:700;color:#fff;text-align:center}
 .pass .hpLbl b{color:#ff9d2e}.correct .hpLbl b{color:#3ce06a}
 .hpStage{display:flex;align-items:center;gap:3px;perspective:520px}
@@ -520,11 +522,13 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 <script>
 (function(){
   var ov=document.getElementById('introOv'),s1=document.getElementById('introS1'),s2=document.getElementById('introS2');
-  function go2(){ s1.classList.remove('cur'); s2.classList.add('cur'); }
+  function fitS2(){ var inner=s2.querySelector('.h2pInner'); if(!inner||!s2.classList.contains('cur')) return; inner.style.transform='none'; var avail=s2.clientHeight-14, need=inner.scrollHeight; var sc=Math.min(1, avail/need); inner.style.transform=sc<1?'scale('+sc+')':'none'; }
+  function go2(){ s1.classList.remove('cur'); s2.classList.add('cur'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); }
   function done(){ ov.classList.remove('on'); }
   s1.addEventListener('click',go2);
-  var sk=document.getElementById('h2pSkip'); if(sk) sk.addEventListener('click',done);
-  var bk=document.getElementById('h2pBack'); if(bk) bk.addEventListener('click',function(){ s2.classList.remove('cur'); s1.classList.add('cur'); s2.scrollTop=0; });
+  s2.addEventListener('click',done);
+  window.addEventListener('resize',fitS2);
+  window.addEventListener('orientationchange',function(){ setTimeout(fitS2,220); });
 })();
 </script>
 <header id="topbar">
