@@ -227,10 +227,8 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 /* ===== Music-screen redesign ===== */
 #app{position:relative;z-index:1}
 #topbar{z-index:1}
-#floorbg{position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(to bottom,rgba(14,11,22,.5) 0%,rgba(14,11,22,.12) 26%,rgba(14,11,22,.15) 58%,rgba(14,11,22,.7) 100%),url('music-floor.jpg?v=2');background-repeat:no-repeat,no-repeat;background-position:center top,center 45%;background-size:cover,cover}
-.hero-inner{display:flex;flex-direction:column;align-items:center;gap:5px;transform:translateY(-14px);position:relative;z-index:3}
-.mlogo{width:88%;max-width:352px;max-height:52%;height:auto;object-fit:contain;filter:drop-shadow(0 5px 20px rgba(0,0,0,.55))}
-.mtag{font-family:var(--body);font-style:italic;font-weight:800;font-size:clamp(15px,4.6vw,21px);line-height:1;color:#d9fbff;text-shadow:0 0 7px rgba(87,230,255,.95),0 0 16px rgba(87,230,255,.5);transform:rotate(-2.4deg);letter-spacing:.3px}
+#floorbg{position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(to bottom,rgba(14,11,22,.32) 0%,rgba(14,11,22,0) 22%,rgba(14,11,22,0) 66%,rgba(14,11,22,.5) 100%),url('music-floor.jpg?v=3');background-repeat:no-repeat,no-repeat;background-position:center top,center 40%;background-size:cover,cover}
+.mlogo{width:86%;max-width:360px;max-height:64%;height:auto;object-fit:contain;transform:translateY(-8px);mix-blend-mode:screen;position:relative;z-index:3}
 .edtabs{position:absolute;left:0;right:0;bottom:10px;z-index:4;display:flex;gap:7px;justify-content:center;padding:0 10px}
 .edtabs button{display:flex;align-items:center;gap:7px;font-family:var(--disp);font-size:15.5px;letter-spacing:1px;font-weight:700;color:#cfc7e0;background:rgba(10,7,18,.5);border:1.5px solid rgba(255,255,255,.16);border-radius:21px;padding:7px 16px;cursor:pointer;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);white-space:nowrap}
 .edtabs button::before{content:'';width:10px;height:10px;border-radius:50%;border:1.5px solid #6a6478;background:transparent;flex:0 0 auto}
@@ -551,10 +549,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 </script>
 <div id="floorbg"></div>
 <header id="topbar">
-  <div class="hero-inner">
-    <img class="mlogo" src="music-logo.png?v=2" alt="SuperFan Shuffle">
-    <div class="mtag">Face the Music.</div>
-  </div>
+  <img class="mlogo" src="music-logo.png?v=3" alt="SuperFan Shuffle — Face the Music.">
   <div class="edtabs" id="edtabs"></div>
 </header>
 <div id="brandBar" aria-label="SuperFan Shuffle editions">
