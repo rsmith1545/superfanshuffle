@@ -25,7 +25,7 @@ header{padding:16px 16px 8px;text-align:center;background:var(--chrome);box-shad
 html.fullscreen-active{--fullscreen-top:24px}
 /* Large first-impression brand stage. Safe-area space keeps the sign below an iPhone's
    camera island; Android gets an equivalent inset after the page enters fullscreen. */
-header#topbar{padding:0;overflow:hidden;position:relative;text-align:center;display:flex;align-items:center;justify-content:center;height:calc(clamp(190px,50vw,228px) + env(safe-area-inset-top,0px) + var(--fullscreen-top));flex:0 0 auto;background:#140a26 url('music-header.jpg?v=1') center 35%/cover no-repeat;isolation:isolate;transition:height .18s ease,padding .18s ease}
+header#topbar{padding:0;overflow:hidden;position:relative;text-align:center;display:flex;align-items:center;justify-content:center;height:calc(clamp(190px,50vw,228px) + env(safe-area-inset-top,0px) + var(--fullscreen-top));flex:0 0 auto;background:#140a26;isolation:isolate;transition:height .18s ease,padding .18s ease}
 .neon{position:relative;width:100%;height:100%;margin:0 auto;line-height:0}
 .neon img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;mix-blend-mode:screen}
 .neon .neon-unlit{position:absolute;inset:0;height:100%;width:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity .07s linear}
@@ -227,13 +227,20 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 /* ===== Music-screen redesign ===== */
 #app{position:relative;z-index:1}
 #topbar{z-index:1}
-#floorbg{position:fixed;inset:0;z-index:0;pointer-events:none;filter:brightness(0.3);background:linear-gradient(to bottom,rgba(14,11,22,.32) 0%,rgba(14,11,22,0) 22%,rgba(14,11,22,0) 66%,rgba(14,11,22,.5) 100%),url('music-floor.jpg?v=3');background-repeat:no-repeat,no-repeat;background-position:center top,center 40%;background-size:cover,cover}
-.mlogo{width:86%;max-width:360px;max-height:64%;height:auto;object-fit:contain;transform:translateY(-8px);mix-blend-mode:screen;position:relative;z-index:3}
+#floorbg{position:fixed;inset:0;z-index:0;pointer-events:none;filter:brightness(0.3)}
+.floorL{position:absolute;inset:0;background-repeat:no-repeat;background-position:center 40%;background-size:cover;opacity:0;transition:opacity .4s ease}
+#floorbg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,11,22,.32) 0%,rgba(14,11,22,0) 22%,rgba(14,11,22,0) 66%,rgba(14,11,22,.5) 100%)}
+.hdrbg{position:absolute;inset:0;z-index:0;background-repeat:no-repeat;background-position:center 35%;background-size:cover;opacity:0;transition:opacity .4s ease}
+.mlogo{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-50% - 14px));width:86%;max-width:378px;max-height:67%;height:auto;object-fit:contain;mix-blend-mode:screen;z-index:3;opacity:0;transition:opacity .4s ease}
+.mlogo.pulse{animation:logopulse .4s ease-out}
+@keyframes logopulse{0%{filter:brightness(1.7) saturate(1.15)}100%{filter:none}}
+#app.edin{animation:edin .4s ease-out}
+@keyframes edin{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
 .edtabs{position:absolute;left:0;right:0;bottom:10px;z-index:4;display:flex;gap:7px;justify-content:center;padding:0 10px}
-.edtabs button{display:flex;align-items:center;gap:7px;font-family:var(--disp);font-size:15.5px;letter-spacing:1px;font-weight:700;color:#cfc7e0;background:rgba(10,7,18,.5);border:1.5px solid rgba(255,255,255,.16);border-radius:21px;padding:7px 16px;cursor:pointer;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);white-space:nowrap}
-.edtabs button::before{content:'';width:10px;height:10px;border-radius:50%;border:1.5px solid #6a6478;background:transparent;flex:0 0 auto}
-.edtabs button.on{color:#fff;border-color:var(--accent);background:rgba(255,255,255,.06);box-shadow:0 0 14px -3px var(--accent)}
-.edtabs button.on::before{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px var(--accent)}
+.edtabs button{display:flex;align-items:center;gap:7px;font-family:var(--disp);font-size:15.5px;letter-spacing:1px;font-weight:700;color:#cfc7e0;background:rgba(10,7,18,.5);border:1.5px solid color-mix(in srgb,var(--tab,#888) 50%,transparent);border-radius:21px;padding:7px 16px;cursor:pointer;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);white-space:nowrap;transition:border-color .25s ease,box-shadow .25s ease,color .25s ease}
+.edtabs button::before{content:'';width:10px;height:10px;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--tab,#888) 65%,transparent);background:transparent;flex:0 0 auto;transition:background .25s ease,box-shadow .25s ease}
+.edtabs button.on{color:#fff;border-color:var(--tab);background:rgba(255,255,255,.06);box-shadow:0 0 15px -3px var(--tab)}
+.edtabs button.on::before{background:var(--tab);border-color:var(--tab);box-shadow:0 0 9px var(--tab)}
 #installBtn{display:none;position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:85;
  font-family:var(--disp);font-size:20px;letter-spacing:1.5px;padding:11px 26px;border:2px solid var(--cyan);border-radius:40px;
  background:rgba(87,230,255,.14);color:#fff;text-shadow:0 0 8px rgba(87,230,255,.7);box-shadow:0 0 20px rgba(87,230,255,.55),inset 0 0 14px rgba(87,230,255,.25);cursor:pointer}
@@ -547,9 +554,12 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
   window.addEventListener('orientationchange',function(){ setTimeout(fitS2,220); });
 })();
 </script>
-<div id="floorbg"></div>
+<div id="floorbg"><div class="floorL" id="floor0"></div><div class="floorL" id="floor1"></div></div>
 <header id="topbar">
-  <img class="mlogo" src="music-logo.png?v=3" alt="SuperFan Shuffle — Face the Music.">
+  <div class="hdrbg" id="hdr0"></div>
+  <div class="hdrbg" id="hdr1"></div>
+  <img class="mlogo" id="logo0" alt="SuperFan Shuffle — Face the Music.">
+  <img class="mlogo" id="logo1" alt="" aria-hidden="true">
   <div class="edtabs" id="edtabs"></div>
 </header>
 <div id="brandBar" aria-label="SuperFan Shuffle editions">
@@ -576,7 +586,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 var DEV_PREVIEW=true;
 var EDITIONS=[
  {id:'music',  label:'Music',     enabled:true,  accent:'#3EDBFF'},
- {id:'filmtv', label:'Film & TV', enabled:false, accent:'#F2C14E'},
+ {id:'filmtv', label:'Movies & TV', enabled:false, accent:'#F2C14E'},
  {id:'sports', label:'Sports',    enabled:true,  accent:'#FF8A2A'}
 ];
 function editionVisible(e){ return e.enabled || DEV_PREVIEW; }
@@ -856,13 +866,17 @@ function numShelf(title,arr){ if(arr.length<1) return ''; var tiles=arr.map(func
 
 /* ===== views: Play (home) · Explore · My Vaults ===== */
 var curEdition='music', curView='play';
-function setEdition(id){ curEdition=id; var e=edById(id); if(e) document.documentElement.style.setProperty('--accent', e.accent); render(); window.scrollTo(0,0); }
+function setEdition(id){ curEdition=id; var e=edById(id); if(e) document.documentElement.style.setProperty('--accent', e.accent); applyTheme(id,true); render(); var app=document.getElementById('app'); if(app){ app.classList.remove('edin'); void app.offsetWidth; app.classList.add('edin'); } window.scrollTo(0,0); }
+var THEME={music:{hdr:"music-header.jpg?v=3",logo:"music-logo.png?v=3",floor:"music-floor.jpg?v=3"},filmtv:{hdr:"movies-header.jpg?v=1",logo:"movies-logo.png?v=1",floor:"movies-floor.jpg?v=1"},sports:{hdr:"sports-header.jpg?v=1",logo:"sports-logo.png?v=1",floor:"sports-floor.jpg?v=1"}};
+var _hb=1,_lg=1,_fl=1;
+function applyTheme(id,animate){ var t=THEME[id]||THEME.music; var hb=1-_hb,h=document.getElementById('hdr'+hb),ho=document.getElementById('hdr'+_hb); if(h){h.style.backgroundImage="url('"+t.hdr+"')";h.style.opacity='1';} if(ho)ho.style.opacity='0'; _hb=hb; var lg=1-_lg,l=document.getElementById('logo'+lg),lo=document.getElementById('logo'+_lg); if(l){l.src=t.logo;l.style.opacity='1'; if(animate){l.classList.remove('pulse');void l.offsetWidth;l.classList.add('pulse');}} if(lo)lo.style.opacity='0'; _lg=lg; var fl=1-_fl,fe=document.getElementById('floor'+fl),foe=document.getElementById('floor'+_fl); if(fe){fe.style.backgroundImage="url('"+t.floor+"')";fe.style.opacity='1';} if(foe)foe.style.opacity='0'; _fl=fl; }
+function preloadThemes(){ for(var k in THEME){ (function(t){['hdr','logo','floor'].forEach(function(p){var im=new Image();im.src=t[p];});})(THEME[k]); } }
 function setEditionFromBar(id){ curView='play'; setEdition(id); }
 function setView(v){ curView=v; render(); window.scrollTo(0,0); }
 function tabsHTML(){
  var vis=EDITIONS.filter(editionVisible); if(vis.length<=1) return '';
  var h='<div class="tabs">';
- vis.forEach(function(e){ h+='<button class="'+(e.id===curEdition?'on':'')+'" onclick="setEdition(\''+e.id+'\')">'+e.label+'</button>'; });
+ vis.forEach(function(e){ h+='<button class="'+(e.id===curEdition?'on':'')+'" style="--tab:'+e.accent+'" onclick="setEdition(\''+e.id+'\')">'+e.label+'</button>'; });
  return h+'</div>';
 }
 function renderMiniTabs(){
@@ -957,7 +971,7 @@ function myVaultsHTML(){
  return '<div class="mv-top">'+top+'</div>'
    +'<div class="mv-cross"><div class="xhead">More ways to play</div>'+cycDoorwayHTML()+'</div>';
 }
-function renderEdTabs(){ var el=document.getElementById('edtabs'); if(!el) return; el.innerHTML=EDITIONS.filter(editionVisible).map(function(e){return '<button class="'+(e.id===curEdition?'on':'')+'" onclick="setEdition(\''+e.id+'\')">'+e.label+'</button>';}).join(''); }
+function renderEdTabs(){ var el=document.getElementById('edtabs'); if(!el) return; el.innerHTML=EDITIONS.filter(editionVisible).map(function(e){return '<button class="'+(e.id===curEdition?'on':'')+'" style="--tab:'+e.accent+'" onclick="setEdition(\''+e.id+'\')">'+e.label+'</button>';}).join(''); }
 function render(){
  var v=curView;
  document.getElementById('app').innerHTML = v==='play'?playHTML() : v==='browse'?browseHTML() : myVaultsHTML();
@@ -1098,7 +1112,7 @@ document.addEventListener('webkitfullscreenchange',fullscreenState);
 function brandBarState(){ var hero=document.getElementById('topbar'); var cutoff=hero?Math.max(100,hero.offsetHeight-64):140; document.body.classList.toggle('brandbar-on',window.scrollY>cutoff); }
 window.addEventListener('scroll',brandBarState,{passive:true});
 window.addEventListener('resize',brandBarState);
-render();
+render(); applyTheme(curEdition||'music',false); preloadThemes();
 brandBarState();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
