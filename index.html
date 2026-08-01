@@ -271,14 +271,14 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .artcover .artimg{width:100%;height:100%;object-fit:cover;display:block}
 /* ===== Vault open v4: zoom-in + flip; front=album art, back=v4 sheet ===== */
 #sheet{max-width:390px!important}
-.flipwrap{width:100%;max-width:376px;perspective:1400px;opacity:0;transform:scale(.62);transition:opacity .3s ease, transform .72s cubic-bezier(.22,1,.32,1)}
-.flipwrap.in{opacity:1;transform:scale(1)}
+.flipwrap{width:100%;max-width:376px;perspective:1400px;opacity:0;transform:scale(.62) translateY(56px);transition:opacity .3s ease, transform .82s cubic-bezier(.22,1,.32,1)}
+.flipwrap.in{opacity:1;transform:scale(1) translateY(0)}
 .flipcard{position:relative;width:100%;transform-style:preserve-3d;transition:transform .66s cubic-bezier(.3,.85,.35,1)}
 .flipwrap.flipped .flipcard{transform:rotateY(180deg)}
 .flipface{border-radius:26px;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 26px 66px rgba(0,0,0,.62)}
 .flipfront{position:absolute;inset:0;overflow:hidden;border-radius:26px}
 .flipbackface{position:relative;transform:rotateY(180deg);overflow:visible}
-.ffront{position:absolute;inset:0;background:linear-gradient(180deg,#241645,#180d33)}
+.ffront{position:absolute;inset:0;background:#0c0913}
 .ffront .ffart{width:100%;height:100%;object-fit:contain;display:block}
 .ffront .ffname{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:var(--disp);font-size:48px;line-height:.88;letter-spacing:1px;color:#fff;background:radial-gradient(120% 80% at 50% 0%,rgba(var(--tint),.55),rgba(var(--tint),.14) 58%,#160f0a)}
 /* back = v4 sheet + sample-card fan */
@@ -1176,4 +1176,4 @@ brandBarState();
  setTimeout(go, 1200); // safety: run even if a preload stalls
 })();
 </script>
-<div id="buildtag">v50</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v51</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
