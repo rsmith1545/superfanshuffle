@@ -993,7 +993,7 @@ function brSearch(){ var el=document.getElementById('brq'); if(!el) return; var 
 /* owned vaults (payments not wired yet — seed one so the full owned round + report card is playable) */
 var OWNED=['taylorswift'];
 function playOwned(id){ var v=byId(id); if(v) location.href=launchURL(v)+'&mode=full'; }
-function ownedTile(v){ return '<div class="vault" onclick="playOwned(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
+function ownedTile(v){ return '<div class="vault" onclick="openVault(\''+v.id+'\')">'+coverHTML(v)+'<div class="vname">'+v.name+'</div></div>'; }
 function myVaultsHTML(){
  var owned=OWNED.map(byId).filter(Boolean);
  var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Movies & TV',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'}];
@@ -1145,7 +1145,8 @@ function closeOv(){ var ov=document.getElementById('ov'); var w=ov.querySelector
  }, 430); }
 
 
-function tryFree(id){ var v=byId(id); if(v) location.href=launchURL(v); }
+function isOwned(id){ return OWNED.indexOf(id)>=0; }
+function tryFree(id){ var v=byId(id); if(!v) return; var u=launchURL(v); if(isOwned(id)) u+='&mode=full'; if(typeof V5ED!=='undefined'&&V5ED) u+='&ed='+encodeURIComponent(V5ED); if(!V5SPORT && typeof V5CLUE!=='undefined'&&V5CLUE) u+='&clue='+encodeURIComponent(V5CLUE); location.href=u; }
 function buy(id){ var v=byId(id); toast('Checkout: '+(v?v.name:'vault')+' · $0.99 — payments not wired yet'); }
 var tHandle;
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(tHandle);tHandle=setTimeout(function(){t.classList.remove('on');},2400);}
@@ -1232,4 +1233,4 @@ brandBarState();
  setTimeout(go, 1200); // safety: run even if a preload stalls
 })();
 </script>
-<div id="buildtag">v62</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v63</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
