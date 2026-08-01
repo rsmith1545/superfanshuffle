@@ -1,4 +1,4 @@
-var CACHE='sfs-v41';
+var CACHE='sfs-v42';
 var ASSETS=['/','/index.html','/play.html','/manifest.webmanifest','/icon-192.png','/icon-512.png','/apple-touch-icon.png'];
 self.addEventListener('install',function(e){ e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(ASSETS).catch(function(){});}).then(function(){return self.skipWaiting();})); });
 self.addEventListener('activate',function(e){ e.waitUntil(caches.keys().then(function(keys){return Promise.all(keys.map(function(k){if(k!==CACHE)return caches.delete(k);}));}).then(function(){return self.clients.claim();})); });
@@ -7,7 +7,7 @@ function cacheOk(req,res){ try{ if(res && res.ok && res.type==='basic'){ var cop
 self.addEventListener('fetch',function(e){ var req=e.request; if(req.method!=='GET') return;
   try{ if(new URL(req.url).origin!==self.location.origin) return; }catch(_){ return; }
   if(req.mode==='navigate' || req.destination==='document'){
-    e.respondWith(fetch(req).then(function(res){ return cacheOk(req,res); }).catch(function(){ return caches.match(req).then(function(r){ return r||caches.match('/'); }); }));
+    e.respondWith(fetch(req,{cache:'no-store'}).then(function(res){ return cacheOk(req,res); }).catch(function(){ return caches.match(req).then(function(r){ return r||caches.match('/'); }); }));
     return;
   }
   e.respondWith(caches.match(req).then(function(r){ return r||fetch(req).then(function(res){ return cacheOk(req,res); }).catch(function(){ return caches.match('/'); }); }));

@@ -1118,7 +1118,7 @@ window.addEventListener('resize',brandBarState);
 render(); applyTheme(curEdition||'music',false); preloadThemes();
 brandBarState();
 </script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script>if("serviceWorker" in navigator){var _swReloaded=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(_swReloaded)return;_swReloaded=true;location.reload();});window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(function(r){r.update();}).catch(function(){});});}</script>
 <script>
 (function(){var un=document.getElementById('neonUnlit'),tagUn=document.getElementById('heroTagUnlit');if(!un)return;
  function powerOff(n){un.style.opacity=n;if(tagUn)tagUn.style.opacity=n;}

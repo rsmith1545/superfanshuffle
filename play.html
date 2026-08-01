@@ -359,5 +359,5 @@ var dbgOn=false;
 document.getElementById('dbgBtn').onclick=function(){ dbgOn=!dbgOn; document.getElementById('dbg').style.display=dbgOn?'block':'none'; };
 function dbgTick(){ if(!dbgOn) return; document.getElementById('dbg').innerHTML='gz: '+gz.toFixed(2)+'<br>beta: '+beta.toFixed(0)+'  gamma: '+gamma.toFixed(0)+'<br>armed: '+armed+'  hold:'+holdDir+'  motion:'+haveMotion+'<br>TH:'+TH+' NEU:'+NEUTRAL; }
 </script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script>if("serviceWorker" in navigator){var _swReloaded=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(_swReloaded)return;_swReloaded=true;location.reload();});window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(function(r){r.update();}).catch(function(){});});}</script>
 </body></html>
