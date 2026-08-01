@@ -41,7 +41,7 @@ body.brandbar-on #brandBar{transform:translateY(0);opacity:1;pointer-events:auto
 .mini-brand img{display:block;width:100%;height:100%;object-fit:contain;object-position:left center}
 .mini-tabs{display:flex;align-items:center;justify-content:flex-end;gap:5px;min-width:0;flex:1}
 .mini-tabs button{font-family:var(--disp);font-size:13px;line-height:1;letter-spacing:.5px;white-space:nowrap;color:#d6ccec;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:7px 8px;cursor:pointer}
-.mini-tabs button.on{color:#12002a;background:var(--accent);border-color:transparent;box-shadow:0 0 12px -2px var(--accent)}
+.mini-tabs button.on{color:#12002a;background:var(--accent);border-color:transparent;box-shadow:0 0 12px -2px var(--accent)}.bbsec{display:flex;gap:5px;flex:1;justify-content:flex-end;min-width:0;overflow-x:auto;scrollbar-width:none}.bbsec::-webkit-scrollbar{display:none}.bbsec .mvpill{font-size:11px;padding:5px 8px;flex:0 0 auto}.bbsec .mvpill span{font-size:10px;padding:1px 5px;min-width:14px}body.view-browse #brandBar .mini-tabs{justify-content:center}body.view-browse .brsearch{top:52px}
 @media(max-width:370px){.mini-brand{width:78px;flex-basis:78px}.mini-tabs{gap:3px}.mini-tabs button{font-size:12px;padding:7px 6px}}
 .logo{display:inline-block;border:3px solid var(--mag);border-radius:22px;padding:8px 20px 11px;
  box-shadow:0 0 18px rgba(255,92,240,.55),inset 0 0 18px rgba(255,92,240,.25)}
@@ -874,7 +874,7 @@ var THEME={music:{hdr:"music-header.jpg?v=12",logo:"music-logo.png?v=3",floor:"m
 var _hb=1,_lg=1,_fl=1;
 function applyTheme(id,animate){ var t=THEME[id]||THEME.music; var hb=1-_hb,h=document.getElementById('hdr'+hb),ho=document.getElementById('hdr'+_hb); if(h){h.style.backgroundImage="url('"+t.hdr+"')";h.style.opacity='1';} if(ho)ho.style.opacity='0'; _hb=hb; var lg=1-_lg,l=document.getElementById('logo'+lg),lo=document.getElementById('logo'+_lg); if(l){l.src=t.logo;l.style.opacity='1'; if(animate){l.classList.remove('pulse');void l.offsetWidth;l.classList.add('pulse');}} if(lo)lo.style.opacity='0'; _lg=lg; var fl=1-_fl,fe=document.getElementById('floor'+fl),foe=document.getElementById('floor'+_fl); var _fg={sports:"radial-gradient(85% 55% at 88% 6%,rgba(255,130,30,.26),rgba(255,130,30,0) 55%),radial-gradient(95% 68% at 6% 12%,rgba(22,44,86,.60),rgba(22,44,86,0) 58%),linear-gradient(165deg,#111119 0%,#0a0b11 55%,#070709 100%)",filmtv:"radial-gradient(85% 55% at 88% 6%,rgba(242,193,78,.24),rgba(242,193,78,0) 55%),radial-gradient(95% 68% at 6% 12%,rgba(150,110,30,.42),rgba(150,110,30,0) 58%),linear-gradient(165deg,#121118 0%,#0b0a10 55%,#070708 100%)"}[id]||''; if(fe){fe.style.backgroundImage=_fg?_fg:"url('"+t.floor+"')";fe.style.opacity='1';} if(foe)foe.style.opacity='0'; _fl=fl; var fbg=document.getElementById('floorbg'); if(fbg) fbg.style.filter='brightness('+(_fg?1:(t.fb||0.3))+')'; var BBBG={music:'#1a0d33',filmtv:'#0e0e12',sports:'#14274d'}; var bb=document.getElementById('brandBar'); if(bb) bb.style.background=(BBBG[id]||'#1a0d33'); var mb=document.querySelector('#brandBar .mini-brand img'); if(mb) mb.src=t.logo; var BRBAR={music:'#3EDBFF',filmtv:'#F2C14E',sports:'#FF8A2A'}; document.documentElement.style.setProperty('--brbar', BRBAR[id]||BRBAR.music); }
 function preloadThemes(){ for(var k in THEME){ (function(t){['hdr','logo','floor'].forEach(function(p){var im=new Image();im.src=t[p];});})(THEME[k]); } }
-function setEditionFromBar(id){ curView='play'; setEdition(id); }
+function setEditionFromBar(id){ setEdition(id); }
 function setView(v){ curView=v; render(); window.scrollTo(0,0); }
 function tabsHTML(){
  var vis=EDITIONS.filter(editionVisible); if(vis.length<=1) return '';
@@ -1031,10 +1031,27 @@ function setHeaderForView(v){
    applyTheme(curEdition,false);
  }
 }
+function renderBrandBar(v){
+ var bb=document.getElementById('brandBar'); if(!bb) return;
+ var BBBG={music:'#1a0d33',filmtv:'#0e0e12',sports:'#14274d'};
+ bb.style.background=(v==='vaults'?'#120a20':(BBBG[curEdition]||'#1a0d33'));
+ if(v==='vaults'){
+   var owned=OWNED.map(byId).filter(Boolean);
+   var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Movies & TV',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'}];
+   var pills=order.map(function(e){var c=owned.filter(function(x){return (x.edition||'music')===e.id;}).length; return '<button class="mvpill" style="--pa:'+e.acc+'" onclick="mvJump(\''+e.id+'\')">'+e.label+' <span>'+c+'</span></button>';}).join('');
+   bb.innerHTML='<button class="mini-brand" onclick="setView(\'play\');window.scrollTo(0,0)" aria-label="Home"><img src="sfs-neon-mobile-lit.webp" alt=""></button><div class="bbsec">'+pills+'</div>';
+ } else if(v==='browse'){
+   bb.innerHTML='<div class="mini-tabs" id="miniTabs"></div>'; renderMiniTabs();
+ } else {
+   var lg=(typeof THEME!=='undefined'&&THEME[curEdition])?THEME[curEdition].logo:'sfs-neon-mobile-lit.webp';
+   bb.innerHTML='<button class="mini-brand" onclick="setView(\'play\');window.scrollTo(0,0)" aria-label="Home"><img src="'+lg+'" alt=""></button><div class="mini-tabs" id="miniTabs"></div>'; renderMiniTabs();
+ }
+}
 function render(){
  var v=curView;
+ document.body.classList.remove('view-play','view-browse','view-vaults'); document.body.classList.add('view-'+v);
  document.getElementById('app').innerHTML = v==='play'?playHTML() : v==='browse'?browseHTML() : myVaultsHTML();
- renderMiniTabs(); renderEdTabs(); setHeaderForView(v);
+ renderEdTabs(); renderBrandBar(v); setHeaderForView(v);
  document.getElementById('nav-play').className    = v==='play'?'on':'';
  document.getElementById('nav-browse').className  = v==='browse'?'on':'';
  document.getElementById('nav-vaults').className  = v==='vaults'?'on':'';
@@ -1250,4 +1267,4 @@ brandBarState();
  setTimeout(go, 1200); // safety: run even if a preload stalls
 })();
 </script>
-<div id="buildtag">v66</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v67</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
