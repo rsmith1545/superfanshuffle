@@ -1211,7 +1211,10 @@ document.addEventListener('click',function(e){var t=e.target.closest&&e.target.c
  var ua=navigator.userAgent||''; var isIOS=/iP(hone|ad|od)/.test(ua) && !window.MSStream;
  if(isIOS && !standalone){ var hint=document.getElementById('iosHint'); hint.style.display='block'; setTimeout(function(){hint.style.display='none';}, 9000); }
 })();
-function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
+function lockPortrait(){ try{ if(screen.orientation&&screen.orientation.lock){ screen.orientation.lock('portrait').catch(function(){}); } }catch(e){} }
+window.addEventListener('load',lockPortrait);
+window.addEventListener('orientationchange',lockPortrait);
+function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p){ if(p.then)p.then(lockPortrait,function(){}); if(p.catch)p.catch(function(){}); } lockPortrait(); } }catch(e){} }
 document.addEventListener('click', function(){ goFullscreen(); }, {once:true});
 function fullscreenState(){ document.documentElement.classList.toggle('fullscreen-active',!!(document.fullscreenElement||document.webkitFullscreenElement)); }
 document.addEventListener('fullscreenchange',fullscreenState);
@@ -1280,4 +1283,4 @@ brandBarState();
  setTimeout(go, 1200); // safety: run even if a preload stalls
 })();
 </script>
-<div id="buildtag">v77</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v78</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>

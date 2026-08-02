@@ -361,6 +361,8 @@ function doShare(){
 }
 function tryLockLandscape(){ try{ if(screen.orientation&&screen.orientation.lock){ screen.orientation.lock('landscape').catch(function(){}); } }catch(e){} }
 function tryUnlock(){ try{ if(screen.orientation&&screen.orientation.unlock){ screen.orientation.unlock(); } }catch(e){} }
+window.addEventListener('load',function(){ if(!document.body.classList.contains('lock-ls')) tryPortrait(); });
+window.addEventListener('orientationchange',function(){ if(!document.body.classList.contains('lock-ls')) tryPortrait(); });
 function tryPortrait(){ try{ if(screen.orientation&&screen.orientation.lock){ screen.orientation.lock('portrait').catch(function(){ tryUnlock(); }); } else { tryUnlock(); } }catch(e){ tryUnlock(); } }
 /* ---------- keep the screen awake during play (Wake Lock API: Android Chrome + iOS 16.4+) ---------- */
 var _wake=null;
