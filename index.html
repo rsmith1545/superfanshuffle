@@ -935,9 +935,9 @@ function cycDoorwayHTML(){
    +'<div class="link">Explore Crowd Results →</div></a>';
  return h;
 }
-function browseHTML(){ var HB={music:'26,13,51',filmtv:'14,14,18',sports:'20,39,77'}; var hero=(typeof THEME!=='undefined'&&THEME[curEdition]&&THEME[curEdition].hdr)||'music-header.jpg'; var barbg='background:linear-gradient(rgba('+(HB[curEdition]||HB.music)+',.75),rgba('+(HB[curEdition]||HB.music)+',.75)),url('+hero+');background-size:cover;background-position:center';
+function browseHTML(){ var BG={music:'linear-gradient(100deg,rgba(58,32,110,.9),rgba(26,13,51,.88))',filmtv:'linear-gradient(100deg,rgba(62,49,18,.9),rgba(14,14,18,.9))',sports:'linear-gradient(100deg,rgba(24,45,86,.9),rgba(12,24,56,.9))'}; var blogo=(typeof THEME!=='undefined'&&THEME[curEdition]&&THEME[curEdition].logo)||'sfs-neon-mobile-lit.webp'; var barbg='background:'+(BG[curEdition]||BG.music);
  var h='<div class="brtop">'
-   +'<div class="brbar" style="'+barbg+'"><img class="brbarlogo" src="sfs-neon-mobile-lit.webp" alt="SuperFan Shuffle"><div class="brworlds" id="brWorlds"></div></div>'
+   +'<div class="brbar" style="'+barbg+'"><img class="brbarlogo" src="'+blogo+'" alt="SuperFan Shuffle"><div class="brworlds" id="brWorlds"></div></div>'
    +'<div class="brsearch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'
      +'<input id="brq" type="text" placeholder="Search all vaults…" oninput="brSearch()" autocomplete="off"></div>'
    +'</div>';
@@ -1273,4 +1273,4 @@ brandBarState();
  setTimeout(go, 1200); // safety: run even if a preload stalls
 })();
 </script>
-<div id="buildtag">v70</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v71</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
