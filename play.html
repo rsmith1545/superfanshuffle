@@ -185,7 +185,7 @@ var MAX_Q=5;
 
 /* ---------- screens ---------- */
 var app=document.getElementById('app');
-function show(id){['sStart','sReady','sGame','sWall','sReport'].forEach(function(s){document.getElementById(s).classList.toggle('on',s===id);});}
+function show(id){['sStart','sReady','sGame','sWall','sReport'].forEach(function(s){document.getElementById(s).classList.toggle('on',s===id);}); if(id==='sStart'||id==='sWall'||id==='sReport'){ document.body.classList.remove('lock-ls'); tryUnlock(); } }
 var tHandle2=null;
 function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(tHandle2); tHandle2=setTimeout(function(){ t.classList.remove('on'); }, 2600); }
 
