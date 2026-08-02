@@ -369,17 +369,16 @@ function isLandscape(){
   return !!mm || Math.abs(gamma) > 55;
 }
 function ready(){
-  show('sReady'); counting=false; awaitingLandscape=true;
-  document.getElementById('rotateMsg').style.display='';
+  show('sReady'); counting=false; awaitingLandscape=false;
+  document.getElementById('rotateMsg').style.display='none';
   var gr=document.getElementById('getReady'); gr.style.display='none'; gr.classList.remove('pulsing');
   document.getElementById('big').style.display='none';
-  checkOrientation();
+  startCountdown();
 }
 function checkOrientation(){ if(awaitingLandscape && isLandscape()){ awaitingLandscape=false; startCountdown(); } }
 function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 function startCountdown(){
   if(counting) return; counting=true;
-  document.body.classList.add('lock-ls');
   document.getElementById('rotateMsg').style.display='none';
   var gr=document.getElementById('getReady'), big=document.getElementById('big');
   big.style.display='none';
