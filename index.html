@@ -1243,6 +1243,17 @@ function brandBarState(){ var hero=document.getElementById('topbar'); var cutoff
 window.addEventListener('scroll',brandBarState,{passive:true});
 window.addEventListener('resize',brandBarState);
 render(); applyTheme(curEdition||'music',false); preloadThemes();
+/* Play-screen edition flick: swipe left/right cycles Music <-> Movies&TV <-> Sports */
+(function(){
+  var app=document.getElementById('app'); if(!app) return;
+  var x0=0,y0=0,track=false,hs=false;
+  function overlay(){ if(document.getElementById('splash')) return true; var ov=document.getElementById('introOv'); if(ov&&ov.classList.contains('on')) return true; var sh=document.getElementById('sheet'); if(sh&&sh.childElementCount>0) return true; return false; }
+  function isH(el){ while(el&&el!==document.body){ try{var st=getComputedStyle(el);}catch(e){return false;} if((st.overflowX==='auto'||st.overflowX==='scroll')&&el.scrollWidth>el.clientWidth+6) return true; el=el.parentElement; } return false; }
+  function vis(){ return (typeof EDITIONS!=='undefined')?EDITIONS.filter(editionVisible):[]; }
+  function go(dir){ var a=vis(); if(a.length<2) return; var i=0; for(var k=0;k<a.length;k++){ if(a[k].id===curEdition){i=k;break;} } var n=(i+dir+a.length)%a.length; if(a[n].id!==curEdition) setEdition(a[n].id); }
+  app.addEventListener('touchstart',function(e){ if(e.touches.length!==1||!document.body.classList.contains('view-play')||overlay()){track=false;return;} var t=e.touches[0]; x0=t.clientX; y0=t.clientY; hs=isH(e.target); track=true; },{passive:true});
+  app.addEventListener('touchend',function(e){ if(!track) return; track=false; if(hs) return; var t=e.changedTouches[0]; var dx=t.clientX-x0, dy=t.clientY-y0; if(Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.8){ go(dx<0?1:-1); } },{passive:true});
+})();
 brandBarState();
 </script>
 <script>if("serviceWorker" in navigator){var _swReloaded=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(_swReloaded)return;_swReloaded=true;location.reload();});window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(function(r){r.update();}).catch(function(){});});}</script>
@@ -1285,4 +1296,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v89</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v90</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
