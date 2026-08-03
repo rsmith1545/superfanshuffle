@@ -383,7 +383,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .spLogo.on{opacity:1}
 .spLogo img{position:absolute;width:min(78vw,420px);height:auto;object-fit:contain}
 .spLit{opacity:0}
-.spLit.flick{animation:sflick .85s steps(1,end) forwards}
+.spLit.flick{animation:sflick .5s steps(1,end) forwards}
 @keyframes sflick{0%{opacity:0}9%{opacity:.85}16%{opacity:0}28%{opacity:.92}35%{opacity:.12}50%{opacity:1}58%{opacity:.4}72%{opacity:1}84%{opacity:.65}100%{opacity:1}}
 .spLogo.lit .spUnlit{opacity:0}
 .triWrap{position:absolute;inset:0;opacity:0;transition:opacity .2s ease}
@@ -402,7 +402,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .triP.p3 .triTxt{color:#FF8A2A;text-shadow:0 0 14px rgba(255,138,42,.9),0 0 30px rgba(255,138,42,.5)}
 .descP{position:absolute;inset:0;opacity:0;transition:opacity .3s ease}
 .descP.on{opacity:1}
-.descP img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.descP img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
 .spSkip{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:16px;z-index:6;font-family:var(--disp);font-size:12px;letter-spacing:1.5px;color:rgba(255,255,255,.55);text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none}
 .spSkip.on{opacity:1}
 </style>
@@ -453,11 +453,19 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
       <div class="hpBcol"><div class="hpStack"><div class="hpHd"><div class="hpIc gr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div><b>CORRECT ANSWER</b></div><p>Tilt down when you nail it&mdash;on to the next question.</p></div><div class="hpLbl2 gr">Tilt <b>DOWN</b> for Correct</div><div class="hpPhone correct"><div class="hpStage"><span class="hpArr l"><svg viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></span><div class="hpDev"><div class="hpScr"><span class="hpBtn cw">Correct Answer</span></div></div><span class="hpArr r"><svg viewBox="0 0 40 52"><path d="M27 44 C 13 41 11 20 21 9" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="#fff"/></svg></span></div></div></div>
     </div>
     </div>
+    <div class="h2pCta" id="h2pCta">TAP ANYWHERE TO START <span>&#9654;</span></div>
   </div>
 </div>
 <style>
 #introOv{position:fixed;inset:0;z-index:100000;background:#0b0714;display:none}
 #introOv.on{display:block}
+.hpTwo .hpHd{display:flex;align-items:flex-start;gap:10px;padding-left:0}
+.hpTwo .hpHd .hpIc{position:static;top:auto;transform:none;flex:0 0 38px}
+.hpTwo .hpStack>p{padding-left:48px}
+.h2p{position:relative}
+.h2pCta{position:absolute;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);height:48px;display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(90deg,#ff2eb0,#b06aff);color:#fff;font-family:var(--disp);font-size:18px;letter-spacing:1.6px;border-radius:14px;box-shadow:0 0 22px rgba(255,46,176,.5);animation:ctaPulse 1.4s ease-in-out infinite;z-index:6;pointer-events:none}
+.h2pCta span{font-size:14px}
+@keyframes ctaPulse{0%,100%{transform:scale(1);box-shadow:0 0 18px rgba(255,46,176,.45)}50%{transform:scale(1.03);box-shadow:0 0 32px rgba(255,46,176,.78)}}
 .introSlide{position:absolute;inset:0;display:none;cursor:pointer}
 .introSlide.cur{display:block}
 .introSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
@@ -557,7 +565,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 <script>
 (function(){
   var ov=document.getElementById('introOv'),s1=document.getElementById('introS1'),s2=document.getElementById('introS2');
-  function fitS2(){ var inner=s2.querySelector('.h2pInner'); if(!inner||!s2.classList.contains('cur')) return; inner.style.transform='none'; var avail=s2.clientHeight-14, need=inner.scrollHeight; var sc=Math.min(1, avail/need); inner.style.transform=sc<1?'scale('+sc+')':'none'; }
+  function fitS2(){ var inner=s2.querySelector('.h2pInner'); if(!inner||!s2.classList.contains('cur')) return; inner.style.transform='none'; var avail=s2.clientHeight-72, need=inner.scrollHeight; var sc=Math.min(1, avail/need); inner.style.transform=sc<1?'scale('+sc+')':'none'; }
   function go2(){ s1.classList.remove('cur'); s2.classList.add('cur'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); }
   function done(){ ov.classList.remove('on'); }
   window.__startHowTo=function(){ ov.classList.add('on'); if(s1)s1.classList.remove('cur'); s2.classList.add('cur'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); };
@@ -1255,12 +1263,12 @@ brandBarState();
  function run(){
    at(200, function(){ $('#spLogo').classList.add('on'); });
    at(350, function(){ $('#spLit').classList.add('flick'); });
-   at(1230, function(){ $('#spLogo').classList.add('lit'); });
-   at(2600, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
+   at(880, function(){ $('#spLogo').classList.add('lit'); });
+   at(2300, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
    function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+230,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
-   panel('.p1',2600); panel('.p2',3750); panel('.p3',4900);
-   at(6050, function(){ $('#triWrap').style.opacity='0'; $('#descP').classList.add('on'); });
-   at(8450, endIntro);
+   panel('.p1',2300); panel('.p2',4000); panel('.p3',5700);
+   at(7400, function(){ $('#triWrap').style.opacity='0'; $('#descP').classList.add('on'); });
+   at(10200, endIntro);
    if(repeat){ at(300,function(){ $('#spSkip').classList.add('on'); }); sp.addEventListener('click', endIntro); }
  }
  var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=1'];
@@ -1270,4 +1278,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v84</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v85</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
