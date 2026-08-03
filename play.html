@@ -437,6 +437,7 @@ function goFullscreen(){ try{ var el=document.documentElement; var fn=el.request
 document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); }); };
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
 document.getElementById('customBtn').onclick=function(){ toast('Vault customization \u2014 coming next'); };
+if(Q.get('demo')){ try{ score=parseInt(Q.get('score')||'7',10)||7; results=[{w:'Shake It Off',good:true},{w:'Blank Space',good:true},{w:'Style',good:false},{w:'Love Story',good:true},{w:'Anti-Hero',good:true},{w:'Cardigan',good:false},{w:'Cruel Summer',good:true},{w:'Delicate',good:false},{w:'Willow',good:true},{w:'Lover',good:true}]; buildReport(); document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('on');x.style.display='none';}); var _r=document.getElementById('sReport'); _r.style.display='block'; _r.classList.add('on'); }catch(e){} }
 /* unlock wall */
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · $0.99 — payments not wired yet'); };
 document.getElementById('wallBack').onclick=function(){ location.href='/'; };
