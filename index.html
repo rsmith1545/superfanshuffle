@@ -428,8 +428,9 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 <div id="bgfx"></div>
 <!-- FULL-SCREEN INTRO (shows every app open: brand card -> how-to-play -> store) -->
 <div id="introOv" aria-label="Welcome to SuperFan Shuffle">
-  <div class="introSlide cur" id="introS1"><img src="intro-card.jpg?v=1" alt="Everyone&rsquo;s a superfan of something"></div>
+  <div class="introSlide idesc" id="introDesc"><img src="intro-desc.jpg?v=2" alt="Everyone&rsquo;s a superfan of something"><div class="idescHint">TAP TO CONTINUE <span>&#9654;</span></div></div>
   <div class="introSlide h2p" id="introS2">
+    <div class="ovBack" id="h2pBack">&#8249;</div>
     <div class="h2pInner">
     <div class="h2pHead"><span class="h2pLine"></span><h1>HOW TO PLAY</h1><span class="h2pLine"></span></div>
     <p class="h2pSub">Everything you need to know to play.</p>
@@ -469,6 +470,9 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .introSlide{position:absolute;inset:0;display:none;cursor:pointer}
 .introSlide.cur{display:block}
 .introSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.idescHint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 26px);text-align:center;font-family:var(--disp);font-size:15px;letter-spacing:2.5px;color:rgba(255,255,255,.9);text-shadow:0 0 10px rgba(0,0,0,.85);animation:ctaPulse 1.6s ease-in-out infinite;pointer-events:none;z-index:2}
+.idescHint span{font-size:12px}
+.ovBack{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:10px;z-index:9;width:40px;height:40px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:26px;line-height:1;color:#fff;background:rgba(10,7,20,.5);border:1px solid rgba(255,255,255,.18);cursor:pointer;backdrop-filter:blur(4px)}
 .s2bg{z-index:0;object-position:50% 50%}
 .tiltDemo{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2vh;padding-top:16vh}
 .tGroup{display:flex;flex-direction:column;align-items:center;gap:1.6vh;perspective:640px}
@@ -564,13 +568,16 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 </style>
 <script>
 (function(){
-  var ov=document.getElementById('introOv'),s1=document.getElementById('introS1'),s2=document.getElementById('introS2');
+  var ov=document.getElementById('introOv'),idesc=document.getElementById('introDesc'),s2=document.getElementById('introS2');
+  var descTimer=null;
   function fitS2(){ var inner=s2.querySelector('.h2pInner'); if(!inner||!s2.classList.contains('cur')) return; inner.style.transform='none'; var avail=s2.clientHeight-72, need=inner.scrollHeight; var sc=Math.min(1, avail/need); inner.style.transform=sc<1?'scale('+sc+')':'none'; }
-  function go2(){ s1.classList.remove('cur'); s2.classList.add('cur'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); }
+  function showDesc(auto){ ov.classList.add('on'); s2.classList.remove('cur'); if(idesc)idesc.classList.add('cur'); clearTimeout(descTimer); if(auto){ descTimer=setTimeout(function(){ showHowTo(); },4200); } }
+  function showHowTo(){ clearTimeout(descTimer); if(idesc)idesc.classList.remove('cur'); s2.classList.add('cur'); ov.classList.add('on'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); }
   function done(){ ov.classList.remove('on'); }
-  window.__startHowTo=function(){ ov.classList.add('on'); if(s1)s1.classList.remove('cur'); s2.classList.add('cur'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); };
-  s1.addEventListener('click',go2);
-  s2.addEventListener('click',done);
+  window.__startIntro=function(){ showDesc(true); };
+  window.__startHowTo=function(){ showHowTo(); };
+  if(idesc) idesc.addEventListener('click',function(){ showHowTo(); });
+  s2.addEventListener('click',function(e){ if(e.target.closest('#h2pBack')){ showDesc(false); return; } done(); });
   window.addEventListener('resize',fitS2);
   window.addEventListener('orientationchange',function(){ setTimeout(fitS2,220); });
 })();
@@ -1259,16 +1266,16 @@ brandBarState();
  var T=[]; function at(ms,fn){ T.push(setTimeout(fn,ms)); }
  var repeat=false; try{ repeat=!!localStorage.getItem('sfs_seenIntro'); localStorage.setItem('sfs_seenIntro','1'); }catch(e){}
  var ended=false;
- function endIntro(){ if(ended) return; ended=true; T.forEach(clearTimeout); sp.classList.add('gone'); setTimeout(function(){ if(sp.parentNode) sp.parentNode.removeChild(sp); },500); if(window.__startHowTo) window.__startHowTo(); }
+ function endIntro(){ if(ended) return; ended=true; T.forEach(clearTimeout); sp.classList.add('gone'); setTimeout(function(){ if(sp.parentNode) sp.parentNode.removeChild(sp); },500); if(window.__startIntro) window.__startIntro(); }
  function run(){
    at(200, function(){ $('#spLogo').classList.add('on'); });
    at(350, function(){ $('#spLit').classList.add('flick'); });
    at(880, function(){ $('#spLogo').classList.add('lit'); });
    at(2300, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
    function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+230,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
-   panel('.p1',2300); panel('.p2',3700); panel('.p3',5100);
-   at(6500, function(){ $('#triWrap').style.opacity='0'; $('#descP').classList.add('on'); });
-   at(9300, endIntro);
+   panel('.p1',2300); panel('.p2',3500); panel('.p3',4700);
+   at(5600, function(){ $('#triWrap').style.opacity='0'; });
+   at(5900, endIntro);
    if(repeat){ at(300,function(){ $('#spSkip').classList.add('on'); }); sp.addEventListener('click', endIntro); }
  }
  var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=2'];
@@ -1278,4 +1285,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v88</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v89</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
