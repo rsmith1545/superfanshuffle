@@ -1091,7 +1091,7 @@ function render(){
 }
 
 /* vault tap: free → 5-question taste; paid → fly-in detail card */
-function launchURL(v){ var u='/play.html?vault='+encodeURIComponent(v.id)+'&n='+encodeURIComponent(v.name); try{ var pool=VAULTS.filter(function(x){return x.edition===v.edition&&x.id!==v.id&&(x.edition!=='sports'||x.sp);}); if(pool.length){ var xv=pool[Math.floor(Math.random()*pool.length)]; u+='&xs='+encodeURIComponent(xv.id)+'&xsn='+encodeURIComponent(xv.name)+'&xse='+encodeURIComponent(xv.cat||'SuperFan Vault'); } }catch(e){} return u; }
+function launchURL(v){ var u='/play.html?vault='+encodeURIComponent(v.id)+'&n='+encodeURIComponent(v.name)+'&ed='+encodeURIComponent(v.edition||'music'); try{ var pool=VAULTS.filter(function(x){return x.edition===v.edition&&x.id!==v.id&&(x.edition!=='sports'||x.sp);}); if(pool.length){ var xv=pool[Math.floor(Math.random()*pool.length)]; u+='&xs='+encodeURIComponent(xv.id)+'&xsn='+encodeURIComponent(xv.name)+'&xse='+encodeURIComponent(xv.cat||'SuperFan Vault'); } }catch(e){} return u; }
 function pickVault(id){ var v=byId(id); if(!v) return; openVault(id); }
 function vkSel(el){ var p=el.parentNode; var ms=p.querySelectorAll('.vkmode'); for(var i=0;i<ms.length;i++) ms[i].classList.remove('sel'); el.classList.add('sel'); }
 var ARTCOLOR={dmb:['#e07a1e','224,122,30'], grunge90s:['#d18900','209,137,0'], taylorswift:['#c95a44','201,90,68'], fthc:['#2f97d8','47,151,216'], pearljam:['#cf5330','207,83,48'], nirvana:['#d1a11a','209,161,26'], foo:['#c8402e','200,64,46'], springsteen:['#c76a24','199,106,36'], billieeilish:['#d19d00','209,157,0'], edsheeran:['#d17213','209,114,19'], rihanna:['#d18243','209,130,67'], arianagrande:['#d1a168','209,161,104'], brunomars:['#d16f00','209,111,0'], postmalone:['#d16e00','209,110,0'], dualipa:['#0039d1','0,57,209'], maroon5:['#d16600','209,102,0'], coldplay:['#d1790f','209,121,15'], ladygaga:['#d16600','209,102,0'], kidstoybox:['#cc6800','204,104,0'], summerbeach:['#cc6a00','204,106,0']};
@@ -1213,7 +1213,7 @@ function closeOv(){ var ov=document.getElementById('ov'); var w=ov.querySelector
 
 
 function isOwned(id){ return OWNED.indexOf(id)>=0; }
-function tryFree(id){ var v=byId(id); if(!v) return; try{var _lp=JSON.parse(localStorage.getItem('sfs_lp')||'{}');_lp[id]=Date.now();localStorage.setItem('sfs_lp',JSON.stringify(_lp));}catch(e){} var u=launchURL(v); if(isOwned(id)) u+='&mode=full'; if(typeof V5ED!=='undefined'&&V5ED) u+='&ed='+encodeURIComponent(V5ED); if(!V5SPORT && typeof V5CLUE!=='undefined'&&V5CLUE) u+='&clue='+encodeURIComponent(V5CLUE); location.href=u; }
+function tryFree(id){ var v=byId(id); if(!v) return; try{var _lp=JSON.parse(localStorage.getItem('sfs_lp')||'{}');_lp[id]=Date.now();localStorage.setItem('sfs_lp',JSON.stringify(_lp));}catch(e){} var u=launchURL(v); if(isOwned(id)) u+='&mode=full'; if(!V5SPORT && typeof V5CLUE!=='undefined'&&V5CLUE) u+='&clue='+encodeURIComponent(V5CLUE); location.href=u; }
 function buy(id){ var v=byId(id); toast('Checkout: '+(v?v.name:'vault')+' · $0.99 — payments not wired yet'); }
 var tHandle;
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(tHandle);tHandle=setTimeout(function(){t.classList.remove('on');},2400);}
@@ -1296,4 +1296,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v91</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v92</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>

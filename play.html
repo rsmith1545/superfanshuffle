@@ -78,46 +78,57 @@
  .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:24px;font-size:14px;font-weight:700;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:86%;text-align:center}
  .toast.on{opacity:.96}
 
-#sReport{padding:0}
-.rcCard{display:flex;flex-direction:column;height:100dvh;max-width:520px;margin:0 auto;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));box-sizing:border-box;color:#fff}
-.rcTop{display:flex;align-items:center;gap:10px}
-.rcThumb{width:44px;height:44px;border-radius:9px;object-fit:cover;background:#1a1230;border:1px solid rgba(255,255,255,.15);flex:0 0 auto}
-.rcArtist{font-family:var(--disp);font-size:20px;letter-spacing:3px;text-transform:uppercase;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rcMode{font-family:var(--disp);font-size:12px;letter-spacing:1.5px;color:#ff5cf0;border:1.5px solid #ff5cf0;border-radius:16px;padding:5px 12px;white-space:nowrap;box-shadow:0 0 12px -4px #ff5cf0}
-.rcComplete{text-align:center;font-family:var(--disp);font-size:20px;letter-spacing:2px;margin:12px 0 4px;color:#fff}
-.rcHero{display:flex;align-items:center;gap:12px;margin:2px 0 8px}
-.rcBadge{width:118px;height:118px;object-fit:contain;flex:0 0 auto}
+#sReport{padding:0;background:#05040a}
+.rcCard{display:flex;flex-direction:column;height:calc(100dvh - 12px);max-width:520px;margin:6px auto;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));box-sizing:border-box;color:#fff;border:1.5px solid var(--rcbord,rgba(126,86,224,.55));border-radius:20px;background:var(--rcgrad,linear-gradient(180deg,#1a0d33,#0b0714));overflow:hidden}
+.rcBar{display:flex;align-items:center;gap:10px}
+.rcSFS{font-family:var(--disp);font-size:14px;letter-spacing:1px;color:var(--cyan);border:1.5px solid var(--cyan);border-radius:8px;padding:3px 7px;flex:0 0 auto;box-shadow:0 0 10px -4px var(--cyan)}
+.rcBar .rcArtist{font-family:var(--disp);font-size:19px;letter-spacing:3px;text-transform:uppercase;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rcMode{font-family:var(--disp);font-size:11.5px;letter-spacing:1.5px;color:#ff5cf0;border:1.5px solid #ff5cf0;border-radius:16px;padding:5px 11px;white-space:nowrap;box-shadow:0 0 12px -4px #ff5cf0;flex:0 0 auto}
+.rcComplete{text-align:center;font-family:var(--disp);font-size:19px;letter-spacing:2px;margin:12px 0 6px;color:#fff}
+.rcHero{display:flex;align-items:center;gap:14px;margin:2px 0 10px}
+.rcBadge{width:110px;height:110px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--tc,#3EDBFF);box-shadow:0 0 22px -6px var(--tc,#3EDBFF),inset 0 0 24px -12px var(--tc,#3EDBFF)}
+.rcBadge svg{width:54px;height:54px;color:var(--tc,#3EDBFF)}
 .rcScoreCol{flex:1;text-align:center;min-width:0}
-.rcBig{font-family:var(--disp);font-size:60px;line-height:.9;color:var(--cyan);text-shadow:0 0 22px rgba(62,219,255,.6)}
-.rcCorrect{font-family:var(--disp);font-size:19px;letter-spacing:3px;color:var(--cyan)}
+.rcBig{font-family:var(--disp);font-size:58px;line-height:.9;color:var(--cyan);text-shadow:0 0 22px rgba(62,219,255,.6)}
+.rcCorrect{font-family:var(--disp);font-size:18px;letter-spacing:3px;color:var(--cyan)}
 .rcMsg{font-size:15px;color:#fff;margin-top:8px}
-.rcNext{font-size:14px;color:#c9b8ff;margin-top:2px}.rcNext b{color:#ff5cf0}
-.rcLevels{display:flex;justify-content:space-between;gap:4px;margin:2px 0 8px}
-.rclv{flex:1;text-align:center}
-.rclv img{width:40px;height:40px;object-fit:contain;opacity:.45}
-.rclv.on img{opacity:1;transform:scale(1.12)}
-.rclv .rlname{font-family:var(--disp);font-size:12px;letter-spacing:.5px;color:#8a7db5;margin-top:1px}
-.rclv.on .rlname{color:var(--cyan)}
-.rclv .rlrange{font-size:11px;color:#6f6390}
-.rclv.on .rlrange{color:#bfe9ff}
-.rcRoundHd{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--disp);font-size:14px;letter-spacing:1px;padding:8px 2px 6px;border-top:1px solid rgba(255,255,255,.12)}
-.rcKey{font-family:var(--body);font-size:11px;color:#9a8fc0}
-.rcRecap{flex:1 1 auto;overflow-y:auto;list-style:none;margin:0;padding:0 2px;min-height:60px}
-.rcRecap li{display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid rgba(255,255,255,.06);font-size:15px}
-.rcRecap li .n{color:#6f6390;font-size:13px;width:20px;flex:0 0 auto;text-align:right}
-.rcRecap li .ic{width:22px;flex:0 0 auto;text-align:center;font-weight:800}
+.rcNext{font-size:13.5px;color:#c9b8ff;margin-top:2px}.rcNext b{color:#ff5cf0}
+.rcLevels{position:relative;display:flex;justify-content:space-between;gap:4px;margin:2px 2px 10px;padding-top:4px}
+.rlTrack,.rlFill{position:absolute;top:25px;height:3px;border-radius:3px}
+.rlTrack{left:9%;right:9%;background:rgba(255,255,255,.14)}
+.rlFill{left:9%;background:linear-gradient(90deg,#8A6AC8,var(--cyan));box-shadow:0 0 8px -1px var(--cyan)}
+.rclv{position:relative;flex:1;text-align:center;z-index:1}
+.rlic{width:42px;height:42px;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #453b63;background:#140f24;color:#7a6ea3}
+.rlic svg{width:22px;height:22px}
+.rclv.on .rlic{border-color:var(--tc);color:var(--tc);background:#160f2a;box-shadow:0 0 16px -3px var(--tc)}
+.rlname{font-family:var(--disp);font-size:12px;letter-spacing:.5px;color:#8a7db5;margin-top:3px}
+.rclv.on .rlname{color:var(--tc)}
+.rlrange{font-size:10.5px;color:#6f6390}
+.rclv.on .rlrange{color:#cfe9ff}
+.rcRound{flex:1 1 auto;display:flex;flex-direction:column;min-height:66px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(0,0,0,.22);padding:0 10px 4px;overflow:hidden}
+.rcRoundHd{display:flex;justify-content:space-between;align-items:center;font-family:var(--disp);font-size:13.5px;letter-spacing:1px;padding:9px 2px 7px;border-bottom:1px solid rgba(255,255,255,.10)}
+.rcKey{font-family:var(--body);font-size:11px;color:#9a8fc0;letter-spacing:0}
+.rcKey b{font-family:var(--disp)}.rcKey b.g{color:#4be08a}.rcKey b.p{color:#ff9a3c}
+.rcRecap{flex:1 1 auto;overflow-y:auto;list-style:none;margin:0;padding:2px 2px 0}
+.rcRecap li{display:flex;align-items:center;gap:11px;padding:7px 2px;border-bottom:1px solid rgba(255,255,255,.06);font-size:15px}
+.rcRecap li:last-child{border-bottom:0}
+.rcRecap li .n{color:#6f6390;font-size:13px;width:18px;flex:0 0 auto;text-align:right}
+.rcRecap li .ic{width:22px;height:22px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:1.5px solid currentColor}
 .rcRecap li.g .ic{color:#4be08a}.rcRecap li.p .ic{color:#ff9a3c}
 .rcRecap li .t{flex:1;color:#fff}
-#sReport #againBtn{margin:10px 0 0;width:100%;background:transparent;border:2px solid var(--cyan);color:var(--cyan);border-radius:16px;padding:13px;font-family:var(--disp);font-size:20px;letter-spacing:2px;box-shadow:0 0 18px -6px var(--cyan)}
-.rcActions{display:flex;align-items:center;justify-content:center;gap:16px;margin:11px 0 9px;font-family:var(--disp);font-size:14px;letter-spacing:1px}
+.rcBtns{display:flex;gap:10px;margin:10px 0 0}
+.rcBtn{flex:1;border-radius:14px;padding:11px 6px;font-family:var(--disp);font-size:17px;letter-spacing:1.5px;cursor:pointer;background:transparent}
+.rcBtn.primary{border:2px solid var(--cyan);color:var(--cyan);box-shadow:0 0 18px -6px var(--cyan)}
+.rcBtn.ghost{border:2px solid #b98bff;color:#d9c2ff}
+.rcActions{display:flex;align-items:center;justify-content:center;gap:16px;margin:9px 0 8px;font-family:var(--disp);font-size:13.5px;letter-spacing:1px}
 .rcActions a{color:#b98bff;cursor:pointer}.rcActions i{color:#4a3a6a;font-style:normal}
-.rcXsell{display:flex;align-items:center;gap:12px;border:1px solid rgba(255,92,240,.3);border-radius:14px;padding:8px;background:rgba(255,92,240,.05)}
-.rcXsell img{width:70px;height:56px;border-radius:9px;object-fit:cover;flex:0 0 auto;background:#1a1230}
+.rcXsell{display:flex;align-items:center;gap:12px;border:1px solid rgba(255,92,240,.3);border-radius:14px;padding:8px;background:rgba(255,92,240,.06)}
+.rcXsell img{width:66px;height:52px;border-radius:9px;object-fit:cover;flex:0 0 auto;background:#1a1230}
 .rcXsell .xt{flex:1;min-width:0}
-.rcXsell .xk{font-family:var(--disp);font-size:12px;letter-spacing:1px;color:#ff5cf0}
-.rcXsell .xn{font-size:16px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rcXsell .xk{font-family:var(--disp);font-size:11.5px;letter-spacing:1px;color:#ff5cf0}
+.rcXsell .xn{font-size:15px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rcXsell .xs{font-size:12px;color:#c9b8ff}
-.rcXsell .xgo{font-family:var(--disp);font-size:13px;color:#ff5cf0;white-space:nowrap;cursor:pointer}
+.rcXsell .xgo{font-family:var(--disp);font-size:12.5px;color:#ff5cf0;white-space:nowrap;cursor:pointer}
 </style><style id="rotgate">
 .rotate-gate{display:none;position:fixed;inset:0;z-index:99998;background:#0b0713;color:#fff;align-items:center;justify-content:center;text-align:center;font-family:var(--disp,sans-serif);padding:24px}
 .rotate-gate .rg-icon{font-size:60px;color:var(--cyan,#3EDBFF);display:inline-block;animation:rgspin 2.2s ease-in-out infinite}
@@ -164,13 +175,13 @@
   <!-- REPORT CARD (end of a full, owned round — owner-only) -->
   <div class="screen" id="sReport">
    <div class="rcCard">
-    <div class="rcTop"><img class="rcThumb" id="rcThumb" alt=""><div class="rcArtist" id="rcArtist"></div><div class="rcMode" id="rcMode">STANDARD MODE</div></div>
+    <div class="rcBar"><span class="rcSFS">SFS</span><span class="rcArtist" id="rcArtist"></span><span class="rcMode" id="rcMode">MODE</span></div>
     <div class="rcComplete">&#9656; ROUND COMPLETE! &#9666;</div>
-    <div class="rcHero"><img class="rcBadge" id="rcBadge" alt=""><div class="rcScoreCol"><div class="rcBig" id="rScoreN">0</div><div class="rcCorrect">CORRECT</div><div class="rcMsg" id="rcMsg"></div><div class="rcNext" id="rcNext"></div></div></div>
+    <div class="rcHero"><div class="rcBadge" id="rcBadge"></div><div class="rcScoreCol"><div class="rcBig" id="rScoreN">0</div><div class="rcCorrect">CORRECT</div><div class="rcMsg" id="rcMsg"></div><div class="rcNext" id="rcNext"></div></div></div>
     <div class="rcLevels" id="rcLevels"></div>
-    <div class="rcRoundHd">YOUR 60-SECOND ROUND<span class="rcKey">&#10003; CORRECT &nbsp; &#10007; PASSED</span></div>
-    <ul id="recap" class="rcRecap"></ul>
-    <button class="btn again" id="againBtn">&#8635; PLAY AGAIN</button>
+    <div class="rcRound"><div class="rcRoundHd">YOUR 60-SECOND ROUND<span class="rcKey"><b class="g">&#10003;</b> CORRECT &nbsp; <b class="p">&#10007;</b> PASSED</span></div>
+    <ul id="recap" class="rcRecap"></ul></div>
+    <div class="rcBtns"><button class="rcBtn primary" id="againBtn">&#8635; PLAY AGAIN</button><button class="rcBtn ghost" id="customBtn">&#9881; CUSTOMIZE</button></div>
     <div class="rcActions"><a id="shareBtn">&#10548; SHARE RESULT</a><i>|</i><a id="backBtn">&#8962; BACK TO VAULTS</a></div>
     <div class="rcXsell" id="crossSell"></div>
    </div>
@@ -321,33 +332,46 @@ function endGame(){
   setTimeout(function(){ app.classList.remove('st-timeup'); document.body.classList.remove('lock-ls'); tryPortrait(); buildReport(); show('sReport'); }, 1800);
 }
 /* tier verdict = the payoff (hero); score is support */
+var ED=(Q.get('ed')||'music');
+var EDTHEME={
+ music:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(124,64,224,.34),transparent 60%),linear-gradient(180deg,#1a0d33 0%,#0d0819 60%,#080511 100%)",bord:"rgba(126,86,224,.55)"},
+ filmtv:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(150,110,30,.30),transparent 60%),linear-gradient(180deg,#141009 0%,#0b0a10 60%,#08070a 100%)",bord:"rgba(242,193,78,.45)"},
+ sports:{grad:"radial-gradient(110% 60% at 88% -6%,rgba(255,120,30,.24),transparent 55%),radial-gradient(95% 60% at 6% 6%,rgba(22,44,86,.55),transparent 60%),linear-gradient(180deg,#0e1626 0%,#0a0e18 60%,#07090f 100%)",bord:"rgba(255,138,42,.45)"}
+};
+var ICON={
+ rookie:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3l7 2.2v5.1c0 5-3.4 8.3-7 10.2-3.6-1.9-7-5.2-7-10.2V5.2z"/></svg>',
+ fan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="12" cy="8" r="4.6"/><path d="M8.7 11.5L6.7 20l5.3-3 5.3 3-2-8.5"/></svg>',
+ superfan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M8.6 2.6l3.4 6.2M15.4 2.6L12 8.8"/><circle cx="12" cy="15" r="5.7"/><path d="M12 12l1.03 2.09 2.3.34-1.66 1.62.39 2.29L12 17.36l-2.06 1.08.39-2.29-1.66-1.62 2.3-.34z"/></svg>',
+ legend:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M7 4.5h10V8a5 5 0 01-10 0zM7 6H4.7v.8A3 3 0 007.6 9.7M17 6h2.3v.8A3 3 0 0116.4 9.7M9.6 13.4h4.8M8.7 20h6.6M12 13.2v3.4M9.6 20l.9-3.4h3l.9 3.4"/></svg>'
+};
 var TIERS=[
- {min:10,name:'Legend',   col:'#C99E4A', icon:'lvl-legend.png',  msg:'You ARE the deep cut.'},
- {min:7, name:'Superfan', col:'#3EDBFF', icon:'lvl-superfan.png',msg:'You know your %!'},
- {min:4, name:'Fan',      col:'#B06AFF', icon:'lvl-fan.png',     msg:'Solid \u2014 you know the hits.'},
- {min:0, name:'Rookie',   col:'#8A6AC8', icon:'lvl-rookie.png',  msg:'Just getting warmed up.'}
+ {min:10,name:'Legend',key:'legend',col:'#C99E4A',msg:'You ARE the deep cut.'},
+ {min:7, name:'Superfan',key:'superfan',col:'#3EDBFF',msg:'You know your %!'},
+ {min:4, name:'Fan',key:'fan',col:'#B06AFF',msg:'Solid \u2014 you know the hits.'},
+ {min:0, name:'Rookie',key:'rookie',col:'#8A6AC8',msg:'Just getting warmed up.'}
 ];
-var LADDER=[{name:'Rookie',range:'0\u20133',icon:'lvl-rookie.png',min:0},{name:'Fan',range:'4\u20136',icon:'lvl-fan.png',min:4},{name:'Superfan',range:'7\u20139',icon:'lvl-superfan.png',min:7},{name:'Legend',range:'10+',icon:'lvl-legend.png',min:10}];
+var LADDER=[{name:'Rookie',range:'0\u20133',key:'rookie',col:'#8A6AC8',min:0},{name:'Fan',range:'4\u20136',key:'fan',col:'#B06AFF',min:4},{name:'Superfan',range:'7\u20139',key:'superfan',col:'#3EDBFF',min:7},{name:'Legend',range:'10+',key:'legend',col:'#C99E4A',min:10}];
 function firstName(n){ return (n&&n!=='this vault')? n.split(' ')[0] : 'these'; }
 function tierFor(s){ for(var i=0;i<TIERS.length;i++){ if(s>=TIERS[i].min) return TIERS[i]; } return TIERS[TIERS.length-1]; }
 function buildReport(){
-  var t=tierFor(score);
+  var t=tierFor(score), et=EDTHEME[ED]||EDTHEME.music;
+  var card=document.querySelector('.rcCard'); if(card){ card.style.setProperty('--rcgrad',et.grad); card.style.setProperty('--rcbord',et.bord); }
   var artist=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME:'SuperFan';
   document.getElementById('rcArtist').textContent=artist.toUpperCase();
   document.getElementById('rcMode').textContent=(Q.get('clue')||'Standard').toUpperCase()+' MODE';
-  var th=document.getElementById('rcThumb'); th.src='art-'+VAULT_ID+'.jpg?v=5'; th.onerror=function(){this.onerror=null;this.style.visibility='hidden';};
   document.getElementById('rScoreN').textContent=score;
-  document.getElementById('rcBadge').src=t.icon;
+  var badge=document.getElementById('rcBadge'); badge.style.setProperty('--tc',t.col); badge.innerHTML=ICON[t.key]||'';
   document.getElementById('rcMsg').textContent=t.msg.replace('%',firstName(VAULT_NAME));
   var cur=-1,i; for(i=0;i<LADDER.length;i++){ if(score>=LADDER[i].min) cur=i; }
   var nx=document.getElementById('rcNext');
-  if(cur<LADDER.length-1){ nx.innerHTML=(LADDER[cur+1].min-score)+' more to reach <b>'+LADDER[cur+1].name.toUpperCase()+'</b>'; } else { nx.textContent='Top tier — untouchable.'; }
-  document.getElementById('rcLevels').innerHTML=LADDER.map(function(L,ix){ return '<div class="rclv'+(ix===cur?' on':'')+'"><img src="'+L.icon+'" alt=""><div class="rlname">'+L.name+'</div><div class="rlrange">'+L.range+'</div></div>'; }).join('');
+  if(cur<LADDER.length-1){ nx.innerHTML=(LADDER[cur+1].min-score)+' more to reach <b>'+LADDER[cur+1].name.toUpperCase()+'</b>'; } else { nx.textContent='Top tier \u2014 untouchable.'; }
+  var fillPct=cur<=0?0:(cur/(LADDER.length-1))*100;
+  document.getElementById('rcLevels').innerHTML='<div class="rlTrack"></div><div class="rlFill" style="width:'+fillPct+'%"></div>'+LADDER.map(function(L,ix){ return '<div class="rclv'+(ix===cur?' on':'')+'" style="--tc:'+L.col+'"><div class="rlic">'+(ICON[L.key]||'')+'</div><div class="rlname">'+L.name+'</div><div class="rlrange">'+L.range+'</div></div>'; }).join('');
   var ul=document.getElementById('recap'); ul.innerHTML='';
-  results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="n">'+(ix+1)+'</span><span class="ic">'+(r.good?'✓':'✗')+'</span><span class="t"></span>'; li.querySelector('.t').textContent=r.w; ul.appendChild(li); });
+  results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="n">'+(ix+1)+'</span><span class="ic">'+(r.good?'\u2713':'\u2717')+'</span><span class="t"></span>'; li.querySelector('.t').textContent=r.w; ul.appendChild(li); });
   var xsid=Q.get('xs'), xs=document.getElementById('crossSell');
   if(xsid){
-    xs.style.display=''; xs.innerHTML='<img id="xsimg" alt=""><div class="xt"><div class="xk">YOU MIGHT ALSO KNOW</div><div class="xn">'+(Q.get('xsn')||'Another Vault')+'</div><div class="xs">'+(Q.get('xse')||'SuperFan Vault')+'</div></div><span class="xgo" id="xsgo">VIEW VAULT →</span>';
+    xs.style.display=''; xs.innerHTML='<img id="xsimg" alt=""><div class="xt"><div class="xk">YOU MIGHT ALSO KNOW</div><div class="xn">'+(Q.get('xsn')||'Another Vault')+'</div><div class="xs">'+(Q.get('xse')||'SuperFan Vault')+'</div></div><span class="xgo" id="xsgo">VIEW VAULT \u2192</span>';
     var xi=document.getElementById('xsimg'); xi.src='art-'+xsid+'.jpg?v=5'; xi.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';};
     document.getElementById('xsgo').onclick=function(){ location.href='https://superfanshuffle.com/'; };
   } else { xs.style.display='none'; }
@@ -412,6 +436,7 @@ function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
 document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); }); };
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
+document.getElementById('customBtn').onclick=function(){ toast('Vault customization \u2014 coming next'); };
 /* unlock wall */
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · $0.99 — payments not wired yet'); };
 document.getElementById('wallBack').onclick=function(){ location.href='/'; };
