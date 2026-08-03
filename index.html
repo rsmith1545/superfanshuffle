@@ -1200,7 +1200,7 @@ function openVault(id){
  setTimeout(function(){ if(wrap) wrap.classList.add('fanpop'); }, 1480);
  setTimeout(function(){ if(wrap) wrap.classList.add('shuffled'); }, 2500);
 }
-function closeOv(){ var ov=document.getElementById('ov'); var w=ov.querySelector('.flipwrap'); if(!w){ ov.classList.remove('on'); return; } if(w.__closing) return; w.__closing=true;
+function closeOv(){ if(/[?&]ret=results/.test(location.search)){ location.replace('/play.html?resume=1'); return; } var ov=document.getElementById('ov'); var w=ov.querySelector('.flipwrap'); if(!w){ ov.classList.remove('on'); return; } if(w.__closing) return; w.__closing=true;
  w.classList.remove('shuffled','fanpop');
  setTimeout(function(){ w.classList.remove('flipped');
   setTimeout(function(){ var o=window.__vorigin, r=w.getBoundingClientRect();
@@ -1298,4 +1298,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v99</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v100</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>

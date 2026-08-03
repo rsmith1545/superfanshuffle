@@ -334,6 +334,7 @@ function endGame(){
 }
 /* tier verdict = the payoff (hero); score is support */
 var ED=(Q.get('ed')||'music');
+var RCLUE=Q.get('clue')||'Standard', RXS=Q.get('xs')||'', RXSN=Q.get('xsn')||'', RXSE=Q.get('xse')||'';
 var EDTHEME={
  music:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(124,64,224,.34),transparent 60%),linear-gradient(180deg,#1a0d33 0%,#0d0819 60%,#080511 100%)",bord:"rgba(126,86,224,.55)"},
  filmtv:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(150,110,30,.30),transparent 60%),linear-gradient(180deg,#141009 0%,#0b0a10 60%,#08070a 100%)",bord:"rgba(242,193,78,.45)"},
@@ -359,7 +360,7 @@ function buildReport(){
   var card=document.querySelector('.rcCard'); if(card){ card.style.setProperty('--rcgrad',et.grad); card.style.setProperty('--rcbord',et.bord); }
   var artist=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME:'SuperFan';
   document.getElementById('rcArtist').textContent=artist.toUpperCase();
-  document.getElementById('rcMode').textContent=(Q.get('clue')||'Standard').toUpperCase()+' MODE';
+  document.getElementById('rcMode').textContent=(RCLUE||'Standard').toUpperCase()+' MODE';
   document.getElementById('rScoreN').textContent=score;
   var badge=document.getElementById('rcBadge'); badge.style.setProperty('--tc',t.col); badge.innerHTML=ICON[t.key]||'';
   document.getElementById('rcMsg').textContent=t.msg.replace('%',firstName(VAULT_NAME));
@@ -370,11 +371,11 @@ function buildReport(){
   document.getElementById('rcLevels').innerHTML='<div class="rlTrack"></div><div class="rlFill" style="width:'+fillPct+'%"></div>'+LADDER.map(function(L,ix){ return '<div class="rclv'+(ix===cur?' on':'')+'" style="--tc:'+L.col+'"><div class="rlic">'+(ICON[L.key]||'')+'</div><div class="rlname">'+L.name+'</div><div class="rlrange">'+L.range+'</div></div>'; }).join('');
   var ul=document.getElementById('recap'); ul.innerHTML='';
   results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="n">'+(ix+1)+'</span><span class="ic">'+(r.good?'\u2713':'\u2717')+'</span><span class="t"></span>'; li.querySelector('.t').textContent=r.w; ul.appendChild(li); });
-  var xsid=Q.get('xs'), xs=document.getElementById('crossSell');
+  var xsid=RXS, xs=document.getElementById('crossSell');
   if(xsid){
-    xs.style.display=''; xs.innerHTML='<img id="xsimg" alt=""><div class="xt"><div class="xk">YOU MIGHT ALSO KNOW</div><div class="xn">'+(Q.get('xsn')||'Another Vault')+'</div><div class="xs">'+(Q.get('xse')||'SuperFan Vault')+'</div></div><span class="xgo" id="xsgo">VIEW VAULT \u2192</span>';
+    xs.style.display=''; xs.innerHTML='<img id="xsimg" alt=""><div class="xt"><div class="xk">YOU MIGHT ALSO KNOW</div><div class="xn">'+(RXSN||'Another Vault')+'</div><div class="xs">'+(RXSE||'SuperFan Vault')+'</div></div><span class="xgo" id="xsgo">VIEW VAULT \u2192</span>';
     var xi=document.getElementById('xsimg'); xi.src='art-'+xsid+'.jpg?v=5'; xi.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';};
-    document.getElementById('xsgo').onclick=function(){ location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(xsid); };
+    document.getElementById('xsgo').onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(xsid)+'&ret=results'; };
   } else { xs.style.display='none'; }
 }
 function doShare(){
@@ -439,6 +440,7 @@ document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10)
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
 document.getElementById('customBtn').onclick=function(){ toast('Vault customization \u2014 coming next'); };
 if(Q.get('demo')){ try{ score=parseInt(Q.get('score')||'7',10)||7; results=[{w:'Shake It Off',good:true},{w:'Blank Space',good:true},{w:'Style',good:false},{w:'Love Story',good:true},{w:'Anti-Hero',good:true},{w:'Cardigan',good:false},{w:'Cruel Summer',good:true},{w:'Delicate',good:false},{w:'Willow',good:true},{w:'Lover',good:true}]; buildReport(); document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('on');x.style.display='none';}); var _r=document.getElementById('sReport'); _r.style.display='block'; _r.classList.add('on'); document.body.classList.add('report-on'); }catch(e){} }
+if(Q.get('resume')){ try{ var _st=JSON.parse(sessionStorage.getItem('sfs_resume')||'null'); if(_st){ score=_st.score||0; results=_st.results||[]; ED=_st.ED||'music'; VAULT_ID=_st.vault||''; VAULT_NAME=_st.n||'this vault'; RCLUE=_st.clue||'Standard'; RXS=_st.xs||''; RXSN=_st.xsn||''; RXSE=_st.xse||''; buildReport(); document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('on');x.style.display='none';}); var _r3=document.getElementById('sReport'); _r3.style.display='block'; _r3.classList.add('on'); document.body.classList.add('report-on'); } }catch(e){} }
 /* unlock wall */
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · $0.99 — payments not wired yet'); };
 document.getElementById('wallBack').onclick=function(){ location.href='/?ed='+encodeURIComponent(ED)+'&nointro=1'; };
