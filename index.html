@@ -422,7 +422,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
     <div class="triP p2"><div class="triBg"></div><div class="triTxt">Lights, Camera, Action</div></div>
     <div class="triP p3"><div class="triBg"></div><div class="triTxt">Settle the Score</div></div>
   </div>
-  <div class="descP" id="descP"><img src="intro-desc.jpg?v=1" alt="Everyone's a superfan of something"></div>
+  <div class="descP" id="descP"><img src="intro-desc.jpg?v=2" alt="Everyone's a superfan of something"></div>
   <div class="spSkip" id="spSkip">Tap to skip</div>
 </div>
 <div id="bgfx"></div>
@@ -1266,16 +1266,16 @@ brandBarState();
    at(880, function(){ $('#spLogo').classList.add('lit'); });
    at(2300, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
    function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+230,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
-   panel('.p1',2300); panel('.p2',4000); panel('.p3',5700);
-   at(7400, function(){ $('#triWrap').style.opacity='0'; $('#descP').classList.add('on'); });
-   at(10200, endIntro);
+   panel('.p1',2300); panel('.p2',3700); panel('.p3',5100);
+   at(6500, function(){ $('#triWrap').style.opacity='0'; $('#descP').classList.add('on'); });
+   at(9300, endIntro);
    if(repeat){ at(300,function(){ $('#spSkip').classList.add('on'); }); sp.addEventListener('click', endIntro); }
  }
- var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=1'];
+ var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=2'];
  var left=srcs.length, started=false;
  function go(){ if(started)return; started=true; run(); }
  srcs.forEach(function(u){ var i=new Image(); i.onload=i.onerror=function(){ if(--left<=0) go(); }; i.src=u; });
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v87</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v88</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
