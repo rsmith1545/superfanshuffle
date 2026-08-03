@@ -1255,12 +1255,12 @@ brandBarState();
  function run(){
    at(150, function(){ $('#spLogo').classList.add('on'); });
    at(250, function(){ $('#spLit').classList.add('flick'); });
-   at(760, function(){ $('#spLogo').classList.add('lit'); });
-   at(900, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
-   function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+170,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
-   panel('.p1',900); panel('.p2',1650); panel('.p3',2400);
-   at(3150, function(){ $('#triWrap').style.opacity='0'; $('#descP').classList.add('on'); });
-   at(4750, endIntro);
+   at(780, function(){ $('#spLogo').classList.add('lit'); });
+   at(1000, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
+   function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+230,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
+   panel('.p1',1000); panel('.p2',2150); panel('.p3',3300);
+   at(4450, function(){ $('#triWrap').style.opacity='0'; $('#descP').classList.add('on'); });
+   at(6850, endIntro);
    if(repeat){ at(300,function(){ $('#spSkip').classList.add('on'); }); sp.addEventListener('click', endIntro); }
  }
  var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=1'];
@@ -1270,4 +1270,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v82</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v83</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
