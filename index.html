@@ -377,29 +377,34 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .v5cl.sel b{color:var(--cyan)}
 </style>
 <style id="splashcss">
-#splash{position:fixed;inset:0;z-index:200000;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;opacity:1;transition:opacity .5s ease}
+#splash{position:fixed;inset:0;z-index:200000;background:#000;overflow:hidden;opacity:1;transition:opacity .45s ease}
 #splash.gone{opacity:0;pointer-events:none}
-.splCurtain{position:absolute;inset:0;background:#050208 url('new-curtain.jpg?v=1') center/cover no-repeat;opacity:0;transition:opacity .7s ease}
-.splCurtain.in{opacity:1}
-.splStage{position:relative;width:min(86vw,540px);aspect-ratio:2.394/1;z-index:2}
-.sp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;object-fit:contain;pointer-events:none}
-.sp.u{opacity:0}
-.sp.lit{opacity:0;width:112%}                 /* lit has extra glow; sized up to overlay the unlit core */
-/* ring snap-in */
-.sp.ring.in{opacity:1;animation:ringIn .18s cubic-bezier(.2,1.4,.3,1)}
-@keyframes ringIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.9)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-/* typewriter wipe reveal */
-@keyframes wipeR{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-.sp.super.reveal{opacity:1;animation:wipeR .55s steps(8) forwards}
-.sp.shuf.reveal{opacity:1;animation:wipeR .40s steps(7) forwards}
-.sp.u.fade{transition:opacity .3s ease .2s;opacity:0!important}
-/* ignite flicker (with 2 "failed" stutters, then lock) */
-@keyframes flick{0%{opacity:0}8%{opacity:.7}14%{opacity:0}26%{opacity:.95}34%{opacity:.15}48%{opacity:1}56%{opacity:.5}70%{opacity:1}100%{opacity:1}}
-.sp.lit.g1{clip-path:inset(0 0 56% 0)}         /* SUPERFAN band (cyan) */
-.sp.lit.g2{clip-path:inset(40% 0 0 0)}         /* SHUFFLE + lower ring (magenta) */
-.sp.lit.g1.ig{animation:flick .5s ease-out forwards}
-.sp.lit.g2.ig{animation:flick .5s ease-out .16s forwards}
-.sp.lit.g3.ig{animation:flick .55s ease-out .34s forwards}
+.spLogo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s ease}
+.spLogo.on{opacity:1}
+.spLogo img{position:absolute;width:min(78vw,420px);height:auto;object-fit:contain}
+.spLit{opacity:0}
+.spLit.flick{animation:sflick .5s steps(1,end) forwards}
+@keyframes sflick{0%{opacity:0}9%{opacity:.85}16%{opacity:0}28%{opacity:.92}35%{opacity:.12}50%{opacity:1}58%{opacity:.4}72%{opacity:1}84%{opacity:.65}100%{opacity:1}}
+.spLogo.lit .spUnlit{opacity:0}
+.triWrap{position:absolute;inset:0;opacity:0;transition:opacity .2s ease}
+.triWrap.on{opacity:1}
+.triP{position:absolute;left:0;right:0;height:33.34%;overflow:hidden}
+.triP.p1{top:0}.triP.p2{top:33.33%}.triP.p3{top:66.66%}
+.triBg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .16s ease}
+.triBg.in{opacity:1}
+.triP.p1 .triBg{background-image:url('intro-tri1.jpg?v=1')}
+.triP.p2 .triBg{background-image:url('intro-tri2.jpg?v=1')}
+.triP.p3 .triBg{background-image:url('intro-tri3.jpg?v=1')}
+.triTxt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--disp);font-size:clamp(20px,6.6vw,34px);letter-spacing:2px;text-transform:uppercase;padding:0 5vw;line-height:1.05;opacity:0;transform:scale(.95);transition:opacity .22s ease,transform .22s ease;z-index:2}
+.triTxt.in{opacity:1;transform:scale(1)}
+.triP.p1 .triTxt{color:#3EDBFF;text-shadow:0 0 14px rgba(62,219,255,.9),0 0 30px rgba(62,219,255,.5)}
+.triP.p2 .triTxt{color:#F2C14E;text-shadow:0 0 14px rgba(242,193,78,.9),0 0 30px rgba(242,193,78,.5)}
+.triP.p3 .triTxt{color:#FF8A2A;text-shadow:0 0 14px rgba(255,138,42,.9),0 0 30px rgba(255,138,42,.5)}
+.descP{position:absolute;inset:0;opacity:0;transition:opacity .3s ease}
+.descP.on{opacity:1}
+.descP img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.spSkip{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:16px;z-index:6;font-family:var(--disp);font-size:12px;letter-spacing:1.5px;color:rgba(255,255,255,.55);text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none}
+.spSkip.on{opacity:1}
 </style>
 <style id="rotgate">
 .rotate-gate{display:none;position:fixed;inset:0;z-index:99998;background:#0b0713;color:#fff;align-items:center;justify-content:center;text-align:center;font-family:var(--disp,sans-serif);padding:24px}
@@ -411,19 +416,18 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 <body>
 <div class="rotate-gate" aria-hidden="true"><div><div class="rg-icon">↻</div><div class="rg-txt">Rotate your phone<br>to portrait</div></div></div>
 <div id="splash">
-  <div class="splCurtain"></div>
-  <div class="splStage">
-    <img class="sp lit g1" src="splash-lit.png?v=1" alt="">
-    <img class="sp lit g2" src="splash-lit.png?v=1" alt="">
-    <img class="sp lit g3" src="splash-lit.png?v=1" alt="">
-    <img class="sp u ring"  src="splash-u-ring.png?v=1" alt="">
-    <img class="sp u super" src="splash-u-super.png?v=1" alt="">
-    <img class="sp u shuf"  src="splash-u-shuf.png?v=1" alt="SuperFan Shuffle">
+  <div class="spLogo" id="spLogo"><img class="spUnlit" src="sfs-unlit.png?v=1" alt=""><img class="spLit" id="spLit" src="sfs-lit.png?v=1" alt="SuperFan Shuffle"></div>
+  <div class="triWrap" id="triWrap">
+    <div class="triP p1"><div class="triBg"></div><div class="triTxt">Face the Music</div></div>
+    <div class="triP p2"><div class="triBg"></div><div class="triTxt">Lights, Camera, Action</div></div>
+    <div class="triP p3"><div class="triBg"></div><div class="triTxt">Settle the Score</div></div>
   </div>
+  <div class="descP" id="descP"><img src="intro-desc.jpg?v=1" alt="Everyone's a superfan of something"></div>
+  <div class="spSkip" id="spSkip">Tap to skip</div>
 </div>
 <div id="bgfx"></div>
 <!-- FULL-SCREEN INTRO (shows every app open: brand card -> how-to-play -> store) -->
-<div id="introOv" class="on" aria-label="Welcome to SuperFan Shuffle">
+<div id="introOv" aria-label="Welcome to SuperFan Shuffle">
   <div class="introSlide cur" id="introS1"><img src="intro-card.jpg?v=1" alt="Everyone&rsquo;s a superfan of something"></div>
   <div class="introSlide h2p" id="introS2">
     <div class="h2pInner">
@@ -556,6 +560,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
   function fitS2(){ var inner=s2.querySelector('.h2pInner'); if(!inner||!s2.classList.contains('cur')) return; inner.style.transform='none'; var avail=s2.clientHeight-14, need=inner.scrollHeight; var sc=Math.min(1, avail/need); inner.style.transform=sc<1?'scale('+sc+')':'none'; }
   function go2(){ s1.classList.remove('cur'); s2.classList.add('cur'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); }
   function done(){ ov.classList.remove('on'); }
+  window.__startHowTo=function(){ ov.classList.add('on'); if(s1)s1.classList.remove('cur'); s2.classList.add('cur'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); };
   s1.addEventListener('click',go2);
   s2.addEventListener('click',done);
   window.addEventListener('resize',fitS2);
@@ -1242,45 +1247,27 @@ brandBarState();
 <script>
 (function(){
  var sp=document.getElementById('splash'); if(!sp) return;
- var srcs=['splash-u-ring.png?v=1','splash-u-super.png?v=1','splash-u-shuf.png?v=1','splash-lit.png?v=1'];
- var $=function(s){return sp.querySelector(s);};
- // gated web-audio: faint hum + flicker crackles (silent if autoplay blocked; plays in native)
- function audio(){ try{
-   var Ctx=window.AudioContext||window.webkitAudioContext; if(!Ctx) throw 0;
-   var ac=new Ctx(); if(ac.state==='suspended') ac.resume().catch(function(){});
-   var master=ac.createGain(); master.gain.value=0; master.connect(ac.destination);
-   var hum=ac.createOscillator(); hum.type='sawtooth'; hum.frequency.value=58;
-   var hg=ac.createGain(); hg.gain.value=.025; hum.connect(hg); hg.connect(master); hum.start();
-   master.gain.linearRampToValueAtTime(.6, ac.currentTime+.35);
-   return {crackle:function(){},
-           stop:function(){ try{ master.gain.linearRampToValueAtTime(0,ac.currentTime+.4); setTimeout(function(){hum.stop();ac.close();},600);}catch(e){} } };
- }catch(e){ return {crackle:function(){},stop:function(){}}; } }
+ var $=function(x){return sp.querySelector(x);};
+ var T=[]; function at(ms,fn){ T.push(setTimeout(fn,ms)); }
+ var repeat=false; try{ repeat=!!localStorage.getItem('sfs_seenIntro'); localStorage.setItem('sfs_seenIntro','1'); }catch(e){}
+ var ended=false;
+ function endIntro(){ if(ended) return; ended=true; T.forEach(clearTimeout); sp.classList.add('gone'); setTimeout(function(){ if(sp.parentNode) sp.parentNode.removeChild(sp); },500); if(window.__startHowTo) window.__startHowTo(); }
  function run(){
-   var A=audio();
-   var T=[];
-   function at(ms,fn){ T.push(setTimeout(fn,ms)); }
-   // 1) black hold, then ring
-   at(350, function(){ $('.ring').classList.add('in'); });
-   // 2) SUPERFAN typewriter
-   at(520, function(){ $('.super').classList.add('reveal'); });
-   // 3) pause then SHUFFLE
-   at(1190,function(){ $('.shuf').classList.add('reveal'); });
-   // 4) ignite (flicker, no beeps)
-   var ig=1640;
-   at(ig,     function(){ $('.g1').classList.add('ig'); });
-   at(ig+170, function(){ $('.g2').classList.add('ig'); });
-   at(ig+350, function(){ $('.g3').classList.add('ig'); [].forEach.call(sp.querySelectorAll('.sp.u'),function(e){e.classList.add('fade');}); });
-   // 5) curtain fades in behind the lit sign
-   at(ig+470, function(){ $('.splCurtain').classList.add('in'); });
-   // 6) hold, then fade to onboarding (total ~3.0s)
-   at(3300,   function(){ A.stop(); sp.classList.add('gone'); });
-   at(3850,   function(){ if(sp&&sp.parentNode) sp.parentNode.removeChild(sp); });
+   at(150, function(){ $('#spLogo').classList.add('on'); });
+   at(250, function(){ $('#spLit').classList.add('flick'); });
+   at(760, function(){ $('#spLogo').classList.add('lit'); });
+   at(900, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
+   function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+170,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
+   panel('.p1',900); panel('.p2',1650); panel('.p3',2400);
+   at(3150, function(){ $('#triWrap').style.opacity='0'; $('#descP').classList.add('on'); });
+   at(4750, endIntro);
+   if(repeat){ at(300,function(){ $('#spSkip').classList.add('on'); }); sp.addEventListener('click', endIntro); }
  }
- // preload sprites, then run (keeps the opening frame pure black)
+ var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=1'];
  var left=srcs.length, started=false;
- function go(){ if(started) return; started=true; run(); }
+ function go(){ if(started)return; started=true; run(); }
  srcs.forEach(function(u){ var i=new Image(); i.onload=i.onerror=function(){ if(--left<=0) go(); }; i.src=u; });
- setTimeout(go, 1200); // safety: run even if a preload stalls
+ setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v81</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v82</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
