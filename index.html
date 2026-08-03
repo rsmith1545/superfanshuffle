@@ -1242,7 +1242,9 @@ document.addEventListener('webkitfullscreenchange',fullscreenState);
 function brandBarState(){ var hero=document.getElementById('topbar'); var cutoff=hero?Math.max(100,hero.offsetHeight-64):140; document.body.classList.toggle('brandbar-on',window.scrollY>cutoff); }
 window.addEventListener('scroll',brandBarState,{passive:true});
 window.addEventListener('resize',brandBarState);
+try{var _iq=new URLSearchParams(location.search);var _ied=_iq.get('ed');if(_ied&&edById(_ied)){curEdition=_ied;var _iee=edById(_ied);if(_iee)document.documentElement.style.setProperty('--accent',_iee.accent);}}catch(e){}
 render(); applyTheme(curEdition||'music',false); preloadThemes();
+try{var _io=new URLSearchParams(location.search).get('open');if(_io){var _iv=byId(_io);if(_iv){if(_iv.edition&&_iv.edition!==curEdition)setEdition(_iv.edition);openVault(_io);}}}catch(e){}
 /* Play-screen edition flick: swipe left/right cycles Music <-> Movies&TV <-> Sports */
 (function(){
   var app=document.getElementById('app'); if(!app) return;
@@ -1272,7 +1274,7 @@ brandBarState();
 </script>
 <script>
 (function(){
- var sp=document.getElementById('splash'); if(!sp) return;
+ var sp=document.getElementById('splash'); if(!sp) return; if(/[?&]nointro=1/.test(location.search)){ if(sp.parentNode) sp.parentNode.removeChild(sp); return; }
  var $=function(x){return sp.querySelector(x);};
  var T=[]; function at(ms,fn){ T.push(setTimeout(fn,ms)); }
  var repeat=false; try{ repeat=!!localStorage.getItem('sfs_seenIntro'); localStorage.setItem('sfs_seenIntro','1'); }catch(e){}
@@ -1296,4 +1298,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v97</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v98</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>

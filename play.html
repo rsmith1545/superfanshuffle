@@ -374,7 +374,7 @@ function buildReport(){
   if(xsid){
     xs.style.display=''; xs.innerHTML='<img id="xsimg" alt=""><div class="xt"><div class="xk">YOU MIGHT ALSO KNOW</div><div class="xn">'+(Q.get('xsn')||'Another Vault')+'</div><div class="xs">'+(Q.get('xse')||'SuperFan Vault')+'</div></div><span class="xgo" id="xsgo">VIEW VAULT \u2192</span>';
     var xi=document.getElementById('xsimg'); xi.src='art-'+xsid+'.jpg?v=5'; xi.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';};
-    document.getElementById('xsgo').onclick=function(){ location.href='https://superfanshuffle.com/'; };
+    document.getElementById('xsgo').onclick=function(){ location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(xsid); };
   } else { xs.style.display='none'; }
 }
 function doShare(){
@@ -441,11 +441,11 @@ document.getElementById('customBtn').onclick=function(){ toast('Vault customizat
 if(Q.get('demo')){ try{ score=parseInt(Q.get('score')||'7',10)||7; results=[{w:'Shake It Off',good:true},{w:'Blank Space',good:true},{w:'Style',good:false},{w:'Love Story',good:true},{w:'Anti-Hero',good:true},{w:'Cardigan',good:false},{w:'Cruel Summer',good:true},{w:'Delicate',good:false},{w:'Willow',good:true},{w:'Lover',good:true}]; buildReport(); document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('on');x.style.display='none';}); var _r=document.getElementById('sReport'); _r.style.display='block'; _r.classList.add('on'); document.body.classList.add('report-on'); }catch(e){} }
 /* unlock wall */
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · $0.99 — payments not wired yet'); };
-document.getElementById('wallBack').onclick=function(){ location.href='/'; };
+document.getElementById('wallBack').onclick=function(){ location.href='/?ed='+encodeURIComponent(ED)+'&nointro=1'; };
 document.getElementById('wallDemo').onclick=function(){ location.href='/play.html?mode=full'+(VAULT_ID?'&vault='+encodeURIComponent(VAULT_ID):'')+(VAULT_NAME!=='this vault'?'&n='+encodeURIComponent(VAULT_NAME):''); };
 /* report card */
 document.getElementById('shareBtn').onclick=doShare;
-document.getElementById('backBtn').onclick=function(){ location.href='https://superfanshuffle.com/'; };
+document.getElementById('backBtn').onclick=function(){ location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1'; };
 
 /* ---------- debug ---------- */
 var dbgOn=false;
