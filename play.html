@@ -88,11 +88,12 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rcState{font-family:var(--disp);font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#9a8fc0;white-space:nowrap;flex:0 0 auto}
 .rcMode{font-family:var(--disp);font-size:11.5px;letter-spacing:1.5px;color:#ff5cf0;border:1.5px solid #ff5cf0;border-radius:16px;padding:5px 11px;white-space:nowrap;box-shadow:0 0 12px -4px #ff5cf0;flex:0 0 auto}
 .rcComplete{text-align:center;font-family:var(--disp);font-size:19px;letter-spacing:2px;margin:12px 0 6px;color:#fff}
-.rcHero{display:flex;align-items:center;gap:14px;margin:2px 0 10px}
-.rcBadge{width:110px;height:110px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--tc,#3EDBFF);box-shadow:0 0 22px -6px var(--tc,#3EDBFF),inset 0 0 24px -12px var(--tc,#3EDBFF)}
-.rcBadge svg{width:54px;height:54px;color:var(--tc,#3EDBFF)}
+.rcMid{display:flex;gap:12px;flex:1 1 auto;min-height:0;margin:6px 0 8px}
+.rcLeft{flex:0 0 40%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:0}
+.rcBadge{width:92px;height:92px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--tc,#3EDBFF);box-shadow:0 0 22px -6px var(--tc,#3EDBFF),inset 0 0 24px -12px var(--tc,#3EDBFF)}
+.rcBadge svg{width:44px;height:44px;color:var(--tc,#3EDBFF)}
 .rcScoreCol{flex:1;text-align:center;min-width:0}
-.rcBig{font-family:var(--disp);font-size:58px;line-height:.9;color:var(--cyan);text-shadow:0 0 22px rgba(62,219,255,.6)}
+.rcBig{font-family:var(--disp);font-size:54px;line-height:.9;color:var(--cyan);text-shadow:0 0 22px rgba(62,219,255,.6);margin-top:12px}
 .rcCorrect{font-family:var(--disp);font-size:18px;letter-spacing:3px;color:var(--cyan)}
 .rcMsg{font-size:15px;color:#fff;margin-top:8px}
 .rcNext{font-size:13.5px;color:#c9b8ff;margin-top:2px}.rcNext b{color:#ff5cf0}
@@ -109,29 +110,30 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rlrange{font-size:10.5px;color:#6f6390}
 .rclv.on .rlrange{color:#cfe9ff}
 .rcRound{flex:1 1 auto;display:flex;flex-direction:column;min-height:66px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(0,0,0,.22);padding:0 10px 4px;overflow:hidden}
-.rcRoundHd{display:flex;justify-content:space-between;align-items:center;font-family:var(--disp);font-size:13.5px;letter-spacing:1px;padding:9px 2px 7px;border-bottom:1px solid rgba(255,255,255,.10)}
-.rcKey{font-family:var(--body);font-size:11px;color:#9a8fc0;letter-spacing:0}
+.rcRoundHd{display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-family:var(--disp);font-size:13px;letter-spacing:1px;padding:8px 2px 6px;border-bottom:1px solid rgba(255,255,255,.10)}
+.rcRoundT{color:#fff}
+.rcKey{font-family:var(--body);font-size:10.5px;color:#9a8fc0;letter-spacing:0}
 .rcKey b{font-family:var(--disp)}.rcKey b.g{color:#4be08a}.rcKey b.p{color:#ff9a3c}
 .rcRecap{flex:1 1 auto;overflow-y:auto;list-style:none;margin:0;padding:2px 2px 0}
-.rcRecap li{display:flex;align-items:center;gap:11px;padding:7px 2px;border-bottom:1px solid rgba(255,255,255,.06);font-size:15px}
+.rcRecap li{display:flex;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13.5px}
 .rcRecap li:last-child{border-bottom:0}
-.rcRecap li .n{color:#6f6390;font-size:13px;width:18px;flex:0 0 auto;text-align:right}
-.rcRecap li .ic{width:22px;height:22px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:1.5px solid currentColor}
+.rcRecap li .n{color:#6f6390;font-size:12px;width:15px;flex:0 0 auto;text-align:right}
+.rcRecap li .ic{width:20px;height:20px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;border:1.5px solid currentColor}
 .rcRecap li.g .ic{color:#4be08a}.rcRecap li.p .ic{color:#ff9a3c}
-.rcRecap li .t{flex:1;color:#fff}
+.rcRecap li .t{flex:1;color:#fff;line-height:1.2}
 .rcBtns{display:flex;gap:10px;margin:10px 0 0}
 .rcBtn{flex:1;border-radius:14px;padding:11px 6px;font-family:var(--disp);font-size:17px;letter-spacing:1.5px;cursor:pointer;background:transparent}
 .rcBtn.primary{border:2px solid var(--cyan);color:var(--cyan);box-shadow:0 0 18px -6px var(--cyan)}
 .rcBtn.ghost{border:2px solid #b98bff;color:#d9c2ff}
 .rcActions{display:flex;align-items:center;justify-content:center;gap:16px;margin:9px 0 8px;font-family:var(--disp);font-size:13.5px;letter-spacing:1px}
 .rcActions a{color:#b98bff;cursor:pointer}.rcActions i{color:#4a3a6a;font-style:normal}
-.rcXsell{display:flex;align-items:center;gap:12px;border:1px solid rgba(255,92,240,.3);border-radius:14px;padding:8px;background:rgba(255,92,240,.06)}
-.rcXsell img{width:66px;height:52px;border-radius:9px;object-fit:cover;flex:0 0 auto;background:#1a1230}
+.rcXsell{display:flex;align-items:center;gap:11px;border:0;border-top:1px solid rgba(255,255,255,.1);border-radius:0;padding:10px 2px 0;background:transparent;margin-top:4px}
+.rcXsell img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:0 0 auto;background:#1a1230}
 .rcXsell .xt{flex:1;min-width:0}
-.rcXsell .xk{font-family:var(--disp);font-size:11.5px;letter-spacing:1px;color:#ff5cf0}
+.rcXsell .xk{font-family:var(--disp);font-size:10.5px;letter-spacing:1.5px;color:#8a7db5}
 .rcXsell .xn{font-size:15px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rcXsell .xs{font-size:12px;color:#c9b8ff}
-.rcXsell .xgo{font-family:var(--disp);font-size:12.5px;color:#ff5cf0;white-space:nowrap;cursor:pointer}
+.rcXsell .xgo{font-family:var(--disp);font-size:13px;color:var(--cyan);white-space:nowrap;cursor:pointer}
 .rcCustOv{position:fixed;inset:0;z-index:130;background:rgba(5,3,12,.72);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
 .rcCustOv.on{display:flex}
 .rcCustSheet{width:100%;max-width:520px;background:linear-gradient(180deg,#180f2e,#0d0819);border-top:1.5px solid rgba(126,86,224,.6);border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.55)}
@@ -195,10 +197,11 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   <div class="screen" id="sReport">
    <div class="rcCard">
     <div class="rcBar"><span class="rcHd"><b class="rcArtist" id="rcArtist"></b><span class="rcState">&#8250; Round Complete</span></span><span class="rcMode" id="rcMode">MODE</span></div>
-    <div class="rcHero"><div class="rcBadge" id="rcBadge"></div><div class="rcScoreCol"><div class="rcBig" id="rScoreN">0</div><div class="rcCorrect">CORRECT</div><div class="rcMsg" id="rcMsg"></div><div class="rcNext" id="rcNext"></div></div></div>
+    <div class="rcMid">
+      <div class="rcLeft"><div class="rcBadge" id="rcBadge"></div><div class="rcBig" id="rScoreN">0</div><div class="rcCorrect">CORRECT</div><div class="rcMsg" id="rcMsg"></div><div class="rcNext" id="rcNext"></div></div>
+      <div class="rcRound"><div class="rcRoundHd"><span class="rcRoundT">YOUR ROUND</span><span class="rcKey"><b class="g">&#10003;</b> hit &nbsp; <b class="p">&#10007;</b> pass</span></div><ul id="recap" class="rcRecap"></ul></div>
+    </div>
     <div class="rcLevels" id="rcLevels"></div>
-    <div class="rcRound"><div class="rcRoundHd">YOUR 60-SECOND ROUND<span class="rcKey"><b class="g">&#10003;</b> CORRECT &nbsp; <b class="p">&#10007;</b> PASSED</span></div>
-    <ul id="recap" class="rcRecap"></ul></div>
     <div class="rcBtns"><button class="rcBtn primary" id="againBtn">&#8635; PLAY AGAIN</button><button class="rcBtn ghost" id="customBtn">&#9881; CUSTOMIZE</button></div>
     <div class="rcActions"><a id="shareBtn">&#10548; SHARE RESULT</a><i>|</i><a id="backBtn">&#8962; BACK TO VAULTS</a></div>
     <div class="rcXsell" id="crossSell"></div>
@@ -398,7 +401,7 @@ function buildReport(){
   results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="n">'+(ix+1)+'</span><span class="ic">'+(r.good?'\u2713':'\u2717')+'</span><span class="t"></span>'; li.querySelector('.t').textContent=r.w; ul.appendChild(li); });
   var xsid=RXS, xs=document.getElementById('crossSell');
   if(xsid){
-    xs.style.display=''; xs.innerHTML='<img id="xsimg" alt=""><div class="xt"><div class="xk">YOU MIGHT ALSO KNOW</div><div class="xn">'+(RXSN||'Another Vault')+'</div><div class="xs">'+(RXSE||'SuperFan Vault')+'</div></div><span class="xgo" id="xsgo">VIEW VAULT \u2192</span>';
+    xs.style.display=''; xs.innerHTML='<img id="xsimg" alt=""><div class="xt"><div class="xk">UP NEXT</div><div class="xn">'+(RXSN||'Another Vault')+'</div></div><span class="xgo" id="xsgo">Play \u2192</span>';
     var xi=document.getElementById('xsimg'); xi.src='art-'+xsid+'.jpg?v=5'; xi.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';};
     document.getElementById('xsgo').onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(xsid)+'&ret=results'; };
   } else { xs.style.display='none'; }
