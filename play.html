@@ -88,8 +88,8 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rcState{font-family:var(--disp);font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#9a8fc0;white-space:nowrap;flex:0 0 auto}
 .rcMode{font-family:var(--disp);font-size:11.5px;letter-spacing:1.5px;color:#ff5cf0;border:1.5px solid #ff5cf0;border-radius:16px;padding:5px 11px;white-space:nowrap;box-shadow:0 0 12px -4px #ff5cf0;flex:0 0 auto}
 .rcComplete{text-align:center;font-family:var(--disp);font-size:19px;letter-spacing:2px;margin:12px 0 6px;color:#fff}
-.rcTop{display:flex;gap:12px;align-items:flex-start;margin-bottom:8px}
-.rcLeft{flex:0 0 48%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-width:0}
+.rcTop{display:flex;gap:12px;align-items:stretch;margin-bottom:8px}
+.rcLeft{flex:0 0 48%;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:4px;text-align:center;min-width:0;padding:2px 0}
 .rcLevels,.rcBtns,.rcActions,.rcXsell{width:100%}
 .rcTitle{font-family:var(--disp);font-size:23px;letter-spacing:1.5px;color:#fff;text-transform:uppercase;line-height:1;margin-top:2px}
 .rcLeft .rcArtist{font-family:var(--disp);font-size:16px;letter-spacing:2px;color:#e9dcff;text-transform:uppercase;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -119,15 +119,15 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rlrange{font-size:10.5px;color:#6f6390}
 .rclv.on .rlrange{color:#cfe9ff}
 .rcRound{flex:1 1 auto;display:flex;flex-direction:column;min-height:66px;max-height:46vh;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(0,0,0,.22);padding:0 10px 4px;overflow:hidden}
-.rcRoundHd{display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-family:var(--disp);font-size:13px;letter-spacing:1px;padding:8px 2px 6px;border-bottom:1px solid rgba(255,255,255,.10)}
+.rcRoundHd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--disp);font-size:15.5px;letter-spacing:1px;padding:9px 2px 7px;border-bottom:1px solid rgba(255,255,255,.10)}
 .rcRoundT{color:#fff}
 .rcKey{font-family:var(--body);font-size:10.5px;color:#9a8fc0;letter-spacing:0}
 .rcKey b{font-family:var(--disp)}.rcKey b.g{color:#4be08a}.rcKey b.p{color:#ff9a3c}
 .rcRecap{flex:1 1 auto;overflow-y:auto;list-style:none;margin:0;padding:2px 2px 0}
-.rcRecap li{display:flex;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13.5px}
+.rcRecap li{display:flex;align-items:center;gap:9px;padding:7px 2px;border-bottom:1px solid rgba(255,255,255,.06);font-size:14.5px}
 .rcRecap li:last-child{border-bottom:0}
-.rcRecap li .n{color:#6f6390;font-size:12px;width:15px;flex:0 0 auto;text-align:right}
-.rcRecap li .ic{width:20px;height:20px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;border:1.5px solid currentColor}
+.rcRecap li .n{color:#6f6390;font-size:13px;width:17px;flex:0 0 auto;text-align:right}
+.rcRecap li .ic{width:22px;height:22px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:1.5px solid currentColor}
 .rcRecap li.g .ic{color:#4be08a}.rcRecap li.p .ic{color:#ff9a3c}
 .rcRecap li .t{flex:1;color:#fff;line-height:1.2}
 .rcBtns{display:flex;gap:10px;margin:10px 0 0}
@@ -143,15 +143,12 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rcXsell .xn{font-size:15px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rcXsell .xs{font-size:12px;color:#c9b8ff}
 .rcXsell .xgo{font-family:var(--disp);font-size:13px;color:var(--cyan);white-space:nowrap;cursor:pointer}
-.rcSimilar{border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.045);padding:10px 12px 4px;margin-top:10px}
-.rcSimHd{font-family:var(--disp);font-size:13px;letter-spacing:.5px;color:#cdbdf2;margin-bottom:4px}
-.rcSimRow{display:flex;align-items:center;gap:11px;padding:8px 0;border-top:1px solid rgba(255,255,255,.08);cursor:pointer}
-.rcSimRow:first-child{border-top:0}
-.rcSimRow img{width:44px;height:44px;border-radius:10px;object-fit:cover;background:#1a1230;flex:0 0 auto}
-.rcSimRow .snm{flex:1;min-width:0;text-align:left}
-.rcSimRow .snn{font-size:15px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rcSimRow .snc{font-size:12px;color:#9a8fc0}
-.rcSimRow .sgo{font-family:var(--disp);font-size:13px;color:var(--cyan);white-space:nowrap}
+.rcSimilar{border:1px solid rgba(255,255,255,.14);border-radius:14px;background:rgba(255,255,255,.045);padding:12px;margin-top:10px}
+.rcSimHd{font-family:var(--disp);font-size:13.5px;letter-spacing:1px;color:#cdbdf2;text-align:center;margin-bottom:10px;text-transform:uppercase}
+.rcSimList{display:flex;gap:10px}
+.rcSimTile{flex:1;min-width:0;text-align:center;cursor:pointer}
+.rcSimTile img{width:100%;aspect-ratio:1/1;border-radius:12px;object-fit:cover;background:#1a1230;display:block;border:1px solid rgba(255,255,255,.08)}
+.rcSimTile .snn{font-size:13px;font-weight:700;color:#fff;margin-top:6px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rcCustOv{position:fixed;inset:0;z-index:130;background:rgba(5,3,12,.72);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
 .rcCustOv.on{display:flex}
 .rcCustSheet{width:100%;max-width:520px;background:linear-gradient(180deg,#180f2e,#0d0819);border-top:1.5px solid rgba(126,86,224,.6);border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.55)}
@@ -430,8 +427,8 @@ function buildReport(){
   var simWrap=document.getElementById('rcSimilar'), simList=document.getElementById('rcSimList');
   if(sims.length){
     simWrap.style.display='';
-    simList.innerHTML=sims.slice(0,3).map(function(v){ return '<div class="rcSimRow"><img alt=""><div class="snm"><div class="snn">'+(v.name||'Another Vault')+'</div><div class="snc">'+(v.cat||'SuperFan Vault')+'</div></div><span class="sgo">Play →</span></div>'; }).join('');
-    var _rows=simList.querySelectorAll('.rcSimRow');
+    simList.innerHTML=sims.slice(0,3).map(function(v){ return '<div class="rcSimTile"><img alt=""><div class="snn">'+(v.name||'Vault')+'</div></div>'; }).join('');
+    var _rows=simList.querySelectorAll('.rcSimTile');
     sims.slice(0,3).forEach(function(v,ix){ var row=_rows[ix]; if(!row) return; var img=row.querySelector('img'); img.src='art-'+v.id+'.jpg?v=5'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
   } else { simWrap.style.display='none'; }
 }
