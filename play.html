@@ -134,8 +134,8 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rcBtn{flex:1;border-radius:14px;padding:12px 6px;font-family:var(--disp);font-size:17px;letter-spacing:1.5px;cursor:pointer;background:transparent}
 .rcBtn.primary{border:2px solid var(--cyan);color:var(--cyan);box-shadow:0 0 18px -6px var(--cyan)}
 .rcBtn.ghost{border:2px solid #b98bff;color:#d9c2ff}
-.rcActions{display:flex;align-items:center;justify-content:center;gap:16px;margin:9px 0 8px;font-family:var(--disp);font-size:13.5px;letter-spacing:1px}
-.rcActions a{color:#b98bff;cursor:pointer}.rcActions i{color:#4a3a6a;font-style:normal}
+.rcActions{display:flex;align-items:center;margin:10px 0 8px;font-family:var(--disp);font-size:15px;letter-spacing:1px}
+.rcActions a{color:#b98bff;cursor:pointer;flex:1;text-align:center}.rcActions i{color:#4a3a6a;font-style:normal;flex:0 0 auto}
 .rcXsell{display:flex;align-items:center;gap:11px;border:0;border-top:1px solid rgba(255,255,255,.1);border-radius:0;padding:10px 2px 0;background:transparent;margin-top:4px}
 .rcXsell img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:0 0 auto;background:#1a1230}
 .rcXsell .xt{flex:1;min-width:0}
@@ -224,8 +224,8 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
       <div class="rcRound"><div class="rcRoundHd"><span class="rcRoundT">Your Round</span><span class="rcKey"><b class="g">&#10003;</b> hit <b class="p">&#10007;</b> pass</span></div><ul id="recap" class="rcRecap"></ul></div>
     </div>
     <div class="rcLevels" id="rcLevels"></div>
-    <div class="rcBtns"><button class="rcBtn primary" id="againBtn">&#8635; PLAY AGAIN</button><button class="rcBtn ghost" id="customBtn">&#9881; CUSTOMIZE</button></div>
-    <div class="rcActions"><a id="shareBtn">&#10548; SHARE RESULT</a><i>|</i><a id="backBtn">&#8962; BACK TO VAULTS</a></div>
+    <div class="rcBtns"><button class="rcBtn primary" id="againBtn">&#8635; PLAY AGAIN</button><button class="rcBtn ghost" id="backBtn">&#8962; HOME / PLAY</button></div>
+    <div class="rcActions"><a id="customBtn">&#9881; CUSTOMIZE</a><i>|</i><a id="shareBtn">&#10548; SHARE RESULT</a></div>
     <div class="rcSimilar" id="rcSimilar"><div class="rcSimHd">Artists similar to <span id="rcSimArtist"></span></div><div class="rcSimList" id="rcSimList"></div></div>
     <div class="rcCustOv" id="rcCustOv"><div class="rcCustSheet">
     <div class="rcCustHd">CUSTOMIZE GAME<span class="rcCustX" id="rcCustX">&#10005;</span></div>
