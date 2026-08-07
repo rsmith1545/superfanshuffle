@@ -1279,7 +1279,7 @@ try{var _io=new URLSearchParams(location.search).get('open');if(_io){var _iv=byI
 })();
 brandBarState();
 </script>
-<script>if("serviceWorker" in navigator){var _swReloaded=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(_swReloaded)return;_swReloaded=true;location.reload();});window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(function(r){r.update();}).catch(function(){});});}</script>
+<script>if("serviceWorker" in navigator){var _swReloaded=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(_swReloaded)return;_swReloaded=true;try{sessionStorage.setItem('sfs_swreload','1');}catch(e){}location.reload();});window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(function(r){r.update();}).catch(function(){});});}</script>
 <script>
 (function(){var un=document.getElementById('neonUnlit'),tagUn=document.getElementById('heroTagUnlit');if(!un)return;
  function powerOff(n){un.style.opacity=n;if(tagUn)tagUn.style.opacity=n;}
@@ -1295,7 +1295,7 @@ brandBarState();
 </script>
 <script>
 (function(){
- var sp=document.getElementById('splash'); if(!sp) return; if(/[?&]nointro=1/.test(location.search)){ if(sp.parentNode) sp.parentNode.removeChild(sp); return; }
+ var sp=document.getElementById('splash'); if(!sp) return; var _swr=false; try{ _swr=!!sessionStorage.getItem('sfs_swreload'); if(_swr) sessionStorage.removeItem('sfs_swreload'); }catch(e){} if(_swr || /[?&]nointro=1/.test(location.search)){ if(sp.parentNode) sp.parentNode.removeChild(sp); return; }
  var $=function(x){return sp.querySelector(x);};
  var T=[]; function at(ms,fn){ T.push(setTimeout(fn,ms)); }
  var repeat=false; try{ repeat=!!localStorage.getItem('sfs_seenIntro'); localStorage.setItem('sfs_seenIntro','1'); }catch(e){}
@@ -1319,4 +1319,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v120</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v121</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
