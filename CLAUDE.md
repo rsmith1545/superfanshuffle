@@ -144,3 +144,16 @@ Re-run failed jobs (an empty commit re-triggers).
   direction (DOWN_IS_GOOD +1 guess).
 - Reminder: repo is cloud-synced via OneDrive — the bash sandbox sometimes reads half-synced files. Work from a fresh
   /tmp clone and push (the reliable path); the Read tool sees the authoritative OneDrive copy.
+
+### STANDING RULES — SFS regressions that keep coming back (DO NOT reintroduce)
+- **Play tiles NEVER show rank numerals.** The Netflix-style numeral belongs only to a deliberately
+  ranked carousel — it must never appear on the Play/home shelves. The numbered `rankTile`/`rankedShelf`
+  helpers + the `.rank .num` CSS were DELETED (Aug 2026) so numerals can't sneak back. If a numbered row
+  is ever wanted again, build it as its own opt-in function; do not restore `.rank .num` globally.
+- **Every ACTIVE vault must have an `art-<id>.jpg` (900×1200) AND an entry in the `ART` map.** A missing
+  file makes `coverHTML`/`flipFront`/`v5poster` fall back to an ugly TEXT placeholder (the "Grateful Dead
+  bug"). When adding/renaming a vault, add its poster in the same commit. Fixed Aug 2026: gratefuldead,
+  hendrix, codyjohnson, laineywilson (newpopqueens is a collection with no dedicated poster → intentional
+  text fallback). Similar-artist tiles on the report card also pull `art-<id>.jpg`, so any vault used as a
+  cross-sell needs art too.
+
