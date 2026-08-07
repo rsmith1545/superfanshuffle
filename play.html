@@ -481,8 +481,8 @@ function startCountdown(){
       n--;
       if(n<=0){ clearInterval(iv); startGame(); }
       else { big.textContent=n; popEl(big); sndBeep(); buzz([0,35]); }
-    }, 850);
-  }, 1300);
+    }, 700);
+  }, 1050);
 }
 window.addEventListener('orientationchange', function(){ setTimeout(checkOrientation,150); });
 window.addEventListener('resize', checkOrientation);
