@@ -252,6 +252,9 @@ function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()
 /* ---------- launch params: preview (5 free questions) vs owned full round ---------- */
 var Q=new URLSearchParams(location.search);
 var VAULT_ID=Q.get('vault')||'';
+var DECKS=null;
+if((Q.get('ed')||'')==='filmtv'){ fetch('film-decks.json?v=136').then(function(r){return r.json();}).then(function(j){DECKS=j;}).catch(function(){}); }
+function activeDeck(){ if(DECKS && DECKS[VAULT_ID]){ var d=DECKS[VAULT_ID]; var std=(d.standard||[]).slice(); if(PREVIEW || REDITION!=='Deluxe') return std; return std.concat(d.deluxe||[]); } return DECK.slice(); }
 var VAULT_NAME=Q.get('n')||'this vault';
 /* persisted seen-set per user per vault+edition (localStorage). Powers the Standard->Deluxe nudge. */
 function _seenKey(ed){ return 'sfs_seen_'+(VAULT_ID||'x')+'_'+(ed||REDITION||'Standard'); }
@@ -332,7 +335,7 @@ function sndBuzzer(){ initAudio(); tone(160,0.6,'sawtooth',0.36,0); tone(168,0.6
 function fmt(t){ var m=Math.floor(t/60), sec=t%60; return m+':'+(sec<10?'0':'')+sec; }
 var playing=false, idx=0, order=[], results=[], score=0, timeLeft=60, tHandle=null;
 var qCount=0, ended=false, previewSafety=null;
-function newCard(){ if(idx>=order.length){ order=shuffle(DECK.slice()); idx=0; } var w=order[idx++]; recordSeen(w); document.getElementById('card').textContent=w; return w; }
+function newCard(){ if(idx>=order.length){ order=shuffle(activeDeck()); idx=0; } var w=order[idx++]; recordSeen(w); document.getElementById('card').textContent=w; return w; }
 var current='';
 function mark(good){
   results.push({w:current,good:good});
@@ -352,7 +355,7 @@ function flash(good,label){
     app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }, good?620:550);
 }
 function startGame(){
-  order=shuffle(DECK.slice()); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
+  order=shuffle(activeDeck()); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
   document.getElementById('score').textContent='0';
   show('sGame'); app.classList.remove('st-correct','st-pass'); sndGo(); requestWake();
   var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing');
@@ -442,7 +445,7 @@ function buildReport(){
     sims.slice(0,3).forEach(function(v,ix){ var row=_rows[ix]; if(!row) return; var img=row.querySelector('img'); img.src='art-'+v.id+'.jpg?v=7'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
   } else { simWrap.style.display='none'; }
   var deep=document.getElementById('rcDeep');
-  if(deep){ var need=Math.ceil(DECK.length*0.7);
+  if(deep){ var _pool=(DECKS&&DECKS[VAULT_ID]&&DECKS[VAULT_ID].standard)?DECKS[VAULT_ID].standard.length:DECK.length; var need=Math.ceil(_pool*0.7);
     if(REDITION!=='Deluxe' && seenCount('Standard')>=need){
       deep.style.display='';
       deep.innerHTML='<div class="rdt">You\'ve seen most of the hits. Ready for the deep cuts?</div><button class="rdb" onclick="switchToDeluxe()">Switch to Deluxe \u2192</button>';
