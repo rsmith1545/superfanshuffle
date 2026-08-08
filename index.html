@@ -1127,6 +1127,67 @@ function openSportsVault(v){
  V5ED='Standard'; V5SPORT=true; V5FILM=false;
  var sp=v.sp; var SP=SPDATA[v.id]||{player:'\u2014',coach:'\u2014',stadium:'\u2014'}; var tint=hexRgb(sp.p);
  var poster='<div class="v5poster spposter" style="--p:'+sp.p+';--s:'+sp.s+';--t:'+sp.t+'"><span class="spc">'+sp.city+'</span><span class="spt'+(sp.fit?" fit":"")+'">'+spTeamDisp(sp.team)+'</span><span class="spl">SuperFan Vault</span></div>';
+ var fan='<div class="vkfan">'
+   +'<div class="vksamp vs1"><div class="typ">\ud83d\udc64 Player</div><div class="q">'+SP.player+'</div><div class="smp">Sample</div></div>'
+   +'<div class="vksamp vs2"><div class="typ">\ud83e\udde2 Coach</div><div class="q">'+SP.coach+'</div><div class="smp">Sample</div></div>'
+   +'<div class="vksamp vs3"><div class="typ">\ud83c\udfdf\ufe0f Stadium</div><div class="q">'+SP.stadium+'</div><div class="smp">Sample</div></div></div>';
+ var sheet='<div class="vksheet v5sheet spcard" style="--spP:'+sp.p+';--spS:'+sp.s+';--spT:'+sp.t+'">'
+   +'<button class="vkclose" onclick="closeOv()">\u2715</button>'
+   +'<div class="v5legal" onclick="openLegal()">'+vaultLegal(v)+'</div>'
+   +'<div class="v5main">'+poster
+     +'<div class="v5head"><div class="v5title">'+v.name+'</div><div class="v5tier">Superfan Vault</div>'
+     +'<p class="v5blurb">One shuffle. Players, Coaches, GMs, Stadiums, League Championships, Nicknames and Team Lore.</p>'
+     +'</div></div>'
+   +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">\u25b6 PLAY</span><span class="v5sub" id="v5sub">Standard Edition</span></button>'
+   +'<div class="v5custrow"><button class="v5custbtn" onclick="toggleCust()">Editions &amp; house rules <span id="v5carat">\u25be</span></button></div>'
+   +'<div class="v5cust" id="v5cust">'
+     +'<div class="v5sh">Think you know the deep cuts? Try Deluxe</div>'
+     +'<div class="v5opts"><button class="v5opt sel" id="ed-Standard" onclick="selEd(\'Standard\')"><b>Standard Edition</b><span>The essential players, coaches, and moments every fan knows.</span></button>'
+       +'<button class="v5opt" id="ed-Deluxe" onclick="selEd(\'Deluxe\')"><b>Deluxe Edition</b><span>Deep cuts \u2014 the lesser-known players, coaches, and lore for the true superfan.</span></button></div>'
+     +'<div class="v5note">Both editions included with every vault.</div>'
+   +'</div></div>';
+ var back='<div class="vkback" style="--artist:'+sp.s+';--artist-glow:rgba('+tint+',.5);--tint:'+tint+'">'+fan+sheet+'</div>';
+ var html='<div class="flipwrap"><div class="flipcard"><div class="flipface flipfront">'+flipFront(v)+'</div><div class="flipface flipbackface">'+back+'</div></div></div>';
+ var host=document.getElementById('sheet'); host.innerHTML=html;
+ document.getElementById('ov').classList.add('on');
+ var wrap=host.querySelector('.flipwrap');
+ flyInFromOrigin(wrap);
+ setTimeout(function(){ if(wrap) wrap.classList.add('flipped'); }, 760);
+ setTimeout(function(){ if(wrap) wrap.classList.add('fanpop'); }, 1480);
+ setTimeout(function(){ if(wrap) wrap.classList.add('shuffled'); }, 2500);
+}
+function flyInFromOrigin(wrap){
+ var o=window.__vorigin;
+ wrap.style.transition='none'; wrap.style.transform='none'; wrap.style.opacity='0';
+ var r=wrap.getBoundingClientRect();
+ if(o && r.width){
+  var sc=Math.max(0.1,o.width/r.width);
+  var tx=(o.left+o.width/2)-(r.left+r.width/2);
+  var ty=(o.top+o.height/2)-(r.top+r.height/2);
+  wrap.style.transformOrigin='center';
+  wrap.style.transform='translate('+tx+'px,'+ty+'px) scale('+sc+')'; wrap.style.opacity='.2';
+  void wrap.offsetWidth;
+  requestAnimationFrame(function(){
+   wrap.style.transition='transform .42s cubic-bezier(.4,0,.6,1), opacity .42s ease';
+   wrap.style.transform='translate(0,0) scale(1)'; wrap.style.opacity='1';
+  });
+ } else { wrap.style.transition=''; wrap.style.transform=''; wrap.style.opacity=''; wrap.classList.add('in'); }
+}
+var GENERIC_SUBJ={newpopqueens:1,grunge90s:1,summerbeach:1,kidstoybox:1};
+var LEGAL_GEN='Unofficial fan-created content. Not affiliated with or endorsed by any featured artist, team, league, or rights holder.';
+function vaultLegal(v){ if(!v) return LEGAL_GEN;
+ if(v.sp) return 'Unofficial fan-created content. Not affiliated with or endorsed by '+v.name+', its league, or any affiliated organizations.';
+ if(v.edition==='sports' || GENERIC_SUBJ[v.id]) return LEGAL_GEN;
+ return 'Unofficial fan-created content. Not affiliated with or endorsed by '+v.name+', their management, or affiliated companies.'; }
+var FILMDATA={
+ mv_comedy:{blurb:"The movies you still quote, the jokes you still steal, and the scenes that had you laughing so hard you cried. From Animal House and Monty Python and the Holy Grail to Coming to America, Dumb and Dumber, Happy Gilmore, Meet the Parents, The Hangover and Bridesmaids \u2014 how well do you know the movies that made us laugh?",std:"The greatest hits of comedy \u2014 the movies you know, quote and love.",dlx:"More laughs, more favorites, and movies you may have forgotten you loved."}
+};
+function openVault(id){
+ var v=byId(id); if(!v) return; V5ED='Standard'; V5CLUE='Beginner'; V5SPORT=false; V5FILM=false;
+ if(v.sp) return openSportsVault(v);
+ var rk=artistColor(v); var d=SDATA[v.id]||{song:'Songs',last:v.name.split(' ').pop(),album:'Albums'};
+ var poster = ART[v.id] ? '<div class="v5poster"><img src="'+ART[v.id]+'?v=7" alt=""></div>'
+                        : '<div class="v5poster v5noart"><span>'+v.name.toUpperCase()+'</span></div>';
  var isFilm=(v.edition==='filmtv'); V5FILM=isFilm;
  var fdata=FILMDATA[v.id]||{blurb:'One shuffle of the moments only true fans remember \u2014 the ones you quote, replay, and never forget.',std:'The essentials everyone knows and loves.',dlx:'Deeper cuts and forgotten favorites.'};
  var fan, blurbHTML, catsHTML, drawer, subTxt, custLbl;
@@ -1171,74 +1232,6 @@ function openSportsVault(v){
    +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">▶ PLAY</span><span class="v5sub" id="v5sub">'+subTxt+'</span></button>'
    +'<div class="v5custrow"><button class="v5custbtn" onclick="toggleCust()">'+custLbl+' <span id="v5carat">▾</span></button></div>'
    +drawer
-   +'</div>';
- var back='<div class="vkback" style="--artist:'+sp.s+';--artist-glow:rgba('+tint+',.5);--tint:'+tint+'">'+fan+sheet+'</div>';
- var html='<div class="flipwrap"><div class="flipcard"><div class="flipface flipfront">'+flipFront(v)+'</div><div class="flipface flipbackface">'+back+'</div></div></div>';
- var host=document.getElementById('sheet'); host.innerHTML=html;
- document.getElementById('ov').classList.add('on');
- var wrap=host.querySelector('.flipwrap');
- flyInFromOrigin(wrap);
- setTimeout(function(){ if(wrap) wrap.classList.add('flipped'); }, 760);
- setTimeout(function(){ if(wrap) wrap.classList.add('fanpop'); }, 1480);
- setTimeout(function(){ if(wrap) wrap.classList.add('shuffled'); }, 2500);
-}
-function flyInFromOrigin(wrap){
- var o=window.__vorigin;
- wrap.style.transition='none'; wrap.style.transform='none'; wrap.style.opacity='0';
- var r=wrap.getBoundingClientRect();
- if(o && r.width){
-  var sc=Math.max(0.1,o.width/r.width);
-  var tx=(o.left+o.width/2)-(r.left+r.width/2);
-  var ty=(o.top+o.height/2)-(r.top+r.height/2);
-  wrap.style.transformOrigin='center';
-  wrap.style.transform='translate('+tx+'px,'+ty+'px) scale('+sc+')'; wrap.style.opacity='.2';
-  void wrap.offsetWidth;
-  requestAnimationFrame(function(){
-   wrap.style.transition='transform .42s cubic-bezier(.4,0,.6,1), opacity .42s ease';
-   wrap.style.transform='translate(0,0) scale(1)'; wrap.style.opacity='1';
-  });
- } else { wrap.style.transition=''; wrap.style.transform=''; wrap.style.opacity=''; wrap.classList.add('in'); }
-}
-var GENERIC_SUBJ={newpopqueens:1,grunge90s:1,summerbeach:1,kidstoybox:1};
-var LEGAL_GEN='Unofficial fan-created content. Not affiliated with or endorsed by any featured artist, team, league, or rights holder.';
-function vaultLegal(v){ if(!v) return LEGAL_GEN;
- if(v.sp) return 'Unofficial fan-created content. Not affiliated with or endorsed by '+v.name+', its league, or any affiliated organizations.';
- if(v.edition==='sports' || GENERIC_SUBJ[v.id]) return LEGAL_GEN;
- return 'Unofficial fan-created content. Not affiliated with or endorsed by '+v.name+', their management, or affiliated companies.'; }
-var FILMDATA={
- mv_comedy:{blurb:"The movies you still quote, the jokes you still steal, and the scenes that had you laughing so hard you cried. From Animal House and Monty Python and the Holy Grail to Coming to America, Dumb and Dumber, Happy Gilmore, Meet the Parents, The Hangover and Bridesmaids \u2014 how well do you know the movies that made us laugh?",std:"The greatest hits of comedy \u2014 the movies you know, quote and love.",dlx:"More laughs, more favorites, and movies you may have forgotten you loved."}
-};
-function openVault(id){
- var v=byId(id); if(!v) return; V5ED='Standard'; V5CLUE='Beginner'; V5SPORT=false; V5FILM=false;
- if(v.sp) return openSportsVault(v);
- var rk=artistColor(v); var d=SDATA[v.id]||{song:'Songs',last:v.name.split(' ').pop(),album:'Albums'};
- var poster = ART[v.id] ? '<div class="v5poster"><img src="'+ART[v.id]+'?v=7" alt=""></div>'
-                        : '<div class="v5poster v5noart"><span>'+v.name.toUpperCase()+'</span></div>';
- var fan='<div class="vkfan">'
-   +'<div class="vksamp vs1"><div class="typ">🎵 Song</div><div class="q">'+d.song+'</div><div class="smp">Sample</div></div>'
-   +'<div class="vksamp vs2"><div class="typ">📖 Lore</div><div class="q">'+(d.lore||d.last||'')+'</div><div class="smp">Sample</div></div>'
-   +'<div class="vksamp vs3"><div class="typ">💿 Album</div><div class="q">'+d.album+'</div><div class="smp">Sample</div></div>'
-   +'</div>';
- var sheet='<div class="vksheet v5sheet">'
-   +'<button class="vkclose" onclick="closeOv()">✕</button>'+'<div class="v5legal" onclick="openLegal()">'+vaultLegal(v)+'</div>'
-   +'<div class="v5main">'+poster
-     +'<div class="v5head"><div class="v5title">'+v.name+'</div><div class="v5tier">Superfan Vault</div>'
-     +'<p class="v5blurb">One shuffle. Songs, albums, lore, and deep cuts&mdash;for fans who know there&rsquo;s more to every artist than the hits.</p>'
-     +'<div class="v5cats"><div class="v5cat">'+IC_SONG+'<span>Songs</span></div><div class="v5cat">'+IC_ALB+'<span>Albums</span></div><div class="v5cat">'+IC_LORE+'<span>Lore</span></div><div class="v5cat">'+IC_DEEP+'<span>Deep Cuts</span></div></div>'
-     +'</div></div>'
-   +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">▶ PLAY</span><span class="v5sub" id="v5sub">Standard Edition · Beginner Rules</span></button>'
-   +'<div class="v5custrow"><button class="v5custbtn" onclick="toggleCust()">Editions &amp; house rules <span id="v5carat">▾</span></button></div>'
-   +'<div class="v5cust" id="v5cust">'
-     +'<div class="v5sh">Think you know the deep cuts? Try Deluxe</div>'
-     +'<div class="v5opts"><button class="v5opt sel" id="ed-Standard" onclick="selEd(\'Standard\')"><b>Standard Edition</b><span>Just the hits — easy to clue.</span></button>'
-       +'<button class="v5opt" id="ed-Deluxe" onclick="selEd(\'Deluxe\')"><b>Deluxe Edition</b><span>Adds deep cuts &amp; B-sides — tougher to clue.</span></button></div>'
-     +'<div class="v5note">Both editions included with every vault.</div>'
-     +'<div class="v5sh">Playing with superfans? Change the rules</div>'
-     +'<div class="v5cluerow"><button class="v5cl sel" id="cl-Beginner" onclick="selClue(\'Beginner\')"><b>Beginner</b><span>Hum it, sing it, or say it.</span></button>'
-       +'<button class="v5cl" id="cl-Casual" onclick="selClue(\'Casual\')"><b>Casual</b><span>No humming or singing.</span></button>'
-       +'<button class="v5cl" id="cl-Superfan" onclick="selClue(\'Superfan\')"><b>Superfan</b><span>Lyrics only, no chorus.</span></button></div>'
-   +'</div>'
-   
    +'</div>';
  var back='<div class="vkback" style="--artist:'+rk.acc+';--artist-glow:rgba('+rk.tint+',.5);--tint:'+rk.tint+'">'+fan+sheet+'</div>';
  var html='<div class="flipwrap"><div class="flipcard"><div class="flipface flipfront">'+flipFront(v)+'</div><div class="flipface flipbackface">'+back+'</div></div></div>';
@@ -1348,4 +1341,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v132</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v133</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
