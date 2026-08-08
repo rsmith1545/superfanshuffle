@@ -473,22 +473,23 @@ function releaseWake(){ try{ if(_wake&&_wake.release){ _wake.release(); } }catch
 document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible' && playing && !_wake){ requestWake(); } });
 
 /* ---------- ready: wait for portrait -> landscape, then 3-2-1 ---------- */
-var awaitingLandscape=false, counting=false;
+var awaitingLandscape=false, counting=false, _readyTO;
 function isLandscape(){
   var mm=(window.matchMedia && window.matchMedia('(orientation: landscape)').matches);
   return !!mm || Math.abs(gamma) > 55;
 }
 function ready(){
-  show('sReady'); counting=false; awaitingLandscape=false;
-  document.getElementById('rotateMsg').style.display='none';
+  show('sReady'); counting=false;
   var gr=document.getElementById('getReady'); gr.style.display='none'; gr.classList.remove('pulsing');
   document.getElementById('big').style.display='none';
-  startCountdown();
+  if(isLandscape()){ awaitingLandscape=false; document.getElementById('rotateMsg').style.display='none'; startCountdown(); return; }
+  awaitingLandscape=true; document.getElementById('rotateMsg').style.display='';   // wait for phone-to-forehead (landscape / tilt) to kickstart
+  clearTimeout(_readyTO); _readyTO=setTimeout(function(){ if(awaitingLandscape){ awaitingLandscape=false; startCountdown(); } }, 20000);
 }
 function checkOrientation(){ if(awaitingLandscape && isLandscape()){ awaitingLandscape=false; startCountdown(); } }
 function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 function startCountdown(){
-  if(counting) return; counting=true;
+  if(counting) return; counting=true; clearTimeout(_readyTO);
   document.getElementById('rotateMsg').style.display='none';
   var gr=document.getElementById('getReady'), big=document.getElementById('big');
   big.style.display='none';
