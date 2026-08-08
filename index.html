@@ -1190,15 +1190,14 @@ function openVault(id){
                         : '<div class="v5poster v5noart"><span>'+v.name.toUpperCase()+'</span></div>';
  var isFilm=(v.edition==='filmtv'); V5FILM=isFilm;
  var fdata=FILMDATA[v.id]||{blurb:'One shuffle of the moments only true fans remember \u2014 the ones you quote, replay, and never forget.',std:'The essentials everyone knows and loves.',dlx:'Deeper cuts and forgotten favorites.'};
- var fan, blurbHTML, catsHTML, drawer, subTxt, custLbl;
+ var fan, blurbHTML, catsHTML, drawer, subTxt, custLbl, custPre;
  if(isFilm){
    fan='';
    blurbHTML='<p class="v5blurb">'+fdata.blurb+'</p>';
    catsHTML='';
    subTxt='Standard Edition';
-   custLbl='Editions';
+   custLbl='Choose Your Edition'; custPre='Think you know the deep cuts? Ready for more? Try Deluxe \u2014 already included. ';
    drawer='<div class="v5cust" id="v5cust">'
-     +'<div class="v5sh">Think you know the deep cuts? Ready for more? Try Deluxe \u2014 already included.</div>'
      +'<div class="v5opts"><button class="v5opt sel" id="ed-Standard" onclick="selEd(\'Standard\')"><b>Standard Edition</b><span>'+fdata.std+'</span></button>'
        +'<button class="v5opt" id="ed-Deluxe" onclick="selEd(\'Deluxe\')"><b>Deluxe Edition</b><span>'+fdata.dlx+'</span></button></div>'
      +'</div>';
@@ -1211,7 +1210,7 @@ function openVault(id){
    blurbHTML='<p class="v5blurb">One shuffle. Songs, albums, lore, and deep cuts&mdash;for fans who know there&rsquo;s more to every artist than the hits.</p>';
    catsHTML='<div class="v5cats"><div class="v5cat">'+IC_SONG+'<span>Songs</span></div><div class="v5cat">'+IC_ALB+'<span>Albums</span></div><div class="v5cat">'+IC_LORE+'<span>Lore</span></div><div class="v5cat">'+IC_DEEP+'<span>Deep Cuts</span></div></div>';
    subTxt='Standard Edition \u00b7 Beginner Rules';
-   custLbl='Editions &amp; house rules';
+   custLbl='Editions &amp; house rules'; custPre='';
    drawer='<div class="v5cust" id="v5cust">'
      +'<div class="v5sh">Think you know the deep cuts? Try Deluxe</div>'
      +'<div class="v5opts"><button class="v5opt sel" id="ed-Standard" onclick="selEd(\'Standard\')"><b>Standard Edition</b><span>Just the hits \u2014 easy to clue.</span></button>'
@@ -1230,7 +1229,7 @@ function openVault(id){
      +blurbHTML+catsHTML
      +'</div></div>'
    +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">▶ PLAY</span><span class="v5sub" id="v5sub">'+subTxt+'</span></button>'
-   +'<div class="v5custrow"><button class="v5custbtn" onclick="toggleCust()">'+custLbl+' <span id="v5carat">▾</span></button></div>'
+   +'<div class="v5custrow">'+custPre+'<button class="v5custbtn" onclick="toggleCust()">'+custLbl+' <span id="v5carat">▾</span></button></div>'
    +drawer
    +'</div>';
  var back='<div class="vkback" style="--artist:'+rk.acc+';--artist-glow:rgba('+rk.tint+',.5);--tint:'+rk.tint+'">'+fan+sheet+'</div>';
@@ -1341,4 +1340,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v133</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v134</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
