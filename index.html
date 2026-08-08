@@ -168,7 +168,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:24px;font-size:13px;font-weight:700;z-index:95;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center}
 .toast.on{opacity:.95}
 .note{text-align:center;color:var(--dim);font-size:10.5px;margin:16px;line-height:1.5}
-.legal-footer{margin:34px 8px 44px;padding:18px 10px 10px;border-top:1px solid rgba(255,255,255,.10);text-align:center;color:#8f83aa;font-size:10.5px;line-height:1.55}
+.legal-footer{margin:14px 8px 20px;padding:16px 10px 46px;border-top:1px solid rgba(255,255,255,.10);text-align:center;color:#8f83aa;font-size:10.5px;line-height:1.55}
 .legal-footer button,.purchase-legal{border:0;background:none;color:#b9a8e0;text-decoration:underline;text-underline-offset:3px;font:inherit;cursor:pointer}
 .legal-footer .links{display:block;margin-top:8px;color:#a99abd;font-weight:700;letter-spacing:.25px}
 .purchase-legal{display:block;width:100%;margin:10px auto -3px;font-size:10.5px;line-height:1.4;text-align:center}
@@ -908,7 +908,7 @@ function trendingShelf(){
  var t=arr.map(function(v,ix){return trendingTile(v,ix+1);}).join('')+browseRankTile();
  return '<h2>Trending Now</h2><div class="row rrow">'+t+'</div>';
 }
-function shelf(title,arr,minN){ if(arr.length < (minN||3)) return ''; var tiles=arr.map(function(v){return tileHTML(v);}).join(''); if(arr.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+title.replace(/'/g,"")+' — coming soon\')"><div class="cover seeallc">See All '+title+' ▸</div></div>'; } return '<h2>'+title+'</h2><div class="row">'+tiles+'</div>'; }
+function shelf(title,arr,minN,noAll){ if(arr.length < (minN||3)) return ''; var tiles=arr.map(function(v){return tileHTML(v);}).join(''); if(!noAll && arr.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+title.replace(/'/g,"")+' — coming soon\')"><div class="cover seeallc">See All '+title+' ▸</div></div>'; } return '<h2>'+title+'</h2><div class="row">'+tiles+'</div>'; }
 function numShelf(title,arr){ if(arr.length<1) return ''; var tiles=arr.map(function(v,i){return tileHTML(v);}).join(''); if(arr.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+title.replace(/'/g,"")+' — coming soon\')"><div class="cover seeallc">See All '+title+' ▸</div></div>'; } return '<h2>'+title+'</h2><div class="row">'+tiles+'</div>'; }
 
 /* ===== views: Play (home) · Explore · My Vaults ===== */
@@ -949,8 +949,8 @@ function playHTML(){
  } else if(ed==='sports'){
    ['Football','Basketball','Baseball','Hockey'].forEach(function(lg){ h+=sportsShelf(lg, vaults.filter(function(v){return v.cat===lg;})); });
  } else if(ed==='filmtv'){
-   h+=shelf('Movies', vaults.filter(function(v){return v.cat==='Movies';}), 1);
-   h+=shelf('TV', vaults.filter(function(v){return v.cat==='TV';}), 1);
+   h+=shelf('Movies', vaults.filter(function(v){return v.cat==='Movies';}), 1, true);
+   h+=shelf('TV', vaults.filter(function(v){return v.cat==='TV';}), 1, true);
  } else {
    h+='<div class="note">Coming soon.</div>';
  }
@@ -1319,4 +1319,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v128</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v129</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
