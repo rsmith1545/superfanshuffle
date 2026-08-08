@@ -439,7 +439,7 @@ function buildReport(){
     simWrap.style.display='';
     simList.innerHTML=sims.slice(0,3).map(function(v){ return '<div class="rcSimTile"><img alt=""><div class="snn">'+(v.name||'Vault')+'</div></div>'; }).join('');
     var _rows=simList.querySelectorAll('.rcSimTile');
-    sims.slice(0,3).forEach(function(v,ix){ var row=_rows[ix]; if(!row) return; var img=row.querySelector('img'); img.src='art-'+v.id+'.jpg?v=5'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
+    sims.slice(0,3).forEach(function(v,ix){ var row=_rows[ix]; if(!row) return; var img=row.querySelector('img'); img.src='art-'+v.id+'.jpg?v=6'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
   } else { simWrap.style.display='none'; }
   var deep=document.getElementById('rcDeep');
   if(deep){ var need=Math.ceil(DECK.length*0.7);
