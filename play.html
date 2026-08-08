@@ -490,6 +490,7 @@ function checkOrientation(){ if(awaitingLandscape && isLandscape()){ awaitingLan
 function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 function startCountdown(){
   if(counting) return; counting=true; clearTimeout(_readyTO);
+  document.body.classList.add('lock-ls'); tryLockLandscape();   // fake-landscape the Face-the-Music + 3-2-1 screens (iOS)
   document.getElementById('rotateMsg').style.display='none';
   var gr=document.getElementById('getReady'), big=document.getElementById('big');
   big.style.display='none';
