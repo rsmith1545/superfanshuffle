@@ -1308,8 +1308,8 @@ brandBarState();
    at(1650, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
    function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+230,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
    panel('.p1',1650); panel('.p2',2550); panel('.p3',3450);
-   at(4350, function(){ $('#triWrap').style.opacity='0'; });
-   at(4650, endIntro);
+   at(4550, function(){ $('#triWrap').style.opacity='0'; });
+   at(4850, endIntro);
    if(repeat){ at(300,function(){ $('#spSkip').classList.add('on'); }); sp.addEventListener('click', endIntro); }
  }
  var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=2'];
@@ -1319,4 +1319,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v129</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v130</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
