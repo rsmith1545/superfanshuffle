@@ -356,7 +356,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .v5play{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;margin:14px 0 0;padding:13px;border-radius:16px;border:2px solid var(--artist);background:rgba(var(--tint),.14);box-shadow:0 0 20px var(--artist-glow);cursor:pointer}
 .v5big{font-family:var(--disp);font-size:30px;letter-spacing:2px;color:#fff;line-height:.9}
 .v5sub{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--artist);text-transform:uppercase}
-.v5custrow{text-align:center;margin:12px 0 2px;font-size:12.5px;color:var(--dim)}
+.v5custrow{text-align:center;margin:12px 0 2px;font-size:12.5px;color:var(--dim)}.v5dare{color:#fff;font-weight:800}
 .v5custbtn{background:none;border:none;color:var(--cyan);font:800 14px var(--body);cursor:pointer;display:inline-block;margin-top:3px}
 .v5cust{max-height:0;overflow:hidden;transition:max-height .35s ease}
 .v5cust.open{max-height:640px}
@@ -1229,7 +1229,7 @@ function openVault(id){
      +blurbHTML+catsHTML
      +'</div></div>'
    +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">▶ PLAY</span><span class="v5sub" id="v5sub">'+subTxt+'</span></button>'
-   +'<div class="v5custrow">'+custPre+'<button class="v5custbtn" onclick="toggleCust()">'+custLbl+' <span id="v5carat">▾</span></button></div>'
+   +'<div class="v5custrow">'+(custPre?'<span class="v5dare">'+custPre+'</span>':'')+'<button class="v5custbtn" onclick="toggleCust()">'+custLbl+' <span id="v5carat">▾</span></button></div>'
    +drawer
    +'</div>';
  var back='<div class="vkback" style="--artist:'+rk.acc+';--artist-glow:rgba('+rk.tint+',.5);--tint:'+rk.tint+'">'+fan+sheet+'</div>';
@@ -1340,4 +1340,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v134</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v135</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
