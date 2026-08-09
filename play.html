@@ -109,16 +109,17 @@
 
 
 .rfScoreWrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;line-height:.78}
-.rfScore{font-family:'Anton',var(--disp);font-size:clamp(86px,28vw,124px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
-.rfCorrect{font-family:var(--disp);font-size:18px;letter-spacing:3px;color:#21D9F2;margin-top:1px}
+.rfScore{font-family:var(--disp);font-weight:400;font-size:clamp(92px,30vw,132px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
+.rfScore.two{font-size:clamp(76px,25vw,112px)}
+.rfCorrect{font-family:var(--disp);font-size:18px;letter-spacing:3px;color:#21D9F2;margin-top:8px}
 .rfNice{display:block;text-align:left;line-height:1.05;margin-top:6px}
-.rfNice1{font-family:'Caveat',cursive;font-weight:700;font-size:28px;color:#FFB52B}
-.rfNice2{font-family:'Caveat',cursive;font-weight:500;font-size:24px;color:#F1ECE3}
+.rfNice1{font-family:'Caveat',cursive;font-weight:700;font-size:25px;color:#FFB52B}
+.rfNice2{font-family:'Caveat',cursive;font-weight:500;font-size:21px;color:#F1ECE3}
 .rfRibbon{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:radial-gradient(120% 160% at 0 50%,rgba(118,36,160,.3),rgba(16,10,27,.92));border:1.5px solid #7624A0;border-radius:11px;padding:7px 10px;margin-top:6px}
 .rfRibTop{display:flex;flex-direction:row;align-items:center;gap:8px}
 .rfRibA{font-family:var(--disp);font-size:clamp(12px,3.6vw,15px);letter-spacing:1px;color:#F6F1E8;line-height:1;white-space:nowrap}
 .rfRibTier{font-family:'Anton',var(--disp);font-size:clamp(16px,4.6vw,21px);line-height:1;color:var(--tc,#B06AFF);text-shadow:0 0 15px color-mix(in srgb,var(--tc,#23D9ED) 55%,transparent)}
-.rfRibSub{font-family:'Inter',sans-serif;font-size:clamp(9.5px,2.9vw,12px);color:#F3EEF4;margin-top:1px;line-height:1.16}
+.rfRibSub{font-family:'Inter',sans-serif;font-size:clamp(11px,3.4vw,14px);color:#F3EEF4;margin-top:2px;line-height:1.2}
 .rfRibSub b{color:#E642F2}
 .rfRing{flex:0 0 auto;width:32px;height:32px;border-radius:50%;border:2px solid #B06AFF;background:radial-gradient(circle at 50% 35%,rgba(92,42,142,.55),rgba(14,9,24,.9));box-shadow:0 0 13px rgba(176,106,255,.6),inset 0 0 9px rgba(176,106,255,.4);display:flex;align-items:center;justify-content:center;color:#EAD9FF;margin-bottom:0}
 .rfRing svg{width:16px;height:16px}
@@ -556,7 +557,7 @@ function buildReportFilm(){
   var L=LADDER[cur];
   var pv=document.getElementById('rfPoster'); if(pv){ if(VAULT_ID){ pv.src='art-'+VAULT_ID+'.jpg?v=7'; pv.style.display=''; pv.onerror=function(){this.style.display='none';}; } else { pv.style.display='none'; } }
   var b=document.getElementById('rfBadgeInner'); if(b){ b.innerHTML=(ICON[L.key]||''); }
-  document.getElementById('rfScore').textContent=score;
+  var _se=document.getElementById('rfScore'); _se.textContent=score; _se.className='rfScore'+(String(score).length>1?' two':'');
   var t=tierFor(score); document.getElementById('rfNice2').textContent=t.msg.replace('%',firstName(VAULT_NAME));
   var tier=document.getElementById('rfRibTier'); tier.textContent=L.name.toUpperCase(); tier.style.setProperty('--tc',L.col);
   var sub=document.getElementById('rfRibSub');
