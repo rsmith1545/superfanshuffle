@@ -635,7 +635,19 @@ document.getElementById('rcCustOv').addEventListener('click',function(e){ if(e.t
 document.getElementById('rcEdRow').addEventListener('click',function(e){ var b=e.target.closest('.rcOpt'); if(b){ custEd=b.getAttribute('data-ed'); _syncCust(); } });
 document.getElementById('rcClRow').addEventListener('click',function(e){ var b=e.target.closest('.rcOpt'); if(b){ custCl=b.getAttribute('data-cl'); _syncCust(); } });
 document.getElementById('rcCustGo').onclick=function(){ REDITION=custEd; RCLUE=custCl; closeCust(); var m=document.getElementById('rcMode'); if(m) m.textContent=(RCLUE||'Standard').toUpperCase()+' MODE'; goFullscreen(); unlockAudio(); ready(); };
-if(Q.get('demo')){ try{ score=parseInt(Q.get('score')||'7',10)||7; results=[{w:'Shake It Off',good:true},{w:'Blank Space',good:true},{w:'Style',good:false},{w:'Love Story',good:true},{w:'Anti-Hero',good:true},{w:'Cardigan',good:false},{w:'Cruel Summer',good:true},{w:'Delicate',good:false},{w:'Willow',good:true},{w:'Lover',good:true}]; RXSL=RXSL||'[{"id":"arianagrande","name":"Ariana Grande","cat":"Pop Superstar"},{"id":"oliviarodrigo","name":"Olivia Rodrigo","cat":"Pop"},{"id":"lorde","name":"Lorde","cat":"Alt Pop"}]'; showReport(); }catch(e){} }
+if(Q.get('demo')){ try{
+  if(ED==='filmtv'){
+    score=parseInt(Q.get('score')||'6',10); if(isNaN(score))score=6;
+    if(!VAULT_ID) VAULT_ID='mv_animated'; if(VAULT_NAME==='this vault') VAULT_NAME='Animated Movie';
+    results=[{w:'Elemental',good:true},{w:'Dumbo',good:true},{w:'Tangled',good:true},{w:'The Wild Robot',good:false},{w:'Beauty and the Beast',good:true},{w:'Up',good:true},{w:'Hotel Transylvania',good:true}];
+    RXSL=RXSL||'[{"id":"tv_gameshow","name":"Game Show TV"},{"id":"mv_horror","name":"Horror Movies"},{"id":"tv_cartoon","name":"Cartoon TV"}]';
+  } else {
+    score=parseInt(Q.get('score')||'7',10)||7;
+    results=[{w:'Shake It Off',good:true},{w:'Blank Space',good:true},{w:'Style',good:false},{w:'Love Story',good:true},{w:'Anti-Hero',good:true},{w:'Cardigan',good:false},{w:'Cruel Summer',good:true},{w:'Delicate',good:false},{w:'Willow',good:true},{w:'Lover',good:true}];
+    RXSL=RXSL||'[{"id":"arianagrande","name":"Ariana Grande","cat":"Pop Superstar"},{"id":"oliviarodrigo","name":"Olivia Rodrigo","cat":"Pop"},{"id":"lorde","name":"Lorde","cat":"Alt Pop"}]';
+  }
+  showReport();
+}catch(e){} }
 if(Q.get('resume')){ try{ var _st=JSON.parse(sessionStorage.getItem('sfs_resume')||'null'); if(_st){ score=_st.score||0; results=_st.results||[]; ED=_st.ED||'music'; VAULT_ID=_st.vault||''; VAULT_NAME=_st.n||'this vault'; RCLUE=_st.clue||'Beginner'; REDITION=_st.edition||'Standard'; RXS=_st.xs||''; RXSL=_st.xsl||''; RXSN=_st.xsn||''; RXSE=_st.xse||''; showReport(); } }catch(e){} }
 /* unlock wall */
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · $0.99 — payments not wired yet'); };
