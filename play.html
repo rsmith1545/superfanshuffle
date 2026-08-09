@@ -94,7 +94,7 @@
 .rfTopRow{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
 .rfHero{position:relative;width:100%;display:flex;justify-content:center;overflow:visible;margin-bottom:4px}
 .rfHeroBox{position:relative;width:66%;margin:0 auto}
-.rfHeroImg{width:100%;display:block}
+.rfHeroImg{width:86%;max-width:300px;display:block;margin:0 auto}
 .rfHeroBadge{position:absolute;left:48.7%;top:70.5%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 .rfBIcon{display:flex}
 .rfBIcon svg{width:clamp(16px,5.5vw,24px);height:auto;color:#f2a6ff;filter:drop-shadow(0 0 4px #ee55ff)}
@@ -114,11 +114,14 @@
 .rfNice{display:flex;flex-direction:column;text-align:left;line-height:1.02}
 .rfNice1{font-family:'Caveat',cursive;font-weight:700;font-size:21px;color:#FFB52B}
 .rfNice2{font-family:'Caveat',cursive;font-weight:500;font-size:16px;color:#F6F1E8}
-.rfRibbon{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;background:radial-gradient(120% 130% at 50% 0,rgba(118,36,160,.3),rgba(16,10,27,.92));border:1.5px solid #7624A0;border-radius:12px;padding:9px 8px;margin-top:4px}
+.rfRibbon{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;background:radial-gradient(120% 130% at 50% 0,rgba(118,36,160,.3),rgba(16,10,27,.92));border:1.5px solid #7624A0;border-radius:12px;padding:11px 8px 12px;margin-top:5px}
 .rfRibA{font-family:var(--disp);font-size:clamp(14px,4.6vw,19px);letter-spacing:1px;color:#F6F1E8}
 .rfRibTier{font-family:'Anton',var(--disp);font-size:clamp(25px,7.6vw,35px);line-height:.94;color:var(--tc,#23D9ED);text-shadow:0 0 15px color-mix(in srgb,var(--tc,#23D9ED) 55%,transparent)}
 .rfRibSub{font-family:'Inter',sans-serif;font-size:clamp(10.5px,3.3vw,13.5px);color:#F3EEF4;margin-top:3px;line-height:1.2}
 .rfRibSub b{color:#E642F2}
+.rfRing{width:54px;height:54px;border-radius:50%;border:3px solid #B06AFF;background:radial-gradient(circle at 50% 35%,rgba(92,42,142,.55),rgba(14,9,24,.9));box-shadow:0 0 13px rgba(176,106,255,.6),inset 0 0 9px rgba(176,106,255,.4);display:flex;align-items:center;justify-content:center;color:#EAD9FF;margin-bottom:6px}
+.rfRing svg{width:27px;height:27px}
+.rfRing .rfBIcon{display:flex;align-items:center;justify-content:center}
 .rfRoundHd{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-bottom:5px}
 .rfRoundT{font-family:var(--disp);font-size:15px;letter-spacing:1px;color:#F7F1E8}
 .rfKey{font-family:'Inter',sans-serif;font-size:9.5px;color:#cdbfe6;display:flex;align-items:center;gap:3px}
@@ -314,7 +317,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  <div class="rfScroll">
   <div class="rfTop">
    <div class="rfPanel rfL">
-    <div class="rfHero"><div class="rfHeroBox"><img class="rfHeroImg" src="movies-roundcomplete.png?v=1" alt="Round Complete"><div class="rfHeroBadge" id="rfBadgeInner"></div></div></div>
+    <div class="rfHero"><img class="rfHeroImg" src="movies-roundcomplete-wm.png?v=1" alt="Round Complete"></div>
     <div class="rfMid">
      <div class="rfPoster"><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW POSTER ART</button></div>
      <div class="rfScoreCol">
@@ -322,7 +325,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
       <div class="rfNice"><span class="rfNice1">Nice round!</span><span class="rfNice2" id="rfNice2"></span></div>
      </div>
     </div>
-    <div class="rfRibbon"><span class="rfRibA">YOU&rsquo;RE A</span><span class="rfRibTier" id="rfRibTier"></span><span class="rfRibSub" id="rfRibSub"></span></div>
+    <div class="rfRibbon"><div class="rfRing" id="rfBadgeInner"></div><span class="rfRibA">YOU&rsquo;RE A</span><span class="rfRibTier" id="rfRibTier"></span><span class="rfRibSub" id="rfRibSub"></span></div>
    </div>
    <div class="rfPanel rfR">
     <div class="rfRoundHd"><span class="rfRoundT">YOUR ROUND</span><span class="rfKey"><b class="g">&#10003;</b> hit <b class="p">&#8594;</b> pass</span></div>
@@ -553,7 +556,7 @@ function buildReportFilm(){
   var cur=-1,i; for(i=0;i<LADDER.length;i++){ if(score>=LADDER[i].min) cur=i; } if(cur<0) cur=0;
   var L=LADDER[cur];
   var pv=document.getElementById('rfPoster'); if(pv){ if(VAULT_ID){ pv.src='art-'+VAULT_ID+'.jpg?v=7'; pv.style.display=''; pv.onerror=function(){this.style.display='none';}; } else { pv.style.display='none'; } }
-  var b=document.getElementById('rfBadgeInner'); if(b){ b.innerHTML='<span class="rfBIcon">'+(ICON[L.key]||'')+'</span><span class="rfBName">'+L.name.toUpperCase()+'</span>'; }
+  var b=document.getElementById('rfBadgeInner'); if(b){ b.innerHTML=(ICON[L.key]||''); }
   document.getElementById('rfScore').textContent=score;
   var t=tierFor(score); document.getElementById('rfNice2').textContent=t.msg.replace('%',firstName(VAULT_NAME));
   var tier=document.getElementById('rfRibTier'); tier.textContent=L.name.toUpperCase(); tier.style.setProperty('--tc',L.col);
