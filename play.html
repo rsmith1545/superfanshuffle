@@ -89,10 +89,10 @@
 .rfScroll{position:relative;z-index:1;max-width:600px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;gap:11px;padding:max(env(safe-area-inset-top,0px),10px) 11px calc(env(safe-area-inset-bottom,0px) + 12px);box-sizing:border-box}
 .rfPanel{background:rgba(5,8,18,.9);border:1.5px solid #C68A32;border-radius:15px;box-shadow:0 0 22px -12px #C68A32,inset 0 0 44px -22px rgba(198,138,50,.35)}
 .rfTop{display:flex;gap:9px;align-items:stretch}
-.rfL{flex:1 1 55%;display:flex;flex-direction:column;padding:11px;gap:7px;min-width:0}
+.rfL{flex:1 1 55%;display:flex;flex-direction:column;padding:11px;gap:6px;min-width:0}
 .rfR{flex:1 1 45%;display:flex;flex-direction:column;padding:11px 9px;min-width:0}
 .rfTopRow{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
-.rfHero{position:relative;width:100%;display:flex;justify-content:center;overflow:visible;margin-bottom:4px}
+.rfHero{position:relative;width:100%;display:flex;justify-content:center;overflow:visible;margin-bottom:0}
 .rfHeroBox{position:relative;width:66%;margin:0 auto}
 .rfHeroImg{width:86%;max-width:300px;display:block;margin:0 auto}
 .rfHeroBadge{position:absolute;left:48.7%;top:70.5%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
@@ -104,24 +104,24 @@
 .rfPoster img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:block;background:#0c0906}
 .rfPosterBtn{font-family:var(--disp);font-size:10.5px;letter-spacing:.4px;color:#D35BEE;background:none;border:1px solid rgba(211,91,238,.5);border-radius:8px;padding:5px 3px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.rfMid{display:flex;align-items:center;justify-content:space-between;gap:11px;margin-top:1px}
+.rfMid{display:flex;align-items:center;justify-content:space-between;gap:11px;margin-top:-3px}
 
 
 
 .rfScoreWrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;line-height:.78}
-.rfScore{font-family:'Anton',var(--disp);font-size:clamp(42px,14vw,60px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
-.rfCorrect{font-family:var(--disp);font-size:12px;letter-spacing:2px;color:#21D9F2}
+.rfScore{font-family:'Anton',var(--disp);font-size:clamp(60px,20vw,88px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
+.rfCorrect{font-family:var(--disp);font-size:16px;letter-spacing:3px;color:#21D9F2;margin-top:2px}
 .rfNice{display:block;text-align:left;line-height:1.05;margin-top:6px}
-.rfNice1{font-family:'Caveat',cursive;font-weight:700;font-size:20px;color:#FFB52B}
-.rfNice2{font-family:'Caveat',cursive;font-weight:500;font-size:17px;color:#F1ECE3}
-.rfRibbon{display:flex;flex-direction:row;align-items:center;gap:12px;text-align:left;background:radial-gradient(120% 160% at 0 50%,rgba(118,36,160,.3),rgba(16,10,27,.92));border:1.5px solid #7624A0;border-radius:12px;padding:9px 12px;margin-top:7px}
-.rfRibTxt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
-.rfRibA{font-family:var(--disp);font-size:clamp(15px,4.8vw,20px);letter-spacing:1px;color:#F6F1E8;line-height:1}
-.rfRibTier{font-family:'Anton',var(--disp);font-size:clamp(22px,6.4vw,30px);line-height:1;color:var(--tc,#B06AFF);text-shadow:0 0 15px color-mix(in srgb,var(--tc,#23D9ED) 55%,transparent)}
+.rfNice1{font-family:'Caveat',cursive;font-weight:700;font-size:24px;color:#FFB52B}
+.rfNice2{font-family:'Caveat',cursive;font-weight:500;font-size:20px;color:#F1ECE3}
+.rfRibbon{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:radial-gradient(120% 160% at 0 50%,rgba(118,36,160,.3),rgba(16,10,27,.92));border:1.5px solid #7624A0;border-radius:12px;padding:8px 11px;margin-top:6px}
+.rfRibTop{display:flex;flex-direction:row;align-items:center;gap:10px}
+.rfRibA{font-family:var(--disp);font-size:clamp(13px,4.2vw,17px);letter-spacing:1px;color:#F6F1E8;line-height:1}
+.rfRibTier{font-family:'Anton',var(--disp);font-size:clamp(19px,5.4vw,25px);line-height:1;color:var(--tc,#B06AFF);text-shadow:0 0 15px color-mix(in srgb,var(--tc,#23D9ED) 55%,transparent)}
 .rfRibSub{font-family:'Inter',sans-serif;font-size:clamp(10.5px,3.3vw,13px);color:#F3EEF4;margin-top:2px;line-height:1.18}
 .rfRibSub b{color:#E642F2}
-.rfRing{flex:0 0 auto;width:50px;height:50px;border-radius:50%;border:3px solid #B06AFF;background:radial-gradient(circle at 50% 35%,rgba(92,42,142,.55),rgba(14,9,24,.9));box-shadow:0 0 13px rgba(176,106,255,.6),inset 0 0 9px rgba(176,106,255,.4);display:flex;align-items:center;justify-content:center;color:#EAD9FF;margin-bottom:0}
-.rfRing svg{width:25px;height:25px}
+.rfRing{flex:0 0 auto;width:40px;height:40px;border-radius:50%;border:2.5px solid #B06AFF;background:radial-gradient(circle at 50% 35%,rgba(92,42,142,.55),rgba(14,9,24,.9));box-shadow:0 0 13px rgba(176,106,255,.6),inset 0 0 9px rgba(176,106,255,.4);display:flex;align-items:center;justify-content:center;color:#EAD9FF;margin-bottom:0}
+.rfRing svg{width:20px;height:20px}
 .rfRing .rfBIcon{display:flex;align-items:center;justify-content:center}
 .rfRoundHd{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-bottom:5px}
 .rfRoundT{font-family:var(--disp);font-size:15px;letter-spacing:1px;color:#F7F1E8}
@@ -324,7 +324,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
      <div class="rfScoreWrap"><span class="rfScore" id="rfScore">0</span><span class="rfCorrect">CORRECT</span></div>
     </div>
     <div class="rfNice"><span class="rfNice1">Nice round!</span> <span class="rfNice2" id="rfNice2"></span></div>
-    <div class="rfRibbon"><div class="rfRing" id="rfBadgeInner"></div><div class="rfRibTxt"><span class="rfRibA">YOU&rsquo;RE A <span class="rfRibTier" id="rfRibTier"></span></span><span class="rfRibSub" id="rfRibSub"></span></div></div>
+    <div class="rfRibbon"><div class="rfRibTop"><div class="rfRing" id="rfBadgeInner"></div><span class="rfRibA">YOU&rsquo;RE A <span class="rfRibTier" id="rfRibTier"></span></span></div><span class="rfRibSub" id="rfRibSub"></span></div>
    </div>
    <div class="rfPanel rfR">
     <div class="rfRoundHd"><span class="rfRoundT">YOUR ROUND</span><span class="rfKey"><b class="g">&#10003;</b> hit <b class="p">&#8594;</b> pass</span></div>
