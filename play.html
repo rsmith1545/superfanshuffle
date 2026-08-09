@@ -91,21 +91,25 @@
 .rfTop{display:flex;gap:9px;align-items:stretch}
 .rfL{flex:1 1 55%;display:flex;flex-direction:column;padding:11px;gap:7px;min-width:0}
 .rfR{flex:1 1 45%;display:flex;flex-direction:column;padding:11px 9px;min-width:0}
-.rfLtop{display:flex;gap:9px;align-items:flex-start}
-.rfPoster{flex:0 0 44%;display:flex;flex-direction:column;gap:5px;min-width:0}
+.rfHero{position:relative;width:100%;margin:1px auto 4px}
+.rfHeroImg{width:100%;display:block}
+.rfHeroBadge{position:absolute;left:48.7%;top:70.5%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.rfBIcon{display:flex}
+.rfBIcon svg{width:clamp(16px,5.5vw,24px);height:auto;color:#f2a6ff;filter:drop-shadow(0 0 4px #ee55ff)}
+.rfBName{font-family:var(--disp);font-size:clamp(8px,2.6vw,11px);letter-spacing:.6px;color:#fff;margin-top:1px}
+.rfPoster{flex:0 0 33%;display:flex;flex-direction:column;gap:5px;min-width:0}
+.rfScoreCol{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .rfPoster img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:block;background:#0c0906}
 .rfPosterBtn{font-family:var(--disp);font-size:10.5px;letter-spacing:.4px;color:#D35BEE;background:none;border:1px solid rgba(211,91,238,.5);border-radius:8px;padding:5px 3px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rfComplete{flex:1;font-family:'Anton',var(--disp);font-size:clamp(19px,7vw,30px);line-height:.9;color:#FF8614;text-shadow:0 0 13px rgba(255,134,20,.45),1px 2px 0 rgba(0,0,0,.5);text-transform:uppercase}
-.rfBadgeRow{position:relative;display:flex;justify-content:center;margin:4px 0 2px}
-.rfBadgeRow:before{content:'';position:absolute;left:50%;top:48%;width:3px;height:3px;border-radius:50%;transform:translate(-50%,-50%);box-shadow:-38px -20px 0 0 #57e6ff,32px -24px 0 0 #ff5cf0,-46px 8px 0 0 #ffd24a,42px 6px 0 0 #7fffd4,-22px -34px 0 0 #ff5cf0,26px 28px 0 0 #ffd24a,50px -8px 0 0 #57e6ff,-50px -6px 0 0 #ee55ff,10px 34px 0 0 #57e6ff,-30px 30px 0 0 #ffd24a}
-.rfMid{display:flex;align-items:center;justify-content:center;gap:14px}
-.rfBadge{position:relative;z-index:1;flex:0 0 auto;width:60px;height:60px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2.5px solid var(--tc,#C84CFF);background:radial-gradient(circle at 50% 42%,color-mix(in srgb,var(--tc,#C84CFF) 26%,#0a0714),#0a0714 72%);box-shadow:0 0 0 4px color-mix(in srgb,var(--tc,#C84CFF) 22%,transparent),0 0 26px 2px var(--tc,#C84CFF),inset 0 0 18px -5px var(--tc,#C84CFF)}
-.rfBadge svg{width:24px;height:24px;color:var(--tc,#C84CFF);filter:drop-shadow(0 0 5px var(--tc,#C84CFF))}
-.rfBadge .rfBadgeLbl{font-family:var(--disp);font-size:8px;letter-spacing:.5px;color:var(--tc,#C84CFF);margin-top:1px;line-height:1}
-.rfScoreWrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;line-height:.8;padding-right:4px}
+
+.rfMid{display:flex;align-items:center;gap:10px;margin-top:1px}
+
+
+
+.rfScoreWrap{display:flex;align-items:baseline;gap:6px;line-height:.85}
 .rfScore{font-family:'Anton',var(--disp);font-size:clamp(38px,13vw,54px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
 .rfCorrect{font-family:var(--disp);font-size:12px;letter-spacing:2px;color:#21D9F2}
-.rfNice{flex:1;min-width:0;display:flex;flex-direction:column;text-align:left;line-height:1.02}
+.rfNice{display:flex;flex-direction:column;text-align:left;line-height:1.02}
 .rfNice1{font-family:'Caveat',cursive;font-weight:700;font-size:21px;color:#FFB52B}
 .rfNice2{font-family:'Caveat',cursive;font-weight:500;font-size:16px;color:#F6F1E8}
 .rfRibbon{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;background:radial-gradient(120% 130% at 50% 0,rgba(118,36,160,.3),rgba(16,10,27,.92));border:1.5px solid #7624A0;border-radius:12px;padding:8px;margin-top:1px;min-height:64px}
@@ -308,14 +312,13 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  <div class="rfScroll">
   <div class="rfTop">
    <div class="rfPanel rfL">
-    <div class="rfLtop">
-     <div class="rfPoster"><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW POSTER ART</button></div>
-     <div class="rfComplete">ROUND<br>COMPLETE</div>
-    </div>
-    <div class="rfBadgeRow"><div class="rfBadge" id="rfBadge"></div></div>
+    <div class="rfHero"><img class="rfHeroImg" src="movies-roundcomplete.png?v=1" alt="Round Complete"><div class="rfHeroBadge" id="rfBadgeInner"></div></div>
     <div class="rfMid">
-     <div class="rfScoreWrap"><span class="rfScore" id="rfScore">0</span><span class="rfCorrect">CORRECT</span></div>
-     <div class="rfNice"><span class="rfNice1">Nice round!</span><span class="rfNice2" id="rfNice2"></span></div>
+     <div class="rfPoster"><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW POSTER</button></div>
+     <div class="rfScoreCol">
+      <div class="rfScoreWrap"><span class="rfScore" id="rfScore">0</span><span class="rfCorrect">CORRECT</span></div>
+      <div class="rfNice"><span class="rfNice1">Nice round!</span><span class="rfNice2" id="rfNice2"></span></div>
+     </div>
     </div>
     <div class="rfRibbon"><span class="rfRibA">YOU&rsquo;RE A</span><span class="rfRibTier" id="rfRibTier"></span><span class="rfRibSub" id="rfRibSub"></span></div>
    </div>
@@ -548,7 +551,7 @@ function buildReportFilm(){
   var cur=-1,i; for(i=0;i<LADDER.length;i++){ if(score>=LADDER[i].min) cur=i; } if(cur<0) cur=0;
   var L=LADDER[cur];
   var pv=document.getElementById('rfPoster'); if(pv){ if(VAULT_ID){ pv.src='art-'+VAULT_ID+'.jpg?v=7'; pv.style.display=''; pv.onerror=function(){this.style.display='none';}; } else { pv.style.display='none'; } }
-  var b=document.getElementById('rfBadge'); b.style.setProperty('--tc',L.col); b.innerHTML=(ICON[L.key]||'')+'<span class="rfBadgeLbl">'+L.name.toUpperCase()+'</span>';
+  var b=document.getElementById('rfBadgeInner'); if(b){ b.innerHTML='<span class="rfBIcon">'+(ICON[L.key]||'')+'</span><span class="rfBName">'+L.name.toUpperCase()+'</span>'; }
   document.getElementById('rfScore').textContent=score;
   var t=tierFor(score); document.getElementById('rfNice2').textContent=t.msg.replace('%',firstName(VAULT_NAME));
   var tier=document.getElementById('rfRibTier'); tier.textContent=L.name.toUpperCase(); tier.style.setProperty('--tc',L.col);
