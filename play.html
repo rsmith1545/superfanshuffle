@@ -94,11 +94,13 @@
 .rfPoster img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:block;background:#0c0906}
 .rfPosterBtn{font-family:var(--disp);font-size:10.5px;letter-spacing:.4px;color:#D35BEE;background:none;border:1px solid rgba(211,91,238,.5);border-radius:8px;padding:5px 3px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rfComplete{flex:1;font-family:'Anton',var(--disp);font-size:clamp(19px,7vw,30px);line-height:.9;color:#FF8614;text-shadow:0 0 13px rgba(255,134,20,.45),1px 2px 0 rgba(0,0,0,.5);text-transform:uppercase}
-.rfMid{display:flex;align-items:center;gap:9px}
-.rfBadge{flex:0 0 auto;width:50px;height:50px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--tc,#C84CFF);box-shadow:0 0 16px -4px var(--tc,#C84CFF)}
-.rfBadge svg{width:20px;height:20px;color:var(--tc,#C84CFF)}
+.rfBadgeRow{position:relative;display:flex;justify-content:center;margin:4px 0 2px}
+.rfBadgeRow:before{content:'';position:absolute;left:50%;top:48%;width:3px;height:3px;border-radius:50%;transform:translate(-50%,-50%);box-shadow:-38px -20px 0 0 #57e6ff,32px -24px 0 0 #ff5cf0,-46px 8px 0 0 #ffd24a,42px 6px 0 0 #7fffd4,-22px -34px 0 0 #ff5cf0,26px 28px 0 0 #ffd24a,50px -8px 0 0 #57e6ff,-50px -6px 0 0 #ee55ff,10px 34px 0 0 #57e6ff,-30px 30px 0 0 #ffd24a}
+.rfMid{display:flex;align-items:center;justify-content:center;gap:14px}
+.rfBadge{position:relative;z-index:1;flex:0 0 auto;width:60px;height:60px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2.5px solid var(--tc,#C84CFF);background:radial-gradient(circle at 50% 42%,color-mix(in srgb,var(--tc,#C84CFF) 26%,#0a0714),#0a0714 72%);box-shadow:0 0 0 4px color-mix(in srgb,var(--tc,#C84CFF) 22%,transparent),0 0 26px 2px var(--tc,#C84CFF),inset 0 0 18px -5px var(--tc,#C84CFF)}
+.rfBadge svg{width:24px;height:24px;color:var(--tc,#C84CFF);filter:drop-shadow(0 0 5px var(--tc,#C84CFF))}
 .rfBadge .rfBadgeLbl{font-family:var(--disp);font-size:8px;letter-spacing:.5px;color:var(--tc,#C84CFF);margin-top:1px;line-height:1}
-.rfScoreWrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;line-height:.82}
+.rfScoreWrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;line-height:.8;padding-right:4px}
 .rfScore{font-family:'Anton',var(--disp);font-size:clamp(38px,13vw,54px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
 .rfCorrect{font-family:var(--disp);font-size:12px;letter-spacing:2px;color:#21D9F2}
 .rfNice{flex:1;min-width:0;display:flex;flex-direction:column;text-align:left;line-height:1.02}
@@ -119,18 +121,18 @@
 .rfNum{flex:0 0 auto;font-family:var(--disp);font-size:14px;color:#C94FF1;min-width:15px;text-align:center}
 .rfIc{flex:0 0 auto;width:19px;height:19px;display:flex}.rfIc svg{width:19px;height:19px}
 .rfName{flex:1;min-width:0;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:#F5F2ED;line-height:1.15}
-.rfActions{display:flex;align-items:center;justify-content:center;gap:13px;font-family:var(--disp);font-size:15px;letter-spacing:1px}
-.rfActions a{color:#D650EC;cursor:pointer}.rfActions i{color:rgba(255,255,255,.3);font-style:normal}
+.rfActions{display:flex;align-items:center;justify-content:center;gap:18px;font-family:var(--disp);font-size:15px;letter-spacing:1px;padding:2px 0}
+.rfActions a{color:#D650EC;cursor:pointer;white-space:nowrap}.rfActions i{color:rgba(255,255,255,.28);font-style:normal;margin:0 2px}
 .rfBtns{display:flex;gap:9px}
 .rfBtn{flex:1;font-family:var(--disp);font-size:18px;letter-spacing:1px;padding:12px 6px;border-radius:13px;background:rgba(255,255,255,.04);cursor:pointer;border:2px solid;color:#fff}
 .rfBtn.again{color:#20DDF4;border-color:#20DDF4;box-shadow:0 0 15px -6px #20DDF4}
 .rfBtn.home{color:#E65AF4;border-color:#E65AF4;box-shadow:0 0 15px -6px #E65AF4}
-.rfKeep{background:#090D17;border:1.5px solid rgba(198,138,50,.55);border-radius:15px;padding:9px 9px 11px}
-.rfKeepHd{font-family:var(--disp);font-size:14px;letter-spacing:1.5px;color:#F6E5C4;text-align:center;margin-bottom:7px}
-.rfKeepList{display:flex;gap:7px}
+.rfKeep{background:#090D17;border:1.5px solid rgba(198,138,50,.55);border-radius:15px;padding:11px 11px 13px}
+.rfKeepHd{font-family:var(--disp);font-size:18px;letter-spacing:1.5px;color:#F6E5C4;text-align:left;margin:0 2px 9px}
+.rfKeepList{display:flex;gap:9px}
 .rfTile{flex:1;min-width:0;cursor:pointer}
 .rfTile img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.1);display:block;background:#0c0906}
-.rfTileN{font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;color:#e9e2f5;text-align:center;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rfTileN{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#e9e2f5;text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #rfPosterOv{position:fixed;inset:0;z-index:200;background:rgba(3,3,8,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px}
 #rfPosterOv img{max-width:88vw;max-height:78vh;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
 #rfPosterOv .rfPX{font-family:var(--disp);letter-spacing:1px;color:#cbb9e6;font-size:13px}
@@ -308,8 +310,8 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
      <div class="rfPoster"><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW POSTER ART</button></div>
      <div class="rfComplete">ROUND<br>COMPLETE</div>
     </div>
+    <div class="rfBadgeRow"><div class="rfBadge" id="rfBadge"></div></div>
     <div class="rfMid">
-     <div class="rfBadge" id="rfBadge"></div>
      <div class="rfScoreWrap"><span class="rfScore" id="rfScore">0</span><span class="rfCorrect">CORRECT</span></div>
      <div class="rfNice"><span class="rfNice1">Nice round!</span><span class="rfNice2" id="rfNice2"></span></div>
     </div>
@@ -322,7 +324,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div>
   <div class="rfActions"><a onclick="openCust()">&#9881; CUSTOMIZE</a><i>|</i><a onclick="doShare()">&#10548; SHARE RESULT</a></div>
   <div class="rfBtns"><button class="rfBtn again" onclick="goFullscreen();unlockAudio();ready();">&#8635; PLAY AGAIN</button><button class="rfBtn home" onclick="rfHome()">&#8962; HOME / PLAY</button></div>
-  <div class="rfKeep" id="rfKeep" style="display:none"><div class="rfKeepHd">&#10022; KEEP PLAYING &#10022;</div><div class="rfKeepList" id="rfKeepList"></div></div>
+  <div class="rfKeep" id="rfKeep" style="display:none"><div class="rfKeepHd">KEEP PLAYING</div><div class="rfKeepList" id="rfKeepList"></div></div>
  </div>
 </div>
 <div id="rfPosterOv" onclick="this.style.display='none'"></div>
