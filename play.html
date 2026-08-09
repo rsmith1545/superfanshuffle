@@ -86,13 +86,14 @@
 .rfBgHi{position:absolute;inset:0;background:url('movies-result-bg.jpg?v=2') center/cover no-repeat;filter:blur(1px) brightness(.86)}
 .rfBgMid{position:absolute;inset:0;background:url('movies-result-bg.jpg?v=2') center/cover no-repeat;filter:blur(8px) brightness(.6);-webkit-mask-image:linear-gradient(to bottom,transparent 8%,#000 30%,#000 68%,transparent 95%);mask-image:linear-gradient(to bottom,transparent 8%,#000 30%,#000 68%,transparent 95%)}
 .rfBgOv{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(3,5,10,.22) 0%,rgba(3,5,10,.5) 46%,rgba(3,5,10,.26) 100%)}
-.rfScroll{position:relative;z-index:1;max-width:600px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;gap:9px;padding:max(env(safe-area-inset-top,0px),10px) 11px calc(env(safe-area-inset-bottom,0px) + 12px);box-sizing:border-box}
+.rfScroll{position:relative;z-index:1;max-width:600px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;gap:11px;padding:max(env(safe-area-inset-top,0px),10px) 11px calc(env(safe-area-inset-bottom,0px) + 12px);box-sizing:border-box}
 .rfPanel{background:rgba(5,8,18,.9);border:1.5px solid #C68A32;border-radius:15px;box-shadow:0 0 22px -12px #C68A32,inset 0 0 44px -22px rgba(198,138,50,.35)}
-.rfTop{display:flex;gap:9px;align-items:stretch}
+.rfTop{display:flex;gap:9px;align-items:stretch;flex:1 1 auto;min-height:0}
 .rfL{flex:1 1 55%;display:flex;flex-direction:column;padding:11px;gap:7px;min-width:0}
 .rfR{flex:1 1 45%;display:flex;flex-direction:column;padding:11px 9px;min-width:0}
 .rfTopRow{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
-.rfHero{position:relative;flex:1;min-width:0}
+.rfHero{position:relative;flex:1;min-width:0;display:flex;align-items:center;overflow:visible}
+.rfHeroBox{position:relative;width:115%;margin-left:-8%}
 .rfHeroImg{width:100%;display:block}
 .rfHeroBadge{position:absolute;left:48.7%;top:70.5%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 .rfBIcon{display:flex}
@@ -108,14 +109,14 @@
 
 
 .rfScoreWrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;line-height:.78}
-.rfScore{font-family:'Anton',var(--disp);font-size:clamp(38px,13vw,54px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
+.rfScore{font-family:'Anton',var(--disp);font-size:clamp(42px,14vw,60px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
 .rfCorrect{font-family:var(--disp);font-size:12px;letter-spacing:2px;color:#21D9F2}
 .rfNice{display:flex;flex-direction:column;text-align:left;line-height:1.02}
 .rfNice1{font-family:'Caveat',cursive;font-weight:700;font-size:21px;color:#FFB52B}
 .rfNice2{font-family:'Caveat',cursive;font-weight:500;font-size:16px;color:#F6F1E8}
 .rfRibbon{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;background:radial-gradient(120% 130% at 50% 0,rgba(118,36,160,.3),rgba(16,10,27,.92));border:1.5px solid #7624A0;border-radius:12px;padding:8px;margin-top:1px;min-height:64px}
 .rfRibA{font-family:var(--disp);font-size:clamp(14px,4.6vw,19px);letter-spacing:1px;color:#F6F1E8}
-.rfRibTier{font-family:'Anton',var(--disp);font-size:clamp(26px,9.5vw,42px);line-height:.92;color:var(--tc,#23D9ED);text-shadow:0 0 15px color-mix(in srgb,var(--tc,#23D9ED) 55%,transparent)}
+.rfRibTier{font-family:'Anton',var(--disp);font-size:clamp(29px,10.5vw,48px);line-height:.92;color:var(--tc,#23D9ED);text-shadow:0 0 15px color-mix(in srgb,var(--tc,#23D9ED) 55%,transparent)}
 .rfRibSub{font-family:'Inter',sans-serif;font-size:clamp(10.5px,3.3vw,13.5px);color:#F3EEF4;margin-top:3px;line-height:1.2}
 .rfRibSub b{color:#E642F2}
 .rfRoundHd{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-bottom:5px}
@@ -123,11 +124,11 @@
 .rfKey{font-family:'Inter',sans-serif;font-size:9.5px;color:#cdbfe6;display:flex;align-items:center;gap:3px}
 .rfKey b{font-weight:800}.rfKey .g{color:#20E468}.rfKey .p{color:#FF9D2E}
 .rfList{list-style:none;margin:0;padding:0;overflow-y:auto;flex:1}
-.rfList li{display:flex;align-items:center;gap:7px;padding:5px 1px;border-bottom:1px solid rgba(75,75,81,.32)}
+.rfList li{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:1px solid rgba(75,75,81,.32)}
 .rfList li:last-child{border-bottom:0}
 .rfNum{flex:0 0 auto;font-family:var(--disp);font-size:14px;color:#C94FF1;min-width:15px;text-align:center}
 .rfIc{flex:0 0 auto;width:19px;height:19px;display:flex}.rfIc svg{width:19px;height:19px}
-.rfName{flex:1;min-width:0;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:#F5F2ED;line-height:1.15}
+.rfName{flex:1;min-width:0;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:#F5F2ED;line-height:1.15}
 .rfActions{display:flex;align-items:center;justify-content:center;gap:18px;font-family:var(--disp);font-size:15px;letter-spacing:1px;padding:2px 0}
 .rfActions a{color:#D650EC;cursor:pointer;white-space:nowrap}.rfActions i{color:rgba(255,255,255,.28);font-style:normal;margin:0 2px}
 .rfBtns{display:flex;gap:9px}
@@ -135,11 +136,11 @@
 .rfBtn.again{color:#20DDF4;border-color:#20DDF4;box-shadow:0 0 15px -6px #20DDF4}
 .rfBtn.home{color:#E65AF4;border-color:#E65AF4;box-shadow:0 0 15px -6px #E65AF4}
 .rfKeep{background:#090D17;border:1.5px solid rgba(198,138,50,.55);border-radius:15px;padding:11px 11px 13px}
-.rfKeepHd{font-family:var(--disp);font-size:18px;letter-spacing:1.5px;color:#F6E5C4;text-align:left;margin:0 2px 9px}
+.rfKeepHd{font-family:var(--disp);font-size:19px;letter-spacing:1.5px;color:#F6E5C4;text-align:left;margin:0 2px 9px}
 .rfKeepList{display:flex;gap:9px}
 .rfTile{flex:1;min-width:0;cursor:pointer}
 .rfTile img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.1);display:block;background:#0c0906}
-.rfTileN{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#e9e2f5;text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rfTileN{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#e9e2f5;text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #rfPosterOv{position:fixed;inset:0;z-index:200;background:rgba(3,3,8,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px}
 #rfPosterOv img{max-width:88vw;max-height:78vh;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
 #rfPosterOv .rfPX{font-family:var(--disp);letter-spacing:1px;color:#cbb9e6;font-size:13px}
@@ -315,7 +316,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
    <div class="rfPanel rfL">
     <div class="rfTopRow">
      <div class="rfPoster"><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW POSTER ART</button></div>
-     <div class="rfHero"><img class="rfHeroImg" src="movies-roundcomplete.png?v=1" alt="Round Complete"><div class="rfHeroBadge" id="rfBadgeInner"></div></div>
+     <div class="rfHero"><div class="rfHeroBox"><img class="rfHeroImg" src="movies-roundcomplete.png?v=1" alt="Round Complete"><div class="rfHeroBadge" id="rfBadgeInner"></div></div></div>
     </div>
     <div class="rfMid">
      <div class="rfScoreWrap"><span class="rfScore" id="rfScore">0</span><span class="rfCorrect">CORRECT</span></div>
