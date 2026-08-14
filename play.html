@@ -145,6 +145,13 @@
 .rfKeepList{display:flex;gap:9px}
 .rfTile{flex:1;min-width:0;cursor:pointer}
 .rfTile img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.1);display:block;background:#0c0906}
+.rfBgGrad{position:absolute;inset:0;display:none}
+#rfBgPhoto{position:absolute;inset:0}
+.rfTeamPoster{display:none;width:100%;aspect-ratio:3/4;border-radius:11px;border:1px solid rgba(255,255,255,.16);overflow:hidden;position:relative;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 4px 14px rgba(0,0,0,.4)}
+.rfTPvault{position:absolute;top:8px;left:0;right:0;font-family:var(--disp);font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.7)}
+.rfTPcity{font-family:var(--disp);font-size:15px;letter-spacing:2px;color:rgba(255,255,255,.92);line-height:1;margin-bottom:2px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.rfTPteam{font-family:var(--disp);font-size:30px;letter-spacing:1px;color:#fff;line-height:.92;text-shadow:0 2px 12px rgba(0,0,0,.55)}
+.rfTileG{width:100%;aspect-ratio:3/4;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:block}
 .rfTileN{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#e9e2f5;text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #rfPosterOv{position:fixed;inset:0;z-index:200;background:rgba(3,3,8,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px}
 #rfPosterOv img{max-width:88vw;max-height:78vh;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
@@ -315,13 +322,13 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 </div>
 </div>
 <div class="screen" id="sReportFilm">
- <div class="rfBg"><div class="rfBgHi"></div><div class="rfBgMid"></div><div class="rfBgOv"></div></div>
+ <div class="rfBg"><div id="rfBgPhoto"><div class="rfBgHi"></div><div class="rfBgMid"></div><div class="rfBgOv"></div></div><div class="rfBgGrad" id="rfBgGrad"></div></div>
  <div class="rfScroll">
   <div class="rfTop">
    <div class="rfPanel rfL">
     <div class="rfHero"><img class="rfHeroImg" src="movies-roundcomplete-wm.png?v=1" alt="Round Complete"></div>
     <div class="rfMid">
-     <div class="rfPoster"><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW POSTER ART</button></div>
+     <div class="rfPoster"><div class="rfTeamPoster" id="rfTeamPoster"></div><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW POSTER ART</button></div>
      <div class="rfScoreWrap"><span class="rfScore" id="rfScore">0</span><span class="rfCorrect">CORRECT</span></div>
     </div>
     <div class="rfNice"><span class="rfNice1">Nice round!</span> <span class="rfNice2" id="rfNice2"></span></div>
@@ -493,6 +500,8 @@ function endGame(){
 /* tier verdict = the payoff (hero); score is support */
 var ED=(Q.get('ed')||'music');
 var RCLUE=Q.get('clue')||'Beginner', REDITION=Q.get('edition')||'Standard', RXS=Q.get('xs')||'', RXSN=Q.get('xsn')||'', RXSE=Q.get('xse')||'', RXSL=Q.get('xsl')||'';
+var RP1=Q.get('p1')||'', RP2=Q.get('p2')||'', RCITY=Q.get('city')||'', RTEAM=Q.get('team')||'';
+function hexA(h,a){ h=(h||'').replace('#',''); if(h.length!==6) return 'rgba(40,50,80,'+a+')'; return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+a+')'; }
 var EDTHEME={
  music:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(124,64,224,.34),transparent 60%),linear-gradient(180deg,#1a0d33 0%,#0d0819 60%,#080511 100%)",bord:"rgba(126,86,224,.55)"},
  filmtv:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(150,110,30,.30),transparent 60%),linear-gradient(180deg,#141009 0%,#0b0a10 60%,#08070a 100%)",bord:"rgba(242,193,78,.45)"},
@@ -555,7 +564,17 @@ function rfViewPoster(){ if(!VAULT_ID) return; var o=document.getElementById('rf
 function buildReportFilm(){
   var cur=-1,i; for(i=0;i<LADDER.length;i++){ if(score>=LADDER[i].min) cur=i; } if(cur<0) cur=0;
   var L=LADDER[cur];
-  var pv=document.getElementById('rfPoster'); if(pv){ if(VAULT_ID){ pv.src='art-'+VAULT_ID+'.jpg?v=7'; pv.style.display=''; pv.onerror=function(){this.style.display='none';}; } else { pv.style.display='none'; } }
+  var _spo=(ED==='sports');
+  var _photo=document.getElementById('rfBgPhoto'),_grad=document.getElementById('rfBgGrad'),_tp=document.getElementById('rfTeamPoster'),_pb=document.querySelector('.rfPosterBtn'),pv=document.getElementById('rfPoster');
+  if(_spo){ var _p1=RP1||'#243b6b',_p2=RP2||'#0b1a3a';
+    if(_grad){ _grad.style.background='radial-gradient(90% 60% at 84% 6%,'+hexA(_p1,.6)+',transparent 55%),radial-gradient(95% 72% at 8% 14%,'+hexA(_p2,.55)+',transparent 60%),linear-gradient(165deg,#0d0f14 0%,#08090e 55%,#050609 100%)'; _grad.style.display='block'; }
+    if(_photo) _photo.style.display='none';
+    if(_tp){ _tp.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_p1,.95)+','+hexA(_p1,0)+' 62%),linear-gradient(158deg,'+_p1+' 0%,'+_p2+' 100%)'; _tp.innerHTML='<div class="rfTPvault">SUPERFAN VAULT</div><div class="rfTPcity">'+(RCITY||'').toUpperCase()+'</div><div class="rfTPteam">'+((RTEAM||VAULT_NAME)||'').toUpperCase()+'</div>'; _tp.style.display='flex'; }
+    if(pv) pv.style.display='none'; if(_pb) _pb.style.display='none';
+  } else {
+    if(_grad) _grad.style.display='none'; if(_photo) _photo.style.display=''; if(_tp) _tp.style.display='none'; if(_pb) _pb.style.display='';
+    if(pv){ if(VAULT_ID){ pv.src='art-'+VAULT_ID+'.jpg?v=7'; pv.style.display=''; pv.onerror=function(){this.style.display='none';}; } else { pv.style.display='none'; } }
+  }
   var b=document.getElementById('rfBadgeInner'); if(b){ b.innerHTML=(ICON[L.key]||''); }
   var _se=document.getElementById('rfScore'); _se.textContent=score; _se.className='rfScore'+(String(score).length>1?' two':'');
   var t=tierFor(score); document.getElementById('rfNice2').textContent=t.msg.replace('%',firstName(VAULT_NAME));
@@ -571,10 +590,13 @@ function buildReportFilm(){
   if(sims.length){ keep.style.display='';
     kl.innerHTML=sims.slice(0,3).map(function(v){ return '<div class="rfTile"><img alt=""><div class="rfTileN">'+(v.name||'Vault')+'</div></div>'; }).join('');
     var rows=kl.querySelectorAll('.rfTile');
-    sims.slice(0,3).forEach(function(v,ix){ var row=rows[ix]; if(!row) return; var img=row.querySelector('img'); img.src='art-'+v.id+'.jpg?v=7'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
+    sims.slice(0,3).forEach(function(v,ix){ var row=rows[ix]; if(!row) return; var img=row.querySelector('img');
+      if(ED==='sports' && v.c && v.c[0]){ var g=document.createElement('div'); g.className='rfTileG'; g.style.background='linear-gradient(158deg,'+v.c[0]+' 0%,'+(v.c[1]||v.c[0])+' 100%)'; if(img&&img.parentNode) img.parentNode.replaceChild(g,img); }
+      else if(img){ img.src='art-'+v.id+'.jpg?v=7'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; }
+      row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
   } else { keep.style.display='none'; }
 }
-function showReport(){ if(ED==='filmtv'){ buildReportFilm(); show('sReportFilm'); } else { buildReport(); show('sReport'); } }
+function showReport(){ if(ED==='filmtv'||ED==='sports'){ buildReportFilm(); show('sReportFilm'); } else { buildReport(); show('sReport'); } }
 function doShare(){
   var t=tierFor(score);
   var txt='I’m a '+t.name+' on SuperFan Shuffle'+(VAULT_NAME!=='this vault'?' — '+VAULT_NAME:'')+'! Scored '+score+'. Face the Music →';
@@ -648,7 +670,13 @@ document.getElementById('rcEdRow').addEventListener('click',function(e){ var b=e
 document.getElementById('rcClRow').addEventListener('click',function(e){ var b=e.target.closest('.rcOpt'); if(b){ custCl=b.getAttribute('data-cl'); _syncCust(); } });
 document.getElementById('rcCustGo').onclick=function(){ REDITION=custEd; RCLUE=custCl; closeCust(); var m=document.getElementById('rcMode'); if(m) m.textContent=(RCLUE||'Standard').toUpperCase()+' MODE'; goFullscreen(); unlockAudio(); ready(); };
 if(Q.get('demo')){ try{
-  if(ED==='filmtv'){
+  if(ED==='sports'){
+    score=parseInt(Q.get('score')||'7',10); if(isNaN(score))score=7;
+    if(!VAULT_ID) VAULT_ID='fo-chicago-bears'; if(VAULT_NAME==='this vault') VAULT_NAME='Chicago Bears';
+    RP1=RP1||'#0B162A'; RP2=RP2||'#C83803'; RCITY=RCITY||'Chicago'; RTEAM=RTEAM||'Bears';
+    results=[{w:'Walter Payton',good:true},{w:'\u201cSweetness\u201d',good:true},{w:'Super Bowl XX',good:true},{w:'The 46 Defense',good:false},{w:'Soldier Field',good:true},{w:'Dick Butkus',good:true},{w:'Bear Down',good:true}];
+    RXSL=RXSL||'[{"id":"fo-green-bay-packers","name":"Green Bay Packers","c":["#203731","#FFB612"]},{"id":"fo-dallas-cowboys","name":"Dallas Cowboys","c":["#003594","#869397"]},{"id":"fo-kansas-city-chiefs","name":"Kansas City Chiefs","c":["#E31837","#FFB81C"]}]';
+  } else if(ED==='filmtv'){
     score=parseInt(Q.get('score')||'6',10); if(isNaN(score))score=6;
     if(!VAULT_ID) VAULT_ID='mv_animated'; if(VAULT_NAME==='this vault') VAULT_NAME='Animated Movie';
     results=[{w:'Elemental',good:true},{w:'Dumbo',good:true},{w:'Tangled',good:true},{w:'The Wild Robot',good:false},{w:'Beauty and the Beast',good:true},{w:'Up',good:true},{w:'Hotel Transylvania',good:true}];
