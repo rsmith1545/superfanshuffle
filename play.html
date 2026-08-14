@@ -28,6 +28,8 @@
  .l1{color:var(--cyan);text-shadow:0 0 16px rgba(87,230,255,.85)}
  .l2{color:var(--mag);text-shadow:0 0 16px rgba(255,92,240,.85)}
  .sub{font-size:5vw;color:var(--sand);max-width:640px;line-height:1.4}
+.clueLine{font-size:3.4vw;color:var(--sand);opacity:.66;max-width:600px;line-height:1.5;margin-top:7px}
+.clueLbl{color:#fff;opacity:.9;font-weight:600}
  .btn{font-family:var(--disp);font-size:8vw;padding:14px 44px;border:3px solid var(--cyan);border-radius:44px;background:rgba(87,230,255,.10);color:#fff;letter-spacing:3px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 18px rgba(87,230,255,.6),inset 0 0 16px rgba(87,230,255,.22);text-shadow:0 0 10px rgba(87,230,255,.7)}
  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #000}
  .small{font-size:4vw;color:var(--sand);opacity:.85}
@@ -263,6 +265,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   <div class="screen on" id="sStart">
     <h1><span class="l1">SuperFan</span><br><span class="l2">Shuffle</span></h1>
     <div class="sub">Hold the phone to your forehead.<br><b>Tilt DOWN</b> when you get it • <b>Tilt UP</b> to pass.</div>
+    <div class="clueLine" id="clueLine"></div>
     <button class="btn" id="startBtn">Tap to Play</button>
     <div class="small">Tilt test build · turn sideways to play</div>
   </div>
@@ -499,6 +502,7 @@ function endGame(){
 }
 /* tier verdict = the payoff (hero); score is support */
 var ED=(Q.get('ed')||'music');
+(function(){ var CLUES={sports:'Say the first name &middot; Position and years &middot; Awards, All-Star games, big moments',filmtv:'Name the actors &middot; Use the year on the card &middot; Mention awards it won &middot; Act out a scene',music:'Hum it &middot; Sing a line &middot; Describe it &middot; Act it out'}; var el=document.getElementById('clueLine'); if(el){ var nm=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME+' ':''; el.innerHTML='<span class="clueLbl">For this '+nm+'Vault:</span> '+(CLUES[ED]||CLUES.music); } })();
 var RCLUE=Q.get('clue')||'Beginner', REDITION=Q.get('edition')||'Standard', RXS=Q.get('xs')||'', RXSN=Q.get('xsn')||'', RXSE=Q.get('xse')||'', RXSL=Q.get('xsl')||'';
 var RP1=Q.get('p1')||'', RP2=Q.get('p2')||'', RCITY=Q.get('city')||'', RTEAM=Q.get('team')||'';
 function hexA(h,a){ h=(h||'').replace('#',''); if(h.length!==6) return 'rgba(40,50,80,'+a+')'; return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+a+')'; }
