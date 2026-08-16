@@ -257,6 +257,129 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 #rcClRow .rcOpt.sel{border-color:var(--cyan);background:rgba(87,230,255,.12);box-shadow:0 0 12px -3px var(--cyan)}
 #rcClRow .rcOpt.sel b{color:var(--cyan)}
 .rcCustGo{margin-top:16px;width:100%;background:var(--cyan);color:#06222b;border:0;border-radius:14px;padding:13px;font-family:var(--disp);font-size:18px;letter-spacing:1.5px;cursor:pointer;box-shadow:0 0 20px -6px var(--cyan)}
+
+/* ===== QUICK PLAY GUIDE — sports opening screen (replaces the sStart copy) =====
+   Chrome stays dark on every team; only the ACCENT takes the team's card outline. */
+#app.qpgapp{padding:0;background-color:#05090f}
+#sStart.qpgmode.on{display:flex;align-items:center;justify-content:center;overflow-y:auto}
+#sStart.qpgmode{padding:0;-webkit-overflow-scrolling:touch;background:radial-gradient(125% 68% at 50% 0%,var(--qglow,rgba(200,56,3,.20)) 0%,#0e1c2e 44%,#05090f 100%)}
+#sStart.qpgmode::-webkit-scrollbar{display:none}
+.qpg{margin:auto;--qo:#f47b20;--qg:#43d13a;--qb:#5fa8e8;--qrule:rgba(150,185,225,.30);
+ width:100%;max-width:430px;margin:0 auto;padding:14px 18px 22px;color:#fff;
+ font-family:var(--body);text-align:left;box-sizing:border-box}
+.qpgt{display:flex;align-items:center;justify-content:center;gap:9px;margin:4px 0 15px}
+.qpgt h1{font-family:var(--disp);font-size:8.4vw;letter-spacing:.5px;transform:skewX(-9deg);
+ line-height:1;white-space:nowrap;color:#fff;text-shadow:0 3px 12px rgba(0,0,0,.6)}
+.qdash{display:flex;flex-direction:column;gap:3.5px;flex:0 0 auto}
+.qdash i{display:block;height:3.5px;border-radius:2px;background:var(--qo);transform:skewX(-22deg)}
+.qdash i:nth-child(1){width:26px}.qdash i:nth-child(2){width:15px;margin-left:7px;opacity:.85}
+.qdash.r i:nth-child(2){margin-left:0;margin-right:7px;align-self:flex-end}
+.qtilt{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.qtilt .qc{flex:1;display:flex;align-items:center;gap:9px;justify-content:center}
+.qtilt .qvr{width:1px;align-self:stretch;background:var(--qrule);margin:5px 0}
+.qring{width:13vw;max-width:54px;height:13vw;max-height:54px;border-radius:50%;flex:0 0 auto;
+ display:flex;align-items:center;justify-content:center;border:3px solid currentColor}
+.qtilt .qlab{font-family:var(--disp);font-size:5.6vw;letter-spacing:.6px;line-height:1}
+.qtilt .qsub{font-weight:800;font-size:3.1vw;color:#fff;letter-spacing:.3px;margin-top:1px}
+.qo{color:var(--qo)}.qg{color:var(--qg)}.qb{color:var(--qb)}
+.qphone{position:relative;height:40vw;max-height:180px;margin:2px 0 4px;
+ display:flex;align-items:center;justify-content:center}
+.qarr{position:absolute;top:8%;height:74%;width:11vw;max-width:46px}
+.qarr.l{left:1%}.qarr.r{right:1%}
+.qstage{perspective:760px;width:52vw;max-width:220px;height:30vw;max-height:130px;position:relative}
+.qghost{position:absolute;left:50%;top:50%;width:92%;height:76%;border-radius:16px;
+ background:linear-gradient(180deg,#2a4a70,#16283f);border:1px solid rgba(150,200,245,.28)}
+.qghost.g1{transform:translate(-50%,-50%) rotateX(62deg) translateZ(26px) scale(.965);opacity:.28}
+.qghost.g2{transform:translate(-50%,-50%) rotateX(62deg) translateZ(15px) scale(.985);opacity:.42}
+.qph{position:absolute;left:50%;top:50%;width:95%;height:80%;border-radius:17px;
+ background:linear-gradient(175deg,#12263f 0%,#0a1728 60%,#050d18 100%);border:3px solid #080d14;
+ box-shadow:0 0 0 1.5px rgba(150,200,245,.32),0 20px 30px rgba(0,0,0,.6);
+ display:flex;align-items:center;justify-content:space-around;padding:0 8%;
+ transform:translate(-50%,-50%) rotateX(62deg);animation:qTilt 5.6s cubic-bezier(.45,.05,.25,1) infinite}
+.qpill{width:9vw;max-width:42px;height:9vw;max-height:42px;border-radius:50%;
+ border:2.5px solid currentColor;display:flex;align-items:center;justify-content:center;
+ background:rgba(0,0,0,.30);opacity:.42;transform:scale(.94)}
+.qpill.qg{animation:qLitG 5.6s ease-in-out infinite}
+.qpill.qo{animation:qLitO 5.6s ease-in-out infinite}
+@keyframes qTilt{0%,9%{transform:translate(-50%,-50%) rotateX(62deg)}
+ 19%,30%{transform:translate(-50%,-43%) rotateX(86deg)}
+ 41%,48%{transform:translate(-50%,-50%) rotateX(62deg)}
+ 58%,70%{transform:translate(-50%,-58%) rotateX(34deg)}
+ 81%,100%{transform:translate(-50%,-50%) rotateX(62deg)}}
+@keyframes qLitG{0%,13%{opacity:.42;transform:scale(.94);box-shadow:none}
+ 19%,30%{opacity:1;transform:scale(1.10);box-shadow:0 0 15px 2px var(--qg)}
+ 38%,100%{opacity:.42;transform:scale(.94);box-shadow:none}}
+@keyframes qLitO{0%,52%{opacity:.42;transform:scale(.94);box-shadow:none}
+ 58%,70%{opacity:1;transform:scale(1.10);box-shadow:0 0 15px 2px var(--qo)}
+ 78%,100%{opacity:.42;transform:scale(.94);box-shadow:none}}
+.qarr.r{animation:qArmG 5.6s ease-in-out infinite}
+.qarr.l{animation:qArmO 5.6s ease-in-out infinite}
+@keyframes qArmG{0%,13%{opacity:.28;transform:translateY(0)}19%,30%{opacity:1;transform:translateY(6px)}38%,100%{opacity:.28;transform:translateY(0)}}
+@keyframes qArmO{0%,52%{opacity:.28;transform:translateY(0)}58%,70%{opacity:1;transform:translateY(-6px)}78%,100%{opacity:.28;transform:translateY(0)}}
+.qringG{animation:qRingG 5.6s ease-in-out infinite}
+.qringO{animation:qRingO 5.6s ease-in-out infinite}
+@keyframes qRingG{0%,13%{box-shadow:none}19%,30%{box-shadow:0 0 17px -1px var(--qg)}38%,100%{box-shadow:none}}
+@keyframes qRingO{0%,52%{box-shadow:none}58%,70%{box-shadow:0 0 17px -1px var(--qo)}78%,100%{box-shadow:none}}
+@media (prefers-reduced-motion:reduce){.qph,.qpill,.qarr,.qringG,.qringO{animation:none!important}
+ .qpill{opacity:1;transform:none}.qarr{opacity:1}}
+.qtalk{text-align:center;margin:0 0 12px}
+.qtalk .qrh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.qtalk .qrh span{flex:1;height:1px;background:var(--qrule)}
+.qtalk h2{font-family:var(--disp);font-size:5.2vw;letter-spacing:.6px;white-space:nowrap;line-height:1;color:#fff}
+.qtalk h3{font-family:var(--disp);font-size:5vw;color:var(--qo);letter-spacing:.5px;line-height:1.05}
+.qhow{display:flex;gap:8px;align-items:stretch;margin-bottom:13px}
+.qhow .qc{flex:1;display:flex;gap:8px;align-items:flex-start}
+.qhow .qvr{width:1px;background:var(--qrule);margin:4px 0}
+.qhow .qic{flex:0 0 auto;width:8vw;max-width:34px;display:flex;align-items:center;justify-content:center}
+.qhow h4{font-family:var(--disp);font-size:4.4vw;letter-spacing:.5px;line-height:1.05}
+.qhow p{font-size:3.1vw;line-height:1.32;color:rgba(233,242,255,.78);margin-top:2px}
+.qmh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.qmh span{flex:1;height:1px;background:var(--qrule)}
+.qmh h2{font-family:var(--disp);font-size:4.6vw;letter-spacing:1px;white-space:nowrap;color:#fff}
+.qmodes{display:flex;gap:9px;margin-bottom:13px}
+.qmode{flex:1 1 0;min-width:0;position:relative;border-radius:13px;padding:11px 10px;cursor:pointer;
+ display:flex;gap:8px;align-items:flex-start;background:rgba(255,255,255,.03);border:1.5px solid currentColor}
+.qmode.beg{color:var(--qb)}.qmode.sup{color:var(--qo)}
+.qmode.sel{background:rgba(255,255,255,.08);box-shadow:0 0 15px -2px currentColor}
+.qmode .qav{flex:0 0 auto;width:8vw;max-width:34px}
+.qmode h4{font-family:var(--disp);font-size:4.4vw;letter-spacing:.5px;line-height:1;padding-right:16px}
+.qmode p{font-size:3.1vw;line-height:1.3;color:#fff;font-weight:600;margin-top:3px}
+.qmode p.thin{font-weight:500;color:rgba(233,242,255,.78);font-size:2.9vw;margin-top:2px}
+.qtick{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;
+ background:currentColor;display:none;align-items:center;justify-content:center}
+.qmode.sel .qtick{display:flex}
+.qclues{display:flex;align-items:stretch;margin-bottom:14px}
+.qclue{flex:1;text-align:center;padding:0 2px}
+.qclue .qci{height:7vw;max-height:30px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.qclue b{display:block;font-size:2.4vw;font-weight:800;letter-spacing:.3px;line-height:1.15;text-transform:uppercase;color:#fff}
+.qcdiv{width:1px;background:var(--qo);opacity:.7;margin:3px 0}
+.qcta{width:100%;border:none;border-radius:13px;cursor:pointer;padding:4.2vw;font-family:var(--disp);
+ font-size:7vw;letter-spacing:2.5px;color:#fff;display:flex;align-items:center;justify-content:center;gap:14px;
+ background:linear-gradient(180deg,var(--qo) 0%,var(--qo) 55%,rgba(0,0,0,.28) 320%);
+ box-shadow:0 7px 20px rgba(0,0,0,.5),inset 0 1.5px 0 rgba(255,255,255,.32)}
+.qcta:active{transform:translateY(1px)}
+
+/* ===== team-coloured lettering: white fill + the team's card outline =====
+   Same technique as #app.sportcard #card (white + -webkit-text-stroke), applied
+   to the pre-game screens, the score and the unlock wall. Stroke widths are
+   tuned per element so small text doesn't clog. ===== */
+#app.sportcard .fhText,
+#app.sportcard #getReady,
+#app.sportcard #big,
+#app.sportcard #score,
+#app.sportcard .wallHead{
+ color:#fff;-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;
+ text-shadow:0 2px 9px rgba(0,0,0,.45)}
+#app.sportcard .fhText  {-webkit-text-stroke-width:1.05vmin}
+#app.sportcard #getReady{-webkit-text-stroke-width:1.05vmin}
+#app.sportcard #big     {-webkit-text-stroke-width:1.9vmin}
+#app.sportcard #score   {-webkit-text-stroke-width:.85vmin;letter-spacing:1px}
+#app.sportcard .wallHead{-webkit-text-stroke-width:1.2vmin}
+#app.sportcard .fhHint{color:rgba(255,255,255,.86);text-shadow:0 1px 6px rgba(0,0,0,.5)}
+#app.sportcard .wallTaste{color:var(--cardoutline,#fff);text-shadow:0 2px 9px rgba(0,0,0,.5);opacity:1}
+#app.sportcard .btn.buy{border-color:var(--cardoutline,#fff);
+ background:linear-gradient(180deg,var(--cardoutline,#333),rgba(0,0,0,.34));
+ color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);box-shadow:0 6px 18px rgba(0,0,0,.5)}
 </style><style id="rotgate">
 .rotate-gate{display:none;position:fixed;inset:0;z-index:99998;background:#0b0713;color:#fff;align-items:center;justify-content:center;text-align:center;font-family:var(--disp,sans-serif);padding:24px}
 .rotate-gate .rg-icon{font-size:60px;color:var(--cyan,#3EDBFF);display:inline-block;animation:rgspin 2.2s ease-in-out infinite}
@@ -295,7 +418,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   <div class="screen" id="sWall">
     <div class="wallTaste">That’s the taste</div>
     <div class="wallHead">Unlock the Vault</div>
-    <div class="sub">You’ve played the first <b>5</b> of <b id="wallName">this vault</b>. The full shuffle — songs, lyrics &amp; lore — keeps going.</div>
+    <div class="sub">You’ve played the first <b>5</b> of <b id="wallName">this vault</b>. The full shuffle — <span id="wallMix">songs, lyrics &amp; lore</span> — keeps going.</div>
     <button class="btn buy" id="wallBuy">Unlock full vault · $0.99</button>
     <div class="wallRow">
       <a class="wlink" id="wallBack">‹ Back to store</a>
@@ -327,7 +450,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
     <div class="rcCustLbl">EDITION</div>
     <div class="rcCustRow" id="rcEdRow"><button class="rcOpt" data-ed="Standard"><b>Standard</b><span>The essential tracks everyone knows.</span></button><button class="rcOpt" data-ed="Deluxe"><b>Deluxe</b><span>Every track — deep cuts &amp; features.</span></button></div>
     <div class="rcCustLbl">CLUE RULES</div>
-    <div class="rcCustRow" id="rcClRow"><button class="rcOpt sm" data-cl="Beginner"><b>Beginner</b><span>Hum, sing, or say it.</span></button><button class="rcOpt sm" data-cl="Casual"><b>Casual</b><span>No humming or singing.</span></button><button class="rcOpt sm" data-cl="Superfan"><b>Superfan</b><span>Lyrics only, no chorus.</span></button></div>
+    <div class="rcCustRow" id="rcClRow"><button class="rcOpt sm" data-cl="Beginner"><b>Beginner</b><span>Hum it, sing it, or say it. Anything goes.</span></button><button class="rcOpt sm" data-cl="Superfan"><b>Superfan</b><span>Lyrics only, no chorus.</span></button></div>
     <button class="rcCustGo" id="rcCustGo">&#8635; PLAY WITH THESE</button>
   </div></div>
    </div>
@@ -384,6 +507,13 @@ var MAX_Q=5;
 
 /* ---------- screens ---------- */
 var app=document.getElementById('app');
+/* team card vars applied once, up front — so the forehead screen, the 3-2-1 and
+   the score are already the team's colours before the first card is dealt. */
+function applySportCard(){
+ var _sc=spCard(); if(!_sc) return false;
+ app.style.setProperty('--cardbg',_sc.b); app.style.setProperty('--cardoutline',_sc.o);
+ app.style.setProperty('--olw','2.2vmin'); app.classList.add('sportcard'); return true; }
+
 function show(id){['sStart','sReady','sGame','sWall','sReport','sReportFilm'].forEach(function(s){var _e=document.getElementById(s); if(_e) _e.classList.toggle('on',s===id);}); document.body.classList.toggle('report-on', id==='sReport'||id==='sReportFilm'); if(id==='sStart'||id==='sWall'||id==='sReport'||id==='sReportFilm'){ document.body.classList.remove('lock-ls'); tryPortrait(); } }
 var tHandle2=null;
 function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(tHandle2); tHandle2=setTimeout(function(){ t.classList.remove('on'); }, 2600); }
@@ -484,7 +614,7 @@ function startGame(){
   order=shuffle(activeDeck()); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
   document.getElementById('score').textContent='0';
   show('sGame'); app.classList.remove('st-correct','st-pass','st-timeup');
-  var _sc=spCard(); if(_sc){ app.style.setProperty('--cardbg',_sc.b); app.style.setProperty('--cardoutline',_sc.o); app.style.setProperty('--olw','2.2vmin'); app.classList.add('sportcard'); } else { app.classList.remove('sportcard'); app.style.removeProperty('--cardbg'); app.style.removeProperty('--cardoutline'); }
+  applySportCard(); if(!spCard()) { app.classList.remove('sportcard'); app.style.removeProperty('--cardbg'); app.style.removeProperty('--cardoutline'); }
   hideFb(); sndGo(); requestWake();
   var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing');
   document.body.classList.add('lock-ls'); tryLockLandscape();
@@ -689,7 +819,7 @@ document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10)
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
 function _syncCust(){ var es=document.querySelectorAll('#rcEdRow .rcOpt'); for(var i=0;i<es.length;i++){ es[i].classList.toggle('sel', es[i].getAttribute('data-ed')===custEd); } var cs=document.querySelectorAll('#rcClRow .rcOpt'); for(var j=0;j<cs.length;j++){ cs[j].classList.toggle('sel', cs[j].getAttribute('data-cl')===custCl); } }
 var custEd='Standard', custCl='Beginner';
-function openCust(){ custEd=REDITION; custCl=(['Beginner','Casual','Superfan'].indexOf(RCLUE)>=0?RCLUE:'Beginner'); _syncCust(); document.getElementById('rcCustOv').classList.add('on'); }
+function openCust(){ custEd=REDITION; custCl=(['Beginner','Superfan'].indexOf(RCLUE)>=0?RCLUE:'Beginner'); _syncCust(); document.getElementById('rcCustOv').classList.add('on'); }
 function closeCust(){ document.getElementById('rcCustOv').classList.remove('on'); }
 document.getElementById('customBtn').onclick=openCust;
 document.getElementById('rcCustX').onclick=closeCust;
@@ -730,5 +860,81 @@ var dbgOn=false;
 document.getElementById('dbgBtn').onclick=function(){ dbgOn=!dbgOn; document.getElementById('dbg').style.display=dbgOn?'block':'none'; };
 function dbgTick(){ if(!dbgOn) return; document.getElementById('dbg').innerHTML='gz: '+gz.toFixed(2)+'<br>beta: '+beta.toFixed(0)+'  gamma: '+gamma.toFixed(0)+'<br>armed: '+armed+'  hold:'+holdDir+'  motion:'+haveMotion+'<br>TH:'+TH+' NEU:'+NEUTRAL; }
 </script>
-<script>if("serviceWorker" in navigator){var _swReloaded=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(_swReloaded)return;_swReloaded=true;location.reload();});window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(function(r){r.update();}).catch(function(){});});}</script>
+<script>if("serviceWorker" in navigator){var _swReloaded=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(_swReloaded)return;_swReloaded=true;location.reload();});window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(function(r){r.update();}).catch(function(){});});}
+/* ===== QUICK PLAY GUIDE — sports only. Replaces the sStart copy and IS the
+   gesture gate: its TAP TO PLAY fires the same fullscreen/audio/motion bundle
+   the old startBtn did, so nothing about iOS unlocking changes. ===== */
+function qpgIco(n){var s='<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">';
+ if(n=='pos')return s+'<rect x="3" y="5" width="18" height="16" rx="2.4"/><path d="M3 9.6h18M8 3v3.4M16 3v3.4" stroke-linecap="round"/><rect x="6.4" y="12.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="10.7" y="12.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="15" y="12.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="6.4" y="16.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="10.7" y="16.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/></svg>';
+ if(n=='team')return s+'<path d="M12 2.6l7.6 2.9v6.1c0 4.6-3.1 8.4-7.6 9.8-4.5-1.4-7.6-5.2-7.6-9.8V5.5z"/><path d="M12 7.4l1.5 3.1 3.4.5-2.5 2.4.6 3.4-3-1.6-3 1.6.6-3.4-2.5-2.4 3.4-.5z" fill="currentColor" stroke="none"/></svg>';
+ if(n=='num')return s+'<path d="M8.4 3.2L4 5.6l1.7 4 1.8-.7V21h9V8.9l1.8.7 1.7-4-4.4-2.4a3.6 3.6 0 01-7.2 0z"/><text x="12" y="17.4" font-family="Barlow,sans-serif" font-size="6.6" font-weight="800" fill="currentColor" stroke="none" text-anchor="middle">23</text></svg>';
+ if(n=='awd')return s+'<path d="M7 3.4h10v5.2a5 5 0 01-10 0z" stroke-linecap="round"/><path d="M7 5.2H4.2v1.9a3.4 3.4 0 003.2 3.3" stroke-linecap="round"/><path d="M17 5.2h2.8v1.9a3.4 3.4 0 01-3.2 3.3" stroke-linecap="round"/><path d="M12 13.8v3.4M8.6 20.6h6.8l-.8-3.4H9.4z" stroke-linecap="round"/></svg>';
+ return s+'<path d="M12 2.8l2.9 6 6.6 1-4.8 4.6 1.2 6.6L12 17.9 6.1 21l1.2-6.6L2.5 9.8l6.6-1z"/></svg>';}
+function qpgAv(){return '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10.5"/><circle cx="12" cy="9.6" r="3.3" fill="currentColor" stroke="none"/><path d="M5.6 19.4a6.7 6.7 0 0112.8 0" fill="currentColor" stroke="none"/></svg>';}
+function qpgD(){return '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';}
+function qpgU(){return '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';}
+function qpgAccent(){ var sc=spCard(); var o=sc&&sc.o?sc.o:'#f47b20';
+ var h=o.replace('#',''); if(h.length===6){ var L=(parseInt(h.substr(0,2),16)*.299+parseInt(h.substr(2,2),16)*.587+parseInt(h.substr(4,2),16)*.114);
+  if(L>232 && sc && sc.b) o=sc.b; }              /* near-white outline -> use the card bg instead */
+ return o; }
+function renderQPG(){
+ var st=document.getElementById('sStart'); if(!st) return;
+ var CL=[['pos','Position<br>&amp; Years'],['team','Team'],['num','Number'],['awd','Awards'],['big','Big<br>Moments']];
+ var clues=''; for(var i=0;i<CL.length;i++){ if(i)clues+='<div class="qcdiv"></div>';
+  clues+='<div class="qclue"><div class="qci qb">'+qpgIco(CL[i][0])+'</div><b>'+CL[i][1]+'</b></div>'; }
+ var acc=qpgAccent();
+ st.className='screen on qpgmode';
+ try{ document.getElementById('app').classList.add('qpgapp'); }catch(e){}
+ try{ st.style.setProperty('--qglow', hexA(acc,.20)); }catch(e){}
+ st.innerHTML='<div class="qpg" style="--qo:'+acc+'">'
+  +'<div class="qpgt"><div class="qdash"><i></i><i></i></div><h1>QUICK PLAY GUIDE</h1><div class="qdash r"><i></i><i></i></div></div>'
+  +'<div class="qtilt">'
+    +'<div class="qc"><div class="qring qg qringG">'+qpgD()+'</div><div><div class="qlab qg">CORRECT</div><div class="qsub">TILT DOWN</div></div></div>'
+    +'<div class="qvr"></div>'
+    +'<div class="qc"><div class="qring qo qringO">'+qpgU()+'</div><div><div class="qlab qo">PASS</div><div class="qsub">TILT UP</div></div></div>'
+  +'</div>'
+  +'<div class="qphone">'
+   +'<svg class="qarr l" viewBox="0 0 44 120" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M30 112 C12 92, 8 52, 20 22" stroke="'+acc+'" stroke-width="7" stroke-linecap="round"/><path d="M20 8 L31 30 L9 30 Z" fill="'+acc+'"/></svg>'
+   +'<div class="qstage"><div class="qghost g1"></div><div class="qghost g2"></div>'
+     +'<div class="qph"><div class="qpill qg">'+qpgD()+'</div><div class="qpill qo">'+qpgU()+'</div></div></div>'
+   +'<svg class="qarr r" viewBox="0 0 44 120" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M14 8 C32 28, 36 68, 24 98" stroke="#43d13a" stroke-width="7" stroke-linecap="round"/><path d="M24 112 L13 90 L35 90 Z" fill="#43d13a"/></svg>'
+  +'</div>'
+  +'<div class="qtalk"><div class="qrh"><span></span><h2>YOU CAN TALK —</h2><span></span></div>'
+    +'<h3>THIS ISN’T OLD-SCHOOL CHARADES.</h3></div>'
+  +'<div class="qhow">'
+   +'<div class="qc"><div class="qic qb"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 12a8 7 0 01-8 7 9 9 0 01-3-.5L4.5 20l1-3.4A6.8 6.8 0 013 12a8 7 0 018-7h2a8 7 0 018 7z" stroke-linejoin="round"/><circle cx="9" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="12.5" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.15" fill="currentColor" stroke="none"/></svg></div>'
+     +'<div><h4 class="qb">DESCRIBE IT</h4><p>Talk around the answer without saying it.</p></div></div>'
+   +'<div class="qvr"></div>'
+   +'<div class="qc"><div class="qic qo"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.5V5.4a1.3 1.3 0 012.6 0v6M11.6 11.4V4.2a1.3 1.3 0 012.6 0v7.2"/><path d="M14.2 11.8V6.6a1.3 1.3 0 012.6 0v7.6c0 3.4-2.2 5.8-5.2 5.8-2.4 0-3.8-1-4.9-2.7l-2.3-3.6a1.3 1.3 0 012-1.6l1.6 1.6"/><path d="M4.6 5.2l1.5 1.5M7.4 3.2l.5 1.9M3 8.6l1.9.5"/></svg></div>'
+     +'<div><h4 class="qo">ACT IT OUT</h4><p>Use actions, gestures or movement.</p></div></div>'
+  +'</div>'
+  +'<div class="qmh"><span></span><h2>CHOOSE YOUR MODE</h2><span></span></div>'
+  +'<div class="qmodes">'
+   +'<div class="qmode beg'+(RCLUE!=='Superfan'?' sel':'')+'" onclick="qpgPick(this,\'Beginner\')"><div class="qav">'+qpgAv()+'</div>'
+     +'<div><h4>BEGINNER</h4><p>First names are fair game.</p></div>'
+     +'<span class="qtick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0b1626" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 7"/></svg></span></div>'
+   +'<div class="qmode sup'+(RCLUE==='Superfan'?' sel':'')+'" onclick="qpgPick(this,\'Superfan\')"><div class="qav">'+qpgAv()+'</div>'
+     +'<div><h4>SUPERFAN</h4><p>No first names.</p><p class="thin">Know the player? Prove it.</p></div>'
+     +'<span class="qtick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1b0e03" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 7"/></svg></span></div>'
+  +'</div>'
+  +'<div class="qclues">'+clues+'</div>'
+  +'<button class="qcta" id="qpgGo">TAP TO PLAY <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>'
+ +'</div>';
+ /* THE gesture gate — identical bundle to the old startBtn */
+ document.getElementById('qpgGo').onclick=function(){
+   try{ document.getElementById('app').classList.remove('qpgapp'); }catch(e){}
+   goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); });
+ };
+}
+function qpgPick(el,mode){ RCLUE=mode;
+ var all=el.parentNode.getElementsByClassName('qmode');
+ for(var i=0;i<all.length;i++) all[i].classList.remove('sel');
+ el.classList.add('sel'); }
+if(ED==='sports'){ try{ renderQPG(); }catch(e){} }
+
+/* sports vaults get their own card colours + wall copy from the very first screen */
+if(ED==='sports'){ try{ applySportCard(); }catch(e){}
+ try{ var _wm=document.getElementById('wallMix');
+   if(_wm) _wm.innerHTML='players, coaches, stadiums &amp; team lore'; }catch(e){} }
+</script>
 </body></html>
