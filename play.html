@@ -264,7 +264,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 #sStart.qpgmode.on{display:flex;align-items:center;justify-content:center;overflow-y:auto}
 #sStart.qpgmode{padding:0;-webkit-overflow-scrolling:touch;background:radial-gradient(125% 68% at 50% 0%,var(--qglow,rgba(200,56,3,.20)) 0%,#0e1c2e 44%,#05090f 100%)}
 #sStart.qpgmode::-webkit-scrollbar{display:none}
-.qpg{margin:auto;--qo:#f47b20;--qg:#43d13a;--qb:#5fa8e8;--qrule:rgba(150,185,225,.30);
+.qpg{margin:auto;--qo:#f47b20;--qg:#43d13a;--qb:#5fa8e8;--qp:#ff9d2e;--qrule:rgba(150,185,225,.30);
  width:100%;max-width:430px;margin:0 auto;padding:14px 18px 22px;color:#fff;
  font-family:var(--body);text-align:left;box-sizing:border-box}
 .qpgt{display:flex;align-items:center;justify-content:center;gap:9px;margin:4px 0 15px}
@@ -281,7 +281,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  display:flex;align-items:center;justify-content:center;border:3px solid currentColor}
 .qtilt .qlab{font-family:var(--disp);font-size:5.6vw;letter-spacing:.6px;line-height:1}
 .qtilt .qsub{font-weight:800;font-size:3.1vw;color:#fff;letter-spacing:.3px;margin-top:1px}
-.qo{color:var(--qo)}.qg{color:var(--qg)}.qb{color:var(--qb)}
+.qo{color:var(--qo)}.qg{color:var(--qg)}.qb{color:var(--qb)}.qp{color:var(--qp)}
 .qphone{position:relative;height:40vw;max-height:180px;margin:2px 0 4px;
  display:flex;align-items:center;justify-content:center}
 .qarr{position:absolute;top:8%;height:74%;width:11vw;max-width:46px}
@@ -300,7 +300,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  border:2.5px solid currentColor;display:flex;align-items:center;justify-content:center;
  background:rgba(0,0,0,.30);opacity:.42;transform:scale(.94)}
 .qpill.qg{animation:qLitG 5.6s ease-in-out infinite}
-.qpill.qo{animation:qLitO 5.6s ease-in-out infinite}
+.qpill.qp{animation:qLitO 5.6s ease-in-out infinite}
 @keyframes qTilt{0%,9%{transform:translate(-50%,-50%) rotateX(62deg)}
  19%,30%{transform:translate(-50%,-43%) rotateX(86deg)}
  41%,48%{transform:translate(-50%,-50%) rotateX(62deg)}
@@ -310,7 +310,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  19%,30%{opacity:1;transform:scale(1.10);box-shadow:0 0 15px 2px var(--qg)}
  38%,100%{opacity:.42;transform:scale(.94);box-shadow:none}}
 @keyframes qLitO{0%,52%{opacity:.42;transform:scale(.94);box-shadow:none}
- 58%,70%{opacity:1;transform:scale(1.10);box-shadow:0 0 15px 2px var(--qo)}
+ 58%,70%{opacity:1;transform:scale(1.10);box-shadow:0 0 15px 2px var(--qp)}
  78%,100%{opacity:.42;transform:scale(.94);box-shadow:none}}
 .qarr.r{animation:qArmG 5.6s ease-in-out infinite}
 .qarr.l{animation:qArmO 5.6s ease-in-out infinite}
@@ -319,7 +319,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .qringG{animation:qRingG 5.6s ease-in-out infinite}
 .qringO{animation:qRingO 5.6s ease-in-out infinite}
 @keyframes qRingG{0%,13%{box-shadow:none}19%,30%{box-shadow:0 0 17px -1px var(--qg)}38%,100%{box-shadow:none}}
-@keyframes qRingO{0%,52%{box-shadow:none}58%,70%{box-shadow:0 0 17px -1px var(--qo)}78%,100%{box-shadow:none}}
+@keyframes qRingO{0%,52%{box-shadow:none}58%,70%{box-shadow:0 0 17px -1px var(--qp)}78%,100%{box-shadow:none}}
 @media (prefers-reduced-motion:reduce){.qph,.qpill,.qarr,.qringG,.qringO{animation:none!important}
  .qpill{opacity:1;transform:none}.qarr{opacity:1}}
 .qtalk{text-align:center;margin:0 0 12px}
@@ -380,6 +380,17 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 #app.sportcard .btn.buy{border-color:var(--cardoutline,#fff);
  background:linear-gradient(180deg,var(--cardoutline,#333),rgba(0,0,0,.34));
  color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);box-shadow:0 6px 18px rgba(0,0,0,.5)}
+
+/* music guide: 4 "how" columns instead of 2, a clue-strip header, gradient CTA */
+.qpg.q4 .qhow{gap:5px}
+.qpg.q4 .qhow .qc{flex-direction:column;align-items:center;text-align:center;gap:4px}
+.qpg.q4 .qhow .qic{width:8.5vw;max-width:36px}
+.qpg.q4 .qhow h4{font-size:3.5vw;letter-spacing:.3px}
+.qpg.q4 .qhow p{font-size:2.7vw;line-height:1.25}
+.qcluehead{display:flex;align-items:center;gap:10px;margin:0 0 7px}
+.qcluehead span{flex:1;height:1px;background:var(--qrule)}
+.qcluehead h2{font-family:var(--disp);font-size:4.2vw;letter-spacing:1px;white-space:nowrap;color:#fff}
+.qpg.qgrad .qcta{background:linear-gradient(90deg,var(--qb) 0%,var(--qo) 100%)}
 </style><style id="rotgate">
 .rotate-gate{display:none;position:fixed;inset:0;z-index:99998;background:#0b0713;color:#fff;align-items:center;justify-content:center;text-align:center;font-family:var(--disp,sans-serif);padding:24px}
 .rotate-gate .rg-icon{font-size:60px;color:var(--cyan,#3EDBFF);display:inline-block;animation:rgspin 2.2s ease-in-out infinite}
@@ -865,6 +876,10 @@ function dbgTick(){ if(!dbgOn) return; document.getElementById('dbg').innerHTML=
    gesture gate: its TAP TO PLAY fires the same fullscreen/audio/motion bundle
    the old startBtn did, so nothing about iOS unlocking changes. ===== */
 function qpgIco(n){var s='<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">';
+ if(n=='disc')return s+'<circle cx="12" cy="12" r="9.3"/><circle cx="12" cy="12" r="2.6"/><path d="M12 2.7a9.3 9.3 0 00-6.6 2.7l4.7 4.7A2.6 2.6 0 0112 9.4z" fill="currentColor" stroke="none"/></svg>';
+ if(n=='cal')return s+'<rect x="3" y="5" width="18" height="16" rx="2.4"/><path d="M3 9.6h18M8 3v3.4M16 3v3.4" stroke-linecap="round"/><rect x="6.6" y="12.6" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="10.8" y="12.6" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="15" y="12.6" width="2.6" height="2.4" fill="currentColor" stroke="none"/></svg>';
+ if(n=='star')return s+'<path d="M12 2.8l2.9 6 6.6 1-4.8 4.6 1.2 6.6L12 17.9 6.1 21l1.2-6.6L2.5 9.8l6.6-1z"/></svg>';
+ if(n=='heart')return s+'<path d="M12 20.4l-1.5-1.4C5.4 14.4 2.5 11.8 2.5 8.6A5 5 0 017.5 3.6c1.7 0 3.4.8 4.5 2.1a6 6 0 014.5-2.1 5 5 0 015 5c0 3.2-2.9 5.8-8 10.4z"/></svg>';
  if(n=='pos')return s+'<rect x="3" y="5" width="18" height="16" rx="2.4"/><path d="M3 9.6h18M8 3v3.4M16 3v3.4" stroke-linecap="round"/><rect x="6.4" y="12.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="10.7" y="12.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="15" y="12.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="6.4" y="16.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="10.7" y="16.4" width="2.6" height="2.4" fill="currentColor" stroke="none"/></svg>';
  if(n=='team')return s+'<path d="M12 2.6l7.6 2.9v6.1c0 4.6-3.1 8.4-7.6 9.8-4.5-1.4-7.6-5.2-7.6-9.8V5.5z"/><path d="M12 7.4l1.5 3.1 3.4.5-2.5 2.4.6 3.4-3-1.6-3 1.6.6-3.4-2.5-2.4 3.4-.5z" fill="currentColor" stroke="none"/></svg>';
  if(n=='num')return s+'<path d="M8.4 3.2L4 5.6l1.7 4 1.8-.7V21h9V8.9l1.8.7 1.7-4-4.4-2.4a3.6 3.6 0 01-7.2 0z"/><text x="12" y="17.4" font-family="Barlow,sans-serif" font-size="6.6" font-weight="800" fill="currentColor" stroke="none" text-anchor="middle">23</text></svg>';
@@ -873,50 +888,81 @@ function qpgIco(n){var s='<svg width="100%" height="100%" viewBox="0 0 24 24" fi
 function qpgAv(){return '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10.5"/><circle cx="12" cy="9.6" r="3.3" fill="currentColor" stroke="none"/><path d="M5.6 19.4a6.7 6.7 0 0112.8 0" fill="currentColor" stroke="none"/></svg>';}
 function qpgD(){return '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';}
 function qpgU(){return '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';}
-function qpgAccent(){ var sc=spCard(); var o=sc&&sc.o?sc.o:'#f47b20';
+function qpgAccent(){ if(ED==='music') return '#ff5cf0';
+ var sc=spCard(); var o=sc&&sc.o?sc.o:'#f47b20';
  var h=o.replace('#',''); if(h.length===6){ var L=(parseInt(h.substr(0,2),16)*.299+parseInt(h.substr(2,2),16)*.587+parseInt(h.substr(4,2),16)*.114);
   if(L>232 && sc && sc.b) o=sc.b; }              /* near-white outline -> use the card bg instead */
  return o; }
+/* per-edition content for the guide. Layout, animation and the PASS/CORRECT
+   colours are shared; only copy, icons and the accent change. PASS stays orange
+   and CORRECT stays green in EVERY edition because that is what the game itself
+   flashes — the edition colour is chrome, not feedback. */
+var QPGCFG={
+ sports:{cls:'',  clueHead:'', how:[
+   ['bubble','DESCRIBE IT','Talk around the answer without saying it.','qb'],
+   ['hands','ACT IT OUT','Use actions, gestures or movement.','qo']],
+  clues:[['pos','Position<br>&amp; Years'],['team','Team'],['num','Number'],['awd','Awards'],['big','Big<br>Moments']],
+  beg:['First names are fair game.',''],
+  sup:['No first names.','Know the player? Prove it.']},
+ music:{cls:'q4 qgrad', clueHead:'OTHER CLUES YOU CAN USE', how:[
+   ['mic','SING IT','Lyrics, the chorus, even &ldquo;la-la-la&rdquo;.','qo'],
+   ['note','HUM IT','Carry the tune, let them fill in the words.','qb'],
+   ['bubble','DESCRIBE IT','Talk around the answer without saying it.','qb'],
+   ['hands','ACT IT OUT','Use actions, gestures or movement.','qo']],
+  clues:[['disc','Album'],['cal','Year'],['star','Artist<br>Facts'],['heart',"What It's<br>About"]],
+  beg:['Hum it. Sing it. Say it.',''],
+  sup:['Lyrics only.','No chorus.']}
+};
+function qpgHowIco(n){
+ if(n=='bubble')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 12a8 7 0 01-8 7 9 9 0 01-3-.5L4.5 20l1-3.4A6.8 6.8 0 013 12a8 7 0 018-7h2a8 7 0 018 7z" stroke-linejoin="round"/><circle cx="9" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="12.5" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.15" fill="currentColor" stroke="none"/></svg>';
+ if(n=='hands')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.5V5.4a1.3 1.3 0 012.6 0v6M11.6 11.4V4.2a1.3 1.3 0 012.6 0v7.2"/><path d="M14.2 11.8V6.6a1.3 1.3 0 012.6 0v7.6c0 3.4-2.2 5.8-5.2 5.8-2.4 0-3.8-1-4.9-2.7l-2.3-3.6a1.3 1.3 0 012-1.6l1.6 1.6"/><path d="M4.6 5.2l1.5 1.5M7.4 3.2l.5 1.9M3 8.6l1.9.5"/></svg>';
+ if(n=='mic')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.4" width="6" height="11" rx="3"/><path d="M5.4 11.2a6.6 6.6 0 0013.2 0M12 17.8V21M9 21h6"/><path d="M18.4 5.2c.9.9.9 2.4 0 3.3M20.4 3.4c1.9 1.9 1.9 5 0 6.9"/></svg>';
+ if(n=='note')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M9 18V5.2l10-2v12.6"/><ellipse cx="6.4" cy="18" rx="2.7" ry="2.3" fill="currentColor" stroke="none"/><ellipse cx="16.4" cy="15.8" rx="2.7" ry="2.3" fill="currentColor" stroke="none"/></svg>';
+ return '';}
+
+function qpgHowRow(CFG){
+ var h='<div class="qhow">';
+ for(var i=0;i<CFG.how.length;i++){ var c=CFG.how[i];
+  if(i) h+='<div class="qvr"></div>';
+  h+='<div class="qc"><div class="qic '+c[3]+'">'+qpgHowIco(c[0])+'</div>'
+    +'<div><h4 class="'+c[3]+'">'+c[1]+'</h4><p>'+c[2]+'</p></div></div>'; }
+ return h+'</div>'; }
 function renderQPG(){
  var st=document.getElementById('sStart'); if(!st) return;
- var CL=[['pos','Position<br>&amp; Years'],['team','Team'],['num','Number'],['awd','Awards'],['big','Big<br>Moments']];
+ var CFG=QPGCFG[ED]||QPGCFG.sports;
+ var CL=CFG.clues;
  var clues=''; for(var i=0;i<CL.length;i++){ if(i)clues+='<div class="qcdiv"></div>';
   clues+='<div class="qclue"><div class="qci qb">'+qpgIco(CL[i][0])+'</div><b>'+CL[i][1]+'</b></div>'; }
  var acc=qpgAccent();
  st.className='screen on qpgmode';
  try{ document.getElementById('app').classList.add('qpgapp'); }catch(e){}
  try{ st.style.setProperty('--qglow', hexA(acc,.20)); }catch(e){}
- st.innerHTML='<div class="qpg" style="--qo:'+acc+'">'
+ st.innerHTML='<div class="qpg '+(CFG.cls||'')+'" style="--qo:'+acc+'">'
   +'<div class="qpgt"><div class="qdash"><i></i><i></i></div><h1>QUICK PLAY GUIDE</h1><div class="qdash r"><i></i><i></i></div></div>'
   +'<div class="qtilt">'
     +'<div class="qc"><div class="qring qg qringG">'+qpgD()+'</div><div><div class="qlab qg">CORRECT</div><div class="qsub">TILT DOWN</div></div></div>'
     +'<div class="qvr"></div>'
-    +'<div class="qc"><div class="qring qo qringO">'+qpgU()+'</div><div><div class="qlab qo">PASS</div><div class="qsub">TILT UP</div></div></div>'
+    +'<div class="qc"><div class="qring qp qringO">'+qpgU()+'</div><div><div class="qlab qp">PASS</div><div class="qsub">TILT UP</div></div></div>'
   +'</div>'
   +'<div class="qphone">'
-   +'<svg class="qarr l" viewBox="0 0 44 120" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M30 112 C12 92, 8 52, 20 22" stroke="'+acc+'" stroke-width="7" stroke-linecap="round"/><path d="M20 8 L31 30 L9 30 Z" fill="'+acc+'"/></svg>'
+   +'<svg class="qarr l" viewBox="0 0 44 120" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M30 112 C12 92, 8 52, 20 22" stroke="#ff9d2e" stroke-width="7" stroke-linecap="round"/><path d="M20 8 L31 30 L9 30 Z" fill="#ff9d2e"/></svg>'
    +'<div class="qstage"><div class="qghost g1"></div><div class="qghost g2"></div>'
-     +'<div class="qph"><div class="qpill qg">'+qpgD()+'</div><div class="qpill qo">'+qpgU()+'</div></div></div>'
+     +'<div class="qph"><div class="qpill qg">'+qpgD()+'</div><div class="qpill qp">'+qpgU()+'</div></div></div>'
    +'<svg class="qarr r" viewBox="0 0 44 120" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M14 8 C32 28, 36 68, 24 98" stroke="#43d13a" stroke-width="7" stroke-linecap="round"/><path d="M24 112 L13 90 L35 90 Z" fill="#43d13a"/></svg>'
   +'</div>'
   +'<div class="qtalk"><div class="qrh"><span></span><h2>YOU CAN TALK —</h2><span></span></div>'
     +'<h3>THIS ISN’T OLD-SCHOOL CHARADES.</h3></div>'
-  +'<div class="qhow">'
-   +'<div class="qc"><div class="qic qb"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 12a8 7 0 01-8 7 9 9 0 01-3-.5L4.5 20l1-3.4A6.8 6.8 0 013 12a8 7 0 018-7h2a8 7 0 018 7z" stroke-linejoin="round"/><circle cx="9" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="12.5" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.15" fill="currentColor" stroke="none"/></svg></div>'
-     +'<div><h4 class="qb">DESCRIBE IT</h4><p>Talk around the answer without saying it.</p></div></div>'
-   +'<div class="qvr"></div>'
-   +'<div class="qc"><div class="qic qo"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.5V5.4a1.3 1.3 0 012.6 0v6M11.6 11.4V4.2a1.3 1.3 0 012.6 0v7.2"/><path d="M14.2 11.8V6.6a1.3 1.3 0 012.6 0v7.6c0 3.4-2.2 5.8-5.2 5.8-2.4 0-3.8-1-4.9-2.7l-2.3-3.6a1.3 1.3 0 012-1.6l1.6 1.6"/><path d="M4.6 5.2l1.5 1.5M7.4 3.2l.5 1.9M3 8.6l1.9.5"/></svg></div>'
-     +'<div><h4 class="qo">ACT IT OUT</h4><p>Use actions, gestures or movement.</p></div></div>'
-  +'</div>'
+  +qpgHowRow(CFG)
   +'<div class="qmh"><span></span><h2>CHOOSE YOUR MODE</h2><span></span></div>'
   +'<div class="qmodes">'
    +'<div class="qmode beg'+(RCLUE!=='Superfan'?' sel':'')+'" onclick="qpgPick(this,\'Beginner\')"><div class="qav">'+qpgAv()+'</div>'
-     +'<div><h4>BEGINNER</h4><p>First names are fair game.</p></div>'
+     +'<div><h4>BEGINNER</h4><p>'+CFG.beg[0]+'</p>'+(CFG.beg[1]?'<p class="thin">'+CFG.beg[1]+'</p>':'')+'</div>'
      +'<span class="qtick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0b1626" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 7"/></svg></span></div>'
    +'<div class="qmode sup'+(RCLUE==='Superfan'?' sel':'')+'" onclick="qpgPick(this,\'Superfan\')"><div class="qav">'+qpgAv()+'</div>'
-     +'<div><h4>SUPERFAN</h4><p>No first names.</p><p class="thin">Know the player? Prove it.</p></div>'
+     +'<div><h4>SUPERFAN</h4><p>'+CFG.sup[0]+'</p>'+(CFG.sup[1]?'<p class="thin">'+CFG.sup[1]+'</p>':'')+'</div>'
      +'<span class="qtick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1b0e03" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 7"/></svg></span></div>'
   +'</div>'
+  +(CFG.clueHead?'<div class="qcluehead"><span></span><h2>'+CFG.clueHead+'</h2><span></span></div>':'')
   +'<div class="qclues">'+clues+'</div>'
   +'<button class="qcta" id="qpgGo">TAP TO PLAY <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>'
  +'</div>';
@@ -930,7 +976,7 @@ function qpgPick(el,mode){ RCLUE=mode;
  var all=el.parentNode.getElementsByClassName('qmode');
  for(var i=0;i<all.length;i++) all[i].classList.remove('sel');
  el.classList.add('sel'); }
-if(ED==='sports'){ try{ renderQPG(); }catch(e){} }
+if(ED==='sports'||ED==='music'){ try{ renderQPG(); }catch(e){} }
 
 /* sports vaults get their own card colours + wall copy from the very first screen */
 if(ED==='sports'){ try{ applySportCard(); }catch(e){}
