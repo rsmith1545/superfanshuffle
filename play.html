@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v185"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v186"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -85,6 +85,56 @@
 @keyframes fbpop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.14);opacity:1}100%{transform:scale(1)}}
 #fb.on .fbGlyph,#fb.on .fbWord{animation:fbpop .26s cubic-bezier(.2,1.5,.4,1) both}
  #stage{position:fixed;inset:0;perspective:1600px}
+
+/* ===== the CARD shuffles, not a picture of cards =====
+   Two ghost cards sit behind #app with identical geometry, and #app itself is the
+   top card of the deck. Riffling moves the real card - the one with the border, the
+   texture and the lettering on it - so it reads as the game card being shuffled
+   rather than an illustration printed on top of it.
+   Only #app carries content; the ghosts are empty shells, so the text never
+   duplicates. They fade in for the shuffle and back out once it settles. */
+.deckGhost{position:absolute;
+ top:calc(16px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));
+ bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));
+ border-radius:40px;border:8px solid rgba(255,255,255,.55);box-sizing:border-box;
+ background-color:var(--cardbg,#2a1257);
+ background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),
+  repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 1px,transparent 1px 6px);
+ box-shadow:0 0 22px rgba(0,0,0,.55);opacity:0;pointer-events:none;z-index:0}
+#stage.shuf .deckGhost.g1{animation:deckG1 2.9s cubic-bezier(.55,.05,.3,1) forwards}
+#stage.shuf .deckGhost.g2{animation:deckG2 2.9s cubic-bezier(.55,.05,.3,1) forwards}
+#stage.shuf #app{animation:deckTop 2.9s cubic-bezier(.55,.05,.3,1) forwards}
+@keyframes deckTop{
+ 0%{transform:translate(0,0) rotate(0deg)}
+ 14%{transform:translate(-7vw,-1.2vh) rotate(-5deg)}
+ 30%{transform:translate(0,0) rotate(0deg)}
+ 46%{transform:translate(7vw,1.2vh) rotate(5deg)}
+ 62%{transform:translate(0,0) rotate(0deg)}
+ 76%{transform:translate(-4vw,-.7vh) rotate(-3deg)}
+ 100%{transform:translate(0,0) rotate(0deg)}}
+@keyframes deckG1{
+ 0%{opacity:0;transform:translate(0,0) rotate(0deg)}
+ 10%{opacity:.85}
+ 14%{transform:translate(4vw,.8vh) rotate(3.5deg)}
+ 30%{transform:translate(0,0) rotate(0deg)}
+ 46%{transform:translate(-4vw,-.8vh) rotate(-3.5deg)}
+ 62%{transform:translate(0,0) rotate(0deg)}
+ 76%{transform:translate(2.4vw,.5vh) rotate(2deg)}
+ 88%{opacity:.85;transform:translate(1.2vw,.3vh) rotate(1deg)}
+ 100%{opacity:0;transform:translate(0,0) rotate(0deg)}}
+@keyframes deckG2{
+ 0%{opacity:0;transform:translate(0,0) rotate(0deg)}
+ 10%{opacity:.6}
+ 14%{transform:translate(7vw,1.6vh) rotate(6deg)}
+ 30%{transform:translate(0,0) rotate(0deg)}
+ 46%{transform:translate(-7vw,-1.6vh) rotate(-6deg)}
+ 62%{transform:translate(0,0) rotate(0deg)}
+ 76%{transform:translate(4.4vw,1vh) rotate(3.6deg)}
+ 88%{opacity:.6;transform:translate(2.2vw,.6vh) rotate(1.8deg)}
+ 100%{opacity:0;transform:translate(0,0) rotate(0deg)}}
+@media (prefers-reduced-motion:reduce){
+ #stage.shuf .deckGhost,#stage.shuf #app{animation:none}}
+
  /* iOS standalone PWAs can't physically rotate; while the device stays portrait during play, fake landscape by rotating the whole stage about its centre. Rotation lives here, the card's spring animation lives on #app, so they no longer fight (card stays centred). */
  @media (orientation:portrait){ body.lock-ls #stage{ top:50%; left:50%; width:100vh; height:100vw; transform:translate(-50%,-50%) rotate(-90deg); } body.lock-ls #app{ top:22px; right:22px; bottom:22px; left:22px; } }
  .screen{display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;width:100%;height:100%}
@@ -426,15 +476,15 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .q2{display:flex;flex-direction:column;align-items:center;gap:.5vh;margin:0 0 min(10px,1.1vh)}
 .q2g{display:flex;flex-direction:column;align-items:center;gap:.7vh;perspective:640px}
 .q2row{display:flex;align-items:center;gap:3vw;transform-style:preserve-3d}
-.q2g.pass .q2row{animation:q2Up 1.9s ease-in-out infinite}
-.q2g.correct .q2row{animation:q2Down 1.9s ease-in-out infinite}
+.q2g.pass .q2row{animation:q2Up 3.4s cubic-bezier(.45,0,.3,1) infinite}
+.q2g.correct .q2row{animation:q2Down 3.4s cubic-bezier(.45,0,.3,1) infinite}
 .q2a{width:min(9.5vw,4.2vh);max-width:44px;height:auto;flex:0 0 auto}
 .q2a.r{transform:scaleX(-1)}
 .q2g.correct .q2a{transform:scaleY(-1)}
 .q2g.correct .q2a.r{transform:scale(-1,-1)}
 .q2g.pass .q2a{color:var(--qp)}
 .q2g.correct .q2a{color:var(--qg)}
-.q2p{width:min(41vw,13.6vh);max-width:186px;aspect-ratio:2/1;border-radius:17px;padding:5px;
+.q2p{width:min(41vw,19vh);max-width:186px;aspect-ratio:2/1;border-radius:17px;padding:5px;
  background:linear-gradient(160deg,#15151d,#0a0a10);border:2.5px solid rgba(255,255,255,.16)}
 .q2g.pass .q2p{border-color:var(--qp);box-shadow:0 0 26px 4px rgba(255,157,46,.55),inset 0 0 12px rgba(0,0,0,.7)}
 .q2g.correct .q2p{border-color:var(--qg);box-shadow:0 0 26px 4px rgba(67,209,58,.55),inset 0 0 12px rgba(0,0,0,.7)}
@@ -447,9 +497,13 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .q2sub b{font-weight:900}
 .q2g.pass .q2sub b{color:var(--qp)} .q2g.correct .q2sub b{color:var(--qg)}
-.q2bolt{font-size:min(4.6vw,2.4vh);filter:drop-shadow(0 0 10px rgba(180,110,255,.8));animation:q2Bolt 1.9s ease-in-out infinite;line-height:1}
-@keyframes q2Up{0%,100%{transform:rotateX(20deg)}50%{transform:rotateX(-34deg)}}
-@keyframes q2Down{0%,100%{transform:rotateX(-20deg)}50%{transform:rotateX(34deg)}}
+.q2bolt{font-size:min(4.6vw,2.4vh);filter:drop-shadow(0 0 10px rgba(180,110,255,.8));animation:q2Bolt 3.4s ease-in-out infinite;line-height:1}
+/* 1.9s with no dwell read as a blur - you could not tell which phone was going
+   which way. 3.4s, and each end HOLDS for ~14% of the cycle so the eye can settle
+   on the extreme before it reverses. That pause is what makes the direction legible,
+   more than the slower speed. */
+@keyframes q2Up{0%,6%{transform:rotateX(22deg)}44%,58%{transform:rotateX(-36deg)}96%,100%{transform:rotateX(22deg)}}
+@keyframes q2Down{0%,6%{transform:rotateX(-22deg)}44%,58%{transform:rotateX(36deg)}96%,100%{transform:rotateX(-22deg)}}
 @keyframes q2Bolt{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
 @media (prefers-reduced-motion:reduce){
  .q2g .q2row,.q2bolt{animation:none!important}
@@ -557,19 +611,6 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  background:linear-gradient(180deg,var(--cardoutline,#333),rgba(0,0,0,.34));
  color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);box-shadow:0 6px 18px rgba(0,0,0,.5)}
 
-/* Final few pixels on genuinely short screens (<=680px tall: iPhone SE, small
-   Androids, and any phone with browser chrome eating the viewport). Scoped to a
-   media query so nothing above 680px is touched - the roomy layouts stay roomy. */
-@media (max-height:720px){
- .qpg{padding-top:min(10px,1vh);padding-bottom:min(14px,1.2vh)}
- .qpgt{margin-bottom:min(10px,1.1vh)}
- .q2p{width:min(41vw,12.4vh)}
- .qpg.q4 .q2p{width:min(41vw,11.4vh)}
- /* music/film still ran 2px over at 640 and 667 - the 4-up how-row wraps to a
-    third line there. One more notch, q4 only. */
- .qpg.q4 .qhow p{font-size:min(2.7vw,1.42vh)}
- .qpg.q4 .qclue .qci{height:min(7vw,2.8vh)}
- .qpg.q4 .qclue b{font-size:2.3vw}
  .q2{margin-bottom:min(7px,.8vh)}
  .qtalk{margin-bottom:min(9px,1vh)}
  .qhow{margin-bottom:min(9px,1vh)}
@@ -581,7 +622,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
    run ~15px taller than sports at the same width. Rather than shave the roomy
    layouts further for everyone, the q4 variants give back that difference on short
    screens only - the vh caps do nothing on a tall phone. */
-.qpg.q4 .q2p{width:min(41vw,12.6vh)}
+.qpg.q4 .q2p{width:min(41vw,18vh)}
 .qpg.q4 .q2sub{font-size:min(3.9vw,1.75vh)}
 .qpg.q4 .qtalk{margin-bottom:min(12px,1vh)}
 .qpg.q4 .qhow .qc{gap:3px}
@@ -594,6 +635,27 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .qcluehead span{flex:1;height:1px;background:var(--qrule)}
 .qcluehead h2{font-family:var(--disp);font-size:min(4.2vw,2.4vh);letter-spacing:1px;white-space:nowrap;color:#fff}
 .qpg.qgrad .qcta{background:linear-gradient(90deg,var(--qb) 0%,var(--qo) 100%)}
+/* MUST STAY LAST. This block was originally placed before the .qpg.q4 rules, and
+   since `.qpg.q4 .q2p` inside a media query has the SAME specificity as the one
+   outside it, the later non-media rule silently won - music and film kept their
+   full-size phones on short screens and overflowed by 17px while sports was fine.
+   Media queries do not add specificity; only source order broke the tie.
+   Final few pixels on genuinely short screens (<=680px tall: iPhone SE, small
+   Androids, and any phone with browser chrome eating the viewport). Scoped to a
+   media query so nothing above 680px is touched - the roomy layouts stay roomy. */
+@media (max-height:800px){
+ .qpg{padding-top:min(10px,1vh);padding-bottom:min(14px,1.2vh)}
+ .qpgt{margin-bottom:min(10px,1.1vh)}
+ /* the phones are the largest block, so they carry most of the reduction on
+    short screens - full size above 800px tall, stepped down below it. */
+ .q2p{width:min(41vw,11.6vh)}
+ .qpg.q4 .q2p{width:min(41vw,10.6vh)}
+ /* music/film still ran 2px over at 640 and 667 - the 4-up how-row wraps to a
+    third line there. One more notch, q4 only. */
+ .qpg.q4 .qhow p{font-size:min(2.7vw,1.42vh)}
+ .qpg.q4 .qclue .qci{height:min(7vw,2.8vh)}
+ .qpg.q4 .qclue b{font-size:2.3vw}
+
 </style><style id="rotgate">
 .rotate-gate{display:none;position:fixed;inset:0;z-index:99998;background:#0b0713;color:#fff;align-items:center;justify-content:center;text-align:center;font-family:var(--disp,sans-serif);padding:24px}
 .rotate-gate .rg-icon{font-size:60px;color:var(--cyan,#3EDBFF);display:inline-block;animation:rgspin 2.2s ease-in-out infinite}
@@ -606,6 +668,8 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 <button id="dbgBtn">debug</button>
 <div id="dbg"></div>
 <div id="stage">
+<div class="deckGhost g2" aria-hidden="true"></div>
+<div class="deckGhost g1" aria-hidden="true"></div>
 <div id="app">
   <!-- START -->
   <div class="screen on" id="sStart">
@@ -617,7 +681,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div>
   <!-- READY (countdown) -->
   <div class="screen" id="sReady">
-    <div id="rotateMsg"><div class="shufDeck" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="fhText">Place on your forehead<span class="fhHint">↻ turn phone sideways</span></div></div>
+    <div id="rotateMsg"><div class="fhText">Place on your forehead<span class="fhHint">↻ turn phone sideways</span></div></div>
     <div id="getReady">Time to Face the Music</div>
     <div id="big">3</div>
   </div>
@@ -725,14 +789,21 @@ var MAX_Q=5;
 var app=document.getElementById('app');
 /* team card vars applied once, up front — so the forehead screen, the 3-2-1 and
    the score are already the team's colours before the first card is dealt. */
+/* The ghost cards are SIBLINGS of #app, not descendants, so they cannot inherit
+   --cardbg/--cardoutline from it - they were falling back to the default purple and
+   a Celtics shuffle showed green on top of purple. Mirror the vars onto #stage. */
+function _stageVars(bg,ol){ try{ var st=document.getElementById('stage');
+ if(st){ st.style.setProperty('--cardbg',bg); st.style.setProperty('--cardoutline',ol); } }catch(e){} }
 var FILM_BG='#2B2B31', FILM_OUTLINE='#F2C14E';
 function applyFilmCard(){
  if(ED!=='filmtv') return false;
  app.style.setProperty('--cardbg',FILM_BG); app.style.setProperty('--cardoutline',FILM_OUTLINE);
+ _stageVars(FILM_BG,FILM_OUTLINE);
  app.style.setProperty('--olw','2.2vmin'); app.classList.add('filmcard'); return true; }
 function applySportCard(){
  var _sc=spCard(); if(!_sc) return false;
  app.style.setProperty('--cardbg',_sc.b); app.style.setProperty('--cardoutline',_sc.o);
+ _stageVars(_sc.b,_sc.o);
  app.style.setProperty('--olw','2.2vmin'); app.classList.add('sportcard'); return true; }
 
 function show(id){['sStart','sReady','sGame','sWall','sReport','sReportFilm'].forEach(function(s){var _e=document.getElementById(s); if(_e) _e.classList.toggle('on',s===id);}); document.body.classList.toggle('report-on', id==='sReport'||id==='sReportFilm'); if(id==='sStart'||id==='sWall'||id==='sReport'||id==='sReportFilm'){ document.body.classList.remove('lock-ls'); tryPortrait(); } }
@@ -888,7 +959,11 @@ function quitToHome(){
  /* Back to the PLAY screen on the edition you came from, not the bare home
     screen - index.html reads ?ed= on load and restores curEdition + accent, so
     quitting a film round lands you back in Movies & TV. */
- var _back='index.html'+((typeof ED!=='undefined'&&ED)?('?ed='+encodeURIComponent(ED)):'');
+ /* nointro=1 matters as much as ed=. index.html replays its full splash + intro
+    overlay on EVERY load unless that flag is set, so quitting a round dropped you
+    into the whole opening animation again - which is what made it feel like being
+    dumped on the home screen rather than back where you were. */
+ var _back='index.html?nointro=1'+((typeof ED!=='undefined'&&ED)?('&ed='+encodeURIComponent(ED)):'');
  setTimeout(function(){ location.href=_back; }, reduce?180:740);
 }
 (function(){
@@ -1047,7 +1122,8 @@ function ready(){
   var gr=document.getElementById('getReady'); gr.style.display='none'; gr.classList.remove('pulsing');
   document.getElementById('big').style.display='none';
   if(isLandscape()){ awaitingLandscape=false; document.getElementById('rotateMsg').style.display='none'; startCountdown(); return; }
-  awaitingLandscape=true; document.getElementById('rotateMsg').style.display=''; try{ shufReplay(); }catch(e){}   // wait for phone-to-forehead (landscape / tilt) to kickstart
+  awaitingLandscape=true; document.getElementById('rotateMsg').style.display='';
+  try{ var _stg=document.getElementById('stage'); _stg.classList.remove('shuf'); void _stg.offsetWidth; _stg.classList.add('shuf'); shufReplay(); }catch(e){}   // wait for phone-to-forehead (landscape / tilt) to kickstart
   clearTimeout(_readyTO); _readyTO=setTimeout(function(){ if(awaitingLandscape){ awaitingLandscape=false; startCountdown(); } }, 20000);
 }
 /* Re-deal every few seconds while we wait for the phone to reach the forehead.
@@ -1060,10 +1136,8 @@ function shufReplay(){
    var st=document.getElementById('sReady');
    var rm=document.getElementById('rotateMsg');
    if(!st||!st.classList.contains('on')||!rm||rm.style.display==='none') return;
-   var cards=document.querySelectorAll('.shufDeck i');
-   for(var i=0;i<cards.length;i++){ cards[i].style.animation='none'; }
-   void document.querySelector('.shufDeck').offsetWidth;
-   for(var j=0;j<cards.length;j++){ cards[j].style.animation=''; }
+   var stg=document.getElementById('stage');
+   stg.classList.remove('shuf'); void stg.offsetWidth; stg.classList.add('shuf');
    shufReplay();
  }, 4600);
 }
@@ -1072,7 +1146,8 @@ function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classLis
 function startCountdown(){
   if(counting) return; counting=true; clearTimeout(_readyTO);
   document.body.classList.add('lock-ls'); tryLockLandscape();   // fake-landscape the Face-the-Music + 3-2-1 screens (iOS)
-  document.getElementById('rotateMsg').style.display='none'; try{ clearTimeout(_shufTO); }catch(e){}
+  document.getElementById('rotateMsg').style.display='none';
+  try{ clearTimeout(_shufTO); document.getElementById('stage').classList.remove('shuf'); }catch(e){}
   var gr=document.getElementById('getReady'), big=document.getElementById('big');
   big.style.display='none';
   gr.style.display='block'; gr.classList.add('pulsing');
