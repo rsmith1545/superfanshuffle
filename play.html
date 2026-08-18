@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v184"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v185"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -384,10 +384,10 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 #sStart.qpgmode{padding:0;-webkit-overflow-scrolling:touch;background:radial-gradient(125% 68% at 50% 0%,var(--qglow,rgba(200,56,3,.20)) 0%,#0e1c2e 44%,#05090f 100%)}
 #sStart.qpgmode::-webkit-scrollbar{display:none}
 .qpg{margin:auto;--qo:#f47b20;--qg:#43d13a;--qb:#5fa8e8;--qp:#ff9d2e;--qrule:rgba(150,185,225,.30);
- width:100%;max-width:430px;margin:0 auto;padding:14px 18px 22px;color:#fff;
+ width:100%;max-width:430px;margin:0 auto;padding:min(14px,1.2vh) 16px min(22px,1.6vh);color:#fff;
  font-family:var(--body);text-align:left;box-sizing:border-box}
-.qpgt{display:flex;align-items:center;justify-content:center;gap:9px;margin:4px 0 15px}
-.qpgt h1{font-family:var(--disp);font-size:8.4vw;letter-spacing:.5px;transform:skewX(-9deg);
+.qpgt{display:flex;align-items:center;justify-content:center;gap:9px;margin:2px 0 min(15px,1.6vh)}
+.qpgt h1{font-family:var(--disp);font-size:min(8.4vw,4.2vh);letter-spacing:.5px;transform:skewX(-9deg);
  line-height:1;white-space:nowrap;color:#fff;text-shadow:0 3px 12px rgba(0,0,0,.6)}
 .qdash{display:flex;flex-direction:column;gap:3.5px;flex:0 0 auto}
 .qdash i{display:block;height:3.5px;border-radius:2px;background:var(--qo);transform:skewX(-22deg)}
@@ -423,31 +423,31 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  border:1px solid rgba(255,255,255,.22);cursor:pointer;backdrop-filter:blur(4px);
  -webkit-tap-highlight-color:transparent}
 .qpgBack:active{background:rgba(10,7,20,.8)}
-.q2{display:flex;flex-direction:column;align-items:center;gap:.6vh;margin:2px 0 10px}
-.q2g{display:flex;flex-direction:column;align-items:center;gap:.9vh;perspective:640px}
+.q2{display:flex;flex-direction:column;align-items:center;gap:.5vh;margin:0 0 min(10px,1.1vh)}
+.q2g{display:flex;flex-direction:column;align-items:center;gap:.7vh;perspective:640px}
 .q2row{display:flex;align-items:center;gap:3vw;transform-style:preserve-3d}
 .q2g.pass .q2row{animation:q2Up 1.9s ease-in-out infinite}
 .q2g.correct .q2row{animation:q2Down 1.9s ease-in-out infinite}
-.q2a{width:9.5vw;max-width:44px;height:auto;flex:0 0 auto}
+.q2a{width:min(9.5vw,4.2vh);max-width:44px;height:auto;flex:0 0 auto}
 .q2a.r{transform:scaleX(-1)}
 .q2g.correct .q2a{transform:scaleY(-1)}
 .q2g.correct .q2a.r{transform:scale(-1,-1)}
 .q2g.pass .q2a{color:var(--qp)}
 .q2g.correct .q2a{color:var(--qg)}
-.q2p{width:41vw;max-width:186px;aspect-ratio:2/1;border-radius:17px;padding:5px;
+.q2p{width:min(41vw,13.6vh);max-width:186px;aspect-ratio:2/1;border-radius:17px;padding:5px;
  background:linear-gradient(160deg,#15151d,#0a0a10);border:2.5px solid rgba(255,255,255,.16)}
 .q2g.pass .q2p{border-color:var(--qp);box-shadow:0 0 26px 4px rgba(255,157,46,.55),inset 0 0 12px rgba(0,0,0,.7)}
 .q2g.correct .q2p{border-color:var(--qg);box-shadow:0 0 26px 4px rgba(67,209,58,.55),inset 0 0 12px rgba(0,0,0,.7)}
 .q2s{width:100%;height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center}
 .q2g.pass .q2s{background:radial-gradient(120% 130% at 50% -10%,#ffb43a,#e8720f)}
 .q2g.correct .q2s{background:radial-gradient(120% 130% at 50% -10%,#5ef07e,#22a844)}
-.q2w{font-family:var(--disp);font-size:7vw;line-height:1;letter-spacing:2px;color:#fff;
+.q2w{font-family:var(--disp);font-size:min(7vw,3.8vh);line-height:1;letter-spacing:2px;color:#fff;
  text-shadow:0 2px 10px rgba(0,0,0,.4)}
-.q2sub{font-family:var(--body);font-size:3.9vw;font-weight:600;color:#fff;opacity:.96;
+.q2sub{font-family:var(--body);font-size:min(3.9vw,1.9vh);font-weight:600;color:#fff;opacity:.96;
  text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .q2sub b{font-weight:900}
 .q2g.pass .q2sub b{color:var(--qp)} .q2g.correct .q2sub b{color:var(--qg)}
-.q2bolt{font-size:4.6vw;filter:drop-shadow(0 0 10px rgba(180,110,255,.8));animation:q2Bolt 1.9s ease-in-out infinite;line-height:1}
+.q2bolt{font-size:min(4.6vw,2.4vh);filter:drop-shadow(0 0 10px rgba(180,110,255,.8));animation:q2Bolt 1.9s ease-in-out infinite;line-height:1}
 @keyframes q2Up{0%,100%{transform:rotateX(20deg)}50%{transform:rotateX(-34deg)}}
 @keyframes q2Down{0%,100%{transform:rotateX(-20deg)}50%{transform:rotateX(34deg)}}
 @keyframes q2Bolt{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
@@ -495,42 +495,42 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 @keyframes qRingO{0%,52%{box-shadow:none}58%,70%{box-shadow:0 0 17px -1px var(--qp)}78%,100%{box-shadow:none}}
 @media (prefers-reduced-motion:reduce){.qph,.qpill,.qarr,.qringG,.qringO{animation:none!important}
  .qpill{opacity:1;transform:none}.qarr{opacity:1}}
-.qtalk{text-align:center;margin:0 0 12px}
+.qtalk{text-align:center;margin:0 0 min(12px,1.3vh)}
 .qtalk .qrh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .qtalk .qrh span{flex:1;height:1px;background:var(--qrule)}
-.qtalk h2{font-family:var(--disp);font-size:5.2vw;letter-spacing:.6px;white-space:nowrap;line-height:1;color:#fff}
-.qtalk h3{font-family:var(--disp);font-size:5vw;color:var(--qo);letter-spacing:.5px;line-height:1.05}
-.qhow{display:flex;gap:8px;align-items:stretch;margin-bottom:13px}
+.qtalk h2{font-family:var(--disp);font-size:min(5.2vw,2.9vh);letter-spacing:.6px;white-space:nowrap;line-height:1;color:#fff}
+.qtalk h3{font-family:var(--disp);font-size:min(5vw,2.6vh);color:var(--qo);letter-spacing:.5px;line-height:1.05}
+.qhow{display:flex;gap:8px;align-items:stretch;margin-bottom:min(13px,1.4vh)}
 .qhow .qc{flex:1;display:flex;gap:8px;align-items:flex-start}
 .qhow .qvr{width:1px;background:var(--qrule);margin:4px 0}
-.qhow .qic{flex:0 0 auto;width:8vw;max-width:34px;display:flex;align-items:center;justify-content:center}
-.qhow h4{font-family:var(--disp);font-size:4.4vw;letter-spacing:.5px;line-height:1.05}
-.qhow p{font-size:3.1vw;line-height:1.32;color:rgba(233,242,255,.78);margin-top:2px}
-.qmh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.qhow .qic{flex:0 0 auto;width:min(8vw,4.2vh);max-width:34px;display:flex;align-items:center;justify-content:center}
+.qhow h4{font-family:var(--disp);font-size:min(4.4vw,2.5vh);letter-spacing:.5px;line-height:1.05}
+.qhow p{font-size:min(3.1vw,1.7vh);line-height:1.28;color:rgba(233,242,255,.78);margin-top:2px}
+.qmh{display:flex;align-items:center;gap:10px;margin-bottom:min(8px,.9vh)}
 .qmh span{flex:1;height:1px;background:var(--qrule)}
-.qmh h2{font-family:var(--disp);font-size:4.6vw;letter-spacing:1px;white-space:nowrap;color:#fff}
-.qmodes{display:flex;gap:9px;margin-bottom:13px}
-.qmode{flex:1 1 0;min-width:0;position:relative;border-radius:13px;padding:11px 10px;cursor:pointer;
+.qmh h2{font-family:var(--disp);font-size:min(4.6vw,2.6vh);letter-spacing:1px;white-space:nowrap;color:#fff}
+.qmodes{display:flex;gap:9px;margin-bottom:min(13px,1.4vh)}
+.qmode{flex:1 1 0;min-width:0;position:relative;border-radius:13px;padding:min(11px,1.2vh) 10px;cursor:pointer;
  display:flex;gap:8px;align-items:flex-start;background:rgba(255,255,255,.03);border:1.5px solid currentColor}
 .qmode.beg{color:var(--qb)}.qmode.sup{color:var(--qo)}
 .qmode.sel{background:rgba(255,255,255,.08);box-shadow:0 0 15px -2px currentColor}
-.qmode .qav{flex:0 0 auto;width:8vw;max-width:34px}
-.qmode h4{font-family:var(--disp);font-size:4.4vw;letter-spacing:.5px;line-height:1}
-.qmode p{font-size:3.1vw;line-height:1.3;color:#fff;font-weight:600;margin-top:3px}
-.qmode p.thin{font-weight:500;color:rgba(233,242,255,.78);font-size:2.9vw;margin-top:2px}
+.qmode .qav{flex:0 0 auto;width:min(8vw,4.2vh);max-width:34px}
+.qmode h4{font-family:var(--disp);font-size:min(4.4vw,2.5vh);letter-spacing:.5px;line-height:1}
+.qmode p{font-size:min(3.1vw,1.7vh);line-height:1.26;color:#fff;font-weight:600;margin-top:3px}
+.qmode p.thin{font-weight:500;color:rgba(233,242,255,.78);font-size:min(2.9vw,1.6vh);margin-top:2px}
 /* tick lives BOTTOM-right: at 412px the chip only leaves ~121px for the heading and
    "BEGINNER" needs ~128px, so a top-right badge clipped the final R. Bottom-right is
    empty in both chips. */
 .qtick{position:absolute;bottom:8px;right:8px;width:18px;height:18px;border-radius:50%;
  background:currentColor;display:none;align-items:center;justify-content:center}
 .qmode.sel .qtick{display:flex}
-.qclues{display:flex;align-items:stretch;margin-bottom:14px}
+.qclues{display:flex;align-items:stretch;margin-bottom:min(14px,1.5vh)}
 .qclue{flex:1;text-align:center;padding:0 2px}
-.qclue .qci{height:7vw;max-height:30px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.qclue .qci{height:min(7vw,3.4vh);max-height:30px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
 .qclue b{display:block;font-size:2.4vw;font-weight:800;letter-spacing:.3px;line-height:1.15;text-transform:uppercase;color:#fff}
 .qcdiv{width:1px;background:var(--qo);opacity:.7;margin:3px 0}
-.qcta{width:100%;border:none;border-radius:13px;cursor:pointer;padding:4.2vw;font-family:var(--disp);
- font-size:7vw;letter-spacing:2.5px;color:var(--qink,#fff);display:flex;align-items:center;justify-content:center;gap:14px;
+.qcta{width:100%;border:none;border-radius:13px;cursor:pointer;padding:min(4.2vw,2vh);font-family:var(--disp);
+ font-size:min(7vw,3.9vh);letter-spacing:2.5px;color:var(--qink,#fff);display:flex;align-items:center;justify-content:center;gap:14px;
  background:linear-gradient(180deg,var(--qo) 0%,var(--qo) 55%,rgba(0,0,0,.28) 320%);
  box-shadow:0 7px 20px rgba(0,0,0,.5),inset 0 1.5px 0 rgba(255,255,255,.32)}
 .qcta:active{transform:translateY(1px)}
@@ -557,15 +557,42 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  background:linear-gradient(180deg,var(--cardoutline,#333),rgba(0,0,0,.34));
  color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);box-shadow:0 6px 18px rgba(0,0,0,.5)}
 
+/* Final few pixels on genuinely short screens (<=680px tall: iPhone SE, small
+   Androids, and any phone with browser chrome eating the viewport). Scoped to a
+   media query so nothing above 680px is touched - the roomy layouts stay roomy. */
+@media (max-height:720px){
+ .qpg{padding-top:min(10px,1vh);padding-bottom:min(14px,1.2vh)}
+ .qpgt{margin-bottom:min(10px,1.1vh)}
+ .q2p{width:min(41vw,12.4vh)}
+ .qpg.q4 .q2p{width:min(41vw,11.4vh)}
+ /* music/film still ran 2px over at 640 and 667 - the 4-up how-row wraps to a
+    third line there. One more notch, q4 only. */
+ .qpg.q4 .qhow p{font-size:min(2.7vw,1.42vh)}
+ .qpg.q4 .qclue .qci{height:min(7vw,2.8vh)}
+ .qpg.q4 .qclue b{font-size:2.3vw}
+ .q2{margin-bottom:min(7px,.8vh)}
+ .qtalk{margin-bottom:min(9px,1vh)}
+ .qhow{margin-bottom:min(9px,1vh)}
+ .qmodes{margin-bottom:min(9px,1vh)}
+ .qclues{margin-bottom:min(10px,1.1vh)}
+}
 /* music guide: 4 "how" columns instead of 2, a clue-strip header, gradient CTA */
+/* Music and Film carry a 4-up how-row AND an extra "other clues" header, so they
+   run ~15px taller than sports at the same width. Rather than shave the roomy
+   layouts further for everyone, the q4 variants give back that difference on short
+   screens only - the vh caps do nothing on a tall phone. */
+.qpg.q4 .q2p{width:min(41vw,12.6vh)}
+.qpg.q4 .q2sub{font-size:min(3.9vw,1.75vh)}
+.qpg.q4 .qtalk{margin-bottom:min(12px,1vh)}
+.qpg.q4 .qhow .qc{gap:3px}
 .qpg.q4 .qhow{gap:5px}
 .qpg.q4 .qhow .qc{flex-direction:column;align-items:center;text-align:center;gap:4px}
-.qpg.q4 .qhow .qic{width:8.5vw;max-width:36px}
-.qpg.q4 .qhow h4{font-size:3.5vw;letter-spacing:.3px}
-.qpg.q4 .qhow p{font-size:2.7vw;line-height:1.25}
-.qcluehead{display:flex;align-items:center;gap:10px;margin:0 0 7px}
+.qpg.q4 .qhow .qic{width:min(8.5vw,4.4vh);max-width:36px}
+.qpg.q4 .qhow h4{font-size:min(3.5vw,2vh);letter-spacing:.3px}
+.qpg.q4 .qhow p{font-size:min(2.7vw,1.5vh);line-height:1.22}
+.qcluehead{display:flex;align-items:center;gap:10px;margin:0 0 min(7px,.8vh)}
 .qcluehead span{flex:1;height:1px;background:var(--qrule)}
-.qcluehead h2{font-family:var(--disp);font-size:4.2vw;letter-spacing:1px;white-space:nowrap;color:#fff}
+.qcluehead h2{font-family:var(--disp);font-size:min(4.2vw,2.4vh);letter-spacing:1px;white-space:nowrap;color:#fff}
 .qpg.qgrad .qcta{background:linear-gradient(90deg,var(--qb) 0%,var(--qo) 100%)}
 </style><style id="rotgate">
 .rotate-gate{display:none;position:fixed;inset:0;z-index:99998;background:#0b0713;color:#fff;align-items:center;justify-content:center;text-align:center;font-family:var(--disp,sans-serif);padding:24px}
