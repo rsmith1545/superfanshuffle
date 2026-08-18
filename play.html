@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v186"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v187"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -473,27 +473,39 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  border:1px solid rgba(255,255,255,.22);cursor:pointer;backdrop-filter:blur(4px);
  -webkit-tap-highlight-color:transparent}
 .qpgBack:active{background:rgba(10,7,20,.8)}
-.q2{display:flex;flex-direction:column;align-items:center;gap:.5vh;margin:0 0 min(10px,1.1vh)}
+/* Side by side, not stacked. Stacking encoded up/down spatially, but the tilt
+   animation already does that far more directly - and vertically the block ran ~180px
+   for information that needs half of it. Both captions sit BELOW their phone for
+   symmetry; .correct is column-reverse because its caption comes first in the DOM. */
+.q2{display:flex;flex-direction:row;align-items:center;justify-content:center;
+ gap:1.5vw;margin:0 0 min(10px,1.1vh)}
+.q2g{flex:1 1 0;min-width:0}
+.q2g.correct{flex-direction:column-reverse}
+.q2bolt{flex:0 0 auto;align-self:center;margin-top:-2.2vh}
 .q2g{display:flex;flex-direction:column;align-items:center;gap:.7vh;perspective:640px}
-.q2row{display:flex;align-items:center;gap:3vw;transform-style:preserve-3d}
+.q2row{display:flex;align-items:center;gap:1.2vw;transform-style:preserve-3d}
 .q2g.pass .q2row{animation:q2Up 3.4s cubic-bezier(.45,0,.3,1) infinite}
 .q2g.correct .q2row{animation:q2Down 3.4s cubic-bezier(.45,0,.3,1) infinite}
-.q2a{width:min(9.5vw,4.2vh);max-width:44px;height:auto;flex:0 0 auto}
+.q2a{width:min(7vw,3.6vh);max-width:32px;height:auto;flex:0 0 auto}
 .q2a.r{transform:scaleX(-1)}
+/* Side by side, the two inner arrows collide with the bolt in the middle. One
+   arrow on the outside of each phone still carries the direction. */
+.q2g.correct .q2a.r{display:none}
+.q2g.pass .q2a.l{display:none}
 .q2g.correct .q2a{transform:scaleY(-1)}
 .q2g.correct .q2a.r{transform:scale(-1,-1)}
 .q2g.pass .q2a{color:var(--qp)}
 .q2g.correct .q2a{color:var(--qg)}
-.q2p{width:min(41vw,19vh);max-width:186px;aspect-ratio:2/1;border-radius:17px;padding:5px;
+.q2p{width:min(29vw,13vh);max-width:186px;aspect-ratio:2/1;border-radius:17px;padding:5px;
  background:linear-gradient(160deg,#15151d,#0a0a10);border:2.5px solid rgba(255,255,255,.16)}
 .q2g.pass .q2p{border-color:var(--qp);box-shadow:0 0 26px 4px rgba(255,157,46,.55),inset 0 0 12px rgba(0,0,0,.7)}
 .q2g.correct .q2p{border-color:var(--qg);box-shadow:0 0 26px 4px rgba(67,209,58,.55),inset 0 0 12px rgba(0,0,0,.7)}
 .q2s{width:100%;height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center}
 .q2g.pass .q2s{background:radial-gradient(120% 130% at 50% -10%,#ffb43a,#e8720f)}
 .q2g.correct .q2s{background:radial-gradient(120% 130% at 50% -10%,#5ef07e,#22a844)}
-.q2w{font-family:var(--disp);font-size:min(7vw,3.8vh);line-height:1;letter-spacing:2px;color:#fff;
+.q2w{font-family:var(--disp);font-size:min(4.3vw,2.4vh);line-height:1;letter-spacing:.5px;white-space:nowrap;color:#fff;
  text-shadow:0 2px 10px rgba(0,0,0,.4)}
-.q2sub{font-family:var(--body);font-size:min(3.9vw,1.9vh);font-weight:600;color:#fff;opacity:.96;
+.q2sub{font-family:var(--body);text-align:center;white-space:nowrap;font-size:min(3.6vw,2vh);font-weight:600;color:#fff;opacity:.96;
  text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .q2sub b{font-weight:900}
 .q2g.pass .q2sub b{color:var(--qp)} .q2g.correct .q2sub b{color:var(--qg)}
@@ -622,7 +634,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
    run ~15px taller than sports at the same width. Rather than shave the roomy
    layouts further for everyone, the q4 variants give back that difference on short
    screens only - the vh caps do nothing on a tall phone. */
-.qpg.q4 .q2p{width:min(41vw,18vh)}
+.qpg.q4 .q2p{width:min(29vw,12.5vh)}
 .qpg.q4 .q2sub{font-size:min(3.9vw,1.75vh)}
 .qpg.q4 .qtalk{margin-bottom:min(12px,1vh)}
 .qpg.q4 .qhow .qc{gap:3px}
@@ -648,8 +660,8 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
  .qpgt{margin-bottom:min(10px,1.1vh)}
  /* the phones are the largest block, so they carry most of the reduction on
     short screens - full size above 800px tall, stepped down below it. */
- .q2p{width:min(41vw,11.6vh)}
- .qpg.q4 .q2p{width:min(41vw,10.6vh)}
+ .q2p{width:min(29vw,11vh)}
+ .qpg.q4 .q2p{width:min(29vw,10.5vh)}
  /* music/film still ran 2px over at 640 and 667 - the 4-up how-row wraps to a
     third line there. One more notch, q4 only. */
  .qpg.q4 .qhow p{font-size:min(2.7vw,1.42vh)}
@@ -1322,9 +1334,9 @@ function renderQPG(){
   +'<div class="qpgBack" id="qpgBack" role="button" aria-label="Back">&#8249;</div>'
   +'<div class="qpgt"><div class="qdash"><i></i><i></i></div><h1>QUICK PLAY GUIDE</h1><div class="qdash r"><i></i><i></i></div></div>'
   +'<div class="q2">'
-   +'<div class="q2g correct"><div class="q2sub">Tilt <b>DOWN</b> for Correct</div><div class="q2row"><svg class="q2a l" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg><div class="q2p"><div class="q2s"><span class="q2w">CORRECT</span></div></div><svg class="q2a r" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg></div></div>'
+   +'<div class="q2g correct"><div class="q2sub">Tilt <b>DOWN</b></div><div class="q2row"><svg class="q2a l" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg><div class="q2p"><div class="q2s"><span class="q2w">CORRECT</span></div></div><svg class="q2a r" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg></div></div>'
    +'<div class="q2bolt">\u26a1</div>'
-   +'<div class="q2g pass"><div class="q2row"><svg class="q2a l" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg><div class="q2p"><div class="q2s"><span class="q2w">PASS</span></div></div><svg class="q2a r" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg></div><div class="q2sub">Tilt <b>UP</b> to Pass</div></div>'
+   +'<div class="q2g pass"><div class="q2row"><svg class="q2a l" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg><div class="q2p"><div class="q2s"><span class="q2w">PASS</span></div></div><svg class="q2a r" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg></div><div class="q2sub">Tilt <b>UP</b></div></div>'
   +'</div>'
   +'<div class="qtalk"><div class="qrh"><span></span><h2>YOU CAN TALK —</h2><span></span></div>'
     +'<h3>THIS ISN’T OLD-SCHOOL CHARADES.</h3></div>'
