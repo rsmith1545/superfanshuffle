@@ -50,7 +50,12 @@
  #hint{position:absolute;bottom:12px;left:0;right:0;font-size:3.4vmin;color:rgba(255,255,255,.8);letter-spacing:.5px}
  /* debug */
  #dbg{position:fixed;bottom:6px;left:6px;font:12px/1.4 monospace;color:#0f0;background:rgba(0,0,0,.55);padding:6px 8px;border-radius:6px;display:none;text-align:left;z-index:9}
- #dbgBtn{position:fixed;top:8px;left:8px;font:11px monospace;color:#aaa;background:rgba(0,0,0,.4);border:1px solid #555;border-radius:6px;padding:4px 7px;z-index:10}
+ /* Hidden in production. It shipped visible for months as a grey 'debug' chip
+    floating over live gameplay. The panel behind it is the tilt telemetry
+    (gz / beta / gamma / armed / haveMotion / thresholds), which is the one
+    thing that cannot be checked headlessly - so it stays reachable, just not
+    on screen. Open play.html with ?debug=1 to bring the toggle back. */
+ #dbgBtn{position:fixed;top:8px;left:8px;font:11px monospace;color:#aaa;background:rgba(0,0,0,.4);border:1px solid #555;border-radius:6px;padding:4px 7px;z-index:10;display:none}
  .rotate{font-size:5vw;color:var(--gold)}
  ul{list-style:none;text-align:left;max-width:90vw;max-height:46vh;overflow:auto;font-size:4.4vw}
  li{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.12)}
@@ -282,6 +287,60 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .qtilt .qlab{font-family:var(--disp);font-size:5.6vw;letter-spacing:.6px;line-height:1}
 .qtilt .qsub{font-weight:800;font-size:3.1vw;color:#fff;letter-spacing:.3px;margin-top:1px}
 .qo{color:var(--qo)}.qg{color:var(--qg)}.qb{color:var(--qb)}.qp{color:var(--qp)}
+/* ===== two-phone tilt demo (restored from the old how-to, Aug 2026) =====
+   Replaces the single phone that alternated down-then-up plus the CORRECT/PASS
+   legend row above it. One phone time-sharing both states means you have to wait
+   out a cycle to learn the second gesture, and the tiny pill icons carried the
+   colour rather than the screen doing it. Two phones show both actions at once,
+   each screen floods with the actual feedback colour the game flashes, and the
+   caption sits on the side that phone tilts toward — CORRECT's above it, PASS's
+   below it — so the layout itself encodes the direction.
+   Colours come from --qg/--qp, the locked feedback tokens, NOT the edition accent. */
+/* ===== escape routes out of the guide =====
+   The guide is a full-screen takeover and TAP TO PLAY was the ONLY exit. A player
+   who opened the wrong vault, or who swiped down expecting a sheet to dismiss, was
+   stuck. Two ways out now: a back chevron, and a swipe.
+   The vertical swipe only fires when the guide is scrolled to the very top,
+   otherwise it would hijack normal scrolling on a page that is taller than the
+   viewport on every phone. */
+.qpgBack{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:10px;z-index:12;
+ width:38px;height:38px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+ font-family:var(--disp);font-size:24px;line-height:1;color:#fff;background:rgba(10,7,20,.55);
+ border:1px solid rgba(255,255,255,.22);cursor:pointer;backdrop-filter:blur(4px);
+ -webkit-tap-highlight-color:transparent}
+.qpgBack:active{background:rgba(10,7,20,.8)}
+.q2{display:flex;flex-direction:column;align-items:center;gap:.6vh;margin:2px 0 10px}
+.q2g{display:flex;flex-direction:column;align-items:center;gap:.9vh;perspective:640px}
+.q2row{display:flex;align-items:center;gap:3vw;transform-style:preserve-3d}
+.q2g.pass .q2row{animation:q2Up 1.9s ease-in-out infinite}
+.q2g.correct .q2row{animation:q2Down 1.9s ease-in-out infinite}
+.q2a{width:9.5vw;max-width:44px;height:auto;flex:0 0 auto}
+.q2a.r{transform:scaleX(-1)}
+.q2g.correct .q2a{transform:scaleY(-1)}
+.q2g.correct .q2a.r{transform:scale(-1,-1)}
+.q2g.pass .q2a{color:var(--qp)}
+.q2g.correct .q2a{color:var(--qg)}
+.q2p{width:41vw;max-width:186px;aspect-ratio:2/1;border-radius:17px;padding:5px;
+ background:linear-gradient(160deg,#15151d,#0a0a10);border:2.5px solid rgba(255,255,255,.16)}
+.q2g.pass .q2p{border-color:var(--qp);box-shadow:0 0 26px 4px rgba(255,157,46,.55),inset 0 0 12px rgba(0,0,0,.7)}
+.q2g.correct .q2p{border-color:var(--qg);box-shadow:0 0 26px 4px rgba(67,209,58,.55),inset 0 0 12px rgba(0,0,0,.7)}
+.q2s{width:100%;height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.q2g.pass .q2s{background:radial-gradient(120% 130% at 50% -10%,#ffb43a,#e8720f)}
+.q2g.correct .q2s{background:radial-gradient(120% 130% at 50% -10%,#5ef07e,#22a844)}
+.q2w{font-family:var(--disp);font-size:7vw;line-height:1;letter-spacing:2px;color:#fff;
+ text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.q2sub{font-family:var(--body);font-size:3.9vw;font-weight:600;color:#fff;opacity:.96;
+ text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.q2sub b{font-weight:900}
+.q2g.pass .q2sub b{color:var(--qp)} .q2g.correct .q2sub b{color:var(--qg)}
+.q2bolt{font-size:4.6vw;filter:drop-shadow(0 0 10px rgba(180,110,255,.8));animation:q2Bolt 1.9s ease-in-out infinite;line-height:1}
+@keyframes q2Up{0%,100%{transform:rotateX(20deg)}50%{transform:rotateX(-34deg)}}
+@keyframes q2Down{0%,100%{transform:rotateX(-20deg)}50%{transform:rotateX(34deg)}}
+@keyframes q2Bolt{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+@media (prefers-reduced-motion:reduce){
+ .q2g .q2row,.q2bolt{animation:none!important}
+ .q2g.pass .q2row{transform:rotateX(-18deg)}
+ .q2g.correct .q2row{transform:rotateX(18deg)}}
 .qphone{position:relative;height:40vw;max-height:180px;margin:2px 0 4px;
  display:flex;align-items:center;justify-content:center}
 .qarr{position:absolute;top:8%;height:74%;width:11vw;max-width:46px}
@@ -871,6 +930,8 @@ document.getElementById('backBtn').onclick=function(){ location.href='https://su
 
 /* ---------- debug ---------- */
 var dbgOn=false;
+var DBGMODE=!!(Q.get('debug'));
+if(DBGMODE){ try{ document.getElementById('dbgBtn').style.display='block'; }catch(e){} }
 document.getElementById('dbgBtn').onclick=function(){ dbgOn=!dbgOn; document.getElementById('dbg').style.display=dbgOn?'block':'none'; };
 function dbgTick(){ if(!dbgOn) return; document.getElementById('dbg').innerHTML='gz: '+gz.toFixed(2)+'<br>beta: '+beta.toFixed(0)+'  gamma: '+gamma.toFixed(0)+'<br>armed: '+armed+'  hold:'+holdDir+'  motion:'+haveMotion+'<br>TH:'+TH+' NEU:'+NEUTRAL; }
 </script>
@@ -964,17 +1025,12 @@ function renderQPG(){
  try{ document.getElementById('app').classList.add('qpgapp'); }catch(e){}
  try{ st.style.setProperty('--qglow', hexA(acc,.20)); }catch(e){}
  st.innerHTML='<div class="qpg '+(CFG.cls||'')+'" style="--qo:'+acc+';--qink:'+qpgInk(acc)+';--qb:'+qpgSecond()+'">'
+  +'<div class="qpgBack" id="qpgBack" role="button" aria-label="Back">&#8249;</div>'
   +'<div class="qpgt"><div class="qdash"><i></i><i></i></div><h1>QUICK PLAY GUIDE</h1><div class="qdash r"><i></i><i></i></div></div>'
-  +'<div class="qtilt">'
-    +'<div class="qc"><div class="qring qg qringG">'+qpgD()+'</div><div><div class="qlab qg">CORRECT</div><div class="qsub">TILT DOWN</div></div></div>'
-    +'<div class="qvr"></div>'
-    +'<div class="qc"><div class="qring qp qringO">'+qpgU()+'</div><div><div class="qlab qp">PASS</div><div class="qsub">TILT UP</div></div></div>'
-  +'</div>'
-  +'<div class="qphone">'
-   +'<svg class="qarr l" viewBox="0 0 44 120" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M30 112 C12 92, 8 52, 20 22" stroke="#ff9d2e" stroke-width="7" stroke-linecap="round"/><path d="M20 8 L31 30 L9 30 Z" fill="#ff9d2e"/></svg>'
-   +'<div class="qstage"><div class="qghost g1"></div><div class="qghost g2"></div>'
-     +'<div class="qph"><div class="qpill qg">'+qpgD()+'</div><div class="qpill qp">'+qpgU()+'</div></div></div>'
-   +'<svg class="qarr r" viewBox="0 0 44 120" fill="none" preserveAspectRatio="xMidYMid meet"><path d="M14 8 C32 28, 36 68, 24 98" stroke="#43d13a" stroke-width="7" stroke-linecap="round"/><path d="M24 112 L13 90 L35 90 Z" fill="#43d13a"/></svg>'
+  +'<div class="q2">'
+   +'<div class="q2g correct"><div class="q2sub">Tilt <b>DOWN</b> for Correct</div><div class="q2row"><svg class="q2a l" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg><div class="q2p"><div class="q2s"><span class="q2w">CORRECT</span></div></div><svg class="q2a r" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg></div></div>'
+   +'<div class="q2bolt">\u26a1</div>'
+   +'<div class="q2g pass"><div class="q2row"><svg class="q2a l" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg><div class="q2p"><div class="q2s"><span class="q2w">PASS</span></div></div><svg class="q2a r" viewBox="0 0 40 52" fill="none"><path d="M27 44 C 13 41 11 20 21 9" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M21 6 l-8 8 l11 3 z" fill="currentColor"/></svg></div><div class="q2sub">Tilt <b>UP</b> to Pass</div></div>'
   +'</div>'
   +'<div class="qtalk"><div class="qrh"><span></span><h2>YOU CAN TALK —</h2><span></span></div>'
     +'<h3>THIS ISN’T OLD-SCHOOL CHARADES.</h3></div>'
@@ -995,6 +1051,7 @@ function renderQPG(){
  /* THE gesture gate — identical bundle to the old startBtn */
  document.getElementById('qpgGo').onclick=function(){
    try{ document.getElementById('app').classList.remove('qpgapp'); }catch(e){}
+   try{ var d=document.getElementById('dbgBtn'); if(d) d.style.display=(typeof DBGMODE!=='undefined'&&DBGMODE)?'block':'none'; }catch(e){}
    goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); });
  };
  /* Fullscreen needs a user gesture IN THIS DOCUMENT, and the tap on the vault card
@@ -1006,6 +1063,39 @@ function renderQPG(){
     Capacitor wrapper ships. */
  try{ st.addEventListener('pointerdown', function _fs(){
    st.removeEventListener('pointerdown', _fs); goFullscreen(); }, {passive:true}); }catch(e){}
+
+ /* ---- leave the guide without starting a round ---- */
+ /* Only reachable now via ?debug=1, but when it IS on it overlaps the back
+    chevron and wins the tap: it lives at body level while the chevron is trapped
+    in #sStart's stacking context, so z-index cannot settle it. Hide it while the
+    guide owns the screen. */
+ try{ var _dbg=document.getElementById('dbgBtn'); if(_dbg) _dbg.style.display='none'; }catch(e){}
+ try{ document.getElementById('qpgBack').onclick=function(e){ e.stopPropagation(); qpgExit(); }; }catch(e){}
+ var _sx=0,_sy=0,_st0=0,_tracking=false;
+ st.addEventListener('touchstart',function(e){
+   if(!e.touches||e.touches.length!==1){ _tracking=false; return; }
+   _sx=e.touches[0].clientX; _sy=e.touches[0].clientY; _st0=st.scrollTop; _tracking=true;
+ },{passive:true});
+ st.addEventListener('touchend',function(e){
+   if(!_tracking) return; _tracking=false;
+   var t=(e.changedTouches&&e.changedTouches[0]); if(!t) return;
+   var dx=t.clientX-_sx, dy=t.clientY-_sy;
+   /* swipe RIGHT = back, the platform gesture. Always available. */
+   if(dx>80 && Math.abs(dx)>Math.abs(dy)*2){ qpgExit(); return; }
+   /* swipe DOWN = dismiss, but only from the top of the guide so it cannot
+      steal a normal scroll gesture further down the page. */
+   if(dy>100 && Math.abs(dy)>Math.abs(dx)*2 && _st0<=0){ qpgExit(); return; }
+ },{passive:true});
+}
+/* Back out to wherever they came from. history.back() lands on the vault card with
+   its sheet state intact, which is better than a fresh index.html load. Only fall
+   back to a hard navigation when there is no history to return to (deep link, or
+   the guide opened in a new tab). */
+function qpgExit(){
+ try{ document.getElementById('app').classList.remove('qpgapp'); }catch(e){}
+ try{ var d=document.getElementById('dbgBtn'); if(d) d.style.display=(typeof DBGMODE!=='undefined'&&DBGMODE)?'block':'none'; }catch(e){}
+ try{ if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen(); }catch(e){}
+ if(history.length>1){ history.back(); } else { location.href='index.html'; }
 }
 function qpgPick(el,mode){ RCLUE=mode;
  var all=el.parentNode.getElementsByClassName('qmode');
