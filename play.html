@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v192"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v193"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -153,6 +153,28 @@
   36px 128px, 36px 128px,
   142px 74px, 142px 74px,
   0 0, 0 0, 0 0}
+
+/* ===== Fantasy: purple cauldron haze =====
+   The opposite construction to the camo next door. Camo is hard 0/61% stops because a
+   patch needs an edge; mist is the same primitive with stops that never fully arrive,
+   so nothing ever resolves into a shape.
+   Sized in PERCENTAGES rather than px, and deliberately not tiled - this is one
+   composition that scales with the card, where camo is a fabric that repeats. Plumes
+   sit low and stretch tall to read as rising, with a witch-light glow at the very
+   bottom edge as the source, and thin wisps up top where the mist has thinned out. */
+#app.filmcard.fx-haze{
+ background-color:#241046;
+ background-image:
+  radial-gradient(ellipse 62% 16% at 50% 20%, rgba(206,176,255,.20), rgba(206,176,255,0) 78%),
+  radial-gradient(ellipse 30% 40% at 17% 45%, rgba(126,74,206,.40), rgba(126,74,206,0) 76%),
+  radial-gradient(ellipse 32% 38% at 85% 41%, rgba(126,74,206,.36), rgba(126,74,206,0) 76%),
+  radial-gradient(ellipse 46% 44% at 50% 60%, rgba(214,160,255,.30), rgba(214,160,255,0) 76%),
+  radial-gradient(ellipse 40% 56% at 27% 79%, rgba(190,120,255,.44), rgba(190,120,255,0) 72%),
+  radial-gradient(ellipse 34% 62% at 69% 85%, rgba(152,92,242,.42), rgba(152,92,242,0) 74%),
+  radial-gradient(ellipse 118% 34% at 50% 105%, rgba(140,255,190,.26), rgba(140,255,190,0) 72%),
+  radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.38) 100%),
+  repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 1px,transparent 1px 6px),
+  repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px)}
 /* ===== the CARD shuffles, not a picture of cards =====
    Two ghost cards sit behind #app with identical geometry, and #app itself is the
    top card of the deck. Riffling moves the real card - the one with the border, the
@@ -907,7 +929,7 @@ function _stageVars(bg,ol){ try{ var st=document.getElementById('stage');
    own background. */
 var FILM_CARD={
  mv_animated :['#2A1258','#1B0B33','tiedye'], mv_drama    :['#2A3442','#D9A441'],
- mv_scifi    :['#08303F','#35E0FF'], mv_fantasy  :['#2B1A4D','#8FE3B0'],
+ mv_scifi    :['#08303F','#35E0FF'], mv_fantasy  :['#241046','#8FE3B0','haze'],
  mv_action   :['#7A1F0C','#FFB020'], mv_superhero:['#17307A','#FFCC00'],
  mv_comedy   :['#6B380B','#FFD35C'], mv_romance  :['#6B1338','#FF9EC4'],
  mv_crime    :['#1A1A1E','#C8A24A'], mv_war      :['#39402C','#14180E','camo'],
@@ -926,7 +948,7 @@ function applyFilmCard(){
  var fc=filmCard();
  app.style.setProperty('--cardbg',fc.b); app.style.setProperty('--cardoutline',fc.o);
  _stageVars(fc.b,fc.o);
- app.classList.remove('fx-tiedye','fx-camo'); if(fc.fx) app.classList.add('fx-'+fc.fx);
+ app.classList.remove('fx-tiedye','fx-camo','fx-haze'); if(fc.fx) app.classList.add('fx-'+fc.fx);
  app.style.setProperty('--olw','2.2vmin'); app.classList.add('filmcard'); return true; }
 function applySportCard(){
  var _sc=spCard(); if(!_sc) return false;
