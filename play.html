@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v191"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v192"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -121,30 +121,37 @@
    white lettering holds, and the outline is near-black olive rather than the khaki the
    flat version used, for the same reason the tie-dye needed a dark stroke. */
 #app.filmcard.fx-camo{
- background-color:#39402C;
+ background-color:#3E4A34;
  background-image:
-  radial-gradient(ellipse 62px 44px at 30% 26%, #232A18 0 62%, transparent 63%),
-  radial-gradient(ellipse 48px 62px at 74% 44%, #232A18 0 62%, transparent 63%),
-  radial-gradient(ellipse 70px 40px at 18% 78%, #4E4A2E 0 62%, transparent 63%),
-  radial-gradient(ellipse 44px 54px at 88% 84%, #4E4A2E 0 62%, transparent 63%),
-  radial-gradient(ellipse 54px 38px at 52% 62%, #6B6A44 0 62%, transparent 63%),
-  radial-gradient(ellipse 40px 50px at 8% 44%, #6B6A44 0 62%, transparent 63%),
-  radial-gradient(ellipse 58px 42px at 62% 10%, #2C3320 0 62%, transparent 63%),
-  radial-gradient(ellipse 46px 58px at 36% 94%, #2C3320 0 62%, transparent 63%),
-  radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.40) 100%),
-  repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 1px,transparent 1px 6px),
+  /* Fewer, BIGGER patches with more base green showing. The previous version had 12
+     small blobs and read as confetti.
+     The key fix: blobs of the SAME tone share the same tile size, so they hold a fixed
+     relative position and reliably fuse into one lobed compound shape. Giving them
+     different tiles - which the last version did - slid them apart every repeat and
+     left each one a separate oval. Different TONES still use coprime tiles, so the
+     pattern as a whole never visibly repeats. */
+  radial-gradient(ellipse 92px 58px at 22% 30%, #6E6A46 0 60%, transparent 61%),
+  radial-gradient(ellipse 64px 74px at 38% 46%, #6E6A46 0 60%, transparent 61%),
+  radial-gradient(ellipse 86px 56px at 70% 20%, #4A3A26 0 60%, transparent 61%),
+  radial-gradient(ellipse 58px 78px at 82% 34%, #4A3A26 0 60%, transparent 61%),
+  radial-gradient(ellipse 96px 60px at 30% 76%, #27301F 0 60%, transparent 61%),
+  radial-gradient(ellipse 62px 80px at 46% 88%, #27301F 0 60%, transparent 61%),
+  radial-gradient(ellipse 78px 52px at 76% 70%, #151A12 0 60%, transparent 61%),
+  radial-gradient(ellipse 54px 68px at 88% 82%, #151A12 0 60%, transparent 61%),
+  radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.07) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.42) 100%),
+  repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 1px,transparent 1px 6px),
   repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);
- /* Every layer tiled at the same 190px and the grid was plainly visible - the whole
-    card repeated twice across. These sizes are mutually coprime, so the layers only
-    realign after their least common multiple, which is far larger than any screen.
-    No visible repeat without drawing a single extra blob. */
  background-size:
-  149px 149px, 173px 173px, 191px 191px, 211px 211px,
-  229px 229px, 251px 251px, 163px 163px, 197px 197px,
+  263px 263px, 263px 263px,
+  229px 229px, 229px 229px,
+  197px 197px, 197px 197px,
+  173px 173px, 173px 173px,
   auto, auto, auto;
  background-position:
-  0 0, 95px 40px, 40px 120px, 140px 90px,
-  70px 20px, 20px 150px, 120px 60px, 160px 10px,
+  0 0, 0 0,
+  84px 46px, 84px 46px,
+  36px 128px, 36px 128px,
+  142px 74px, 142px 74px,
   0 0, 0 0, 0 0}
 /* ===== the CARD shuffles, not a picture of cards =====
    Two ghost cards sit behind #app with identical geometry, and #app itself is the
