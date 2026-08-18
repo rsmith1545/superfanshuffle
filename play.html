@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v182"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v183"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -117,8 +117,54 @@
  li{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.12)}
  li.g{color:#7fe0a0}li.p{color:#e6c65a}
  /* READY flow */
- #rotateMsg{display:flex;align-items:center;justify-content:center;height:100%}
- .fhText{transform:rotate(-90deg);white-space:nowrap;font-family:var(--disp);font-size:15vmin;color:var(--cyan);text-transform:uppercase;letter-spacing:2px;line-height:1.15;text-shadow:0 0 16px rgba(87,230,255,.7),2px 2px 0 rgba(0,0,0,.4)}
+ 
+/* ===== the shuffle, on the "Place on your forehead" screen =====
+   This is the one moment the player is definitely LOOKING at the screen: they are
+   reading the instruction and have not raised the phone yet. Once they do raise it
+   the countdown starts and nobody sees anything - which is why the animation goes
+   here and not on the 3-2-1.
+   It loops rather than playing once, because the wait is user-paced: it ends when
+   the phone reaches landscape, anywhere from half a second to the 20s timeout.
+   Cards inherit --cardbg/--cardoutline, so on sports they shuffle in the team's
+   colours and on film in charcoal and gold. */
+/* Absolutely placed and rotated -90deg to match .fhText. A flex column would put
+   it 'above' in DOM terms, which after the -90deg rotation reads as beside - the
+   screen is drawn sideways on purpose so it is upright once the phone turns. */
+.shufDeck{position:absolute;left:50%;top:50%;width:30vh;height:20vh;
+ /* offset from the CENTRE, not from the left edge: the -90deg rotation changes
+    how a percentage left resolves and pushed the deck off-screen (x=-145). */
+ transform:translate(calc(-50% - 27vw),-50%) rotate(-90deg);pointer-events:none}
+.shufDeck i{position:absolute;left:50%;top:50%;width:10.5vh;height:14.5vh;
+ margin:-7.25vh 0 0 -5.25vh;border-radius:1.4vh;
+ /* Ivory faces with a coloured edge. Tinting the faces with --cardbg made them
+    invisible on sports, where --cardbg IS the background they sit on. */
+ background:linear-gradient(160deg,#f7f5ef,#d9d6cc),
+  repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 5px);
+ border:.5vh solid var(--cardoutline,#2a1257);
+ box-shadow:0 1vmin 2.2vmin rgba(0,0,0,.55);
+ animation:shufCard 2.4s cubic-bezier(.55,.05,.3,1) infinite}
+.shufDeck i:nth-child(1){animation-delay:0s}
+.shufDeck i:nth-child(2){animation-delay:.12s}
+.shufDeck i:nth-child(3){animation-delay:.24s}
+.shufDeck i:nth-child(4){animation-delay:.36s}
+.shufDeck i:nth-child(5){animation-delay:.48s}
+@keyframes shufCard{
+ 0%,100%{transform:translate(0,0) rotate(0deg)}
+ 22%{transform:translate(-5.5vh,-1.2vh) rotate(-15deg)}
+ 48%{transform:translate(0,0) rotate(0deg)}
+ 72%{transform:translate(5.5vh,-1.2vh) rotate(15deg)}}
+@media (prefers-reduced-motion:reduce){
+ .shufDeck i{animation:none}
+ .shufDeck i:nth-child(1){transform:translate(-4vh,0) rotate(-10deg)}
+ .shufDeck i:nth-child(5){transform:translate(4vh,0) rotate(10deg)}}
+#rotateMsg{position:relative;display:flex;align-items:center;justify-content:center;height:100%}
+ .fhText{transform:rotate(-90deg);white-space:nowrap;font-family:var(--disp);
+ /* PRE-EXISTING BUG: at 15vmin 'PLACE ON YOUR FOREHEAD' overflowed the screen on
+    every phone tested - 912px of text in 915px at 412x915, and 802 in 640 on a
+    small Android. The line is rotated -90deg and nowrap, so its length is bounded
+    by viewport HEIGHT while vmin tracks WIDTH. Sizing in vh binds it to the axis
+    that actually constrains it. */
+ font-size:min(15vmin,5.6vh);color:var(--cyan);text-transform:uppercase;letter-spacing:2px;line-height:1.15;text-shadow:0 0 16px rgba(87,230,255,.7),2px 2px 0 rgba(0,0,0,.4)}
  .fhHint{display:block;font-size:3.4vw;color:var(--sand);opacity:.9;letter-spacing:0;text-transform:none;margin-top:6px}
  #getReady{display:none;font-family:var(--disp);font-size:14vmin;color:var(--mag);text-transform:uppercase;letter-spacing:2px;line-height:.92;max-width:94vw;text-shadow:0 0 20px rgba(255,92,240,.75),2px 3px 0 rgba(0,0,0,.4)}
  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.13)}}
@@ -532,7 +578,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div>
   <!-- READY (countdown) -->
   <div class="screen" id="sReady">
-    <div id="rotateMsg"><div class="fhText">Place on your forehead<span class="fhHint">↻ turn phone sideways</span></div></div>
+    <div id="rotateMsg"><div class="shufDeck" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div class="fhText">Place on your forehead<span class="fhHint">↻ turn phone sideways</span></div></div>
     <div id="getReady">Time to Face the Music</div>
     <div id="big">3</div>
   </div>
