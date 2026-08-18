@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v194"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v195"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -103,7 +103,12 @@
   radial-gradient(34% 24% at 78% 26%, rgba(60,215,255,.80), rgba(60,215,255,0) 70%),
   radial-gradient(40% 28% at 30% 72%, rgba(110,235,90,.70), rgba(110,235,90,0) 70%),
   radial-gradient(36% 26% at 76% 78%, rgba(255,165,40,.75), rgba(255,165,40,0) 70%),
-  radial-gradient(30% 22% at 50% 48%, rgba(175,90,255,.80), rgba(175,90,255,0) 72%),
+  radial-gradient(24% 20% at 50% 48%, rgba(175,90,255,.55), rgba(175,90,255,0) 72%),
+  /* centre-keeper. Measured in the real landscape card the dye blooms put only
+     2.46:1 behind the answer word - the blooms are sized in percentages and they
+     converge on the middle once the card is 871x368. Same failure the fantasy mist
+     had. This layer sits above the dye and below the weave. */
+  radial-gradient(ellipse 74% 66% at 50% 50%, rgba(20,8,44,.80), rgba(20,8,44,.40) 58%, rgba(20,8,44,0) 100%),
   repeating-conic-gradient(from 18deg at 50% 50%,
     rgba(255,255,255,.055) 0 6deg, rgba(0,0,0,.075) 6deg 12deg),
   radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),
@@ -165,14 +170,23 @@
 #app.filmcard.fx-haze{
  background-color:#241046;
  background-image:
-  radial-gradient(ellipse 62% 16% at 50% 20%, rgba(206,176,255,.20), rgba(206,176,255,0) 78%),
-  radial-gradient(ellipse 30% 40% at 17% 45%, rgba(126,74,206,.40), rgba(126,74,206,0) 76%),
-  radial-gradient(ellipse 32% 38% at 85% 41%, rgba(126,74,206,.36), rgba(126,74,206,0) 76%),
-  radial-gradient(ellipse 46% 44% at 50% 60%, rgba(214,160,255,.30), rgba(214,160,255,0) 76%),
-  radial-gradient(ellipse 40% 56% at 27% 79%, rgba(190,120,255,.44), rgba(190,120,255,0) 72%),
-  radial-gradient(ellipse 34% 62% at 69% 85%, rgba(152,92,242,.42), rgba(152,92,242,0) 74%),
-  radial-gradient(ellipse 118% 34% at 50% 105%, rgba(140,255,190,.26), rgba(140,255,190,0) 72%),
-  radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.38) 100%),
+  /* The mist is pinned to the EDGES and a hard dark vignette holds the centre.
+     The first version put six plumes at .30-.44 alpha across the middle. Sized in
+     percentages they were fine on the tall forehead card, but during play the card
+     is landscape (871x368 on a 412x915 phone) - the plumes overlapped in the centre
+     and stacked into a flat bright violet, exactly where the answer word sits. The
+     card still computed #241046; you just could not see any of it.
+     Rule this now follows: mist lives at the rim, the middle stays dark. */
+  radial-gradient(ellipse 26% 62% at 4% 62%, rgba(178,120,255,.34), rgba(178,120,255,0) 74%),
+  radial-gradient(ellipse 24% 58% at 96% 56%, rgba(150,92,240,.32), rgba(150,92,240,0) 74%),
+  radial-gradient(ellipse 54% 40% at 32% 108%, rgba(190,120,255,.34), rgba(190,120,255,0) 72%),
+  radial-gradient(ellipse 48% 36% at 74% 110%, rgba(152,92,242,.30), rgba(152,92,242,0) 72%),
+  radial-gradient(ellipse 70% 20% at 50% -8%, rgba(206,176,255,.16), rgba(206,176,255,0) 76%),
+  /* the witch-light under the cauldron, low and wide so it never reaches the word */
+  radial-gradient(ellipse 96% 22% at 50% 112%, rgba(140,255,190,.24), rgba(140,255,190,0) 74%),
+  /* centre-keeper: sits ON TOP of the mist and pushes the middle back to near-black */
+  radial-gradient(ellipse 52% 60% at 50% 50%, rgba(16,6,34,.80), rgba(16,6,34,.42) 62%, rgba(16,6,34,0) 100%),
+  radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.06) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.40) 100%),
   repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 1px,transparent 1px 6px),
   repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px)}
 /* ===== the CARD shuffles, not a picture of cards =====
