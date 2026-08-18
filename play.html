@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
+<meta name="sfs-build" content="v182"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -1032,7 +1033,7 @@ var dbgOn=false;
 var DBGMODE=!!(Q.get('debug'));
 if(DBGMODE){ try{ document.getElementById('dbgBtn').style.display='block'; }catch(e){} }
 document.getElementById('dbgBtn').onclick=function(){ dbgOn=!dbgOn; document.getElementById('dbg').style.display=dbgOn?'block':'none'; };
-function dbgTick(){ if(!dbgOn) return; document.getElementById('dbg').innerHTML='gz: '+gz.toFixed(2)+'<br>beta: '+beta.toFixed(0)+'  gamma: '+gamma.toFixed(0)+'<br>armed: '+armed+'  hold:'+holdDir+'  motion:'+haveMotion+'<br>TH:'+TH+' NEU:'+NEUTRAL; }
+function dbgTick(){ if(!dbgOn) return; document.getElementById('dbg').innerHTML='build: '+((document.querySelector('meta[name=sfs-build]')||{}).content||'?')+'<br>'+'gz: '+gz.toFixed(2)+'<br>beta: '+beta.toFixed(0)+'  gamma: '+gamma.toFixed(0)+'<br>armed: '+armed+'  hold:'+holdDir+'  motion:'+haveMotion+'<br>TH:'+TH+' NEU:'+NEUTRAL; }
 </script>
 <script>if("serviceWorker" in navigator){var _swReloaded=false;navigator.serviceWorker.addEventListener("controllerchange",function(){if(_swReloaded)return;_swReloaded=true;location.reload();});window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(function(r){r.update();}).catch(function(){});});}
 /* ===== QUICK PLAY GUIDE — sports only. Replaces the sStart copy and IS the
