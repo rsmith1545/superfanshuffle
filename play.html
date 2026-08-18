@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v195"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v196"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -167,6 +167,24 @@
    composition that scales with the card, where camo is a fabric that repeats. Plumes
    sit low and stretch tall to read as rising, with a witch-light glow at the very
    bottom edge as the source, and thin wisps up top where the mist has thinned out. */
+/* ===== supplied card art =====
+   When a card-<vaultid>.jpg exists it REPLACES the CSS pattern for that genre.
+   Everything else about the card is unchanged - same border, same lettering,
+   same shuffle - so art and pattern genres sit side by side without a seam.
+   The ::after is the centre-keeper. Even art drawn to spec has bright spots:
+   the fantasy plate is a beautiful moonlit valley whose moon lands at 35%/19%,
+   which measured 2.01:1 against white type. This band pushes the middle back
+   without touching the rim, so the moon survives as a glow instead of a hole
+   punched in the word. Sized in percentages of the CARD, so it tracks the same
+   landscape geometry the pattern bug was hiding in. */
+#app.filmcard.hasart{background-image:none;background-size:cover;background-position:center;
+ background-repeat:no-repeat}
+#app.filmcard.hasart::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+ background:
+  radial-gradient(ellipse 62% 58% at 50% 46%, rgba(6,3,14,.74), rgba(6,3,14,.36) 60%, rgba(6,3,14,0) 100%),
+  linear-gradient(to bottom, rgba(6,3,14,.42), rgba(6,3,14,0) 30%, rgba(6,3,14,0) 72%, rgba(6,3,14,.46))}
+/* content has to clear the scrim */
+#app.filmcard.hasart>.screen{position:relative;z-index:1}
 #app.filmcard.fx-haze{
  background-color:#241046;
  background-image:
@@ -988,6 +1006,19 @@ var FILM_CARD={
 var FILM_BG='#1F1F24', FILM_OUTLINE='#F2C14E';
 function filmCard(){ var v=FILM_CARD[VAULT_ID];
  return v?{b:v[0],o:v[1],fx:v[2]||''}:{b:FILM_BG,o:FILM_OUTLINE,fx:''}; }
+/* Look for supplied art for this vault. Absent file = silent no-op and the CSS
+   pattern stays, so genres can be converted one at a time without a broken gap. */
+function applyCardArt(){
+  if(!VAULT_ID) return;
+  var url='card-'+VAULT_ID+'.jpg?v=1';
+  var im=new Image();
+  im.onload=function(){
+    app.style.backgroundImage='url("'+url+'")';
+    app.classList.add('hasart');
+  };
+  im.onerror=function(){};
+  im.src=url;
+}
 function applyFilmCard(){
  if(ED!=='filmtv') return false;
  var fc=filmCard();
@@ -1103,6 +1134,7 @@ function startGame(){
   show('sGame'); app.classList.remove('st-correct','st-pass','st-timeup');
   applySportCard(); if(!spCard()) { app.classList.remove('sportcard'); app.style.removeProperty('--cardbg'); app.style.removeProperty('--cardoutline'); }
   applyFilmCard(); if(ED!=='filmtv'){ app.classList.remove('filmcard'); }
+  applyCardArt();
   hideFb(); sndGo(); requestWake();
   var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing');
   document.body.classList.add('lock-ls'); tryLockLandscape();
@@ -1616,7 +1648,7 @@ function qpgPick(el,mode){ RCLUE=mode;
 if(ED==='sports'||ED==='music'||ED==='filmtv'){ try{ renderQPG(); }catch(e){} }
 
 /* sports vaults get their own card colours + wall copy from the very first screen */
-if(ED==='filmtv'){ try{ applyFilmCard(); }catch(e){} }
+if(ED==='filmtv'){ try{ applyFilmCard(); }catch(e){} try{ applyCardArt(); }catch(e){} }
 if(ED==='sports'){ try{ applySportCard(); }catch(e){}
  try{ var _wm=document.getElementById('wallMix');
    if(_wm) _wm.innerHTML='players, coaches, stadiums &amp; team lore'; }catch(e){} }
