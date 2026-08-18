@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v189"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v190"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -86,6 +86,31 @@
 #fb.on .fbGlyph,#fb.on .fbWord{animation:fbpop .26s cubic-bezier(.2,1.5,.4,1) both}
  #stage{position:fixed;inset:0;perspective:1600px}
 
+
+/* ===== Animated: tie-dye =====
+   The only genre that gets a PATTERN rather than a flat colour, because "animated"
+   is the one whose whole identity is riotous colour.
+   Two rules make it safe for the lettering. The base colour underneath is a deep
+   violet, so wherever the blooms thin out the card still reads dark; and the outline
+   is near-black rather than the yellow the other bright genres use, so the white fill
+   keeps a hard dark edge no matter which hue it crosses. The repeating-conic supplies
+   the spiral rays, the radials the dye blooms, and the original 45deg weave stays on
+   top so the card still feels like the same material as every other card. */
+#app.filmcard.fx-tiedye{
+ background-color:#2A1258;
+ background-image:
+  radial-gradient(38% 26% at 22% 18%, rgba(255,60,160,.85), rgba(255,60,160,0) 70%),
+  radial-gradient(34% 24% at 78% 26%, rgba(60,215,255,.80), rgba(60,215,255,0) 70%),
+  radial-gradient(40% 28% at 30% 72%, rgba(110,235,90,.70), rgba(110,235,90,0) 70%),
+  radial-gradient(36% 26% at 76% 78%, rgba(255,165,40,.75), rgba(255,165,40,0) 70%),
+  radial-gradient(30% 22% at 50% 48%, rgba(175,90,255,.80), rgba(175,90,255,0) 72%),
+  repeating-conic-gradient(from 18deg at 50% 50%,
+    rgba(255,255,255,.055) 0 6deg, rgba(0,0,0,.075) 6deg 12deg),
+  radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),
+  repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),
+  repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px)}
+/* the ghost cards behind the shuffle get the same treatment so the deck matches */
+#stage.shuf .deckGhost.tiedye{background-color:#2A1258}
 /* ===== the CARD shuffles, not a picture of cards =====
    Two ghost cards sit behind #app with identical geometry, and #app itself is the
    top card of the deck. Riffling moves the real card - the one with the border, the
@@ -839,7 +864,7 @@ function _stageVars(bg,ol){ try{ var st=document.getElementById('stage');
    Every pair below clears 9:1 for white lettering and 4:1 for the outline against its
    own background. */
 var FILM_CARD={
- mv_animated :['#123F96','#FFD23F'], mv_drama    :['#2A3442','#D9A441'],
+ mv_animated :['#2A1258','#1B0B33','tiedye'], mv_drama    :['#2A3442','#D9A441'],
  mv_scifi    :['#08303F','#35E0FF'], mv_fantasy  :['#2B1A4D','#8FE3B0'],
  mv_action   :['#7A1F0C','#FFB020'], mv_superhero:['#17307A','#FFCC00'],
  mv_comedy   :['#6B380B','#FFD35C'], mv_romance  :['#6B1338','#FF9EC4'],
@@ -852,12 +877,14 @@ var FILM_CARD={
 /* Fallback is the edition's own black + gold, so a film vault added later without a
    genre entry still gets a coherent card rather than the default purple. */
 var FILM_BG='#1F1F24', FILM_OUTLINE='#F2C14E';
-function filmCard(){ var v=FILM_CARD[VAULT_ID]; return v?{b:v[0],o:v[1]}:{b:FILM_BG,o:FILM_OUTLINE}; }
+function filmCard(){ var v=FILM_CARD[VAULT_ID];
+ return v?{b:v[0],o:v[1],fx:v[2]||''}:{b:FILM_BG,o:FILM_OUTLINE,fx:''}; }
 function applyFilmCard(){
  if(ED!=='filmtv') return false;
  var fc=filmCard();
  app.style.setProperty('--cardbg',fc.b); app.style.setProperty('--cardoutline',fc.o);
  _stageVars(fc.b,fc.o);
+ app.classList.remove('fx-tiedye'); if(fc.fx) app.classList.add('fx-'+fc.fx);
  app.style.setProperty('--olw','2.2vmin'); app.classList.add('filmcard'); return true; }
 function applySportCard(){
  var _sc=spCard(); if(!_sc) return false;
