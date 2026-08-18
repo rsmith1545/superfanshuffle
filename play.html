@@ -26,6 +26,56 @@
    its two 45deg repeating gradients (the line/check weave) carry through. */
 #app:is(.sportcard,.filmcard){background-color:var(--cardbg,#2a1257)}
 #app:is(.sportcard,.filmcard) #card{color:#fff;-webkit-text-stroke-width:var(--olw,2.2vmin);-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;text-shadow:none;letter-spacing:.1em}
+
+/* ===== swipe-to-quit: the card flips, then we land on the home screen =====
+   A single-element flip. #quitBack lives INSIDE #app pre-rotated 180deg, so
+   rotating #app turns the whole card over: the game screens fall past 90deg and
+   are hidden by backface-visibility while the back face swings forward. No DOM
+   restructuring, so nothing about the game layout changes.
+   The gesture is direction-agnostic on purpose. During play the stage is rotated
+   -90deg for landscape, so a swipe the player reads as horizontal arrives as
+   vertical in element space - testing an axis would work in one orientation and
+   silently fail in the other. Distance alone is orientation-proof.
+   Threshold is deliberately long (120px): this abandons a round in progress. */
+#quitBack{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+ justify-content:center;gap:2.4vmin;border-radius:32px;z-index:20;
+ background-color:var(--cardbg,#2a1257);
+ background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);
+ border:8px solid rgba(255,255,255,.94);box-sizing:border-box;
+ transform:rotateY(180deg);opacity:0}
+/* Visibility of BOTH faces is driven by opacity keyframes, not backface-visibility.
+   backface-visibility proved unreliable in this 3D context - it failed to hide the
+   front (showed mirrored) yet DID hide the back, the exact inverse of what was
+   wanted. Opacity crossfades at the halfway point behave identically everywhere.
+   quitBack stays pre-rotated 180deg so its lettering reads correctly once the
+   card has finished turning. */
+#quitBack .qbBolt{width:20vmin;height:32vmin;line-height:0;
+ filter:drop-shadow(0 0 16px rgba(180,110,255,.9)) drop-shadow(0 0 40px rgba(87,230,255,.5))}
+#quitBack .qbTxt{font-family:var(--disp);font-size:5.6vmin;letter-spacing:.34em;
+ color:#fff;text-shadow:0 0 18px rgba(160,120,255,.55),0 2px 14px rgba(0,0,0,.7)}
+/* overflow:visible is REQUIRED here. #app carries overflow:hidden to clip content to
+   its rounded corners, but overflow:hidden forces transform-style:flat - the 3D
+   context collapses, the back face never turns toward the viewer, and the flip
+   renders as a black rectangle. Only the corner clipping is lost, and only for the
+   780ms of the animation. */
+#app.quitting{transform-style:preserve-3d;overflow:visible;
+ animation:cardQuit .78s cubic-bezier(.62,.02,.3,1) forwards;
+ box-shadow:0 0 60px rgba(120,90,255,.5),inset 0 0 30px rgba(0,0,0,.4)}
+#app.quitting #quitBack{display:flex;animation:quitBackIn .78s linear forwards}
+@keyframes quitBackIn{0%,46%{opacity:0}60%,100%{opacity:1}}
+/* backface-visibility alone did not reliably hide the front face here - the card
+   showed through mirrored past 90deg. Rather than depend on that quirk, dissolve the
+   front content out just before the halfway point. Deterministic everywhere, and it
+   reads better anyway: the answer melts away as the card turns. */
+#app.quitting .screen,#app.quitting #fb{backface-visibility:hidden;-webkit-backface-visibility:hidden;
+ animation:quitFaceOut .78s linear forwards}
+@keyframes quitFaceOut{0%,38%{opacity:1}52%,100%{opacity:0}}
+@keyframes cardQuit{
+ 0%{transform:rotateY(0deg) scale(1);opacity:1}
+ 55%{transform:rotateY(-104deg) scale(.93)}
+ 78%{transform:rotateY(-150deg) scale(.86);opacity:1}
+ 100%{transform:rotateY(-180deg) scale(.70);opacity:0}}
+@media (prefers-reduced-motion:reduce){#app.quitting{animation:none;opacity:0;transition:opacity .2s}}
 #fb{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1vmin;background:rgba(4,6,12,.66);z-index:6}
 #fb.on{display:flex}
 .fbGlyph{font-family:var(--disp);font-size:36vmin;line-height:.82;color:#fff}
@@ -33,7 +83,7 @@
 .fbWord{font-family:var(--disp);font-size:16vmin;letter-spacing:4px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45)}
 @keyframes fbpop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.14);opacity:1}100%{transform:scale(1)}}
 #fb.on .fbGlyph,#fb.on .fbWord{animation:fbpop .26s cubic-bezier(.2,1.5,.4,1) both}
- #stage{position:fixed;inset:0}
+ #stage{position:fixed;inset:0;perspective:1600px}
  /* iOS standalone PWAs can't physically rotate; while the device stays portrait during play, fake landscape by rotating the whole stage about its centre. Rotation lives here, the card's spring animation lives on #app, so they no longer fight (card stays centred). */
  @media (orientation:portrait){ body.lock-ls #stage{ top:50%; left:50%; width:100vh; height:100vw; transform:translate(-50%,-50%) rotate(-90deg); } body.lock-ls #app{ top:22px; right:22px; bottom:22px; left:22px; } }
  .screen{display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;width:100%;height:100%}
@@ -492,6 +542,8 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
     <div id="timer">1:00</div>
     <div id="fb"><div class="fbGlyph" id="fbGlyph"></div><div class="fbWord" id="fbWord"></div></div>
   </div>
+  <div id="quitBack" aria-hidden="true"><div class="qbBolt"><svg viewBox="0 0 48 76" width="100%" height="100%" aria-hidden="true"><defs><linearGradient id="qbG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#57E6FF"/><stop offset="55%" stop-color="#B06AFF"/><stop offset="100%" stop-color="#FF2EB0"/></linearGradient></defs><path d="M28 2 L8 42 h13 l-5 32 L40 30 H26 z" fill="url(#qbG)"/></svg></div><div class="qbTxt">SUPERFAN SHUFFLE</div>
+  </div>
   <!-- UNLOCK WALL (end of the 5-question preview — never reaches the report card) -->
   <div class="screen" id="sWall">
     <div class="wallTaste">That’s the taste</div>
@@ -727,6 +779,42 @@ function endPreview(){
   sndFanfare();
   show('sWall');
 }
+/* Abandon the round from the answer card: flip, then home. Not a confirm dialog -
+   the flip IS the feedback, and it is long enough (780ms) to read as intentional.
+   Guarded by `quitting` so a second swipe mid-animation cannot double-navigate,
+   which is the same double-fire class of bug the guide's swipe-right had. */
+var quitting=false;
+function quitToHome(){
+ if(quitting||!playing) return; quitting=true;
+ playing=false; ended=true;
+ try{ clearInterval(tHandle); }catch(e){}
+ try{ releaseWake(); }catch(e){}
+ try{ persistSeen(); }catch(e){}
+ try{ hideFb(); }catch(e){}
+ try{ var t=document.getElementById('timer'); if(t) t.classList.remove('pulsing'); }catch(e){}
+ try{ app.classList.remove('st-correct','st-pass','st-timeup'); }catch(e){}
+ try{ buzz(18); }catch(e){}
+ /* lock-ls stays ON through the flip. Removing it un-rotates #stage instantly,
+    snapping the card 90deg mid-animation. We are navigating away anyway. */
+ try{ if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen(); }catch(e){}
+ var reduce=false; try{ reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches; }catch(e){}
+ app.classList.add('quitting');
+ setTimeout(function(){ location.href='index.html'; }, reduce?180:740);
+}
+(function(){
+ var g=document.getElementById('sGame'); if(!g) return;
+ var sx=0,sy=0,on=false;
+ g.addEventListener('touchstart',function(e){
+   if(!playing||!e.touches||e.touches.length!==1){ on=false; return; }
+   sx=e.touches[0].clientX; sy=e.touches[0].clientY; on=true;
+ },{passive:true});
+ g.addEventListener('touchend',function(e){
+   if(!on) return; on=false;
+   var t=e.changedTouches&&e.changedTouches[0]; if(!t) return;
+   var dx=t.clientX-sx, dy=t.clientY-sy;
+   if(Math.sqrt(dx*dx+dy*dy)>=120) quitToHome();
+ },{passive:true});
+})();
 function endGame(){
   if(ended) return; ended=true;
   playing=false; clearInterval(tHandle); releaseWake(); persistSeen();
