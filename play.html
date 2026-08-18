@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v196"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v197"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -174,15 +174,28 @@
    The ::after is the centre-keeper. Even art drawn to spec has bright spots:
    the fantasy plate is a beautiful moonlit valley whose moon lands at 35%/19%,
    which measured 2.01:1 against white type. This band pushes the middle back
-   without touching the rim, so the moon survives as a glow instead of a hole
-   punched in the word. Sized in percentages of the CARD, so it tracks the same
-   landscape geometry the pattern bug was hiding in. */
+   without touching the rim.
+   It is DELIBERATELY light. The first version used .74 alpha and turned the plate
+   to mud: measured, that art has a median luminance of 0.023 and a 99th percentile
+   of 0.173 - it was already darker than anything the scrim needed to protect
+   against, and all the scrim did was bury the scene. Art drawn to this spec
+   arrives dark; the scrim is insurance for a bright hotspot, not a dimmer. */
 #app.filmcard.hasart{background-image:none;background-size:cover;background-position:center;
  background-repeat:no-repeat}
 #app.filmcard.hasart::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
  background:
-  radial-gradient(ellipse 62% 58% at 50% 46%, rgba(6,3,14,.74), rgba(6,3,14,.36) 60%, rgba(6,3,14,0) 100%),
-  linear-gradient(to bottom, rgba(6,3,14,.42), rgba(6,3,14,0) 30%, rgba(6,3,14,0) 72%, rgba(6,3,14,.46))}
+  radial-gradient(ellipse 64% 58% at 50% 48%, rgba(6,3,14,.50), rgba(6,3,14,.22) 62%, rgba(6,3,14,0) 100%),
+  linear-gradient(to bottom, rgba(6,3,14,.20), rgba(6,3,14,0) 26%, rgba(6,3,14,0) 76%, rgba(6,3,14,.24))}
+/* Legibility on art cards is bought with a halo behind the GLYPHS, not by
+   darkening the plate. Darkening loses the thing that makes the art worth having -
+   on this plate the hotspot IS the moon. A pre-pass that pulled the moon down only
+   moved the worst case 1.75 to 2.21 anyway, because the wide feather that stops it
+   looking like a cutout also dilutes it right at the peak.
+   The halo travels with the text, so it protects every title length and every
+   future plate without anyone tuning a mask. .filmcard sets text-shadow:none to let
+   the stroke do the work; art cards put a shadow back. */
+#app.filmcard.hasart #card{text-shadow:0 0 5px rgba(4,2,10,.98),0 0 11px rgba(4,2,10,.95),0 2px 16px rgba(4,2,10,.92),0 0 30px rgba(4,2,10,.85),0 0 54px rgba(4,2,10,.6)}
+#app.filmcard.hasart #timer,#app.filmcard.hasart #score{text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 20px rgba(4,2,10,.7)}
 /* content has to clear the scrim */
 #app.filmcard.hasart>.screen{position:relative;z-index:1}
 #app.filmcard.fx-haze{
@@ -992,7 +1005,7 @@ function _stageVars(bg,ol){ try{ var st=document.getElementById('stage');
    own background. */
 var FILM_CARD={
  mv_animated :['#2A1258','#1B0B33','tiedye'], mv_drama    :['#2A3442','#D9A441'],
- mv_scifi    :['#08303F','#35E0FF'], mv_fantasy  :['#241046','#8FE3B0','haze'],
+ mv_scifi    :['#08303F','#35E0FF'], mv_fantasy  :['#241046','#D9B87A','haze'],
  mv_action   :['#7A1F0C','#FFB020'], mv_superhero:['#17307A','#FFCC00'],
  mv_comedy   :['#6B380B','#FFD35C'], mv_romance  :['#6B1338','#FF9EC4'],
  mv_crime    :['#1A1A1E','#C8A24A'], mv_war      :['#39402C','#14180E','camo'],
