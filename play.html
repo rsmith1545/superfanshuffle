@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v188"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v189"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -825,11 +825,39 @@ var app=document.getElementById('app');
    a Celtics shuffle showed green on top of purple. Mirror the vars onto #stage. */
 function _stageVars(bg,ol){ try{ var st=document.getElementById('stage');
  if(st){ st.style.setProperty('--cardbg',bg); st.style.setProperty('--cardoutline',ol); } }catch(e){} }
-var FILM_BG='#2B2B31', FILM_OUTLINE='#F2C14E';
+/* ===== Movies & TV cards are coloured BY GENRE =====
+   Every one of the 19 film/TV vaults shipped the same two colours - #3a2a6e for all
+   12 movie genres and #2a3a6e for all 7 TV genres - so Animated, Horror, Romance and
+   War were visually identical. Sports carries 121 distinct colourways across 124
+   vaults and music 6 across 67; Film & TV had 2 across 19, the least identity of any
+   edition.
+   Genre is the axis these vaults are already organised on, so it is the right one to
+   colour by - the same way sports colours by team.
+   Black and gold is NOT dropped: it stays the edition's chrome (store tab, guide
+   accent) and it is still the card for Crime, which is where a noir palette actually
+   belongs. It was never a bad palette, it was one genre's palette applied to all 19.
+   Every pair below clears 9:1 for white lettering and 4:1 for the outline against its
+   own background. */
+var FILM_CARD={
+ mv_animated :['#123F96','#FFD23F'], mv_drama    :['#2A3442','#D9A441'],
+ mv_scifi    :['#08303F','#35E0FF'], mv_fantasy  :['#2B1A4D','#8FE3B0'],
+ mv_action   :['#7A1F0C','#FFB020'], mv_superhero:['#17307A','#FFCC00'],
+ mv_comedy   :['#6B380B','#FFD35C'], mv_romance  :['#6B1338','#FF9EC4'],
+ mv_crime    :['#1A1A1E','#C8A24A'], mv_war      :['#2E3524','#C6B27A'],
+ mv_sports   :['#123D22','#F2E2A0'], mv_horror   :['#2A0A0A','#E23A3A'],
+ tv_cartoon  :['#0A4E5C','#FFD23F'], tv_sitcom   :['#7A3E0C','#FFC96B'],
+ tv_scifi    :['#10233F','#5FD3FF'], tv_binge    :['#3A1050','#E070FF'],
+ tv_oldschool:['#33291C','#D8B98A'], tv_growingup:['#14456B','#7FD4FF'],
+ tv_gameshow :['#5C0F52','#FFD23F']};
+/* Fallback is the edition's own black + gold, so a film vault added later without a
+   genre entry still gets a coherent card rather than the default purple. */
+var FILM_BG='#1F1F24', FILM_OUTLINE='#F2C14E';
+function filmCard(){ var v=FILM_CARD[VAULT_ID]; return v?{b:v[0],o:v[1]}:{b:FILM_BG,o:FILM_OUTLINE}; }
 function applyFilmCard(){
  if(ED!=='filmtv') return false;
- app.style.setProperty('--cardbg',FILM_BG); app.style.setProperty('--cardoutline',FILM_OUTLINE);
- _stageVars(FILM_BG,FILM_OUTLINE);
+ var fc=filmCard();
+ app.style.setProperty('--cardbg',fc.b); app.style.setProperty('--cardoutline',fc.o);
+ _stageVars(fc.b,fc.o);
  app.style.setProperty('--olw','2.2vmin'); app.classList.add('filmcard'); return true; }
 function applySportCard(){
  var _sc=spCard(); if(!_sc) return false;
