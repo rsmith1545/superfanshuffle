@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v183"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v184"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -142,17 +142,29 @@
   repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 5px);
  border:.5vh solid var(--cardoutline,#2a1257);
  box-shadow:0 1vmin 2.2vmin rgba(0,0,0,.55);
- animation:shufCard 2.4s cubic-bezier(.55,.05,.3,1) infinite}
-.shufDeck i:nth-child(1){animation-delay:0s}
-.shufDeck i:nth-child(2){animation-delay:.12s}
-.shufDeck i:nth-child(3){animation-delay:.24s}
-.shufDeck i:nth-child(4){animation-delay:.36s}
-.shufDeck i:nth-child(5){animation-delay:.48s}
+ animation:shufCard 2.9s cubic-bezier(.55,.05,.3,1) forwards}
+.shufDeck i:nth-child(1){animation-delay:0s;--fx:-1.1vh;--fy:-.5vh;--fr:-4deg}
+.shufDeck i:nth-child(2){animation-delay:.10s;--fx:-.5vh;--fy:-.25vh;--fr:-2deg}
+.shufDeck i:nth-child(3){animation-delay:.20s;--fx:0;--fy:0;--fr:0deg}
+.shufDeck i:nth-child(4){animation-delay:.30s;--fx:.5vh;--fy:.25vh;--fr:2deg}
+.shufDeck i:nth-child(5){animation-delay:.40s;--fx:1.1vh;--fy:.5vh;--fr:4deg}
+/* Two riffles, then the deck SETTLES into a tidy stack and stays there - the
+   original looped forever and never resolved, which is not what a shuffle does.
+   Each card's resting offset comes from its own --fx/--fr, so they settle into a
+   slightly staggered stack like a real deck rather than a perfect pile.
+   shufReplay() below re-runs it every few seconds so a slow player is not left
+   watching a static stack. */
 @keyframes shufCard{
- 0%,100%{transform:translate(0,0) rotate(0deg)}
- 22%{transform:translate(-5.5vh,-1.2vh) rotate(-15deg)}
+ 0%{transform:translate(0,0) rotate(0deg)}
+ 11%{transform:translate(-5.5vh,-1.2vh) rotate(-15deg)}
+ 24%{transform:translate(0,0) rotate(0deg)}
+ 36%{transform:translate(5.5vh,-1.2vh) rotate(15deg)}
  48%{transform:translate(0,0) rotate(0deg)}
- 72%{transform:translate(5.5vh,-1.2vh) rotate(15deg)}}
+ 58%{transform:translate(-4.4vh,-1vh) rotate(-11deg)}
+ 68%{transform:translate(0,0) rotate(0deg)}
+ 78%{transform:translate(4.4vh,-1vh) rotate(11deg)}
+ 88%{transform:translate(0,0) rotate(0deg)}
+ 100%{transform:translate(var(--fx,0),var(--fy,0)) rotate(var(--fr,0deg))}}
 @media (prefers-reduced-motion:reduce){
  .shufDeck i{animation:none}
  .shufDeck i:nth-child(1){transform:translate(-4vh,0) rotate(-10deg)}
@@ -846,7 +858,11 @@ function quitToHome(){
  try{ if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen(); }catch(e){}
  var reduce=false; try{ reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches; }catch(e){}
  app.classList.add('quitting');
- setTimeout(function(){ location.href='index.html'; }, reduce?180:740);
+ /* Back to the PLAY screen on the edition you came from, not the bare home
+    screen - index.html reads ?ed= on load and restores curEdition + accent, so
+    quitting a film round lands you back in Movies & TV. */
+ var _back='index.html'+((typeof ED!=='undefined'&&ED)?('?ed='+encodeURIComponent(ED)):'');
+ setTimeout(function(){ location.href=_back; }, reduce?180:740);
 }
 (function(){
  var g=document.getElementById('sGame'); if(!g) return;
@@ -1004,15 +1020,32 @@ function ready(){
   var gr=document.getElementById('getReady'); gr.style.display='none'; gr.classList.remove('pulsing');
   document.getElementById('big').style.display='none';
   if(isLandscape()){ awaitingLandscape=false; document.getElementById('rotateMsg').style.display='none'; startCountdown(); return; }
-  awaitingLandscape=true; document.getElementById('rotateMsg').style.display='';   // wait for phone-to-forehead (landscape / tilt) to kickstart
+  awaitingLandscape=true; document.getElementById('rotateMsg').style.display=''; try{ shufReplay(); }catch(e){}   // wait for phone-to-forehead (landscape / tilt) to kickstart
   clearTimeout(_readyTO); _readyTO=setTimeout(function(){ if(awaitingLandscape){ awaitingLandscape=false; startCountdown(); } }, 20000);
+}
+/* Re-deal every few seconds while we wait for the phone to reach the forehead.
+   The wait is user-paced (up to the 20s timeout), so one shuffle would leave a
+   static stack for most of it. Stops as soon as the ready screen goes away. */
+var _shufTO=null;
+function shufReplay(){
+ clearTimeout(_shufTO);
+ _shufTO=setTimeout(function(){
+   var st=document.getElementById('sReady');
+   var rm=document.getElementById('rotateMsg');
+   if(!st||!st.classList.contains('on')||!rm||rm.style.display==='none') return;
+   var cards=document.querySelectorAll('.shufDeck i');
+   for(var i=0;i<cards.length;i++){ cards[i].style.animation='none'; }
+   void document.querySelector('.shufDeck').offsetWidth;
+   for(var j=0;j<cards.length;j++){ cards[j].style.animation=''; }
+   shufReplay();
+ }, 4600);
 }
 function checkOrientation(){ if(awaitingLandscape && isLandscape()){ awaitingLandscape=false; startCountdown(); } }
 function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 function startCountdown(){
   if(counting) return; counting=true; clearTimeout(_readyTO);
   document.body.classList.add('lock-ls'); tryLockLandscape();   // fake-landscape the Face-the-Music + 3-2-1 screens (iOS)
-  document.getElementById('rotateMsg').style.display='none';
+  document.getElementById('rotateMsg').style.display='none'; try{ clearTimeout(_shufTO); }catch(e){}
   var gr=document.getElementById('getReady'), big=document.getElementById('big');
   big.style.display='none';
   gr.style.display='block'; gr.classList.add('pulsing');
