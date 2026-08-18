@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v190"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v191"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -111,6 +111,41 @@
   repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px)}
 /* the ghost cards behind the shuffle get the same treatment so the deck matches */
 #stage.shuf .deckGhost.tiedye{background-color:#2A1258}
+
+/* ===== War: woodland camo =====
+   Same pattern hook as the tie-dye. Camo is built from hard-edged ellipses rather
+   than soft gradients - the abrupt 0/62% stops are what make a blob read as a painted
+   patch instead of a glow. Each layer tiles on its own 190px grid at a different
+   offset, so the blobs interlock and never line up into a visible repeat.
+   Tones are deliberately all dark-to-mid: the lightest khaki is still dark enough that
+   white lettering holds, and the outline is near-black olive rather than the khaki the
+   flat version used, for the same reason the tie-dye needed a dark stroke. */
+#app.filmcard.fx-camo{
+ background-color:#39402C;
+ background-image:
+  radial-gradient(ellipse 62px 44px at 30% 26%, #232A18 0 62%, transparent 63%),
+  radial-gradient(ellipse 48px 62px at 74% 44%, #232A18 0 62%, transparent 63%),
+  radial-gradient(ellipse 70px 40px at 18% 78%, #4E4A2E 0 62%, transparent 63%),
+  radial-gradient(ellipse 44px 54px at 88% 84%, #4E4A2E 0 62%, transparent 63%),
+  radial-gradient(ellipse 54px 38px at 52% 62%, #6B6A44 0 62%, transparent 63%),
+  radial-gradient(ellipse 40px 50px at 8% 44%, #6B6A44 0 62%, transparent 63%),
+  radial-gradient(ellipse 58px 42px at 62% 10%, #2C3320 0 62%, transparent 63%),
+  radial-gradient(ellipse 46px 58px at 36% 94%, #2C3320 0 62%, transparent 63%),
+  radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.40) 100%),
+  repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 1px,transparent 1px 6px),
+  repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);
+ /* Every layer tiled at the same 190px and the grid was plainly visible - the whole
+    card repeated twice across. These sizes are mutually coprime, so the layers only
+    realign after their least common multiple, which is far larger than any screen.
+    No visible repeat without drawing a single extra blob. */
+ background-size:
+  149px 149px, 173px 173px, 191px 191px, 211px 211px,
+  229px 229px, 251px 251px, 163px 163px, 197px 197px,
+  auto, auto, auto;
+ background-position:
+  0 0, 95px 40px, 40px 120px, 140px 90px,
+  70px 20px, 20px 150px, 120px 60px, 160px 10px,
+  0 0, 0 0, 0 0}
 /* ===== the CARD shuffles, not a picture of cards =====
    Two ghost cards sit behind #app with identical geometry, and #app itself is the
    top card of the deck. Riffling moves the real card - the one with the border, the
@@ -868,7 +903,7 @@ var FILM_CARD={
  mv_scifi    :['#08303F','#35E0FF'], mv_fantasy  :['#2B1A4D','#8FE3B0'],
  mv_action   :['#7A1F0C','#FFB020'], mv_superhero:['#17307A','#FFCC00'],
  mv_comedy   :['#6B380B','#FFD35C'], mv_romance  :['#6B1338','#FF9EC4'],
- mv_crime    :['#1A1A1E','#C8A24A'], mv_war      :['#2E3524','#C6B27A'],
+ mv_crime    :['#1A1A1E','#C8A24A'], mv_war      :['#39402C','#14180E','camo'],
  mv_sports   :['#123D22','#F2E2A0'], mv_horror   :['#2A0A0A','#E23A3A'],
  tv_cartoon  :['#0A4E5C','#FFD23F'], tv_sitcom   :['#7A3E0C','#FFC96B'],
  tv_scifi    :['#10233F','#5FD3FF'], tv_binge    :['#3A1050','#E070FF'],
@@ -884,7 +919,7 @@ function applyFilmCard(){
  var fc=filmCard();
  app.style.setProperty('--cardbg',fc.b); app.style.setProperty('--cardoutline',fc.o);
  _stageVars(fc.b,fc.o);
- app.classList.remove('fx-tiedye'); if(fc.fx) app.classList.add('fx-'+fc.fx);
+ app.classList.remove('fx-tiedye','fx-camo'); if(fc.fx) app.classList.add('fx-'+fc.fx);
  app.style.setProperty('--olw','2.2vmin'); app.classList.add('filmcard'); return true; }
 function applySportCard(){
  var _sc=spCard(); if(!_sc) return false;
