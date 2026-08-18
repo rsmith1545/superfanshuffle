@@ -891,62 +891,33 @@ function qpgIco(n){var s='<svg width="100%" height="100%" viewBox="0 0 24 24" fi
 function qpgAv(){return '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10.5"/><circle cx="12" cy="9.6" r="3.3" fill="currentColor" stroke="none"/><path d="M5.6 19.4a6.7 6.7 0 0112.8 0" fill="currentColor" stroke="none"/></svg>';}
 function qpgD(){return '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';}
 function qpgU(){return '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';}
-/* ===== guide accent picker (rebuilt Aug 2026 — see the audit note below) =====
-   The old version only guarded against a near-WHITE outline. It had no guard for a
-   near-BLACK one, and 52 of the 124 teams carry an outline that fails 3:1 against the
-   guide's #0e1c2e background — 30 of them are pure #000000 (Celtics, Bulls, Raptors,
-   Bruins...). On those teams the accent text and the TAP TO PLAY button rendered black
-   on near-black. Now: take whichever of the team's two colours reads better on the
-   guide background, and if even that is under the floor, lift it toward white until it
-   clears. Result is 124/124 legible; 21 teams get a lift, and most of those are a few
-   percent (Pistons #C8102E -> #CA1734). */
-var QPG_BG='#0e1c2e', QPG_FLOOR=3.2;
+/* ===== guide chrome colours (settled Aug 2026) =====
+   The guide does NOT use team colours. It did briefly, and the audit that came out of
+   it is worth keeping in mind if anyone reconsiders:
+     - 52 of the 124 teams have a card outline that fails 3:1 on this background, 30 of
+       them pure #000000, so a naive team accent renders black-on-black.
+     - Only 13 teams own a genuine, legible, distinct SECOND colour. For the rest the
+       second colour is black, white, or so dark it has to be lifted into a hue the team
+       does not actually own (Braves navy #13274F -> a bright blue).
+     - Worse, the "official" second colours that do exist are mostly unrecognisable:
+       Celtics Gold #BA9653 is a tan in the leprechaun's vest, Yankees red #E4002C is a
+       mark nobody pictures. Technically correct, reads as wrong.
+   The card behind the guide is navy and the game card carries the team colours already,
+   so the guide is app chrome: the sports edition orange plus the standing light blue.
+   Team colours still drive the GAME screens via #app.sportcard - that is unchanged. */
+var QPG_BG='#0e1c2e';
+var QPG_ACCENT={sports:'#FF8A2A', music:'#ff5cf0'};   /* sports orange = the store's Sports tab tint */
+var QPG_SECOND='#5fa8e8';
 function _qRgb(h){ h=(h||'').replace('#',''); if(h.length!==6) return null;
  return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)]; }
-function _qHex(c){ var s='#'; for(var i=0;i<3;i++){ var v=Math.round(Math.max(0,Math.min(255,c[i]))).toString(16); s+=(v.length<2?'0':'')+v; } return s; }
 function _qLum(h){ var c=_qRgb(h); if(!c) return 0; var o=[];
  for(var i=0;i<3;i++){ var v=c[i]/255; o[i]=(v<=.03928)?v/12.92:Math.pow((v+.055)/1.055,2.4); }
  return .2126*o[0]+.7152*o[1]+.0722*o[2]; }
 function _qCr(a,b){ var x=_qLum(a),y=_qLum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); }
-/* Lift in HSL — raise LIGHTNESS only, keep hue and saturation. Blending toward white
-   instead would desaturate: Toronto's #00205B came out #6b6b6b grey, which reads as a
-   bug, not as a team colour. This keeps a dark navy a navy. */
-function _qHsl(c){ var r=c[0]/255,g=c[1]/255,b=c[2]/255,
- mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,l=(mx+mn)/2,h=0,s=0;
- if(d){ s=l>.5?d/(2-mx-mn):d/(mx+mn);
-  h=(mx===r)?((g-b)/d+(g<b?6:0)):(mx===g)?((b-r)/d+2):((r-g)/d+4); h/=6; }
- return [h,s,l]; }
-function _qRgbFromHsl(h,s,l){ function f(p,q,t){ if(t<0)t+=1; if(t>1)t-=1;
-  if(t<1/6)return p+(q-p)*6*t; if(t<1/2)return q; if(t<2/3)return p+(q-p)*(2/3-t)*6; return p; }
- if(!s) return [l*255,l*255,l*255];
- var q=l<.5?l*(1+s):l+s-l*s, p=2*l-q;
- return [f(p,q,h+1/3)*255, f(p,q,h)*255, f(p,q,h-1/3)*255]; }
-function _qLift(h,t,bg){ var c=_qRgb(h); if(!c) return h;
- var v=_qHsl(c), hu=v[0], sa=v[1], li=v[2];
- for(var k=0;k<=100;k++){ var n=_qHex(_qRgbFromHsl(hu,sa,Math.min(1,li+k/100)));
-  if(_qCr(n,bg)>=t) return n; }
- return '#ffffff'; }
-/* chroma, not HSV saturation — HSV calls #101820 "50% saturated" when it is basically
-   black. (max-min)/255 correctly scores it 0.06 and the Steelers' gold 0.93. */
-function _qChroma(h){ var c=_qRgb(h); if(!c) return 0;
- return (Math.max(c[0],c[1],c[2])-Math.min(c[0],c[1],c[2]))/255; }
-/* Pick order:
-   1. If either colour already clears the floor untouched, use it — an unmodified team
-      colour is always truer than a lifted one. Best contrast wins if both clear.
-   2. If neither clears, take the more CHROMATIC one and lift that.
-   Rule 2 is what saves Toronto: their navy #00205B actually scores WORSE than black
-   against this navy-ish background (1.11 vs 1.22), so a contrast-only rule picked
-   black — and lifting a hueless colour can only produce grey. Chroma picks the navy. */
-function qpgAccent(){ if(ED==='music') return '#ff5cf0';
- var sc=spCard(); if(!sc) return '#f47b20';
- var o=sc.o||'#f47b20', b=sc.b||o;
- var co=_qCr(o,QPG_BG), cb=_qCr(b,QPG_BG);
- var oOk=co>=QPG_FLOOR, bOk=cb>=QPG_FLOOR;
- if(oOk||bOk){ if(oOk&&bOk) return co>=cb?o:b; return oOk?o:b; }
- return _qLift(_qChroma(o)>=_qChroma(b)?o:b, QPG_FLOOR, QPG_BG); }
-/* TAP TO PLAY sits ON the accent, so its ink has to flip. 67 of the 124 teams have a
-   gold/silver/grey accent where white lettering falls under 3:1 (Steelers gold = 1.76,
-   Yankees silver = 1.60). Those get dark ink instead. */
+function qpgAccent(){ return QPG_ACCENT[ED] || QPG_ACCENT.sports; }
+function qpgSecond(){ return QPG_SECOND; }
+/* TAP TO PLAY sits ON the accent, so its ink flips. White on the sports orange is only
+   2.35:1 - well under the 3:1 large-text floor - so that button takes dark ink. */
 function qpgInk(acc){ return _qCr('#ffffff',acc)>=3.2 ? '#ffffff' : '#10161f'; }
 /* per-edition content for the guide. Layout, animation and the PASS/CORRECT
    colours are shared; only copy, icons and the accent change. PASS stays orange
@@ -992,7 +963,7 @@ function renderQPG(){
  st.className='screen on qpgmode';
  try{ document.getElementById('app').classList.add('qpgapp'); }catch(e){}
  try{ st.style.setProperty('--qglow', hexA(acc,.20)); }catch(e){}
- st.innerHTML='<div class="qpg '+(CFG.cls||'')+'" style="--qo:'+acc+';--qink:'+qpgInk(acc)+'">'
+ st.innerHTML='<div class="qpg '+(CFG.cls||'')+'" style="--qo:'+acc+';--qink:'+qpgInk(acc)+';--qb:'+qpgSecond()+'">'
   +'<div class="qpgt"><div class="qdash"><i></i><i></i></div><h1>QUICK PLAY GUIDE</h1><div class="qdash r"><i></i><i></i></div></div>'
   +'<div class="qtilt">'
     +'<div class="qc"><div class="qring qg qringG">'+qpgD()+'</div><div><div class="qlab qg">CORRECT</div><div class="qsub">TILT DOWN</div></div></div>'
