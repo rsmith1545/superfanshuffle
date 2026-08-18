@@ -19,8 +19,13 @@
  #app.st-correct{background-color:var(--green);border-color:#fff;box-shadow:0 0 48px rgba(255,255,255,.7),inset 0 0 72px rgba(255,255,255,.5)}
  #app.st-pass{background-color:var(--orange);box-shadow:0 0 26px rgba(255,255,255,.35),inset 0 0 42px rgba(255,255,255,.28)}
  #app.st-timeup{background-color:#e01e4a;box-shadow:0 0 28px rgba(255,0,80,.5),inset 0 0 42px rgba(255,0,80,.4)}
-#app.sportcard{background-color:var(--cardbg,#2a1257)}
-#app.sportcard #card{color:#fff;-webkit-text-stroke-width:var(--olw,2.2vmin);-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;text-shadow:none;letter-spacing:.1em}
+/* Sports and Movies & TV share ONE lettering treatment - white fill plus a
+   -webkit-text-stroke outline - so they can never drift apart. Only the source
+   of the values differs: sports reads the team's card colours, film is a fixed
+   charcoal with gold. Only background-COLOR is set, so #app's radial sheen and
+   its two 45deg repeating gradients (the line/check weave) carry through. */
+#app:is(.sportcard,.filmcard){background-color:var(--cardbg,#2a1257)}
+#app:is(.sportcard,.filmcard) #card{color:#fff;-webkit-text-stroke-width:var(--olw,2.2vmin);-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;text-shadow:none;letter-spacing:.1em}
 #fb{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1vmin;background:rgba(4,6,12,.66);z-index:6}
 #fb.on{display:flex}
 .fbGlyph{font-family:var(--disp);font-size:36vmin;line-height:.82;color:#fff}
@@ -422,24 +427,24 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .qcta:active{transform:translateY(1px)}
 
 /* ===== team-coloured lettering: white fill + the team's card outline =====
-   Same technique as #app.sportcard #card (white + -webkit-text-stroke), applied
+   Same technique as #app:is(.sportcard,.filmcard) #card (white + -webkit-text-stroke), applied
    to the pre-game screens, the score and the unlock wall. Stroke widths are
    tuned per element so small text doesn't clog. ===== */
-#app.sportcard .fhText,
-#app.sportcard #getReady,
-#app.sportcard #big,
-#app.sportcard #score,
-#app.sportcard .wallHead{
+#app:is(.sportcard,.filmcard) .fhText,
+#app:is(.sportcard,.filmcard) #getReady,
+#app:is(.sportcard,.filmcard) #big,
+#app:is(.sportcard,.filmcard) #score,
+#app:is(.sportcard,.filmcard) .wallHead{
  color:#fff;-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;
  text-shadow:0 2px 9px rgba(0,0,0,.45)}
-#app.sportcard .fhText  {-webkit-text-stroke-width:1.05vmin}
-#app.sportcard #getReady{-webkit-text-stroke-width:1.05vmin}
-#app.sportcard #big     {-webkit-text-stroke-width:1.9vmin}
-#app.sportcard #score   {-webkit-text-stroke-width:.85vmin;letter-spacing:1px}
-#app.sportcard .wallHead{-webkit-text-stroke-width:1.2vmin}
-#app.sportcard .fhHint{color:rgba(255,255,255,.86);text-shadow:0 1px 6px rgba(0,0,0,.5)}
-#app.sportcard .wallTaste{color:var(--cardoutline,#fff);text-shadow:0 2px 9px rgba(0,0,0,.5);opacity:1}
-#app.sportcard .btn.buy{border-color:var(--cardoutline,#fff);
+#app:is(.sportcard,.filmcard) .fhText  {-webkit-text-stroke-width:1.05vmin}
+#app:is(.sportcard,.filmcard) #getReady{-webkit-text-stroke-width:1.05vmin}
+#app:is(.sportcard,.filmcard) #big     {-webkit-text-stroke-width:1.9vmin}
+#app:is(.sportcard,.filmcard) #score   {-webkit-text-stroke-width:.85vmin;letter-spacing:1px}
+#app:is(.sportcard,.filmcard) .wallHead{-webkit-text-stroke-width:1.2vmin}
+#app:is(.sportcard,.filmcard) .fhHint{color:rgba(255,255,255,.86);text-shadow:0 1px 6px rgba(0,0,0,.5)}
+#app:is(.sportcard,.filmcard) .wallTaste{color:var(--cardoutline,#fff);text-shadow:0 2px 9px rgba(0,0,0,.5);opacity:1}
+#app:is(.sportcard,.filmcard) .btn.buy{border-color:var(--cardoutline,#fff);
  background:linear-gradient(180deg,var(--cardoutline,#333),rgba(0,0,0,.34));
  color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);box-shadow:0 6px 18px rgba(0,0,0,.5)}
 
@@ -582,6 +587,11 @@ var MAX_Q=5;
 var app=document.getElementById('app');
 /* team card vars applied once, up front — so the forehead screen, the 3-2-1 and
    the score are already the team's colours before the first card is dealt. */
+var FILM_BG='#2B2B31', FILM_OUTLINE='#F2C14E';
+function applyFilmCard(){
+ if(ED!=='filmtv') return false;
+ app.style.setProperty('--cardbg',FILM_BG); app.style.setProperty('--cardoutline',FILM_OUTLINE);
+ app.style.setProperty('--olw','2.2vmin'); app.classList.add('filmcard'); return true; }
 function applySportCard(){
  var _sc=spCard(); if(!_sc) return false;
  app.style.setProperty('--cardbg',_sc.b); app.style.setProperty('--cardoutline',_sc.o);
@@ -671,7 +681,7 @@ function hideFb(){ var f=document.getElementById('fb'); if(f) f.classList.remove
 function flash(good,label){
   var cd=document.getElementById('card');
   var last = PREVIEW && qCount>=MAX_Q;
-  if(app.classList.contains('sportcard')){
+  if(app.classList.contains('sportcard')||app.classList.contains('filmcard')){
     showFb(good?'correct':'pass', good?'\u2713':'\u2717', label);
     setTimeout(function(){ if(!playing) return; hideFb(); if(last){ endPreview(); return; } current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }, good?620:550);
     return;
@@ -688,6 +698,7 @@ function startGame(){
   document.getElementById('score').textContent='0';
   show('sGame'); app.classList.remove('st-correct','st-pass','st-timeup');
   applySportCard(); if(!spCard()) { app.classList.remove('sportcard'); app.style.removeProperty('--cardbg'); app.style.removeProperty('--cardoutline'); }
+  applyFilmCard(); if(ED!=='filmtv'){ app.classList.remove('filmcard'); }
   hideFb(); sndGo(); requestWake();
   var tEl0=document.getElementById('timer'); tEl0.classList.remove('pulsing');
   document.body.classList.add('lock-ls'); tryLockLandscape();
@@ -722,7 +733,7 @@ function endGame(){
   var tEl=document.getElementById('timer'); tEl.classList.remove('pulsing'); tEl.textContent='0:00';
   sndBuzzer();
   app.classList.remove('st-correct','st-pass');
-  if(app.classList.contains('sportcard')){ showFb('timeup','\u23F1',"TIME'S UP"); }
+  if(app.classList.contains('sportcard')||app.classList.contains('filmcard')){ showFb('timeup','\u23F1',"TIME'S UP"); }
   else { app.classList.add('st-timeup'); var cd=document.getElementById('card'); cd.textContent="TIME'S UP"; cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }
   buzz([160,80,160,80,220]);
   setTimeout(function(){ app.classList.remove('st-timeup'); hideFb(); document.body.classList.remove('lock-ls'); tryPortrait(); showReport(); }, 1800);
@@ -939,7 +950,8 @@ function dbgTick(){ if(!dbgOn) return; document.getElementById('dbg').innerHTML=
 /* ===== QUICK PLAY GUIDE — sports only. Replaces the sStart copy and IS the
    gesture gate: its TAP TO PLAY fires the same fullscreen/audio/motion bundle
    the old startBtn did, so nothing about iOS unlocking changes. ===== */
-function qpgIco(n){var s='<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">';
+function qpgIco(n){var f=qpgFilmIco(n); if(f) return f;
+ var s='<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">';
  if(n=='disc')return s+'<circle cx="12" cy="12" r="9.3"/><circle cx="12" cy="12" r="2.6"/><path d="M12 2.7a9.3 9.3 0 00-6.6 2.7l4.7 4.7A2.6 2.6 0 0112 9.4z" fill="currentColor" stroke="none"/></svg>';
  if(n=='cal')return s+'<rect x="3" y="5" width="18" height="16" rx="2.4"/><path d="M3 9.6h18M8 3v3.4M16 3v3.4" stroke-linecap="round"/><rect x="6.6" y="12.6" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="10.8" y="12.6" width="2.6" height="2.4" fill="currentColor" stroke="none"/><rect x="15" y="12.6" width="2.6" height="2.4" fill="currentColor" stroke="none"/></svg>';
  if(n=='star')return s+'<path d="M12 2.8l2.9 6 6.6 1-4.8 4.6 1.2 6.6L12 17.9 6.1 21l1.2-6.6L2.5 9.8l6.6-1z"/></svg>';
@@ -965,9 +977,9 @@ function qpgU(){return '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="
        mark nobody pictures. Technically correct, reads as wrong.
    The card behind the guide is navy and the game card carries the team colours already,
    so the guide is app chrome: the sports edition orange plus the standing light blue.
-   Team colours still drive the GAME screens via #app.sportcard - that is unchanged. */
+   Team colours still drive the GAME screens via #app:is(.sportcard,.filmcard) - that is unchanged. */
 var QPG_BG='#0e1c2e';
-var QPG_ACCENT={sports:'#FF8A2A', music:'#ff5cf0'};   /* sports orange = the store's Sports tab tint */
+var QPG_ACCENT={sports:'#FF8A2A', music:'#ff5cf0', filmtv:'#F2C14E'};  /* each = that edition's tint in the store */
 var QPG_SECOND='#5fa8e8';
 function _qRgb(h){ h=(h||'').replace('#',''); if(h.length!==6) return null;
  return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)]; }
@@ -991,6 +1003,13 @@ var QPGCFG={
   clues:[['pos','Position<br>&amp; Years'],['team','Team'],['num','Number'],['awd','Awards'],['big','Big<br>Moments']],
   beg:['First names are fair game.',''],
   sup:['No first names.','Know the player? Prove it.']},
+ filmtv:{cls:'q4', clueHead:'OTHER CLUES YOU CAN USE', how:[
+   ['quote','QUOTE IT','Famous lines count \u2014 just not the title.','qo'],
+   ['hands','ACT IT OUT','Use actions, gestures or movement.','qb'],
+   ['bubble','DESCRIBE IT','Talk around the answer without saying it.','qb']],
+  clues:[['clap','Genre'],['cal','Year'],['star','Cast'],['heart','What It&rsquo;s<br>About']],
+  beg:['Actor names are fair game.',''],
+  sup:['No actor names.','Quote it or act it.']},
  music:{cls:'q4 qgrad', clueHead:'OTHER CLUES YOU CAN USE', how:[
    ['mic','SING IT','Lyrics, the chorus, even &ldquo;la-la-la&rdquo;.','qo'],
    ['note','HUM IT','Carry the tune, let them fill in the words.','qb'],
@@ -1000,7 +1019,12 @@ var QPGCFG={
   beg:['Hum it. Sing it. Say it.',''],
   sup:['Lyrics only.','No chorus.']}
 };
+function qpgFilmIco(n){
+ if(n=='clap')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="8.5" width="19" height="12" rx="2"/><path d="M2.9 8.5l2.6-4 4.4-.9-2.6 4zM9.9 7.6l2.6-4 4.4-.9-2.6 4zM16.9 6.7l2.6-4 2 1.4-2 3.1z" fill="currentColor" stroke="none"/></svg>';
+ if(n=='quote')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 5.6C6.5 6.9 4.6 9.6 4.6 12.9c0 3 1.8 5.1 4.2 5.1 2 0 3.5-1.5 3.5-3.4 0-1.9-1.3-3.2-3.1-3.2-.3 0-.7 0-1 .2.4-1.5 1.6-2.9 3.3-3.7zM19.6 5.6c-3.1 1.3-5 4-5 7.3 0 3 1.8 5.1 4.2 5.1 2 0 3.5-1.5 3.5-3.4 0-1.9-1.3-3.2-3.1-3.2-.3 0-.7 0-1 .2.4-1.5 1.6-2.9 3.3-3.7z"/></svg>';
+ return '';}
 function qpgHowIco(n){
+ var f=qpgFilmIco(n); if(f) return f;
  if(n=='bubble')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 12a8 7 0 01-8 7 9 9 0 01-3-.5L4.5 20l1-3.4A6.8 6.8 0 013 12a8 7 0 018-7h2a8 7 0 018 7z" stroke-linejoin="round"/><circle cx="9" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="12.5" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1.15" fill="currentColor" stroke="none"/></svg>';
  if(n=='hands')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.5V5.4a1.3 1.3 0 012.6 0v6M11.6 11.4V4.2a1.3 1.3 0 012.6 0v7.2"/><path d="M14.2 11.8V6.6a1.3 1.3 0 012.6 0v7.6c0 3.4-2.2 5.8-5.2 5.8-2.4 0-3.8-1-4.9-2.7l-2.3-3.6a1.3 1.3 0 012-1.6l1.6 1.6"/><path d="M4.6 5.2l1.5 1.5M7.4 3.2l.5 1.9M3 8.6l1.9.5"/></svg>';
  if(n=='mic')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.4" width="6" height="11" rx="3"/><path d="M5.4 11.2a6.6 6.6 0 0013.2 0M12 17.8V21M9 21h6"/><path d="M18.4 5.2c.9.9.9 2.4 0 3.3M20.4 3.4c1.9 1.9 1.9 5 0 6.9"/></svg>';
@@ -1080,10 +1104,12 @@ function renderQPG(){
    if(!_tracking) return; _tracking=false;
    var t=(e.changedTouches&&e.changedTouches[0]); if(!t) return;
    var dx=t.clientX-_sx, dy=t.clientY-_sy;
-   /* swipe RIGHT = back, the platform gesture. Always available. */
-   if(dx>80 && Math.abs(dx)>Math.abs(dy)*2){ qpgExit(); return; }
-   /* swipe DOWN = dismiss, but only from the top of the guide so it cannot
-      steal a normal scroll gesture further down the page. */
+   /* Swipe DOWN = dismiss, and only from the very top of the guide so it cannot
+      steal a normal scroll further down the page.
+      There is deliberately NO swipe-right handler. iOS and Android already treat a
+      right swipe as "back", so handling it here fired history.back() twice and
+      skipped straight past the vault card - verified going two pages deep in test.
+      Let the platform own the gesture it already owns. */
    if(dy>100 && Math.abs(dy)>Math.abs(dx)*2 && _st0<=0){ qpgExit(); return; }
  },{passive:true});
 }
@@ -1101,9 +1127,10 @@ function qpgPick(el,mode){ RCLUE=mode;
  var all=el.parentNode.getElementsByClassName('qmode');
  for(var i=0;i<all.length;i++) all[i].classList.remove('sel');
  el.classList.add('sel'); }
-if(ED==='sports'||ED==='music'){ try{ renderQPG(); }catch(e){} }
+if(ED==='sports'||ED==='music'||ED==='filmtv'){ try{ renderQPG(); }catch(e){} }
 
 /* sports vaults get their own card colours + wall copy from the very first screen */
+if(ED==='filmtv'){ try{ applyFilmCard(); }catch(e){} }
 if(ED==='sports'){ try{ applySportCard(); }catch(e){}
  try{ var _wm=document.getElementById('wallMix');
    if(_wm) _wm.innerHTML='players, coaches, stadiums &amp; team lore'; }catch(e){} }
