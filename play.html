@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v197"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v198"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -196,6 +196,17 @@
    the stroke do the work; art cards put a shadow back. */
 #app.filmcard.hasart #card{text-shadow:0 0 5px rgba(4,2,10,.98),0 0 11px rgba(4,2,10,.95),0 2px 16px rgba(4,2,10,.92),0 0 30px rgba(4,2,10,.85),0 0 54px rgba(4,2,10,.6)}
 #app.filmcard.hasart #timer,#app.filmcard.hasart #score{text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 20px rgba(4,2,10,.7)}
+/* light plates: dark ink, cream stroke, and the scrim LIFTS the centre instead of
+   darkening it - the job is the same (separate type from picture), the direction
+   is opposite. */
+#app.filmcard.hasart.lightart #card{color:var(--cardink,#241546);
+ -webkit-text-stroke-color:var(--cardoutline,#FFF6E0);
+ text-shadow:0 0 6px rgba(255,250,238,.96),0 0 15px rgba(255,250,238,.9),0 2px 22px rgba(255,250,238,.75),0 0 40px rgba(255,250,238,.5)}
+#app.filmcard.hasart.lightart #timer,#app.filmcard.hasart.lightart #score{
+ color:var(--cardink,#241546);text-shadow:0 0 10px rgba(255,250,238,.95),0 0 20px rgba(255,250,238,.8)}
+#app.filmcard.hasart.lightart::after{background:
+  radial-gradient(ellipse 64% 58% at 50% 48%, rgba(255,250,238,.46), rgba(255,250,238,.20) 62%, rgba(255,250,238,0) 100%),
+  linear-gradient(to bottom, rgba(255,250,238,.18), rgba(255,250,238,0) 26%, rgba(255,250,238,0) 76%, rgba(255,250,238,.20))}
 /* content has to clear the scrim */
 #app.filmcard.hasart>.screen{position:relative;z-index:1}
 #app.filmcard.fx-haze{
@@ -1021,6 +1032,17 @@ function filmCard(){ var v=FILM_CARD[VAULT_ID];
  return v?{b:v[0],o:v[1],fx:v[2]||''}:{b:FILM_BG,o:FILM_OUTLINE,fx:''}; }
 /* Look for supplied art for this vault. Absent file = silent no-op and the CSS
    pattern stays, so genres can be converted one at a time without a broken gap. */
+/* Typography per art plate. The lettering has to answer to the picture, not to the
+   genre's old flat colour, and plates differ far more than patterns did.
+   `light:1` inverts the whole scheme. The animated plate is a sunlit sketchbook -
+   measured, its text zone has a median luminance of 0.642, where WHITE type scores
+   1.52:1 and is simply invisible. Dark ink on the same plate scores 13.84:1. So on
+   light plates the fill goes dark, the stroke goes cream, and the halo turns from
+   shadow into glow. Same lettering language, photographic negative of it. */
+var ART_TYPE={
+ mv_fantasy :{outline:'#D9B87A'},
+ mv_animated:{light:1, ink:'#241546', outline:'#FFF6E0'}
+};
 function applyCardArt(){
   if(!VAULT_ID) return;
   var url='card-'+VAULT_ID+'.jpg?v=1';
@@ -1028,6 +1050,10 @@ function applyCardArt(){
   im.onload=function(){
     app.style.backgroundImage='url("'+url+'")';
     app.classList.add('hasart');
+    var t=ART_TYPE[VAULT_ID]||{};
+    if(t.outline) app.style.setProperty('--cardoutline',t.outline);
+    app.classList.toggle('lightart', !!t.light);
+    if(t.ink) app.style.setProperty('--cardink',t.ink);
   };
   im.onerror=function(){};
   im.src=url;
