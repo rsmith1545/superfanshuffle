@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v198"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v199"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -1041,7 +1041,13 @@ function filmCard(){ var v=FILM_CARD[VAULT_ID];
    shadow into glow. Same lettering language, photographic negative of it. */
 var ART_TYPE={
  mv_fantasy :{outline:'#D9B87A'},
- mv_animated:{light:1, ink:'#241546', outline:'#FFF6E0'}
+ mv_animated:{light:1, ink:'#241546', outline:'#FFF6E0'},
+ /* War is bimodal: median luminance 0.065 but the sun blows to 0.98 inside the
+    text zone. No single outline hue survives both ends, so use a near-black one -
+    on the dark 90% the white FILL carries the word, and where a letter crosses the
+    sun the dark STROKE carries it. The plate itself is pre-treated to pull the
+    blowout down without crushing the light source. */
+ mv_war     :{outline:'#14180E'}
 };
 function applyCardArt(){
   if(!VAULT_ID) return;
