@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v203"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v204"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -211,6 +211,15 @@
 #app.hasart.lightart::after{background:
   radial-gradient(ellipse 64% 58% at 50% 48%, rgba(255,250,238,.46), rgba(255,250,238,.20) 62%, rgba(255,250,238,0) 100%),
   linear-gradient(to bottom, rgba(255,250,238,.18), rgba(255,250,238,0) 26%, rgba(255,250,238,0) 76%, rgba(255,250,238,.20))}
+/* Purpose-made plates get the SFS lettering format even outside Film & TV. Derived
+   poster plates deliberately do not - a stroke keyed to one colour cannot suit 66
+   crops of wildly different artwork, whereas a hand-made plate has a palette to
+   answer to. */
+#app.hasart.inked #card{color:#fff;-webkit-text-stroke-width:var(--olw,2.2vmin);
+ -webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;letter-spacing:.1em}
+/* the score sits in the corner in the app's default cyan, which fights a crimson
+   and gold plate. On inked cards it takes the plate's own accent. */
+#app.hasart.inked #score{color:var(--cardoutline,#fff)}
 /* content has to clear the scrim */
 #app.hasart>.screen{position:relative;z-index:1}
 #app.filmcard.fx-haze{
@@ -1051,7 +1060,12 @@ var ART_TYPE={
     on the dark 90% the white FILL carries the word, and where a letter crosses the
     sun the dark STROKE carries it. The plate itself is pre-treated to pull the
     blowout down without crushing the light source. */
- mv_war     :{outline:'#14180E'}
+ mv_war     :{outline:'#14180E'},
+ /* Music vaults normally run plain white lettering, because their plates are
+    DERIVED from posters and vary wildly. A purpose-made plate earns the full
+    lettering format - white fill, coloured stroke - the same as Film & TV. The gold
+    picks up the clock face, the gates and the skyline lights. */
+ taylorswift:{outline:'#D9B87A'}
 };
 function applyCardArt(){
   if(!VAULT_ID) return;
@@ -1067,7 +1081,7 @@ function applyCardArt(){
     app.style.backgroundImage='url("'+url+'")';
     app.classList.add('hasart');
     var t=ART_TYPE[VAULT_ID]||{};
-    if(t.outline) app.style.setProperty('--cardoutline',t.outline);
+    if(t.outline){ app.style.setProperty('--cardoutline',t.outline); app.classList.add('inked'); }
     app.classList.toggle('lightart', !!t.light);
     if(t.ink) app.style.setProperty('--cardink',t.ink);
   };
