@@ -913,12 +913,19 @@ function playHTML(){
  var ed=curEdition, h='';
  var vaults=VAULTS.filter(function(v){return v.edition===ed;});
  var freeV=vaults.filter(function(v){return v.badge==='free';});
- if(freeV.length){ h+='<h2>Try for Free <span class="pill">5-question taste</span></h2><div class="row">'+freeV.map(function(v){return tileHTML(v);}).join('')+'</div>'; }
+ /* Built once, placed differently per edition. On MUSIC the free shelf sits below
+    Featured of the Week - the first screen should lead with the marquee vault, not
+    with the taster. Other editions still open with it. */
+ var freeHTML = freeV.length
+   ? '<h2>Try for Free <span class="pill">5-question taste</span></h2><div class="row">'+freeV.map(function(v){return tileHTML(v);}).join('')+'</div>'
+   : '';
+ if(ed!=='music') h+=freeHTML;
  if(ed==='music'){
    h+=shelf('Party Vaults', BEST_OF.map(byId), 1);
    var feat=byId('taylorswift');
    h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
      +'<div class="fmeta"><div class="k">'+feat.name+'</div><div class="s">How deep does your fandom go?</div><div class="go">Tap to open ▸</div></div></div>';
+   h+=freeHTML;
    CAT_ORDER.forEach(function(cat){ h+=numShelf(CAT_LABEL[cat]||cat, vaults.filter(function(v){return v.cat===cat;})); });
  } else if(ed==='sports'){
    ['Football','Basketball','Baseball','Hockey'].forEach(function(lg){ h+=sportsShelf(lg, vaults.filter(function(v){return v.cat===lg;})); });
@@ -1326,4 +1333,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v205</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v206</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
