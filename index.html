@@ -1013,7 +1013,7 @@ function browseOpen(id){ var v=byId(id); if(!v) return;
 }
 function brSearch(){ var el=document.getElementById('brq'); if(!el) return; var L=document.getElementById('brList'); if(L) L.innerHTML=browseList(el.value); }
 /* owned vaults (payments not wired yet — seed one so the full owned round + report card is playable) */
-var OWNED=['taylorswift','mv_comedy','mv_horror','mv_sports','mv_animated','mv_superhero','mv_fantasy'];
+var OWNED=['taylorswift','mv_comedy','mv_horror','mv_sports','mv_animated','mv_superhero','mv_fantasy','mv_war'];
 function playOwned(id){ var v=byId(id); if(v) location.href=launchURL(v)+'&mode=full'; }
 function ownedTile(v){ return '<div class="vault" onclick="openVault(\''+v.id+'\')">'+coverHTML(v)+vcap(v.name)+'</div>'; }
 function lpMap(){try{return JSON.parse(localStorage.getItem('sfs_lp')||'{}');}catch(e){return {};}}
@@ -1326,4 +1326,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v200</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v201</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
