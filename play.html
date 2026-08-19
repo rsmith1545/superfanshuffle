@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v207"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v208"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -223,6 +223,20 @@
 /* the score sits in the corner in the app's default cyan, which fights a crimson
    and gold plate. On inked cards it takes the plate's own accent. */
 #app.hasart.inked #score{color:var(--cardoutline,#fff)}
+/* The pre-play screens sit on the same plate as the answer card, so they need the
+   same treatment. The instruction is cyan and the countdown digit is white - fine on
+   a dark plate, invisible on a bright one. Dark plates get a shadow halo under the
+   existing neon; light plates flip to the plate's own ink with a cream glow, exactly
+   as #card does. */
+#app.hasart .fhText{text-shadow:0 0 16px rgba(87,230,255,.55),0 2px 12px rgba(4,2,10,.92),0 0 30px rgba(4,2,10,.7)}
+#app.hasart #big{text-shadow:0 2px 14px rgba(4,2,10,.92),0 0 34px rgba(4,2,10,.72)}
+#app.hasart #getReady{text-shadow:0 0 18px rgba(255,92,240,.6),0 2px 14px rgba(4,2,10,.9),0 0 32px rgba(4,2,10,.7)}
+#app.hasart .fhHint{text-shadow:0 1px 8px rgba(4,2,10,.9)}
+#app.hasart.lightart .fhText,
+#app.hasart.lightart #big,
+#app.hasart.lightart #getReady,
+#app.hasart.lightart .fhHint{color:var(--cardink,#241546);
+ text-shadow:0 0 8px rgba(255,250,238,.96),0 0 18px rgba(255,250,238,.88),0 2px 26px rgba(255,250,238,.72)}
 /* content has to clear the scrim */
 #app.hasart>.screen{position:relative;z-index:1}
 #app.filmcard.fx-haze{
@@ -278,9 +292,12 @@
  top:calc(16px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));
  bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));
  border-radius:40px;border:8px solid rgba(255,255,255,.94);box-sizing:border-box;
- background-color:var(--cardbg,#2a1257);
- background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.12) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.30) 100%),
-  repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 1px,transparent 1px 6px);
+ /* No fill. The flyer used to paint itself in --cardbg, which is the old flat card
+    colour - fine when every card was flat, wrong now that the card underneath is a
+    photograph, and actively bad on a light plate where a purple pane would slide
+    across a pale sky. Border and shadow carry the motion; the faint white sheen just
+    catches the light. It works on any plate because it commits to no colour. */
+ background-color:rgba(255,255,255,.06);
  opacity:0;pointer-events:none;z-index:6;transform-origin:50% 50%}
 /* the deck body: two cards fanned a hair, static. They are the pile, not performers. */
 #stage.shuf .deckGhost.g1{animation:deckRest1 1.7s ease-out forwards}
@@ -406,36 +423,10 @@
  .shufDeck i{animation:none}
  .shufDeck i:nth-child(1){transform:translate(-4vh,0) rotate(-10deg)}
  .shufDeck i:nth-child(5){transform:translate(4vh,0) rotate(10deg)}}
-/* ===== Poster art on the "Place on your forehead" card =====
-   Every vault already ships a portrait key art poster (art-<id>.jpg) - it is used
-   on the vault tile and the poster view, but the forehead card never showed it.
-   It cannot be dropped in raw. Those posters are DENSE: dragons, lanterns, prop
-   labels, and their own title lettering ("FANTASY MOVIES") which would collide
-   with the instruction and read as a duplicate headline. So the art is pushed
-   firmly into the background - dimmed, desaturated, blurred - and a scrim sits
-   over the middle band where the words actually land. What survives is the
-   atmosphere and the palette, which is the whole point; what dies is the detail
-   that competes.
-   scale(1.06) hides the soft transparent edge blur() leaves at the boundary.
-   The layer sits inside #app, so it clips to the card's radius and shuffles with
-   the card - the poster IS the card face. */
-#fhArt,#fhScrim{position:absolute;inset:0;pointer-events:none;
- opacity:0;transition:opacity .55s ease}
-#fhArt.on,#fhScrim.on{opacity:1}
-/* Pan DOWN past the poster's own headline. Every poster carries its title in the
-   top third ("FANTASY MOVIES", "GAME SHOW TV"), and centred it crossed the
-   instruction as a second, larger headline - the first render was unreadable.
-   cover() alone cannot do it: the card is TALLER and narrower than the 3:4 poster,
-   so cover scales to match height and the slack is horizontal - panning Y moved
-   nothing and the title stayed. Sizing to 190% of card height forces vertical
-   overflow, and 80% then lands in the scene below the type. */
-#fhArt{z-index:0;background-position:center 80%;background-size:auto 190%;
- filter:brightness(.34) saturate(.62) blur(7px);transform:scale(1.14)}
-#fhScrim{z-index:1;
- background:radial-gradient(ellipse 68% 42% at 50% 50%,rgba(0,0,0,.60),rgba(0,0,0,.20) 68%,rgba(0,0,0,0) 100%),
-  linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0) 26%,rgba(0,0,0,0) 74%,rgba(0,0,0,.55))}
-/* the instruction has to clear both layers */
-#sReady #rotateMsg,#sReady #getReady,#sReady #big{position:relative;z-index:2}
+/* The forehead card used to carry a separate layer showing the vault's PORTRAIT
+   poster, blurred and zoomed past its title. That predates card-<id>.jpg. Now the
+   card itself wears a purpose-built landscape plate on every screen, so a second,
+   different picture of the same vault underneath it was just two artworks fighting. */
 #rotateMsg{position:relative;display:flex;align-items:center;justify-content:center;height:100%}
  .fhText{transform:rotate(-90deg);white-space:nowrap;font-family:var(--disp);
  /* PRE-EXISTING BUG: at 15vmin 'PLACE ON YOUR FOREHEAD' overflowed the screen on
@@ -930,7 +921,6 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div>
   <!-- READY (countdown) -->
   <div class="screen" id="sReady">
-    <div id="fhArt" aria-hidden="true"></div><div id="fhScrim" aria-hidden="true"></div>
     <div id="rotateMsg"><div class="fhText">Place on your forehead<span class="fhHint">↻ turn phone sideways</span></div></div>
     <div id="getReady">Time to Face the Music</div>
     <div id="big">3</div>
@@ -1470,33 +1460,12 @@ function isLandscape(){
   var mm=(window.matchMedia && window.matchMedia('(orientation: landscape)').matches);
   return !!mm || Math.abs(gamma) > 55;
 }
-/* Reveal the poster only once it has actually decoded. Setting background-image
-   and showing the layer in the same frame gives a visible pop as a half-painted
-   JPEG resolves; preloading means the card either has the art or never flickers.
-   Failure is silent - a missing art file just leaves the pattern card as it was. */
-var _fhArtLoaded={};
-function fhArtOn(){
-  var a=document.getElementById('fhArt'), sc=document.getElementById('fhScrim');
-  if(!a||!sc||!VAULT_ID) return;
-  var url='art-'+VAULT_ID+'.jpg?v=7';
-  var reveal=function(){ a.style.backgroundImage='url("'+url+'")'; a.classList.add('on'); sc.classList.add('on'); };
-  if(_fhArtLoaded[url]){ reveal(); return; }
-  var im=new Image();
-  im.onload=function(){ _fhArtLoaded[url]=1; reveal(); };
-  im.onerror=function(){ _fhArtLoaded[url]=0; };
-  im.src=url;
-}
-function fhArtOff(){
-  var a=document.getElementById('fhArt'), sc=document.getElementById('fhScrim');
-  if(a) a.classList.remove('on');
-  if(sc) sc.classList.remove('on');
-}
 function ready(){
   show('sReady'); counting=false;
   var gr=document.getElementById('getReady'); gr.style.display='none'; gr.classList.remove('pulsing');
   document.getElementById('big').style.display='none';
-  if(isLandscape()){ awaitingLandscape=false; document.getElementById('rotateMsg').style.display='none'; fhArtOff(); startCountdown(); return; }
-  awaitingLandscape=true; document.getElementById('rotateMsg').style.display=''; fhArtOn();
+  if(isLandscape()){ awaitingLandscape=false; document.getElementById('rotateMsg').style.display='none'; startCountdown(); return; }
+  awaitingLandscape=true; document.getElementById('rotateMsg').style.display='';
   try{ var _stg=document.getElementById('stage'); _stg.classList.remove('shuf'); void _stg.offsetWidth; _stg.classList.add('shuf'); shufReplay(); }catch(e){}   // wait for phone-to-forehead (landscape / tilt) to kickstart
   clearTimeout(_readyTO); _readyTO=setTimeout(function(){ if(awaitingLandscape){ awaitingLandscape=false; startCountdown(); } }, 20000);
 }
@@ -1522,7 +1491,7 @@ function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classLis
 function startCountdown(){
   if(counting) return; counting=true; clearTimeout(_readyTO);
   document.body.classList.add('lock-ls'); tryLockLandscape();   // fake-landscape the Face-the-Music + 3-2-1 screens (iOS)
-  document.getElementById('rotateMsg').style.display='none'; fhArtOff();
+  document.getElementById('rotateMsg').style.display='none';
   try{ clearTimeout(_shufTO); document.getElementById('stage').classList.remove('shuf'); }catch(e){}
   var gr=document.getElementById('getReady'), big=document.getElementById('big');
   big.style.display='none';
@@ -1776,7 +1745,12 @@ function qpgPick(el,mode){ RCLUE=mode;
 if(ED==='sports'||ED==='music'||ED==='filmtv'){ try{ renderQPG(); }catch(e){} }
 
 /* sports vaults get their own card colours + wall copy from the very first screen */
-if(ED==='filmtv'){ try{ applyFilmCard(); }catch(e){} try{ applyCardArt(); }catch(e){} }
+if(ED==='filmtv'){ try{ applyFilmCard(); }catch(e){} }
+/* Card art up front, every edition. It used to be applied in startGame(), which runs
+   AFTER the forehead screen and the 3-2-1 - so the player met a plain purple card,
+   then the artwork appeared once play began. The card should be itself from the
+   moment the vault opens. */
+try{ applyCardArt(); }catch(e){}
 if(ED==='sports'){ try{ applySportCard(); }catch(e){}
  try{ var _wm=document.getElementById('wallMix');
    if(_wm) _wm.innerHTML='players, coaches, stadiums &amp; team lore'; }catch(e){} }
