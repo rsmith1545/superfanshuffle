@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v209"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v210"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -1082,23 +1082,51 @@ function filmCard(){ var v=FILM_CARD[VAULT_ID];
    light plates the fill goes dark, the stroke goes cream, and the halo turns from
    shadow into glow. Same lettering language, photographic negative of it. */
 var ART_TYPE={
+ adele       :{outline:'#F5AA7A'},
+ arianagrande:{outline:'#CAB8A5'},
  ate         :{outline:'#E3A14B'},
  beatles     :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ beyonce     :{outline:'#F7A178'},
  biggie      :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ billieeilish:{outline:'#E0CE66'},
  billyjoel   :{outline:'#EEC781'},
  bonjovi     :{light:1, ink:'#241546', outline:'#FFF6E0'},
  bowie       :{outline:'#EE9F81'},
+ brunomars   :{outline:'#E99887'},
+ carrieunderwood:{outline:'#DEA991'},
  ccr         :{outline:'#EEBF71'},
+ chrisstapleton:{outline:'#E4B68C'},
+ codyjohnson :{outline:'#E3C18C'},
+ coldplay    :{outline:'#E5B88A'},
+ dmb         :{outline:'#FCA773'},
  dualipa     :{outline:'#D9B87A'},
  eagles      :{outline:'#F9C576'},
+ edsheeran   :{outline:'#EEAF82'},
+ ellalangley :{outline:'#FF9070'},
+ eminem      :{outline:'#DAB895'},
+ faithhill   :{outline:'#F7A578'},
  fleetwoodmac:{outline:'#FA9B3E'},
  foo         :{outline:'#F6B579'},
+ fthc        :{outline:'#E0BE8F'},
  gratefuldead:{light:1, ink:'#241546', outline:'#FFF6E0'},
  greenday    :{outline:'#D1B38F'},
+ grunge90s   :{outline:'#FBA774'},
+ harrystyles :{outline:'#E4B88B'},
  hendrix     :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ jasonaldean :{outline:'#F9A176'},
+ jellyroll   :{outline:'#ECB684'},
+ justintimberlake:{outline:'#D9B87A'},
+ katyperry   :{outline:'#F6B679'},
+ kennychesney:{outline:'#EBC084'},
+ kidstoybox  :{outline:'#FFA870'},
+ ladygaga    :{outline:'#F8B077'},
  laineywilson:{light:1, ink:'#241546', outline:'#FFF6E0'},
  ledzeppelin :{outline:'#DBBE94'},
+ lukebryan   :{outline:'#F4A77B'},
+ lukecombs   :{outline:'#F7A978'},
+ maroon5     :{outline:'#F1AA7E'},
  metallica   :{outline:'#DABF95'},
+ morganwallen:{outline:'#EEB081'},
  mv_animated :{light:1, ink:'#241546', outline:'#FFF6E0'},
  mv_fantasy  :{outline:'#D9B87A'},
  mv_war      :{outline:'#14180E'},
@@ -1106,8 +1134,12 @@ var ART_TYPE={
  oasis       :{outline:'#E59A8A'},
  onedirection:{outline:'#F9BE60'},
  pearljam    :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ postmalone  :{outline:'#F1BC7E'},
  queen       :{outline:'#E6A957'},
  rhcp        :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ rihanna     :{outline:'#D9B87A'},
+ selenagomez :{outline:'#E69C89'},
+ shaboozey   :{outline:'#D9B87A'},
  smashingpumpkins:{outline:'#E0A850'},
  springsteen :{outline:'#E6AA89'},
  stones      :{light:1, ink:'#241546', outline:'#FFF6E0'},
@@ -1115,8 +1147,10 @@ var ART_TYPE={
  summerbeach :{light:1, ink:'#241546', outline:'#FFF6E0'},
  taylorswift :{outline:'#D9B87A'},
  thewho      :{outline:'#F1B28B'},
+ timmcgraw   :{outline:'#EFBC81'},
  tompetty    :{light:1, ink:'#241546', outline:'#FFF6E0'},
- u2          :{light:1, ink:'#241546', outline:'#FFF6E0'}
+ u2          :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ zachbryan   :{outline:'#F8AA77'}
 };
 function applyCardArt(){
   if(!VAULT_ID) return;
