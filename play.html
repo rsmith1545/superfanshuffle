@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v204"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v205"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -204,6 +204,9 @@
    darkening it - the job is the same (separate type from picture), the direction
    is opposite. */
 #app.hasart.lightart #card{color:var(--cardink,#241546);
+ /* stroke WIDTH only came from the .sportcard/.filmcard rule, so a music light plate
+    got a stroke colour and no stroke. Set it here so the format holds everywhere. */
+ -webkit-text-stroke-width:var(--olw,2.2vmin);paint-order:stroke;letter-spacing:.1em;
  -webkit-text-stroke-color:var(--cardoutline,#FFF6E0);
  text-shadow:0 0 6px rgba(255,250,238,.96),0 0 15px rgba(255,250,238,.9),0 2px 22px rgba(255,250,238,.75),0 0 40px rgba(255,250,238,.5)}
 #app.hasart.lightart #timer,#app.hasart.lightart #score{
@@ -1053,19 +1056,41 @@ function filmCard(){ var v=FILM_CARD[VAULT_ID];
    light plates the fill goes dark, the stroke goes cream, and the halo turns from
    shadow into glow. Same lettering language, photographic negative of it. */
 var ART_TYPE={
- mv_fantasy :{outline:'#D9B87A'},
- mv_animated:{light:1, ink:'#241546', outline:'#FFF6E0'},
- /* War is bimodal: median luminance 0.065 but the sun blows to 0.98 inside the
-    text zone. No single outline hue survives both ends, so use a near-black one -
-    on the dark 90% the white FILL carries the word, and where a letter crosses the
-    sun the dark STROKE carries it. The plate itself is pre-treated to pull the
-    blowout down without crushing the light source. */
- mv_war     :{outline:'#14180E'},
- /* Music vaults normally run plain white lettering, because their plates are
-    DERIVED from posters and vary wildly. A purpose-made plate earns the full
-    lettering format - white fill, coloured stroke - the same as Film & TV. The gold
-    picks up the clock face, the gates and the skyline lights. */
- taylorswift:{outline:'#D9B87A'}
+ ate         :{outline:'#E3A14B'},
+ beatles     :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ biggie      :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ billyjoel   :{outline:'#EEC781'},
+ bonjovi     :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ bowie       :{outline:'#EE9F81'},
+ ccr         :{outline:'#EEBF71'},
+ dualipa     :{outline:'#D9B87A'},
+ eagles      :{outline:'#F9C576'},
+ fleetwoodmac:{outline:'#FA9B3E'},
+ foo         :{outline:'#F6B579'},
+ gratefuldead:{light:1, ink:'#241546', outline:'#FFF6E0'},
+ greenday    :{outline:'#D1B38F'},
+ hendrix     :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ laineywilson:{light:1, ink:'#241546', outline:'#FFF6E0'},
+ ledzeppelin :{outline:'#DBBE94'},
+ metallica   :{outline:'#DABF95'},
+ mv_animated :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ mv_fantasy  :{outline:'#D9B87A'},
+ mv_war      :{outline:'#14180E'},
+ nirvana     :{outline:'#E2B063'},
+ oasis       :{outline:'#E59A8A'},
+ onedirection:{outline:'#F9BE60'},
+ pearljam    :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ queen       :{outline:'#E6A957'},
+ rhcp        :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ smashingpumpkins:{outline:'#E0A850'},
+ springsteen :{outline:'#E6AA89'},
+ stones      :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ stp         :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ summerbeach :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ taylorswift :{outline:'#D9B87A'},
+ thewho      :{outline:'#F1B28B'},
+ tompetty    :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ u2          :{light:1, ink:'#241546', outline:'#FFF6E0'}
 };
 function applyCardArt(){
   if(!VAULT_ID) return;
@@ -1081,8 +1106,13 @@ function applyCardArt(){
     app.style.backgroundImage='url("'+url+'")';
     app.classList.add('hasart');
     var t=ART_TYPE[VAULT_ID]||{};
-    if(t.outline){ app.style.setProperty('--cardoutline',t.outline); app.classList.add('inked'); }
+    if(t.outline) app.style.setProperty('--cardoutline',t.outline);
+    /* inked and lightart both style #card at the SAME specificity, so whichever sits
+       later in the stylesheet wins - and inked does. A light plate carrying both came
+       out white-on-pale, which is the one thing light mode exists to prevent. They are
+       mutually exclusive by definition: light plates get their own dark-ink rule. */
     app.classList.toggle('lightart', !!t.light);
+    app.classList.toggle('inked', !!t.outline && !t.light);
     if(t.ink) app.style.setProperty('--cardink',t.ink);
   };
   im.onerror=function(){};
