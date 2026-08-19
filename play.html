@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v208"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v209"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -223,19 +223,28 @@
 /* the score sits in the corner in the app's default cyan, which fights a crimson
    and gold plate. On inked cards it takes the plate's own accent. */
 #app.hasart.inked #score{color:var(--cardoutline,#fff)}
-/* The pre-play screens sit on the same plate as the answer card, so they need the
-   same treatment. The instruction is cyan and the countdown digit is white - fine on
-   a dark plate, invisible on a bright one. Dark plates get a shadow halo under the
-   existing neon; light plates flip to the plate's own ink with a cream glow, exactly
-   as #card does. */
-#app.hasart .fhText{text-shadow:0 0 16px rgba(87,230,255,.55),0 2px 12px rgba(4,2,10,.92),0 0 30px rgba(4,2,10,.7)}
-#app.hasart #big{text-shadow:0 2px 14px rgba(4,2,10,.92),0 0 34px rgba(4,2,10,.72)}
-#app.hasart #getReady{text-shadow:0 0 18px rgba(255,92,240,.6),0 2px 14px rgba(4,2,10,.9),0 0 32px rgba(4,2,10,.7)}
-#app.hasart .fhHint{text-shadow:0 1px 8px rgba(4,2,10,.9)}
+/* The pre-play screens now wear the SAME LETTERING as the answer card: white fill,
+   the plate's own stroke colour, dark halo underneath. They used to keep the app's
+   default neon - cyan instruction, white countdown - which was right when every card
+   was flat purple and looks like a different product now that the card behind them is
+   a photograph with gold or bone lettering.
+   Stroke width is per element, not shared: #card is 18vmin so 2.2vmin reads as a trim
+   edge, but the instruction is a third that size and the same width would swallow it. */
+#app.hasart .fhText,#app.hasart #big,#app.hasart #getReady{
+ color:#fff;-webkit-text-stroke-color:var(--cardoutline,#1a1020);paint-order:stroke}
+#app.hasart .fhText{-webkit-text-stroke-width:.85vmin;
+ text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 24px rgba(4,2,10,.7)}
+#app.hasart #big{-webkit-text-stroke-width:1.7vmin;
+ text-shadow:0 2px 14px rgba(4,2,10,.9),0 0 34px rgba(4,2,10,.7)}
+#app.hasart #getReady{-webkit-text-stroke-width:1.3vmin;
+ text-shadow:0 2px 14px rgba(4,2,10,.9),0 0 30px rgba(4,2,10,.7)}
+#app.hasart .fhHint{color:#fff;text-shadow:0 1px 8px rgba(4,2,10,.92)}
+/* light plates flip the fill to the plate's ink and the halo to a glow, same as #card */
 #app.hasart.lightart .fhText,
 #app.hasart.lightart #big,
 #app.hasart.lightart #getReady,
 #app.hasart.lightart .fhHint{color:var(--cardink,#241546);
+ -webkit-text-stroke-color:var(--cardoutline,#FFF6E0);
  text-shadow:0 0 8px rgba(255,250,238,.96),0 0 18px rgba(255,250,238,.88),0 2px 26px rgba(255,250,238,.72)}
 /* content has to clear the scrim */
 #app.hasart>.screen{position:relative;z-index:1}

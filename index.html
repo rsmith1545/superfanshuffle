@@ -286,6 +286,8 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .vkfan{position:absolute;left:0;right:0;top:0;height:0;z-index:1;display:flex;justify-content:center;pointer-events:none}
 
 .vksamp{width:124px;height:94px;border-radius:12px;position:absolute;top:-84px;opacity:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.08) 0 2px,transparent 2px 6px),var(--scfill,linear-gradient(160deg,#33246b,#201548));border:3px solid var(--scout,#eef0f8);box-shadow:0 8px 22px rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:18px 9px 10px;text-align:center;transition:transform .55s cubic-bezier(.2,1.1,.3,1),opacity .4s ease}
+.vkfan.lightfan .vksamp .q{color:#241546;text-shadow:0 0 6px rgba(255,250,238,.95),0 0 14px rgba(255,250,238,.8)}
+.vkfan.lightfan .vksamp .smp{color:rgba(36,21,70,.55)}
 .vksamp .q{font-size:10px;font-weight:900;letter-spacing:.01em;text-transform:uppercase;line-height:1.12;color:#fff;text-shadow:0 0 6px rgba(239,234,255,.7);overflow-wrap:normal}
 .vksamp .typ{position:absolute;top:5px;left:9px;font-size:7.5px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
 .vksamp .smp{position:absolute;bottom:3px;right:7px;font-size:6px;letter-spacing:.15em;color:rgba(185,174,224,.5);font-weight:800}
@@ -829,6 +831,17 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
 /* Per-vault tile art: the era object with the artist's name typeset ON it (marker on the
    cassette tape, letterpress on the vinyl label, printed on the phone's glass). Falls back to
    the shared era object for any vault whose tile hasn't been generated yet (CD era). */
+/* Which vaults have a real card plate, and what colour their lettering is.
+   GENERATED from play.html's ART_TYPE plus the card-*.jpg files actually present -
+   never hand-edit, or the vault preview will drift out of step with the card the
+   player then sees. */
+/* The plate cache-buster. This cannot be read from #buildtag: that element is the
+   last thing in the document, and the vault sheet is rendered during init when the
+   page arrives with ?open=, so the lookup returned '0' and every plate URL was busted
+   with ?v=0 forever - an updated plate would never reach anyone who had opened that
+   sheet once. Kept in step with the printed build tag by the release step. */
+var SFSBUILD='v209';
+var CARDART={"adele":{"o":"#FFFFFF"},"arianagrande":{"o":"#FFFFFF"},"ate":{"o":"#E3A14B"},"beatles":{"o":"#FFF6E0","l":1},"beyonce":{"o":"#FFFFFF"},"biggie":{"o":"#FFF6E0","l":1},"billieeilish":{"o":"#FFFFFF"},"billyjoel":{"o":"#EEC781"},"bonjovi":{"o":"#FFF6E0","l":1},"bowie":{"o":"#EE9F81"},"brunomars":{"o":"#FFFFFF"},"carrieunderwood":{"o":"#FFFFFF"},"ccr":{"o":"#EEBF71"},"chrisstapleton":{"o":"#FFFFFF"},"codyjohnson":{"o":"#FFFFFF"},"coldplay":{"o":"#FFFFFF"},"dmb":{"o":"#FFFFFF"},"dualipa":{"o":"#D9B87A"},"eagles":{"o":"#F9C576"},"edsheeran":{"o":"#FFFFFF"},"ellalangley":{"o":"#FFFFFF"},"eminem":{"o":"#FFFFFF"},"faithhill":{"o":"#FFFFFF"},"fleetwoodmac":{"o":"#FA9B3E"},"foo":{"o":"#F6B579"},"fthc":{"o":"#FFFFFF"},"gratefuldead":{"o":"#FFF6E0","l":1},"greenday":{"o":"#D1B38F"},"grunge90s":{"o":"#FFFFFF"},"harrystyles":{"o":"#FFFFFF"},"hendrix":{"o":"#FFF6E0","l":1},"jasonaldean":{"o":"#FFFFFF"},"jellyroll":{"o":"#FFFFFF"},"justintimberlake":{"o":"#FFFFFF"},"katyperry":{"o":"#FFFFFF"},"kennychesney":{"o":"#FFFFFF"},"kidstoybox":{"o":"#FFFFFF"},"ladygaga":{"o":"#FFFFFF"},"laineywilson":{"o":"#FFF6E0","l":1},"ledzeppelin":{"o":"#DBBE94"},"lukebryan":{"o":"#FFFFFF"},"lukecombs":{"o":"#FFFFFF"},"maroon5":{"o":"#FFFFFF"},"metallica":{"o":"#DABF95"},"morganwallen":{"o":"#FFFFFF"},"mv_animated":{"o":"#FFF6E0","l":1},"mv_fantasy":{"o":"#D9B87A"},"mv_war":{"o":"#14180E"},"nirvana":{"o":"#E2B063"},"oasis":{"o":"#E59A8A"},"onedirection":{"o":"#F9BE60"},"pearljam":{"o":"#FFF6E0","l":1},"postmalone":{"o":"#FFFFFF"},"queen":{"o":"#E6A957"},"rhcp":{"o":"#FFF6E0","l":1},"rihanna":{"o":"#FFFFFF"},"selenagomez":{"o":"#FFFFFF"},"shaboozey":{"o":"#FFFFFF"},"smashingpumpkins":{"o":"#E0A850"},"springsteen":{"o":"#E6AA89"},"stones":{"o":"#FFF6E0","l":1},"stp":{"o":"#FFF6E0","l":1},"summerbeach":{"o":"#FFF6E0","l":1},"taylorswift":{"o":"#D9B87A"},"thewho":{"o":"#F1B28B"},"timmcgraw":{"o":"#FFFFFF"},"tompetty":{"o":"#FFF6E0","l":1},"u2":{"o":"#FFF6E0","l":1},"zachbryan":{"o":"#FFFFFF"}};
 function coverHTML(v,label){
  var e=eraOf(v);
  var badge=v.badge==='free'?'<div class="badge free">Free</div>':'';
@@ -1191,7 +1204,15 @@ function openVault(id){
  var fdata=FILMDATA[v.id]||{blurb:'One shuffle of the moments only true fans remember \u2014 the ones you quote, replay, and never forget.',std:'The essentials everyone knows and loves.',dlx:'Deeper cuts and forgotten favorites.'};
  var fan, blurbHTML, catsHTML, drawer, subTxt, custLbl, custPre;
  if(isFilm){
-   fan='';
+   /* Film & TV had no sample fan at all - the preview jumped straight to the blurb.
+      It gets the same three cards as music, wearing the same plate the player is
+      about to see. */
+   var _cf=CARDART[v.id];
+   fan=_cf ? '<div class="vkfan'+(_cf.l?' lightfan':'')+'" style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+_cf.o+'">'
+     +'<div class="vksamp vs1"><div class="typ">\ud83c\udfac Movie</div><div class="q">'+v.name.replace(/ Movie$| TV$/,'')+'</div><div class="smp">Sample</div></div>'
+     +'<div class="vksamp vs2"><div class="typ">\ud83c\udf7f Scene</div><div class="q">Scenes</div><div class="smp">Sample</div></div>'
+     +'<div class="vksamp vs3"><div class="typ">\ud83d\udcac Quote</div><div class="q">Quotes</div><div class="smp">Sample</div></div>'
+     +'</div>' : '';
    blurbHTML='<p class="v5blurb">'+fdata.blurb+'</p>';
    catsHTML='';
    subTxt='Standard Edition';
@@ -1201,7 +1222,8 @@ function openVault(id){
        +'<button class="v5opt" id="ed-Deluxe" onclick="selEd(\'Deluxe\')"><b>Deluxe Edition</b><span>'+fdata.dlx+'</span></button></div>'
      +'</div>';
  } else {
-   fan='<div class="vkfan">'
+   var _ca=CARDART[v.id];
+   fan='<div class="vkfan'+(_ca&&_ca.l?' lightfan':'')+'"'+(_ca?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+_ca.o+'"':'')+'>'
      +'<div class="vksamp vs1"><div class="typ">🎵 Song</div><div class="q">'+d.song+'</div><div class="smp">Sample</div></div>'
      +'<div class="vksamp vs2"><div class="typ">📖 Lore</div><div class="q">'+(d.lore||d.last||'')+'</div><div class="smp">Sample</div></div>'
      +'<div class="vksamp vs3"><div class="typ">💿 Album</div><div class="q">'+d.album+'</div><div class="smp">Sample</div></div>'
@@ -1333,4 +1355,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v208</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v209</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
