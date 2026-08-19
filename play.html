@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v199"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v200"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -1051,7 +1051,13 @@ var ART_TYPE={
 };
 function applyCardArt(){
   if(!VAULT_ID) return;
-  var url='card-'+VAULT_ID+'.jpg?v=1';
+  /* Version the art by BUILD, not a hardcoded ?v=1. sw.js caches static assets
+     cache-first and never revalidates, so a hardcoded query means that once a
+     phone has fetched a plate it keeps that exact bytes forever - replacing the
+     artwork later would silently never reach anyone. Keying on the build tag
+     makes every release fetch fresh plates and lets the old ones fall out. */
+  var _b=(document.querySelector('meta[name=sfs-build]')||{}).content||'0';
+  var url='card-'+VAULT_ID+'.jpg?v='+encodeURIComponent(_b);
   var im=new Image();
   im.onload=function(){
     app.style.backgroundImage='url("'+url+'")';
