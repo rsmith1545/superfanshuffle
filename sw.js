@@ -1,4 +1,4 @@
-var CACHE='sfs-v201';
+var CACHE='sfs-v202';
 /* IMPORTANT: do NOT precache the HTML documents. If the app shell is cached, an installed PWA
    can launch straight from cache and bypass Cloudflare Access. Keeping only static assets here
    forces every page launch to hit the network, so the Access login is always enforced. */

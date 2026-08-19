@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v201"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v202"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -167,8 +167,12 @@
    composition that scales with the card, where camo is a fabric that repeats. Plumes
    sit low and stretch tall to read as rising, with a witch-light glow at the very
    bottom edge as the source, and thin wisps up top where the mist has thinned out. */
-/* ===== supplied card art =====
-   When a card-<vaultid>.jpg exists it REPLACES the CSS pattern for that genre.
+/* ===== card art =====
+   When a card-<vaultid>.jpg exists it REPLACES the flat colour or CSS pattern for
+   that vault. NOT film-only: music vaults get plates derived from their existing
+   poster art (see posterplate.py - crop below the title, blur, normalise), so the
+   whole app reads as one thing instead of Film & TV being the only edition with a
+   picture on the card.
    Everything else about the card is unchanged - same border, same lettering,
    same shuffle - so art and pattern genres sit side by side without a seam.
    The ::after is the centre-keeper. Even art drawn to spec has bright spots:
@@ -180,9 +184,9 @@
    of 0.173 - it was already darker than anything the scrim needed to protect
    against, and all the scrim did was bury the scene. Art drawn to this spec
    arrives dark; the scrim is insurance for a bright hotspot, not a dimmer. */
-#app.filmcard.hasart{background-image:none;background-size:cover;background-position:center;
+#app.hasart{background-image:none;background-size:cover;background-position:center;
  background-repeat:no-repeat}
-#app.filmcard.hasart::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+#app.hasart::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
  background:
   radial-gradient(ellipse 64% 58% at 50% 48%, rgba(6,3,14,.50), rgba(6,3,14,.22) 62%, rgba(6,3,14,0) 100%),
   linear-gradient(to bottom, rgba(6,3,14,.20), rgba(6,3,14,0) 26%, rgba(6,3,14,0) 76%, rgba(6,3,14,.24))}
@@ -194,21 +198,21 @@
    The halo travels with the text, so it protects every title length and every
    future plate without anyone tuning a mask. .filmcard sets text-shadow:none to let
    the stroke do the work; art cards put a shadow back. */
-#app.filmcard.hasart #card{text-shadow:0 0 5px rgba(4,2,10,.98),0 0 11px rgba(4,2,10,.95),0 2px 16px rgba(4,2,10,.92),0 0 30px rgba(4,2,10,.85),0 0 54px rgba(4,2,10,.6)}
-#app.filmcard.hasart #timer,#app.filmcard.hasart #score{text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 20px rgba(4,2,10,.7)}
+#app.hasart #card{text-shadow:0 0 5px rgba(4,2,10,.98),0 0 11px rgba(4,2,10,.95),0 2px 16px rgba(4,2,10,.92),0 0 30px rgba(4,2,10,.85),0 0 54px rgba(4,2,10,.6)}
+#app.hasart #timer,#app.hasart #score{text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 20px rgba(4,2,10,.7)}
 /* light plates: dark ink, cream stroke, and the scrim LIFTS the centre instead of
    darkening it - the job is the same (separate type from picture), the direction
    is opposite. */
-#app.filmcard.hasart.lightart #card{color:var(--cardink,#241546);
+#app.hasart.lightart #card{color:var(--cardink,#241546);
  -webkit-text-stroke-color:var(--cardoutline,#FFF6E0);
  text-shadow:0 0 6px rgba(255,250,238,.96),0 0 15px rgba(255,250,238,.9),0 2px 22px rgba(255,250,238,.75),0 0 40px rgba(255,250,238,.5)}
-#app.filmcard.hasart.lightart #timer,#app.filmcard.hasart.lightart #score{
+#app.hasart.lightart #timer,#app.hasart.lightart #score{
  color:var(--cardink,#241546);text-shadow:0 0 10px rgba(255,250,238,.95),0 0 20px rgba(255,250,238,.8)}
-#app.filmcard.hasart.lightart::after{background:
+#app.hasart.lightart::after{background:
   radial-gradient(ellipse 64% 58% at 50% 48%, rgba(255,250,238,.46), rgba(255,250,238,.20) 62%, rgba(255,250,238,0) 100%),
   linear-gradient(to bottom, rgba(255,250,238,.18), rgba(255,250,238,0) 26%, rgba(255,250,238,0) 76%, rgba(255,250,238,.20))}
 /* content has to clear the scrim */
-#app.filmcard.hasart>.screen{position:relative;z-index:1}
+#app.hasart>.screen{position:relative;z-index:1}
 #app.filmcard.fx-haze{
  background-color:#241046;
  background-image:
