@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v211"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v212"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -1045,6 +1045,31 @@ function _seenKey(ed){ return 'sfs_seen_'+(VAULT_ID||'x')+'_'+(ed||REDITION||'St
 var SEEN_RUN={};
 function recordSeen(w){ if(w) SEEN_RUN[w]=1; }
 function persistSeen(){ try{ var k=_seenKey(REDITION); var cur=JSON.parse(localStorage.getItem(k)||'{}'); for(var w in SEEN_RUN){ cur[w]=1; } localStorage.setItem(k,JSON.stringify(cur)); }catch(e){} }
+/* Deal through the deck before repeating anything.
+   The seen set was already being written to localStorage after every round - and
+   never read back. Each round was an independent uniform shuffle of the whole deck,
+   so with an 87-card standard deck and ~15 cards a round the expected overlap between
+   consecutive rounds is 15*15/87, i.e. two or three cards repeating EVERY replay.
+   That is not a shuffling bug, it is a dealing bug: a real deck does not put played
+   cards back before the rest have had a turn.
+   Unseen cards are dealt first (shuffled), then the seen ones (also shuffled) so the
+   round never runs dry. When every card has been seen the set resets and a new pass
+   through the deck begins. */
+function seenSet(){ try{ return JSON.parse(localStorage.getItem(_seenKey(REDITION))||'{}'); }catch(e){ return {}; } }
+function clearSeen(){ try{ localStorage.removeItem(_seenKey(REDITION)); }catch(e){} }
+function dealOrder(){
+  var deck=activeDeck();
+  if(deck.length<2) return deck.slice();
+  var seen=seenSet();
+  /* SEEN_RUN too: the current round is not persisted until it ends, and newCard()
+     can exhaust the order mid-round and re-deal. Without this it would immediately
+     serve back cards from the round in progress. */
+  for(var w in SEEN_RUN) seen[w]=1;
+  var fresh=[], used=[];
+  for(var i=0;i<deck.length;i++){ (seen[deck[i]] ? used : fresh).push(deck[i]); }
+  if(!fresh.length){ clearSeen(); SEEN_RUN={}; return shuffle(deck.slice()); }
+  return shuffle(fresh).concat(shuffle(used));
+}
 function seenCount(ed){ try{ return Object.keys(JSON.parse(localStorage.getItem(_seenKey(ed))||'{}')).length; }catch(e){ return 0; } }
 var PREVIEW=Q.get('mode')!=='full';   // default = 5-question preview; ?mode=full = owned round → report card
 var MAX_Q=5;
@@ -1274,7 +1299,7 @@ function sndBuzzer(){ initAudio(); tone(160,0.6,'sawtooth',0.36,0); tone(168,0.6
 function fmt(t){ var m=Math.floor(t/60), sec=t%60; return m+':'+(sec<10?'0':'')+sec; }
 var playing=false, idx=0, order=[], results=[], score=0, timeLeft=60, tHandle=null;
 var qCount=0, ended=false, previewSafety=null;
-function newCard(){ if(idx>=order.length){ order=shuffle(activeDeck()); idx=0; } var w=order[idx++]; recordSeen(w); document.getElementById('card').textContent=w; return w; }
+function newCard(){ if(idx>=order.length){ order=dealOrder(); idx=0; } var w=order[idx++]; recordSeen(w); document.getElementById('card').textContent=w; return w; }
 var current='';
 function mark(good){
   results.push({w:current,good:good});
@@ -1303,7 +1328,7 @@ function flash(good,label){
     app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }, good?620:550);
 }
 function startGame(){
-  order=shuffle(activeDeck()); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
+  order=dealOrder(); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
   document.getElementById('score').textContent='0';
   show('sGame'); app.classList.remove('st-correct','st-pass','st-timeup');
   applySportCard(); if(!spCard()) { app.classList.remove('sportcard'); app.style.removeProperty('--cardbg'); app.style.removeProperty('--cardoutline'); }
