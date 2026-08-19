@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v213"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v214"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -822,6 +822,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .qmh{display:flex;align-items:center;gap:10px;margin-bottom:min(8px,.9vh)}
 .qmh span{flex:1;height:1px;background:var(--qrule)}
 .qmh h2{font-family:var(--disp);font-size:min(5.1vw,2.9vh);letter-spacing:1px;white-space:nowrap;color:#fff}
+.qmodes.one{grid-template-columns:1fr;max-width:80%;margin-left:auto;margin-right:auto}
 .qmodes{display:flex;gap:9px;margin-bottom:min(13px,1.4vh)}
 .qmode{flex:1 1 0;min-width:0;position:relative;border-radius:13px;padding:min(11px,1.2vh) 9px;cursor:pointer;
  display:flex;gap:8px;align-items:flex-start;background:rgba(255,255,255,.03);border:1.5px solid currentColor}
@@ -1347,7 +1348,13 @@ function startGame(){
     tHandle=setInterval(function(){
       timeLeft--;
       var tEl=document.getElementById('timer'); tEl.textContent=fmt(timeLeft);
-      if(timeLeft<=10 && timeLeft>0){ tEl.classList.add('pulsing'); sndClock(timeLeft%2===0); }
+      /* The last ten seconds had sound and a pulse but no haptic - in a loud room,
+         with the phone on your forehead, the buzz is the only channel that reliably
+         gets through. Escalates so the final three feel different from the run-in. */
+      if(timeLeft<=10 && timeLeft>0){
+        tEl.classList.add('pulsing'); sndClock(timeLeft%2===0);
+        buzz(timeLeft<=3 ? [0,55,55,55] : (timeLeft<=5 ? [0,40] : [0,22]));
+      }
       if(timeLeft<=0){ endGame(); }
     }, 1000);
   }
@@ -1609,7 +1616,34 @@ window.addEventListener('orientationchange', function(){ setTimeout(checkOrienta
 window.addEventListener('resize', checkOrientation);
 
 /* ---------- buttons ---------- */
-function buzz(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+/* ---------- haptics ----------
+   navigator.vibrate covers Android/Chrome. iOS Safari has never implemented the
+   Vibration API at all, so on an iPhone every buzz() in this file has always been
+   a silent no-op - which is exactly what "I don't feel it if it exists" describes.
+   iOS 17.4+ does fire a light system haptic when an <input type=checkbox switch>
+   toggles, so that is the fallback: one tap per "on" segment of the pattern.
+   Feature-detected both ways; where neither exists it stays a no-op as before. */
+var _hapSw=null, _hapReady=false;
+function _hapInit(){
+  if(_hapReady) return; _hapReady=true;
+  try{
+    if(navigator.vibrate) return;                                /* real API - no shim needed */
+    if(!('switch' in document.createElement('input'))) return;    /* pre-17.4 iOS */
+    _hapSw=document.getElementById('hapSw');
+  }catch(e){ _hapSw=null; }
+}
+function _hapTap(){ if(!_hapSw) return; try{ _hapSw.checked=!_hapSw.checked; _hapSw.dispatchEvent(new Event('change')); }catch(e){} }
+function buzz(p){
+  try{ if(navigator.vibrate){ navigator.vibrate(p); return; } }catch(e){}
+  _hapInit(); if(!_hapSw) return;
+  if(typeof p==='number'){ _hapTap(); return; }
+  /* pattern is [pause,on,pause,on,...] - the odd indices are the pulses */
+  var t=0;
+  for(var i=0;i<p.length;i++){
+    if(i%2===1)(function(d){ setTimeout(_hapTap,d); })(t);
+    t+=p[i];
+  }
+}
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
 document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); }); };
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
@@ -1771,14 +1805,17 @@ function renderQPG(){
   +'<div class="qtalk"><div class="qrh"><span></span><h2>YOU CAN TALK —</h2><span></span></div>'
     +'<h3>THIS ISN’T OLD-SCHOOL CHARADES.</h3></div>'
   +qpgHowRow(CFG)
-  +'<div class="qmh"><span></span><h2>HOUSE RULE &mdash; HOW YOU CLUE</h2><span></span></div>'
-  +'<div class="qmodes">'
-   +'<div class="qmode beg'+(RCLUE!=='Superfan'?' sel':'')+'" onclick="qpgPick(this,\'Beginner\')"><div class="qav">'+qpgAv()+'</div>'
-     +'<div><h4>BEGINNER</h4><p>'+CFG.beg[0]+'</p>'+(CFG.beg[1]?'<p class="thin">'+CFG.beg[1]+'</p>':'')+'</div>'
-     +'<span class="qtick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0b1626" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 7"/></svg></span></div>'
-   +'<div class="qmode sup'+(RCLUE==='Superfan'?' sel':'')+'" onclick="qpgPick(this,\'Superfan\')"><div class="qav">'+qpgAv()+'</div>'
-     +'<div><h4>SUPERFAN</h4><p>'+CFG.sup[0]+'</p>'+(CFG.sup[1]?'<p class="thin">'+CFG.sup[1]+'</p>':'')+'</div>'
-     +'<span class="qtick"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1b0e03" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 7"/></svg></span></div>'
+  +'<div class="qmh"><span></span><h2>HOUSE RULE &mdash; '+((RCLUE==='Superfan')?'SUPERFAN':'BEGINNER')+'</h2><span></span></div>'
+  /* The guide REPORTS the house rule now, it does not set it. Choosing it here put the
+     decision two taps deep inside how-to-play, where a player who already knows the
+     game never looks - and it sat beside Standard/Deluxe as if the two were the same
+     kind of choice. Both now live together on the vault sheet. */
+  +'<div class="qmodes one">'
+   +'<div class="qmode '+((RCLUE==='Superfan')?'sup':'beg')+' sel"><div class="qav">'+qpgAv()+'</div>'
+     +'<div><h4>'+((RCLUE==='Superfan')?'SUPERFAN':'BEGINNER')+'</h4><p>'
+       +((RCLUE==='Superfan')?CFG.sup[0]:CFG.beg[0])+'</p>'
+       +(((RCLUE==='Superfan')?CFG.sup[1]:CFG.beg[1])?'<p class="thin">'+((RCLUE==='Superfan')?CFG.sup[1]:CFG.beg[1])+'</p>':'')
+     +'</div></div>'
   +'</div>'
   +(CFG.clueHead?'<div class="qcluehead"><span></span><h2>'+CFG.clueHead+'</h2><span></span></div>':'')
   +'<div class="qclues">'+clues+'</div>'
@@ -1852,4 +1889,7 @@ if(ED==='sports'){ try{ applySportCard(); }catch(e){}
  try{ var _wm=document.getElementById('wallMix');
    if(_wm) _wm.innerHTML='players, coaches, stadiums &amp; team lore'; }catch(e){} }
 </script>
+<!-- iOS 17.4+ haptic shim. Hidden but NOT display:none - Safari will not fire the
+     system haptic for an element it does not lay out. See buzz() below. -->
+<input type="checkbox" switch id="hapSw" tabindex="-1" aria-hidden="true" style="position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none">
 </body></html>
