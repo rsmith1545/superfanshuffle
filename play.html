@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v212"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v213"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -991,9 +991,9 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
     <div class="rcSimilar" id="rcSimilar"><div class="rcSimHd">Artists similar to <span id="rcSimArtist"></span></div><div class="rcSimList" id="rcSimList"></div></div>
     <div class="rcCustOv" id="rcCustOv"><div class="rcCustSheet">
     <div class="rcCustHd">CUSTOMIZE GAME<span class="rcCustX" id="rcCustX">&#10005;</span></div>
-    <div class="rcCustLbl">EDITION</div>
+    <div class="rcCustLbl">DECK</div>
     <div class="rcCustRow" id="rcEdRow"><button class="rcOpt" data-ed="Standard"><b>Standard</b><span>The essential tracks everyone knows.</span></button><button class="rcOpt" data-ed="Deluxe"><b>Deluxe</b><span>Every track — deep cuts &amp; features.</span></button></div>
-    <div class="rcCustLbl">CLUE RULES</div>
+    <div class="rcCustLbl">HOUSE RULE &mdash; HOW YOU CLUE</div>
     <div class="rcCustRow" id="rcClRow"><button class="rcOpt sm" data-cl="Beginner"><b>Beginner</b><span>Hum it, sing it, or say it. Anything goes.</span></button><button class="rcOpt sm" data-cl="Superfan"><b>Superfan</b><span>Lyrics only, no chorus.</span></button></div>
     <button class="rcCustGo" id="rcCustGo">&#8635; PLAY WITH THESE</button>
   </div></div>
@@ -1448,7 +1448,7 @@ function buildReport(){
   var card=document.querySelector('.rcCard'); if(card){ card.style.setProperty('--rcgrad',et.grad); card.style.setProperty('--rcbord',et.bord); }
   var artist=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME:'SuperFan';
   document.getElementById('rcArtist').textContent=artist.toUpperCase();
-  document.getElementById('rcMode').textContent=(RCLUE||'Standard').toUpperCase()+' MODE';
+  document.getElementById('rcMode').textContent=(REDITION||'Standard').toUpperCase()+' DECK \u00b7 '+(RCLUE||'Beginner').toUpperCase()+' RULES';
   document.getElementById('rScoreN').textContent=score;
   var badge=document.getElementById('rcBadge'); badge.style.setProperty('--tc',t.col); badge.innerHTML=ICON[t.key]||'';
   document.getElementById('rcMsg').textContent=t.msg.replace('%',firstName(VAULT_NAME));
@@ -1524,7 +1524,12 @@ function buildReportFilm(){
 /* Pre-lifted backdrops, not the raw intro plates: both are night photographs and at
    source brightness they read as pure black behind a translucent panel. */
 function rfBgFor(ed){ return ed==='sports' ? "url('res-sports.jpg?v=1')" : "url('movies-result-bg.jpg?v=2')"; }
-function showReport(){ if(ED==='filmtv'||ED==='sports'){ buildReportFilm();
+/* One place, both paths. The label was only written by the music report builder, so
+   on Film & TV and sports the card still read a bare "MODE" - the settings you had
+   just chosen were shown back to you on one edition out of three. */
+function stampMode(){ try{ var m=document.getElementById('rcMode');
+  if(m) m.textContent=(REDITION||'Standard').toUpperCase()+' DECK \u00b7 '+(RCLUE||'Beginner').toUpperCase()+' RULES'; }catch(e){} }
+function showReport(){ stampMode(); if(ED==='filmtv'||ED==='sports'){ buildReportFilm();
   try{ document.getElementById('sReportFilm').style.setProperty('--rfbg', rfBgFor(ED)); }catch(e){}
   show('sReportFilm'); } else { buildReport(); show('sReport'); } }
 function doShare(){
@@ -1617,7 +1622,7 @@ document.getElementById('rcCustX').onclick=closeCust;
 document.getElementById('rcCustOv').addEventListener('click',function(e){ if(e.target.id==='rcCustOv') closeCust(); });
 document.getElementById('rcEdRow').addEventListener('click',function(e){ var b=e.target.closest('.rcOpt'); if(b){ custEd=b.getAttribute('data-ed'); _syncCust(); } });
 document.getElementById('rcClRow').addEventListener('click',function(e){ var b=e.target.closest('.rcOpt'); if(b){ custCl=b.getAttribute('data-cl'); _syncCust(); } });
-document.getElementById('rcCustGo').onclick=function(){ REDITION=custEd; RCLUE=custCl; closeCust(); var m=document.getElementById('rcMode'); if(m) m.textContent=(RCLUE||'Standard').toUpperCase()+' MODE'; goFullscreen(); unlockAudio(); ready(); };
+document.getElementById('rcCustGo').onclick=function(){ REDITION=custEd; RCLUE=custCl; closeCust(); var m=document.getElementById('rcMode'); if(m) m.textContent=(REDITION||'Standard').toUpperCase()+' DECK \u00b7 '+(RCLUE||'Beginner').toUpperCase()+' RULES'; goFullscreen(); unlockAudio(); ready(); };
 if(Q.get('demo')){ try{
   if(ED==='sports'){
     score=parseInt(Q.get('score')||'7',10); if(isNaN(score))score=7;
@@ -1766,7 +1771,7 @@ function renderQPG(){
   +'<div class="qtalk"><div class="qrh"><span></span><h2>YOU CAN TALK —</h2><span></span></div>'
     +'<h3>THIS ISN’T OLD-SCHOOL CHARADES.</h3></div>'
   +qpgHowRow(CFG)
-  +'<div class="qmh"><span></span><h2>CHOOSE YOUR MODE</h2><span></span></div>'
+  +'<div class="qmh"><span></span><h2>HOUSE RULE &mdash; HOW YOU CLUE</h2><span></span></div>'
   +'<div class="qmodes">'
    +'<div class="qmode beg'+(RCLUE!=='Superfan'?' sel':'')+'" onclick="qpgPick(this,\'Beginner\')"><div class="qav">'+qpgAv()+'</div>'
      +'<div><h4>BEGINNER</h4><p>'+CFG.beg[0]+'</p>'+(CFG.beg[1]?'<p class="thin">'+CFG.beg[1]+'</p>':'')+'</div>'
