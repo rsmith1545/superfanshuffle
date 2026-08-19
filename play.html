@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v210"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v211"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -480,8 +480,8 @@
 #sReportFilm{position:fixed;inset:0;z-index:120;display:none;background:#04060c;color:#fff;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;font-family:'Inter',sans-serif}
 #sReportFilm.on{display:block}
 .rfBg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#04060c}
-.rfBgHi{position:absolute;inset:0;background:url('movies-result-bg.jpg?v=2') center/cover no-repeat;filter:blur(1px) brightness(.86)}
-.rfBgMid{position:absolute;inset:0;background:url('movies-result-bg.jpg?v=2') center/cover no-repeat;filter:blur(8px) brightness(.6);-webkit-mask-image:linear-gradient(to bottom,transparent 8%,#000 30%,#000 68%,transparent 95%);mask-image:linear-gradient(to bottom,transparent 8%,#000 30%,#000 68%,transparent 95%)}
+.rfBgHi{position:absolute;inset:0;background:var(--rfbg,url('movies-result-bg.jpg?v=2')) center/cover no-repeat;filter:blur(1px) brightness(.86)}
+.rfBgMid{position:absolute;inset:0;background:var(--rfbg,url('movies-result-bg.jpg?v=2')) center/cover no-repeat;filter:blur(8px) brightness(.6);-webkit-mask-image:linear-gradient(to bottom,transparent 8%,#000 30%,#000 68%,transparent 95%);mask-image:linear-gradient(to bottom,transparent 8%,#000 30%,#000 68%,transparent 95%)}
 .rfBgOv{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(3,5,10,.22) 0%,rgba(3,5,10,.5) 46%,rgba(3,5,10,.26) 100%)}
 .rfScroll{position:relative;z-index:1;max-width:600px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;gap:9px;padding:max(env(safe-area-inset-top,0px),10px) 11px calc(env(safe-area-inset-bottom,0px) + 12px);box-sizing:border-box}
 .rfPanel{background:rgba(5,8,18,.9);border:1.5px solid #C68A32;border-radius:15px;box-shadow:0 0 22px -12px #C68A32,inset 0 0 44px -22px rgba(198,138,50,.35)}
@@ -553,9 +553,24 @@
 #rfPosterOv{position:fixed;inset:0;z-index:200;background:rgba(3,3,8,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px}
 #rfPosterOv img{max-width:88vw;max-height:78vh;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
 #rfPosterOv .rfPX{font-family:var(--disp);letter-spacing:1px;color:#cbb9e6;font-size:13px}
-#sReport{padding:0;background:#05040a}
+/* The results screens now sit on the edition's own intro image, blurred right back.
+   Music was a flat #05040a, and sports was borrowing the MOVIE set - the three intro
+   plates map one-to-one onto the editions (stage / film set / stadium), so each
+   edition finishes on the room it started in.
+   The blur is heavy and the brightness low on purpose: this is a scoreboard, and the
+   picture is there to give it a place to stand, not to be looked at. */
+/* Blurred at BUILD time into res-music.jpg rather than with a runtime filter on a
+   pseudo-element. The pseudo approach failed twice: at z-index -1 the element's own
+   opaque background painted straight over it, and at 0 an ancestor's transform made
+   the fixed layer resolve against the card instead of the viewport. A pre-blurred
+   file has neither problem, costs nothing to composite, and is 30KB. */
+#sReport{padding:0;background:#05040a url('res-music.jpg?v=1') center/cover no-repeat}
+/* .rcCard is a full-height panel and it was fully opaque, so the backdrop behind it
+   was painting correctly and being covered completely - which is why three attempts
+   at the backdrop itself changed nothing on screen. The panel is translucent now, the
+   way the film results panels already were. */
 body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!important;border:0!important;border-radius:0!important;padding:0!important;background:#05040a!important;box-shadow:none!important}
-.rcCard{display:flex;flex-direction:column;height:100dvh;max-width:560px;margin:0 auto;padding:max(env(safe-area-inset-top,0px),20px) 15px calc(env(safe-area-inset-bottom,0px) + 10px);box-sizing:border-box;color:#fff;border:1px solid var(--rcbord,rgba(126,86,224,.6));border-radius:0;background:var(--rcgrad,linear-gradient(180deg,#1a0d33,#0b0714));overflow-y:auto;overflow-x:hidden}
+.rcCard{display:flex;flex-direction:column;height:100dvh;max-width:560px;margin:0 auto;padding:max(env(safe-area-inset-top,0px),20px) 15px calc(env(safe-area-inset-bottom,0px) + 10px);box-sizing:border-box;color:#fff;border:1px solid var(--rcbord,rgba(126,86,224,.6));border-radius:0;background:var(--rcgrad,linear-gradient(180deg,rgba(26,13,51,.80),rgba(11,7,20,.88)));overflow-y:auto;overflow-x:hidden}
 .rcBar{display:flex;align-items:center;gap:10px}
 .rcSFS{font-family:var(--disp);font-size:14px;letter-spacing:1px;color:var(--cyan);border:1.5px solid var(--cyan);border-radius:8px;padding:3px 7px;flex:0 0 auto;box-shadow:0 0 10px -4px var(--cyan)}
 .rcHd{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;overflow:hidden}
@@ -1384,9 +1399,9 @@ var RCLUE=Q.get('clue')||'Beginner', REDITION=Q.get('edition')||'Standard', RXS=
 var RP1=Q.get('p1')||'', RP2=Q.get('p2')||'', RCITY=Q.get('city')||'', RTEAM=Q.get('team')||'';
 function hexA(h,a){ h=(h||'').replace('#',''); if(h.length!==6) return 'rgba(40,50,80,'+a+')'; return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+a+')'; }
 var EDTHEME={
- music:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(124,64,224,.34),transparent 60%),linear-gradient(180deg,#1a0d33 0%,#0d0819 60%,#080511 100%)",bord:"rgba(126,86,224,.55)"},
- filmtv:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(150,110,30,.30),transparent 60%),linear-gradient(180deg,#141009 0%,#0b0a10 60%,#08070a 100%)",bord:"rgba(242,193,78,.45)"},
- sports:{grad:"radial-gradient(110% 60% at 88% -6%,rgba(255,120,30,.24),transparent 55%),radial-gradient(95% 60% at 6% 6%,rgba(22,44,86,.55),transparent 60%),linear-gradient(180deg,#0e1626 0%,#0a0e18 60%,#07090f 100%)",bord:"rgba(255,138,42,.45)"}
+ music:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(124,64,224,.34),transparent 60%),linear-gradient(180deg,rgba(26,13,51,.86) 0%,rgba(13,8,25,.80) 60%,rgba(8,5,17,.72) 100%)",bord:"rgba(126,86,224,.55)"},
+ filmtv:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(150,110,30,.30),transparent 60%),linear-gradient(180deg,rgba(20,16,9,.86) 0%,rgba(11,10,16,.80) 60%,rgba(8,7,10,.72) 100%)",bord:"rgba(242,193,78,.45)"},
+ sports:{grad:"radial-gradient(110% 60% at 88% -6%,rgba(255,120,30,.24),transparent 55%),radial-gradient(95% 60% at 6% 6%,rgba(22,44,86,.55),transparent 60%),linear-gradient(180deg,rgba(14,22,38,.86) 0%,rgba(10,14,24,.80) 60%,rgba(7,9,15,.72) 100%)",bord:"rgba(255,138,42,.45)"}
 };
 var ICON={
  rookie:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3l7 2.2v5.1c0 5-3.4 8.3-7 10.2-3.6-1.9-7-5.2-7-10.2V5.2z"/></svg>',
@@ -1448,8 +1463,11 @@ function buildReportFilm(){
   var _spo=(ED==='sports');
   var _photo=document.getElementById('rfBgPhoto'),_grad=document.getElementById('rfBgGrad'),_tp=document.getElementById('rfTeamPoster'),_pb=document.querySelector('.rfPosterBtn'),pv=document.getElementById('rfPoster');
   if(_spo){ var _p1=RP1||'#243b6b',_p2=RP2||'#0b1a3a';
-    if(_grad){ _grad.style.background='radial-gradient(90% 60% at 84% 6%,'+hexA(_p1,.6)+',transparent 55%),radial-gradient(95% 72% at 8% 14%,'+hexA(_p2,.55)+',transparent 60%),linear-gradient(165deg,#0d0f14 0%,#08090e 55%,#050609 100%)'; _grad.style.display='block'; }
-    if(_photo) _photo.style.display='none';
+    if(_grad){ _grad.style.background='radial-gradient(90% 60% at 84% 6%,'+hexA(_p1,.6)+',transparent 55%),radial-gradient(95% 72% at 8% 14%,'+hexA(_p2,.55)+',transparent 60%),linear-gradient(165deg,rgba(13,15,20,.72) 0%,rgba(8,9,14,.62) 55%,rgba(5,6,9,.55) 100%)'; _grad.style.display='block'; }
+    /* Sports used to hide the photo layer entirely and stand on the team gradient
+       alone. It now keeps the stadium underneath, with the team colours washed over
+       it - so the edition finishes in the room it started in, still in team colours. */
+    if(_photo) _photo.style.display='block';
     if(_tp){ _tp.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_p1,.95)+','+hexA(_p1,0)+' 62%),linear-gradient(158deg,'+_p1+' 0%,'+_p2+' 100%)'; _tp.innerHTML='<div class="rfTPvault">SUPERFAN VAULT</div><div class="rfTPcity">'+(RCITY||'').toUpperCase()+'</div><div class="rfTPteam">'+((RTEAM||VAULT_NAME)||'').toUpperCase()+'</div>'; _tp.style.display='flex'; }
     if(pv) pv.style.display='none'; if(_pb) _pb.style.display='none';
   } else {
@@ -1477,7 +1495,13 @@ function buildReportFilm(){
       row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
   } else { keep.style.display='none'; }
 }
-function showReport(){ if(ED==='filmtv'||ED==='sports'){ buildReportFilm(); show('sReportFilm'); } else { buildReport(); show('sReport'); } }
+/* sports finished on a movie set until now - same screen, same background image. */
+/* Pre-lifted backdrops, not the raw intro plates: both are night photographs and at
+   source brightness they read as pure black behind a translucent panel. */
+function rfBgFor(ed){ return ed==='sports' ? "url('res-sports.jpg?v=1')" : "url('movies-result-bg.jpg?v=2')"; }
+function showReport(){ if(ED==='filmtv'||ED==='sports'){ buildReportFilm();
+  try{ document.getElementById('sReportFilm').style.setProperty('--rfbg', rfBgFor(ED)); }catch(e){}
+  show('sReportFilm'); } else { buildReport(); show('sReport'); } }
 function doShare(){
   var t=tierFor(score);
   var txt='I’m a '+t.name+' on SuperFan Shuffle'+(VAULT_NAME!=='this vault'?' — '+VAULT_NAME:'')+'! Scored '+score+'. Face the Music →';
