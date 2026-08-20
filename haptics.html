@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SFS · Haptics Diagnostic</title>
+<style>
+:root{--cyan:#57E6FF;--mag:#FF2EB0;--vio:#B06AFF;--ok:#3FD97A;--bad:#FF5A5A;--warn:#FFB84D}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;padding:14px 14px 60px;background:#0a0714;color:#EDE7F5;
+ font:15px/1.45 -apple-system,system-ui,Roboto,sans-serif}
+h1{font-size:17px;margin:0 0 2px;letter-spacing:.5px}
+h1 span{color:var(--cyan)}
+.sub{font-size:12px;color:#9a8fb5;margin-bottom:12px}
+.box{background:#140e24;border:1px solid #2b2043;border-radius:12px;padding:11px 12px;margin-bottom:11px}
+.box h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9a8fb5;margin:0 0 8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td{padding:3px 0;vertical-align:top}
+td:first-child{color:#9a8fb5;white-space:nowrap;padding-right:10px;width:44%}
+td:last-child{font-family:ui-monospace,Menlo,monospace;font-size:12px;word-break:break-word}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+button{display:block;width:100%;margin:0 0 8px;padding:15px 10px;border-radius:11px;
+ border:1.5px solid var(--vio);background:rgba(176,106,255,.12);color:#fff;
+ font:700 15px/1 system-ui,sans-serif;letter-spacing:.4px}
+button:active{background:rgba(176,106,255,.34)}
+button.big{border-color:var(--cyan);background:rgba(87,230,255,.12);padding:19px 10px;font-size:16px}
+button.alt{border-color:var(--mag);background:rgba(255,46,176,.1)}
+.hint{font-size:12px;color:#9a8fb5;margin:-3px 0 9px;padding-left:2px}
+#log{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.5;
+ white-space:pre-wrap;max-height:230px;overflow:auto;color:#c9bfe0}
+.note{font-size:12.5px;line-height:1.5;color:#c9bfe0}
+.note b{color:#fff}
+ol{margin:6px 0 0;padding-left:20px}
+li{margin-bottom:5px}
+</style>
+</head>
+<body>
+
+<h1>SuperFan Shuffle · <span>Haptics Diagnostic</span></h1>
+<div class="sub">Not part of the game. Tap the buttons and read the log.</div>
+
+<div class="box">
+  <h2>What this browser reports</h2>
+  <table id="caps"></table>
+</div>
+
+<div class="box">
+  <h2>1 · Does anything vibrate at all</h2>
+  <button class="big" data-p="600" data-n="ONE LONG 600ms — start here">▲ LONG BUZZ (600ms)</button>
+  <div class="hint">If you feel nothing here, the problem is the phone or the browser, not the game. See the checklist at the bottom.</div>
+  <button data-p="200" data-n="single 200ms">200ms</button>
+  <button data-p="100" data-n="single 100ms">100ms</button>
+  <button data-p="60"  data-n="single 60ms">60ms</button>
+  <button data-p="40"  data-n="single 40ms">40ms</button>
+  <button data-p="22"  data-n="single 22ms (the OLD clock tick)">22ms — old clock tick</button>
+  <div class="hint">Tell me the shortest one you can still feel. That sets the floor for every haptic in the game.</div>
+</div>
+
+<div class="box">
+  <h2>2 · The exact patterns the game fires</h2>
+  <button class="alt" data-p="[0,60]"        data-n="clock 10..6s">Clock tick · 10 to 6 seconds left</button>
+  <button class="alt" data-p="[0,90]"        data-n="clock 5..4s">Clock tick · 5 to 4 seconds left</button>
+  <button class="alt" data-p="[0,110,60,110]" data-n="clock 3..1s">Clock tick · final 3 (double)</button>
+  <button class="alt" data-p="[0,45,40,110]" data-n="CORRECT">Tilt down · CORRECT</button>
+  <button class="alt" data-p="[0,90]"        data-n="PASS">Tilt up · PASS</button>
+  <button class="alt" data-p="[160,80,160,80,220]" data-n="time's up buzzer">Time's up buzzer</button>
+</div>
+
+<div class="box">
+  <h2>3 · The real countdown, in real time</h2>
+  <button class="big" id="run">▶ RUN THE LAST 10 SECONDS</button>
+  <div class="hint">Fires the same pattern, on the same 1-second cadence, as the end of a round.</div>
+  <button id="fs">Do it again in FULLSCREEN</button>
+  <div class="hint">Fullscreen + landscape lock is how the game actually runs. Worth testing separately.</div>
+</div>
+
+<div class="box">
+  <h2>Log</h2>
+  <div id="log">ready.</div>
+</div>
+
+<div class="box">
+  <h2>If nothing vibrates at all</h2>
+  <div class="note">
+    <b>navigator.vibrate() returning true does not mean the phone actually buzzed</b> — it only
+    means the request was accepted. Android silently drops it in these cases:
+    <ol>
+      <li><b>Touch feedback is off.</b> Settings → Sound &amp; vibration → Vibration &amp; haptics →
+          <b>Touch feedback</b>. If this is off or at zero, Chrome's web vibration is suppressed
+          system-wide. This is the single most common cause.</li>
+      <li><b>Ringer is on Silent.</b> Silent (not Vibrate) suppresses haptics on most Android builds.
+          Do Not Disturb can do the same.</li>
+      <li><b>Battery saver</b> disables vibration on many phones.</li>
+      <li><b>Chrome site settings.</b> Long-press the address bar → Site settings → check nothing is
+          blocked for superfanshuffle.com.</li>
+      <li><b>A cached old build.</b> Check the version below matches what you expect.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+var BUILD='v216';
+function el(id){ return document.getElementById(id); }
+function log(m){ var L=el('log'); L.textContent=(m+'\n'+L.textContent).slice(0,4000); }
+
+/* ---- capability readout ---- */
+(function(){
+  var has = typeof navigator.vibrate === 'function';
+  var ua = navigator.userAgent;
+  var rows = [
+    ['build', BUILD],
+    ['navigator.vibrate', has ? '<span class="ok">present</span>'
+                              : '<span class="bad">MISSING — this browser cannot vibrate</span>'],
+    ['platform', (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '?'],
+    ['is Android', /Android/i.test(ua) ? '<span class="ok">yes</span>' : 'no'],
+    ['is iOS', (/iPhone|iPad|iPod/i.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1))
+               ? '<span class="warn">yes — no Vibration API on iOS</span>' : 'no'],
+    ['switch attr (iOS haptic shim)', ('switch' in document.createElement('input'))
+               ? '<span class="ok">supported</span>' : 'not supported'],
+    ['standalone / installed PWA', (matchMedia('(display-mode: standalone)').matches ||
+       navigator.standalone===true) ? 'yes' : 'no (browser tab)'],
+    ['page visible', document.visibilityState],
+    ['user activation', (navigator.userActivation
+        ? ('hasBeenActive=' + navigator.userActivation.hasBeenActive +
+           ', isActive=' + navigator.userActivation.isActive)
+        : 'API not available')],
+    ['userAgent', ua]
+  ];
+  el('caps').innerHTML = rows.map(function(r){
+    return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'; }).join('');
+})();
+
+/* ---- firing ---- */
+function fire(pattern, name){
+  if(typeof navigator.vibrate !== 'function'){
+    log('✗ ' + name + ' — navigator.vibrate does not exist');
+    return;
+  }
+  var ret;
+  try{ ret = navigator.vibrate(pattern); }
+  catch(e){ log('✗ ' + name + ' — threw: ' + e.message); return; }
+  var act = navigator.userActivation
+      ? (navigator.userActivation.isActive ? 'transient-active' : 'sticky-only') : 'n/a';
+  log((ret ? '→ ' : '✗ ') + name + '  [' + JSON.stringify(pattern) + ']  returned ' + ret +
+      '  (activation: ' + act + ')');
+  if(ret === false) log('   ↑ returned FALSE — the browser refused this call outright.');
+}
+
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button[data-p]');
+  if(!b) return;
+  var raw = b.getAttribute('data-p');
+  fire(raw.charAt(0)==='[' ? JSON.parse(raw) : parseInt(raw,10), b.getAttribute('data-n'));
+});
+
+/* ---- the real countdown ---- */
+var running = false;
+function countdown(){
+  if(running) return; running = true;
+  var t = 10;
+  log('--- countdown start (10 ticks, 1s apart) ---');
+  var iv = setInterval(function(){
+    var p = t <= 3 ? [0,110,60,110] : (t <= 5 ? [0,90] : [0,60]);
+    fire(p, 'T-minus ' + t);
+    t--;
+    if(t <= 0){
+      clearInterval(iv);
+      fire([160,80,160,80,220], "TIME'S UP");
+      log('--- countdown end ---');
+      running = false;
+    }
+  }, 1000);
+}
+el('run').onclick = countdown;
+
+el('fs').onclick = function(){
+  var d = document.documentElement;
+  var fn = d.requestFullscreen || d.webkitRequestFullscreen;
+  if(fn){
+    var pr = fn.call(d);
+    if(pr && pr.catch) pr.catch(function(err){ log('fullscreen refused: ' + err.message); });
+  } else {
+    log('fullscreen API not available');
+  }
+  try{
+    if(screen.orientation && screen.orientation.lock){
+      screen.orientation.lock('landscape').catch(function(){ log('orientation lock refused'); });
+    }
+  }catch(e){}
+  setTimeout(function(){
+    log('fullscreen=' + !!(document.fullscreenElement || document.webkitFullscreenElement));
+    countdown();
+  }, 700);
+};
+</script>
+</body>
+</html>

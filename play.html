@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v215"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v216"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -508,29 +508,45 @@
 .rfBIcon{display:flex}
 .rfBIcon svg{width:clamp(16px,5.5vw,24px);height:auto;color:#f2a6ff;filter:drop-shadow(0 0 4px #ee55ff)}
 .rfBName{font-family:var(--disp);font-size:clamp(8px,2.6vw,11px);letter-spacing:.6px;color:#fff;margin-top:1px}
-.rfPoster{flex:0 0 60%;display:flex;flex-direction:column;gap:5px;min-width:0}
+.rfPoster{flex:0 0 52%;display:flex;flex-direction:column;gap:5px;min-width:0}
 .rfScoreCol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
 .rfPoster img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:block;background:#0c0906}
-.rfPosterBtn{font-family:var(--disp);font-size:10.5px;letter-spacing:.4px;color:#D35BEE;background:none;border:1px solid rgba(211,91,238,.5);border-radius:8px;padding:5px 3px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rfPosterBtn{font-family:var(--disp);font-size:clamp(8.5px,2.5vw,10.5px);letter-spacing:.2px;color:#D35BEE;background:none;border:1px solid rgba(211,91,238,.5);border-radius:8px;padding:5px 3px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .rfMid{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:-9px}
 
 
 
-.rfScoreWrap{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;line-height:.78}
-.rfScore{font-family:var(--disp);font-weight:400;font-size:clamp(92px,30vw,132px);color:#18DFF4;text-shadow:0 0 18px rgba(24,223,244,.6)}
-.rfScore.two{font-size:clamp(76px,25vw,112px)}
-.rfCorrect{font-family:var(--disp);font-size:18px;letter-spacing:3px;color:#21D9F2;margin-top:8px}
+.rfScoreWrap{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;line-height:.78}
+/* Sized off the VIEWPORT (30vw = 124px at 412) while its column is ~90px wide, and a
+   two-digit score needs roughly 1.1em - so 10+ overflowed worst of all, exactly when
+   the player has done best. Re-tuned so two digits fit the column. */
+.rfScore{font-family:var(--disp);font-weight:400;font-size:clamp(44px,17vw,78px);color:#18DFF4;
+ text-shadow:0 0 18px rgba(24,223,244,.6);max-width:100%}
+.rfScore.two{font-size:clamp(38px,15vw,68px)}   /* two digits are ~1.2em wide - go DOWN, not up */
+/* Fixed 18px + 3px letter-spacing in a ~190px column: measured 11.5px of spill at
+   412 and 17.2px at 360. Letter-spacing also adds a phantom advance AFTER the last
+   glyph, so the trailing space is clawed back with a negative margin. */
+.rfCorrect{font-family:var(--disp);font-size:clamp(10px,3vw,15px);letter-spacing:clamp(.6px,.4vw,2.2px);
+ margin-right:-.55vw;color:#21D9F2;margin-top:8px;max-width:100%}
 .rfNice{display:block;text-align:center;line-height:1.05;margin-top:6px}
 .rfNice1{font-family:'Caveat',cursive;font-weight:700;font-size:25px;color:#FFB52B}
 .rfNice2{font-family:'Caveat',cursive;font-weight:500;font-size:21px;color:#F1ECE3}
 .rfRibbon{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;background:radial-gradient(120% 160% at 50% 50%,rgba(118,36,160,.32),rgba(16,10,27,.92));border:1.5px solid #7624A0;border-radius:11px;padding:8px 10px;margin-top:6px}
-.rfRibTop{display:flex;flex-direction:row;align-items:center;gap:8px}
-.rfRibA{font-family:var(--disp);font-size:clamp(14px,4.4vw,18px);letter-spacing:1px;color:#F6F1E8;line-height:1;white-space:nowrap}
-.rfRibTier{font-family:'Anton',var(--disp);font-size:clamp(20px,6vw,26px);line-height:1;color:var(--tc,#B06AFF);text-shadow:0 0 15px color-mix(in srgb,var(--tc,#23D9ED) 55%,transparent)}
+/* The badge row is a fixed 32px ring + gap + display type on ONE nowrap line, inside a
+   ribbon that is only ~188px wide on a 412px phone (it sits in the narrow left column
+   of the two-column report). Measured: the row needs 190-278px depending on tier, so
+   EVERY tier spilled through the border, not just the long word SUPERFAN. Letting the
+   label and the tier stack keeps the ring and the big display type at full size. */
+.rfRibTop{display:flex;flex-direction:row;align-items:center;gap:8px;min-width:0;max-width:100%}
+.rfRibA{font-family:var(--disp);font-size:clamp(12px,3.5vw,15px);letter-spacing:.6px;color:#F6F1E8;
+ line-height:1.05;min-width:0;flex:1 1 auto;text-align:left}
+.rfRibTier{display:block;font-family:'Anton',var(--disp);font-size:clamp(15px,4.6vw,24px);line-height:1.02;
+ color:var(--tc,#B06AFF);text-shadow:0 0 15px color-mix(in srgb,var(--tc,#23D9ED) 55%,transparent);
+ white-space:nowrap;overflow-wrap:normal}
 .rfRibSub{font-family:'Inter',sans-serif;font-size:clamp(11px,3.4vw,14px);color:#F3EEF4;margin-top:2px;line-height:1.2;width:100%;text-align:center}
 .rfRibSub b{color:#E642F2}
-.rfRing{flex:0 0 auto;width:32px;height:32px;border-radius:50%;border:2px solid #B06AFF;background:radial-gradient(circle at 50% 35%,rgba(92,42,142,.55),rgba(14,9,24,.9));box-shadow:0 0 13px rgba(176,106,255,.6),inset 0 0 9px rgba(176,106,255,.4);display:flex;align-items:center;justify-content:center;color:#EAD9FF;margin-bottom:0}
+.rfRing{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #B06AFF;background:radial-gradient(circle at 50% 35%,rgba(92,42,142,.55),rgba(14,9,24,.9));box-shadow:0 0 13px rgba(176,106,255,.6),inset 0 0 9px rgba(176,106,255,.4);display:flex;align-items:center;justify-content:center;color:#EAD9FF;margin-bottom:0}
 .rfRing svg{width:16px;height:16px}
 .rfRing .rfBIcon{display:flex;align-items:center;justify-content:center}
 .rfRoundHd{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-bottom:5px}
@@ -559,7 +575,8 @@
 .rfTeamPoster{display:none;width:100%;aspect-ratio:3/4;border-radius:11px;border:1px solid rgba(255,255,255,.16);overflow:hidden;position:relative;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 4px 14px rgba(0,0,0,.4)}
 .rfTPvault{position:absolute;top:8px;left:0;right:0;font-family:var(--disp);font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.7)}
 .rfTPcity{font-family:var(--disp);font-size:15px;letter-spacing:2px;color:rgba(255,255,255,.92);line-height:1;margin-bottom:2px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
-.rfTPteam{font-family:var(--disp);font-size:30px;letter-spacing:1px;color:#fff;line-height:.92;text-shadow:0 2px 12px rgba(0,0,0,.55)}
+.rfTPteam{font-family:var(--disp);font-size:clamp(18px,5.4vw,30px);letter-spacing:.5px;color:#fff;
+ line-height:.95;text-shadow:0 2px 12px rgba(0,0,0,.55);max-width:100%;overflow-wrap:break-word}
 .rfTileG{width:100%;aspect-ratio:3/4;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:block}
 .rfTileN{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#e9e2f5;text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #rfPosterOv{position:fixed;inset:0;z-index:200;background:rgba(3,3,8,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px}
@@ -611,7 +628,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rcLevels{position:relative;display:flex;justify-content:space-between;gap:3px;margin:4px 0 4px;padding-top:4px}
 .rlTrack,.rlFill{position:absolute;top:25px;height:3px;border-radius:3px}
 .rlTrack{left:9%;right:9%;background:rgba(255,255,255,.14)}
-.rlFill{left:9%;background:linear-gradient(90deg,#8A6AC8,var(--cyan));box-shadow:0 0 8px -1px var(--cyan)}
+.rlFill{left:9%;width:calc(var(--fill,0) * .82%);background:linear-gradient(90deg,#8A6AC8,var(--cyan));box-shadow:0 0 8px -1px var(--cyan)}
 .rclv{position:relative;flex:1;text-align:center;z-index:1}
 .rlic{width:42px;height:42px;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #453b63;background:#140f24;color:#7a6ea3}
 .rlic svg{width:22px;height:22px}
@@ -1018,7 +1035,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
    <div class="rfPanel rfL">
     <div class="rfHero"><img class="rfHeroImg" src="movies-roundcomplete-wm.png?v=1" alt="Round Complete"></div>
     <div class="rfMid">
-     <div class="rfPoster"><div class="rfTeamPoster" id="rfTeamPoster"></div><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW POSTER ART</button></div>
+     <div class="rfPoster"><div class="rfTeamPoster" id="rfTeamPoster"></div><img id="rfPoster" alt=""><button class="rfPosterBtn" onclick="rfViewPoster()">&#128444; VIEW ART</button></div>
      <div class="rfScoreWrap"><span class="rfScore" id="rfScore">0</span><span class="rfCorrect">CORRECT</span></div>
     </div>
     <div class="rfNice"><span class="rfNice1">Nice round!</span> <span class="rfNice2" id="rfNice2"></span></div>
@@ -1362,7 +1379,12 @@ function startGame(){
          gets through. Escalates so the final three feel different from the run-in. */
       if(timeLeft<=10 && timeLeft>0){
         tEl.classList.add('pulsing'); sndClock(timeLeft%2===0);
-        buzz(timeLeft<=3 ? [0,55,55,55] : (timeLeft<=5 ? [0,40] : [0,22]));
+        /* First cut used 22ms / 40ms. Android phones use a linear resonant actuator that
+           needs time to spin up and settle - under roughly 50ms it moves so little that
+           there is nothing to feel, so those ticks were being fired and dropped on the
+           floor. Floor raised to 60ms; the final three double-tap so they read as urgent
+           rather than merely longer. */
+        buzz(timeLeft<=3 ? [0,110,60,110] : (timeLeft<=5 ? [0,90] : [0,60]));
       }
       if(timeLeft<=0){ endGame(); }
     }, 1000);
@@ -1472,7 +1494,7 @@ function buildReport(){
   var nx=document.getElementById('rcNext');
   if(cur<LADDER.length-1){ nx.innerHTML=(LADDER[cur+1].min-score)+' more to reach <b>'+LADDER[cur+1].name.toUpperCase()+'</b>'; } else { nx.textContent='Top tier \u2014 untouchable.'; }
   var fillPct=cur<=0?0:(cur/(LADDER.length-1))*100;
-  document.getElementById('rcLevels').innerHTML='<div class="rlTrack"></div><div class="rlFill" style="width:'+fillPct+'%"></div>'+LADDER.map(function(L,ix){ return '<div class="rclv'+(ix===cur?' on':'')+'" style="--tc:'+L.col+'"><div class="rlic">'+(ICON[L.key]||'')+'</div><div class="rlname">'+L.name+'</div><div class="rlrange">'+L.range+'</div></div>'; }).join('');
+  document.getElementById('rcLevels').innerHTML='<div class="rlTrack"></div><div class="rlFill" style="--fill:'+fillPct+'"></div>'+LADDER.map(function(L,ix){ return '<div class="rclv'+(ix===cur?' on':'')+'" style="--tc:'+L.col+'"><div class="rlic">'+(ICON[L.key]||'')+'</div><div class="rlname">'+L.name+'</div><div class="rlrange">'+L.range+'</div></div>'; }).join('');
   var ul=document.getElementById('recap'); ul.innerHTML='';
   results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="n">'+(ix+1)+'</span><span class="ic">'+(r.good?'\u2713':'\u2717')+'</span><span class="t"></span>'; li.querySelector('.t').textContent=r.w; ul.appendChild(li); });
   document.getElementById('rcSimArtist').textContent=artist;
