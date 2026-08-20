@@ -58,12 +58,12 @@ li{margin-bottom:5px}
 
 <div class="box">
   <h2>2 · The exact patterns the game fires</h2>
-  <button class="alt" data-p="[0,60]"        data-n="clock 10..6s">Clock tick · 10 to 6 seconds left</button>
-  <button class="alt" data-p="[0,90]"        data-n="clock 5..4s">Clock tick · 5 to 4 seconds left</button>
-  <button class="alt" data-p="[0,110,60,110]" data-n="clock 3..1s">Clock tick · final 3 (double)</button>
-  <button class="alt" data-p="[0,45,40,110]" data-n="CORRECT">Tilt down · CORRECT</button>
-  <button class="alt" data-p="[0,90]"        data-n="PASS">Tilt up · PASS</button>
-  <button class="alt" data-p="[160,80,160,80,220]" data-n="time's up buzzer">Time's up buzzer</button>
+  <button class="alt" data-p="[0,90]"        data-n="clock 10..6s">Clock tick · 10 to 6 seconds left</button>
+  <button class="alt" data-p="[0,130]"       data-n="clock 5..4s">Clock tick · 5 to 4 seconds left</button>
+  <button class="alt" data-p="[0,160,70,160]" data-n="clock 3..1s">Clock tick · final 3 (double)</button>
+  <button class="alt" data-p="[0,80,55,170]" data-n="CORRECT">Tilt down · CORRECT</button>
+  <button class="alt" data-p="[0,150]"       data-n="PASS">Tilt up · PASS</button>
+  <button class="alt" data-p="[0,240,90,240,90,360]" data-n="time's up buzzer">Time's up buzzer</button>
 </div>
 
 <div class="box">
@@ -117,7 +117,7 @@ li{margin-bottom:5px}
 </div>
 
 <script>
-var BUILD='v217';
+var BUILD='v218';
 function el(id){ return document.getElementById(id); }
 function log(m){ var L=el('log'); L.textContent=(m+'\n'+L.textContent).slice(0,4000); }
 
@@ -178,12 +178,12 @@ function countdown(){
   var t = 10;
   log('--- countdown start (10 ticks, 1s apart) ---');
   var iv = setInterval(function(){
-    var p = t <= 3 ? [0,110,60,110] : (t <= 5 ? [0,90] : [0,60]);
+    var p = t <= 3 ? [0,160,70,160] : (t <= 5 ? [0,130] : [0,90]);
     fire(p, 'T-minus ' + t);
     t--;
     if(t <= 0){
       clearInterval(iv);
-      fire([160,80,160,80,220], "TIME'S UP");
+      fire([0,240,90,240,90,360], "TIME'S UP");
       log('--- countdown end ---');
       running = false;
     }
