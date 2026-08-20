@@ -74,6 +74,24 @@ li{margin-bottom:5px}
   <div class="hint">Fullscreen + landscape lock is how the game actually runs. Worth testing separately.</div>
 </div>
 
+<div class="box" style="border-color:#3d5c2b;background:#111a0e">
+  <h2 style="color:#9fd177">4 · Sound — the channel that matters on a silent phone</h2>
+  <div class="note" style="margin-bottom:9px">
+    On Android the silent switch mutes the <b>ringer</b>, not <b>media</b>. The game's sound is
+    Web Audio, which is media — so in theory it still plays while your phone is silent.
+    <b>These buttons prove whether that is true on your phone.</b> Leave the phone on silent
+    and turn the media volume up.
+  </div>
+  <button class="big" id="aBell" style="border-color:#6fbf4a;background:rgba(111,191,74,.14)">🔔 CORRECT chime</button>
+  <button id="aBuzz">Time's up buzzer</button>
+  <button id="aClock40">Clock beep — <b>40ms, what ships today</b></button>
+  <button id="aClock90">Clock beep — 90ms</button>
+  <button id="aClock160">Clock beep — 160ms, two-tone</button>
+  <div class="hint">The countdown beep is currently a 40ms blip. Same question as the haptics:
+    is it long enough to register across a loud room? Pick the one you'd want.</div>
+  <button id="aRun" class="alt">▶ Run the last 10 seconds — SOUND ONLY</button>
+</div>
+
 <div class="box">
   <h2>Log</h2>
   <div id="log">ready.</div>
@@ -99,7 +117,7 @@ li{margin-bottom:5px}
 </div>
 
 <script>
-var BUILD='v216';
+var BUILD='v217';
 function el(id){ return document.getElementById(id); }
 function log(m){ var L=el('log'); L.textContent=(m+'\n'+L.textContent).slice(0,4000); }
 
@@ -172,6 +190,66 @@ function countdown(){
   }, 1000);
 }
 el('run').onclick = countdown;
+
+/* ---- audio: the same engine and the same tones play.html uses ---- */
+var AC=null, _silentEl=null;
+function initAudio(){
+  try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+       if(AC.state==='suspended') AC.resume(); }catch(e){ log('audio init failed: '+e.message); }
+}
+function _silentWav(){
+  return 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+}
+function unlockAudio(){
+  initAudio();
+  try{
+    if(!_silentEl){ _silentEl=new Audio(_silentWav()); _silentEl.loop=true; _silentEl.volume=0.001;
+                    _silentEl.setAttribute('playsinline',''); }
+    var p=_silentEl.play(); if(p&&p.catch) p.catch(function(){});
+  }catch(e){}
+}
+function tone(freq,dur,type,vol,when){
+  if(!AC) return;
+  var t0=AC.currentTime+(when||0), o=AC.createOscillator(), g=AC.createGain();
+  o.type=type||'sine'; o.frequency.value=freq;
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(vol||0.3,t0+0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.connect(g); g.connect(AC.destination); o.start(t0); o.stop(t0+dur+0.04);
+}
+function sndBell(){ initAudio(); if(!AC) return; var t0=AC.currentTime;
+  [[784,0.95,0.34],[1568,0.75,0.16],[2352,0.55,0.07]].forEach(function(p){
+    var o=AC.createOscillator(),g=AC.createGain(); o.type='sine'; o.frequency.value=p[0];
+    g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(p[2],t0+0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+p[1]);
+    o.connect(g); g.connect(AC.destination); o.start(t0); o.stop(t0+p[1]+0.05); }); }
+function sndBuzzer(){ initAudio(); tone(160,0.6,'sawtooth',0.36,0); tone(168,0.6,'square',0.18,0); }
+function clockBeep(kind,hi){
+  initAudio();
+  if(kind===40)  tone(hi?1500:1040,0.04,'square',0.30,0);
+  if(kind===90)  tone(hi?1500:1040,0.09,'square',0.30,0);
+  if(kind===160){ tone(hi?1500:1040,0.075,'square',0.30,0); tone(hi?1120:820,0.085,'square',0.26,0.075); }
+}
+function audioState(){ return AC ? AC.state : 'no context'; }
+
+el('aBell').onclick     = function(){ unlockAudio(); sndBell();  log('♪ CORRECT chime — audio ctx: '+audioState()); };
+el('aBuzz').onclick     = function(){ unlockAudio(); sndBuzzer(); log('♪ buzzer — audio ctx: '+audioState()); };
+el('aClock40').onclick  = function(){ unlockAudio(); clockBeep(40,true);  log('♪ clock beep 40ms (current)'); };
+el('aClock90').onclick  = function(){ unlockAudio(); clockBeep(90,true);  log('♪ clock beep 90ms'); };
+el('aClock160').onclick = function(){ unlockAudio(); clockBeep(160,true); log('♪ clock beep 160ms two-tone'); };
+
+var aRunning=false;
+el('aRun').onclick = function(){
+  if(aRunning) return; aRunning=true;
+  unlockAudio();
+  var t=10;
+  log('--- sound-only countdown, audio ctx: '+audioState()+' ---');
+  var iv=setInterval(function(){
+    clockBeep(40, t%2===0);
+    t--;
+    if(t<=0){ clearInterval(iv); sndBuzzer(); log('--- end ---'); aRunning=false; }
+  },1000);
+};
 
 el('fs').onclick = function(){
   var d = document.documentElement;
