@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v214"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v215"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -238,12 +238,13 @@
  text-shadow:0 2px 14px rgba(4,2,10,.9),0 0 34px rgba(4,2,10,.7)}
 #app.hasart #getReady{-webkit-text-stroke-width:1.3vmin;
  text-shadow:0 2px 14px rgba(4,2,10,.9),0 0 30px rgba(4,2,10,.7)}
-#app.hasart .fhHint{color:#fff;text-shadow:0 1px 8px rgba(4,2,10,.92)}
+#app.hasart .fhHint,#app.hasart #hrTip{color:#fff;text-shadow:0 1px 8px rgba(4,2,10,.92),0 0 16px rgba(4,2,10,.85)}
 /* light plates flip the fill to the plate's ink and the halo to a glow, same as #card */
 #app.hasart.lightart .fhText,
 #app.hasart.lightart #big,
 #app.hasart.lightart #getReady,
-#app.hasart.lightart .fhHint{color:var(--cardink,#241546);
+#app.hasart.lightart .fhHint,
+#app.hasart.lightart #hrTip{color:var(--cardink,#241546);
  -webkit-text-stroke-color:var(--cardoutline,#FFF6E0);
  text-shadow:0 0 8px rgba(255,250,238,.96),0 0 18px rgba(255,250,238,.88),0 2px 26px rgba(255,250,238,.72)}
 /* content has to clear the scrim */
@@ -446,6 +447,17 @@
  font-size:min(15vmin,5.6vh);color:var(--cyan);text-transform:uppercase;letter-spacing:2px;line-height:1.15;text-shadow:0 0 16px rgba(87,230,255,.7),2px 2px 0 rgba(0,0,0,.4)}
  .fhHint{display:block;font-size:3.4vw;color:var(--sand);opacity:.9;letter-spacing:0;text-transform:none;margin-top:6px}
  #getReady{display:none;font-family:var(--disp);font-size:14vmin;color:var(--mag);text-transform:uppercase;letter-spacing:2px;line-height:.92;max-width:94vw;text-shadow:0 0 20px rgba(255,92,240,.75),2px 3px 0 rgba(0,0,0,.4)}
+ /* The optional house rule, surfaced from the SECOND play of a vault onward. It is
+    absolutely positioned rather than in the flex flow so it cannot shift the pulsing
+    headline, and it sits on the Face-the-Music beat because that screen always runs -
+    the rotate prompt does NOT, and a replay is precisely when the phone is already
+    sideways from the last round. */
+ #hrTip{display:none;position:absolute;left:50%;bottom:5.5%;transform:translateX(-50%);
+  width:76%;text-align:center;font-family:var(--body);font-size:min(3.1vmin,2.5vh);
+  font-weight:700;line-height:1.35;letter-spacing:.02em;color:var(--sand);
+  text-shadow:0 2px 10px rgba(4,2,10,.92),0 0 18px rgba(4,2,10,.8)}
+ #hrTip b{color:inherit;font-weight:800}
+ #sReady{position:relative}
  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.13)}}
  @keyframes pop{0%{transform:scale(.35);opacity:0}45%{transform:scale(1.22);opacity:1}100%{transform:scale(1);opacity:1}}
  @keyframes cardIn{0%{transform:scale(.22);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
@@ -655,8 +667,6 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rcOpt.sm{text-align:center;padding:9px 5px}.rcOpt.sm b{font-size:12px}.rcOpt.sm span{font-size:9.5px}
 #rcEdRow .rcOpt.sel{border-color:#b06aff;background:rgba(176,106,255,.14);box-shadow:0 0 12px -2px #b06aff}
 #rcEdRow .rcOpt.sel b{color:#c89bff}
-#rcClRow .rcOpt.sel{border-color:var(--cyan);background:rgba(87,230,255,.12);box-shadow:0 0 12px -3px var(--cyan)}
-#rcClRow .rcOpt.sel b{color:var(--cyan)}
 .rcCustGo{margin-top:16px;width:100%;background:var(--cyan);color:#06222b;border:0;border-radius:14px;padding:13px;font-family:var(--disp);font-size:18px;letter-spacing:1.5px;cursor:pointer;box-shadow:0 0 20px -6px var(--cyan)}
 
 /* ===== QUICK PLAY GUIDE — sports opening screen (replaces the sStart copy) =====
@@ -948,6 +958,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   <div class="screen" id="sReady">
     <div id="rotateMsg"><div class="fhText">Place on your forehead<span class="fhHint">↻ turn phone sideways</span></div></div>
     <div id="getReady">Time to Face the Music</div>
+    <div id="hrTip"></div>
     <div id="big">3</div>
   </div>
   <!-- GAME -->
@@ -994,8 +1005,6 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
     <div class="rcCustHd">CUSTOMIZE GAME<span class="rcCustX" id="rcCustX">&#10005;</span></div>
     <div class="rcCustLbl">DECK</div>
     <div class="rcCustRow" id="rcEdRow"><button class="rcOpt" data-ed="Standard"><b>Standard</b><span>The essential tracks everyone knows.</span></button><button class="rcOpt" data-ed="Deluxe"><b>Deluxe</b><span>Every track — deep cuts &amp; features.</span></button></div>
-    <div class="rcCustLbl">HOUSE RULE &mdash; HOW YOU CLUE</div>
-    <div class="rcCustRow" id="rcClRow"><button class="rcOpt sm" data-cl="Beginner"><b>Beginner</b><span>Hum it, sing it, or say it. Anything goes.</span></button><button class="rcOpt sm" data-cl="Superfan"><b>Superfan</b><span>Lyrics only, no chorus.</span></button></div>
     <button class="rcCustGo" id="rcCustGo">&#8635; PLAY WITH THESE</button>
   </div></div>
    </div>
@@ -1427,7 +1436,7 @@ function endGame(){
 /* tier verdict = the payoff (hero); score is support */
 var ED=(Q.get('ed')||'music');
 (function(){ var CLUES={sports:'Say the first name &middot; Position and years &middot; Awards, All-Star games, big moments',filmtv:'Name the actors &middot; Use the year on the card &middot; Mention awards it won &middot; Act out a scene',music:'Hum it &middot; Sing a line &middot; Describe it &middot; Act it out'}; var el=document.getElementById('clueLine'); if(el){ var nm=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME+' ':''; el.innerHTML='<span class="clueLbl">For this '+nm+'Vault:</span> '+(CLUES[ED]||CLUES.music); } })();
-var RCLUE=Q.get('clue')||'Beginner', REDITION=Q.get('edition')||'Standard', RXS=Q.get('xs')||'', RXSN=Q.get('xsn')||'', RXSE=Q.get('xse')||'', RXSL=Q.get('xsl')||'';
+var REDITION=Q.get('edition')||'Standard', RXS=Q.get('xs')||'', RXSN=Q.get('xsn')||'', RXSE=Q.get('xse')||'', RXSL=Q.get('xsl')||'';
 var RP1=Q.get('p1')||'', RP2=Q.get('p2')||'', RCITY=Q.get('city')||'', RTEAM=Q.get('team')||'';
 function hexA(h,a){ h=(h||'').replace('#',''); if(h.length!==6) return 'rgba(40,50,80,'+a+')'; return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+a+')'; }
 var EDTHEME={
@@ -1455,7 +1464,7 @@ function buildReport(){
   var card=document.querySelector('.rcCard'); if(card){ card.style.setProperty('--rcgrad',et.grad); card.style.setProperty('--rcbord',et.bord); }
   var artist=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME:'SuperFan';
   document.getElementById('rcArtist').textContent=artist.toUpperCase();
-  document.getElementById('rcMode').textContent=(REDITION||'Standard').toUpperCase()+' DECK \u00b7 '+(RCLUE||'Beginner').toUpperCase()+' RULES';
+  stampMode();
   document.getElementById('rScoreN').textContent=score;
   var badge=document.getElementById('rcBadge'); badge.style.setProperty('--tc',t.col); badge.innerHTML=ICON[t.key]||'';
   document.getElementById('rcMsg').textContent=t.msg.replace('%',firstName(VAULT_NAME));
@@ -1474,7 +1483,7 @@ function buildReport(){
     simWrap.style.display='';
     simList.innerHTML=sims.slice(0,3).map(function(v){ return '<div class="rcSimTile"><img alt=""><div class="snn">'+(v.name||'Vault')+'</div></div>'; }).join('');
     var _rows=simList.querySelectorAll('.rcSimTile');
-    sims.slice(0,3).forEach(function(v,ix){ var row=_rows[ix]; if(!row) return; var img=row.querySelector('img'); img.src='art-'+v.id+'.jpg?v=7'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
+    sims.slice(0,3).forEach(function(v,ix){ var row=_rows[ix]; if(!row) return; var img=row.querySelector('img'); img.src='art-'+v.id+'.jpg?v=7'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
   } else { simWrap.style.display='none'; }
   var deep=document.getElementById('rcDeep');
   if(deep){ var _pool=(DECKS&&DECKS[VAULT_ID]&&DECKS[VAULT_ID].standard)?DECKS[VAULT_ID].standard.length:DECK.length; var need=Math.ceil(_pool*0.7);
@@ -1524,7 +1533,7 @@ function buildReportFilm(){
     sims.slice(0,3).forEach(function(v,ix){ var row=rows[ix]; if(!row) return; var img=row.querySelector('img');
       if(ED==='sports' && v.c && v.c[0]){ var g=document.createElement('div'); g.className='rfTileG'; g.style.background='linear-gradient(158deg,'+v.c[0]+' 0%,'+(v.c[1]||v.c[0])+' 100%)'; if(img&&img.parentNode) img.parentNode.replaceChild(g,img); }
       else if(img){ img.src='art-'+v.id+'.jpg?v=7'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; }
-      row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,clue:RCLUE,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
+      row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
   } else { keep.style.display='none'; }
 }
 /* sports finished on a movie set until now - same screen, same background image. */
@@ -1534,8 +1543,11 @@ function rfBgFor(ed){ return ed==='sports' ? "url('res-sports.jpg?v=1')" : "url(
 /* One place, both paths. The label was only written by the music report builder, so
    on Film & TV and sports the card still read a bare "MODE" - the settings you had
    just chosen were shown back to you on one edition out of three. */
+/* Was "STANDARD DECK - BEGINNER RULES". The second half claimed a rule had been in
+   force that nothing enforced: one blurted actor name in round one and the line was
+   simply untrue. Only the deck is a fact about the game that was played. */
 function stampMode(){ try{ var m=document.getElementById('rcMode');
-  if(m) m.textContent=(REDITION||'Standard').toUpperCase()+' DECK \u00b7 '+(RCLUE||'Beginner').toUpperCase()+' RULES'; }catch(e){} }
+  if(m) m.textContent=(REDITION||'Standard').toUpperCase()+' DECK'; }catch(e){} }
 function showReport(){ stampMode(); if(ED==='filmtv'||ED==='sports'){ buildReportFilm();
   try{ document.getElementById('sReportFilm').style.setProperty('--rfbg', rfBgFor(ED)); }catch(e){}
   show('sReportFilm'); } else { buildReport(); show('sReport'); } }
@@ -1592,6 +1604,21 @@ function shufReplay(){
 }
 function checkOrientation(){ if(awaitingLandscape && isLandscape()){ awaitingLandscape=false; startCountdown(); } }
 function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+/* The Beginner/Superfan pills are gone: the choice changed no game behaviour, and next
+   to Standard/Deluxe - which really does swap the deck - it read as a second difficulty
+   tier and cost a decision before the fun. The rule was worth keeping, so it survives as
+   a suggestion the group meets once they have already played the vault straight. Kept
+   OFF the results card on purpose: that is where the Standard->Deluxe nudge lives, and a
+   free twist next to a paid upgrade competes with it for the same "we want more" moment. */
+function houseRule(){
+  if(PREVIEW) return '';                                   /* never during the 5-question taste */
+  var cfg=QPGCFG[ED==='sports'?'sports':(ED==='filmtv'?'filmtv':'music')];
+  if(!cfg||!cfg.sup||!cfg.sup[0]) return '';
+  var played=false;
+  try{ for(var k in seenSet()){ played=true; break; } }catch(e){ return ''; }
+  if(!played) return '';                                   /* first time through: just play */
+  return 'Played this one already? <b>House rule: '+cfg.sup.join(' ').trim()+'</b>';
+}
 function startCountdown(){
   if(counting) return; counting=true; clearTimeout(_readyTO);
   document.body.classList.add('lock-ls'); tryLockLandscape();   // fake-landscape the Face-the-Music + 3-2-1 screens (iOS)
@@ -1602,15 +1629,19 @@ function startCountdown(){
   gr.style.display='block'; gr.classList.add('pulsing');
   sndFanfare();
   buzz([0,60]);
+  var tip=document.getElementById('hrTip'), beat=1050;
+  var rule=houseRule();
+  if(rule){ tip.innerHTML=rule; tip.style.display='block'; beat=2100; }  /* readable beat, not a flash */
+  else { tip.style.display='none'; }
   setTimeout(function(){
-    gr.classList.remove('pulsing'); gr.style.display='none';
+    gr.classList.remove('pulsing'); gr.style.display='none'; tip.style.display='none';
     big.style.display=''; var n=3; big.textContent=n; popEl(big); sndBeep(); buzz([0,35]);
     var iv=setInterval(function(){
       n--;
       if(n<=0){ clearInterval(iv); startGame(); }
       else { big.textContent=n; popEl(big); sndBeep(); buzz([0,35]); }
     }, 700);
-  }, 1050);
+  }, beat);
 }
 window.addEventListener('orientationchange', function(){ setTimeout(checkOrientation,150); });
 window.addEventListener('resize', checkOrientation);
@@ -1647,16 +1678,15 @@ function buzz(p){
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
 document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(10); unlockAudio(); requestPerm(function(ok){ ready(); }); };
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
-function _syncCust(){ var es=document.querySelectorAll('#rcEdRow .rcOpt'); for(var i=0;i<es.length;i++){ es[i].classList.toggle('sel', es[i].getAttribute('data-ed')===custEd); } var cs=document.querySelectorAll('#rcClRow .rcOpt'); for(var j=0;j<cs.length;j++){ cs[j].classList.toggle('sel', cs[j].getAttribute('data-cl')===custCl); } }
-var custEd='Standard', custCl='Beginner';
-function openCust(){ custEd=REDITION; custCl=(['Beginner','Superfan'].indexOf(RCLUE)>=0?RCLUE:'Beginner'); _syncCust(); document.getElementById('rcCustOv').classList.add('on'); }
+function _syncCust(){ var es=document.querySelectorAll('#rcEdRow .rcOpt'); for(var i=0;i<es.length;i++){ es[i].classList.toggle('sel', es[i].getAttribute('data-ed')===custEd); } }
+var custEd='Standard';
+function openCust(){ custEd=REDITION; _syncCust(); document.getElementById('rcCustOv').classList.add('on'); }
 function closeCust(){ document.getElementById('rcCustOv').classList.remove('on'); }
 document.getElementById('customBtn').onclick=openCust;
 document.getElementById('rcCustX').onclick=closeCust;
 document.getElementById('rcCustOv').addEventListener('click',function(e){ if(e.target.id==='rcCustOv') closeCust(); });
 document.getElementById('rcEdRow').addEventListener('click',function(e){ var b=e.target.closest('.rcOpt'); if(b){ custEd=b.getAttribute('data-ed'); _syncCust(); } });
-document.getElementById('rcClRow').addEventListener('click',function(e){ var b=e.target.closest('.rcOpt'); if(b){ custCl=b.getAttribute('data-cl'); _syncCust(); } });
-document.getElementById('rcCustGo').onclick=function(){ REDITION=custEd; RCLUE=custCl; closeCust(); var m=document.getElementById('rcMode'); if(m) m.textContent=(REDITION||'Standard').toUpperCase()+' DECK \u00b7 '+(RCLUE||'Beginner').toUpperCase()+' RULES'; goFullscreen(); unlockAudio(); ready(); };
+document.getElementById('rcCustGo').onclick=function(){ REDITION=custEd; closeCust(); stampMode(); goFullscreen(); unlockAudio(); ready(); };
 if(Q.get('demo')){ try{
   if(ED==='sports'){
     score=parseInt(Q.get('score')||'7',10); if(isNaN(score))score=7;
@@ -1676,7 +1706,7 @@ if(Q.get('demo')){ try{
   }
   showReport();
 }catch(e){} }
-if(Q.get('resume')){ try{ var _st=JSON.parse(sessionStorage.getItem('sfs_resume')||'null'); if(_st){ score=_st.score||0; results=_st.results||[]; ED=_st.ED||'music'; VAULT_ID=_st.vault||''; VAULT_NAME=_st.n||'this vault'; RCLUE=_st.clue||'Beginner'; REDITION=_st.edition||'Standard'; RXS=_st.xs||''; RXSL=_st.xsl||''; RXSN=_st.xsn||''; RXSE=_st.xse||''; showReport(); } }catch(e){} }
+if(Q.get('resume')){ try{ var _st=JSON.parse(sessionStorage.getItem('sfs_resume')||'null'); if(_st){ score=_st.score||0; results=_st.results||[]; ED=_st.ED||'music'; VAULT_ID=_st.vault||''; VAULT_NAME=_st.n||'this vault'; REDITION=_st.edition||'Standard'; RXS=_st.xs||''; RXSL=_st.xsl||''; RXSN=_st.xsn||''; RXSE=_st.xse||''; showReport(); } }catch(e){} }
 /* unlock wall */
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · $0.99 — payments not wired yet'); };
 document.getElementById('wallBack').onclick=function(){ location.href='/?ed='+encodeURIComponent(ED)+'&nointro=1'; };
@@ -1805,16 +1835,16 @@ function renderQPG(){
   +'<div class="qtalk"><div class="qrh"><span></span><h2>YOU CAN TALK —</h2><span></span></div>'
     +'<h3>THIS ISN’T OLD-SCHOOL CHARADES.</h3></div>'
   +qpgHowRow(CFG)
-  +'<div class="qmh"><span></span><h2>HOUSE RULE &mdash; '+((RCLUE==='Superfan')?'SUPERFAN':'BEGINNER')+'</h2><span></span></div>'
-  /* The guide REPORTS the house rule now, it does not set it. Choosing it here put the
-     decision two taps deep inside how-to-play, where a player who already knows the
-     game never looks - and it sat beside Standard/Deluxe as if the two were the same
-     kind of choice. Both now live together on the vault sheet. */
+  +'<div class="qmh"><span></span><h2>HOUSE RULE &mdash; OPTIONAL</h2><span></span></div>'
+  /* This was a Beginner/Superfan picker, then briefly a read-only card reporting which
+     one was "active". Neither was honest: the setting changed no game behaviour, and
+     sitting it next to Standard/Deluxe implied the two were the same kind of choice
+     when only the deck actually swaps any cards. It is a house rule, so it is now
+     stated once, as a suggestion, and nothing in the app claims to enforce it. */
   +'<div class="qmodes one">'
-   +'<div class="qmode '+((RCLUE==='Superfan')?'sup':'beg')+' sel"><div class="qav">'+qpgAv()+'</div>'
-     +'<div><h4>'+((RCLUE==='Superfan')?'SUPERFAN':'BEGINNER')+'</h4><p>'
-       +((RCLUE==='Superfan')?CFG.sup[0]:CFG.beg[0])+'</p>'
-       +(((RCLUE==='Superfan')?CFG.sup[1]:CFG.beg[1])?'<p class="thin">'+((RCLUE==='Superfan')?CFG.sup[1]:CFG.beg[1])+'</p>':'')
+   +'<div class="qmode sup"><div class="qav">'+qpgAv()+'</div>'
+     +'<div><h4>PLAYING ON HARD MODE?</h4><p>'+CFG.sup[0]+'</p>'
+       +(CFG.sup[1]?'<p class="thin">'+CFG.sup[1]+'</p>':'')
      +'</div></div>'
   +'</div>'
   +(CFG.clueHead?'<div class="qcluehead"><span></span><h2>'+CFG.clueHead+'</h2><span></span></div>':'')
@@ -1872,10 +1902,6 @@ function qpgExit(){
  try{ if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen(); }catch(e){}
  if(history.length>1){ history.back(); } else { location.href='index.html'; }
 }
-function qpgPick(el,mode){ RCLUE=mode;
- var all=el.parentNode.getElementsByClassName('qmode');
- for(var i=0;i<all.length;i++) all[i].classList.remove('sel');
- el.classList.add('sel'); }
 if(ED==='sports'||ED==='music'||ED==='filmtv'){ try{ renderQPG(); }catch(e){} }
 
 /* sports vaults get their own card colours + wall copy from the very first screen */
