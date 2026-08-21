@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v219"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v220"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -79,7 +79,14 @@
 @media (prefers-reduced-motion:reduce){#app.quitting{animation:none;opacity:0;transition:opacity .2s}}
 #fb{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1vmin;background:rgba(4,6,12,.66);z-index:6}
 #fb.on{display:flex}
-.fbGlyph{font-family:var(--disp);font-size:36vmin;line-height:.82;color:#fff}
+/* Was a text character at font-size:36vmin. Measured: the box was 148px but the tick
+   the display face actually draws is 33x34px - a fifth of the space it was given, and
+   it landed on top of the still-opaque answer word. Drawn as SVG the mark fills the box
+   it is given, at any size, in any font. */
+.fbGlyph{width:30vmin;height:30vmin;color:#fff;display:flex;align-items:center;justify-content:center}
+.fbGlyph svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 14px rgba(0,0,0,.55))}
+/* the answer is not the message any more - the verdict is */
+#app.fbon #card{opacity:.12;transition:opacity .12s ease}
 .fbGlyph.correct{color:#35E27F}.fbGlyph.pass{color:#FF9D2E}.fbGlyph.timeup{color:#fff}
 .fbWord{font-family:var(--disp);font-size:16vmin;letter-spacing:4px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45)}
 @keyframes fbpop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.14);opacity:1}100%{transform:scale(1)}}
@@ -1376,12 +1383,29 @@ function mark(good){
   good?sndBell():sndPass();
   buzz(good?[0,80,55,170]:[0,150]);
 }
-function showFb(kind,glyph,word){ var f=document.getElementById('fb'),g=document.getElementById('fbGlyph'),w=document.getElementById('fbWord'); if(!f)return; g.className='fbGlyph '+kind; g.textContent=glyph; w.textContent=word; f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
-function hideFb(){ var f=document.getElementById('fb'); if(f) f.classList.remove('on'); }
+var FBMARK={
+ correct:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"><path d="M18 53 L40 75 L83 26"/></svg>',
+ pass   :'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round"><path d="M26 26 L74 74M74 26L26 74"/></svg>',
+ timeup :'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="55" r="33"/><path d="M50 36v20l13 9M38 10h24M50 10v12"/></svg>'
+};
+function showFb(kind,glyph,word){ var f=document.getElementById('fb'),g=document.getElementById('fbGlyph'),w=document.getElementById('fbWord'); if(!f)return;
+  g.className='fbGlyph '+kind; g.innerHTML=FBMARK[kind]||''; w.textContent=word;
+  try{ app.classList.add('fbon'); }catch(e){}
+  f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
+function hideFb(){ var f=document.getElementById('fb'); if(f) f.classList.remove('on');
+  try{ app.classList.remove('fbon'); }catch(e){} }
 function flash(good,label){
   var cd=document.getElementById('card');
   var last = PREVIEW && qCount>=MAX_Q;
-  if(app.classList.contains('sportcard')||app.classList.contains('filmcard')){
+  /* This branch used to be sportcard/filmcard only. Music fell through to the path
+     below, which signals CORRECT vs PASS purely with #app.st-correct's background
+     COLOUR - and background-color paints UNDERNEATH background-image. The moment every
+     music vault got a plate, that green disappeared behind the artwork and the two
+     outcomes became the same white word on the same picture. With the phone on someone
+     else's forehead, read at arm's length in a noisy room, that is the one thing that
+     has to be unmistakable. The glyph overlay carries its own scrim, so it works on
+     any plate, light or dark - which is why it can now be unconditional. */
+  if(true){
     showFb(good?'correct':'pass', good?'\u2713':'\u2717', label);
     setTimeout(function(){ if(!playing) return; hideFb(); if(last){ endPreview(); return; } current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }, good?620:550);
     return;
@@ -1489,8 +1513,7 @@ function endGame(){
   var tEl=document.getElementById('timer'); tEl.classList.remove('pulsing'); tEl.textContent='0:00';
   sndBuzzer();
   app.classList.remove('st-correct','st-pass');
-  if(app.classList.contains('sportcard')||app.classList.contains('filmcard')){ showFb('timeup','\u23F1',"TIME'S UP"); }
-  else { app.classList.add('st-timeup'); var cd=document.getElementById('card'); cd.textContent="TIME'S UP"; cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }
+  showFb('timeup','\u23F1',"TIME'S UP");   /* same reasoning as flash() - see the note there */
   buzz([0,240,90,240,90,360]);
   setTimeout(function(){ app.classList.remove('st-timeup'); hideFb(); document.body.classList.remove('lock-ls'); tryPortrait(); showReport(); }, 1800);
 }
