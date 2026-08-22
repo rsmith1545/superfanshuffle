@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v224"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v225"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -121,8 +121,6 @@
   radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),
   repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),
   repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px)}
-/* the ghost cards behind the shuffle get the same treatment so the deck matches */
-#stage.shuf .deckGhost.tiedye{background-color:#2A1258}
 
 /* ===== War: woodland camo =====
    Same pattern hook as the tie-dye. Camo is built from hard-edged ellipses rather
@@ -278,102 +276,9 @@
   radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.06) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.40) 100%),
   repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 1px,transparent 1px 6px),
   repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px)}
-/* ===== the CARD shuffles, not a picture of cards =====
-   Two ghost cards sit behind #app with identical geometry, and #app itself is the
-   top card of the deck. Riffling moves the real card - the one with the border, the
-   texture and the lettering on it - so it reads as the game card being shuffled
-   rather than an illustration printed on top of it.
-   Only #app carries content; the ghosts are empty shells, so the text never
-   duplicates. They fade in for the shuffle and back out once it settles. */
-.deckGhost{position:absolute;
- top:calc(16px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));
- bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));
- border-radius:40px;border:8px solid rgba(255,255,255,.55);box-sizing:border-box;
- background-color:var(--cardbg,#2a1257);
- background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),
-  repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 1px,transparent 1px 6px);
- box-shadow:0 0 22px rgba(0,0,0,.55);opacity:0;pointer-events:none;z-index:0}
-/* ===== one card over the top =====
-   The previous version riffled the whole deck left-right, which reads as "three
-   cards wobbling" rather than as shuffling. This is the motion actually asked for:
-   the deck holds still and a SINGLE card lifts off the top, arcs over, and lands
-   back on the pile.
-   The flyer sits ABOVE #app in z-order, because a card passing behind the deck is
-   not going over the top - it is going under it.
-   Travel is in vmin, NOT percent. Percent resolves against the element's own box,
-   and this screen is portrait - the card is 380x822, so a modest-looking -13% was
-   107px and the card left the top of the phone entirely. vmin is the same distance
-   whichever way the card is oriented. It fades on the landing frame,
-   having "become" the new top card, which is why #app never has to change. */
-.deckFly{position:absolute;
- top:calc(16px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));
- bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));
- border-radius:40px;border:8px solid rgba(255,255,255,.94);box-sizing:border-box;
- /* No fill. The flyer used to paint itself in --cardbg, which is the old flat card
-    colour - fine when every card was flat, wrong now that the card underneath is a
-    photograph, and actively bad on a light plate where a purple pane would slide
-    across a pale sky. Border and shadow carry the motion; the faint white sheen just
-    catches the light. It works on any plate because it commits to no colour. */
- background-color:rgba(255,255,255,.06);
- opacity:0;pointer-events:none;z-index:6;transform-origin:50% 50%}
-/* ===== overhand shuffle =====
-   Third attempt, and the first two failed the same way: ONE full-size card lifting,
-   wandering and landing once every 4.2s does not read as shuffling. A person watching
-   sees a single card wobble. A hand shuffle reads because packets come off the deck in
-   a STREAM - one card is always in the air, another is always landing, and it does not
-   stop. So: three flyers on the same arc, staggered a third of a cycle apart, looping
-   for as long as the player is holding the phone. A card leaves the pile every 300ms,
-   which is about the cadence of a real overhand shuffle.
-
-   The arc is deliberately one-directional now - out to the right, up and over, down
-   onto the front - instead of the old meander. A hand does the same motion over and
-   over; the repetition is what sells it, and a wandering path reads as drifting.
-
-   Still translucent, and for the same reason as before: these are full-bleed cards
-   sitting on top of "PLACE ON YOUR FOREHEAD", which is the one line the player is on
-   this screen to read. The border and the shadow carry the motion; the words read
-   straight through. */
-#stage.shuf .deckGhost.g1{animation:deckRest1 .9s ease-out infinite}
-#stage.shuf .deckGhost.g2{animation:deckRest2 .9s ease-out infinite}
-#stage.shuf .deckFly{animation:deckFly .9s cubic-bezier(.36,.05,.28,1) infinite}
-#stage.shuf .deckFly.f2{animation-delay:.3s}
-#stage.shuf .deckFly.f3{animation-delay:.6s}
-/* the pile takes a knock every time a packet lands - once per 300ms, not once per flight */
-#stage.shuf #app{animation:deckSettle .3s cubic-bezier(.33,.02,.30,1) infinite}
-@keyframes deckFly{
- 0%  {opacity:0;   transform:translate(0,0) rotate(0deg) scale(1);
-      box-shadow:0 0 0 rgba(0,0,0,0)}
- /* Travel and rotation are both bounded by the SIDES of the phone, not by taste.
-    A 380x883 card rotated 6.5deg is 430px across inside a 412px viewport - measured,
-    it hung 28px off the right edge at the top of the arc. Rotation costs width far
-    faster than translation does, so the tilt is the part that had to come down. */
- 10% {opacity:.52; transform:translate(1.8vmin,-1.4vmin) rotate(-2.2deg) scale(.955);
-      box-shadow:0 2vmin 3vmin rgba(0,0,0,.42)}
- 42% {opacity:.55; transform:translate(2.6vmin,-4.4vmin) rotate(-3.8deg) scale(.875);
-      box-shadow:0 6vmin 9vmin rgba(0,0,0,.5)}
- 70% {opacity:.5;  transform:translate(.5vmin,-3vmin) rotate(-1.4deg) scale(.9);
-      box-shadow:0 5vmin 8vmin rgba(0,0,0,.46)}
- 88% {opacity:.34; transform:translate(0,.3vmin) rotate(.6deg) scale(1.006);
-      box-shadow:0 .8vmin 1.8vmin rgba(0,0,0,.3)}
- 100%{opacity:0;   transform:translate(0,0) rotate(0deg) scale(1);
-      box-shadow:0 0 0 rgba(0,0,0,0)}}
-@keyframes deckSettle{
- 0%,55%{transform:translate(0,0) scale(1)}
- 72%   {transform:translate(0,.28%) scale(.9955)}
- 100%  {transform:translate(0,0) scale(1)}}
-/* the pile itself: fanned, and it STAYS - it is the deck being shuffled, so it cannot
-   fade out between flights the way it did when the animation was a one-shot */
-@keyframes deckRest1{
- 0%,100%{opacity:.8;transform:translate(1.4vw,.35vh) rotate(1.4deg)}
- 60%    {opacity:.8;transform:translate(1.6vw,.45vh) rotate(1.7deg)}}
-@keyframes deckRest2{
- 0%,100%{opacity:.55;transform:translate(2.8vw,.7vh) rotate(2.8deg)}
- 60%    {opacity:.55;transform:translate(3.1vw,.85vh) rotate(3.2deg)}}
-@media (prefers-reduced-motion:reduce){
- #stage.shuf .deckGhost,#stage.shuf #app,#stage.shuf .deckFly{animation:none}}
 
  /* iOS standalone PWAs can't physically rotate; while the device stays portrait during play, fake landscape by rotating the whole stage about its centre. Rotation lives here, the card's spring animation lives on #app, so they no longer fight (card stays centred). */
- @media (orientation:portrait){ body.lock-ls #stage{ top:50%; left:50%; width:100vh; height:100vw; transform:translate(-50%,-50%) rotate(-90deg); } body.lock-ls #app,body.lock-ls .deckGhost,body.lock-ls .deckFly{ top:22px; right:22px; bottom:22px; left:22px; } }
+ @media (orientation:portrait){ body.lock-ls #stage{ top:50%; left:50%; width:100vh; height:100vw; transform:translate(-50%,-50%) rotate(-90deg); } body.lock-ls #app{ top:22px; right:22px; bottom:22px; left:22px; } }
  .screen{display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;width:100%;height:100%}
  .screen.on{display:flex}
  h1{font-family:var(--disp);font-size:17vmin;letter-spacing:2px;line-height:.86;text-transform:uppercase}
@@ -405,57 +310,12 @@
  li.g{color:#7fe0a0}li.p{color:#e6c65a}
  /* READY flow */
  
-/* ===== the shuffle, on the "Place on your forehead" screen =====
-   This is the one moment the player is definitely LOOKING at the screen: they are
-   reading the instruction and have not raised the phone yet. Once they do raise it
-   the countdown starts and nobody sees anything - which is why the animation goes
-   here and not on the 3-2-1.
-   It loops rather than playing once, because the wait is user-paced: it ends when
-   the phone reaches landscape, anywhere from half a second to the 20s timeout.
-   Cards inherit --cardbg/--cardoutline, so on sports they shuffle in the team's
-   colours and on film in charcoal and gold. */
-/* Absolutely placed and rotated -90deg to match .fhText. A flex column would put
-   it 'above' in DOM terms, which after the -90deg rotation reads as beside - the
-   screen is drawn sideways on purpose so it is upright once the phone turns. */
-.shufDeck{position:absolute;left:50%;top:50%;width:30vh;height:20vh;
- /* offset from the CENTRE, not from the left edge: the -90deg rotation changes
-    how a percentage left resolves and pushed the deck off-screen (x=-145). */
- transform:translate(calc(-50% - 27vw),-50%) rotate(-90deg);pointer-events:none}
-.shufDeck i{position:absolute;left:50%;top:50%;width:10.5vh;height:14.5vh;
- margin:-7.25vh 0 0 -5.25vh;border-radius:1.4vh;
- /* Ivory faces with a coloured edge. Tinting the faces with --cardbg made them
-    invisible on sports, where --cardbg IS the background they sit on. */
- background:linear-gradient(160deg,#f7f5ef,#d9d6cc),
-  repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 5px);
- border:.5vh solid var(--cardoutline,#2a1257);
- box-shadow:0 1vmin 2.2vmin rgba(0,0,0,.55);
- animation:shufCard 2.9s cubic-bezier(.55,.05,.3,1) forwards}
-.shufDeck i:nth-child(1){animation-delay:0s;--fx:-1.1vh;--fy:-.5vh;--fr:-4deg}
-.shufDeck i:nth-child(2){animation-delay:.10s;--fx:-.5vh;--fy:-.25vh;--fr:-2deg}
-.shufDeck i:nth-child(3){animation-delay:.20s;--fx:0;--fy:0;--fr:0deg}
-.shufDeck i:nth-child(4){animation-delay:.30s;--fx:.5vh;--fy:.25vh;--fr:2deg}
-.shufDeck i:nth-child(5){animation-delay:.40s;--fx:1.1vh;--fy:.5vh;--fr:4deg}
-/* Two riffles, then the deck SETTLES into a tidy stack and stays there - the
-   original looped forever and never resolved, which is not what a shuffle does.
-   Each card's resting offset comes from its own --fx/--fr, so they settle into a
-   slightly staggered stack like a real deck rather than a perfect pile.
-   shufReplay() below re-runs it every few seconds so a slow player is not left
-   watching a static stack. */
-@keyframes shufCard{
- 0%{transform:translate(0,0) rotate(0deg)}
- 11%{transform:translate(-5.5vh,-1.2vh) rotate(-15deg)}
- 24%{transform:translate(0,0) rotate(0deg)}
- 36%{transform:translate(5.5vh,-1.2vh) rotate(15deg)}
- 48%{transform:translate(0,0) rotate(0deg)}
- 58%{transform:translate(-4.4vh,-1vh) rotate(-11deg)}
- 68%{transform:translate(0,0) rotate(0deg)}
- 78%{transform:translate(4.4vh,-1vh) rotate(11deg)}
- 88%{transform:translate(0,0) rotate(0deg)}
- 100%{transform:translate(var(--fx,0),var(--fy,0)) rotate(var(--fr,0deg))}}
-@media (prefers-reduced-motion:reduce){
- .shufDeck i{animation:none}
- .shufDeck i:nth-child(1){transform:translate(-4vh,0) rotate(-10deg)}
- .shufDeck i:nth-child(5){transform:translate(4vh,0) rotate(10deg)}}
+/* The shuffle animation that used to live here is gone. Three attempts: a whole-deck
+   riffle, a single card over the top, then a continuous three-card stream. None of them
+   read as shuffling, and the reason is geometric rather than fixable by tuning - the
+   "cards" are the full screen, so a card can travel about 20px before it leaves the
+   phone. There is no room for the motion the animation was imitating. The forehead
+   screen now just shows the card and the instruction. */
 /* The forehead card used to carry a separate layer showing the vault's PORTRAIT
    poster, blurred and zoomed past its title. That predates card-<id>.jpg. Now the
    card itself wears a purpose-built landscape plate on every screen, so a second,
@@ -987,11 +847,6 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 <button id="dbgBtn">debug</button>
 <div id="dbg"></div>
 <div id="stage">
-<div class="deckGhost g2" aria-hidden="true"></div>
-<div class="deckGhost g1" aria-hidden="true"></div>
-<div class="deckFly f1" aria-hidden="true"></div>
-<div class="deckFly f2" aria-hidden="true"></div>
-<div class="deckFly f3" aria-hidden="true"></div>
 <div id="app">
   <!-- START -->
   <div class="screen on" id="sStart">
@@ -1737,18 +1592,13 @@ function ready(){
   document.getElementById('big').style.display='none';
   if(isLandscape()){ awaitingLandscape=false; document.getElementById('rotateMsg').style.display='none'; startCountdown(); return; }
   awaitingLandscape=true; document.getElementById('rotateMsg').style.display='';
-  try{ var _stg=document.getElementById('stage'); _stg.classList.remove('shuf'); void _stg.offsetWidth; _stg.classList.add('shuf'); shufReplay(); }catch(e){}   // wait for phone-to-forehead (landscape / tilt) to kickstart
   clearTimeout(_readyTO); _readyTO=setTimeout(function(){ if(awaitingLandscape){ awaitingLandscape=false; startCountdown(); } }, 20000);
 }
 /* Re-deal every few seconds while we wait for the phone to reach the forehead.
    The wait is user-paced (up to the 20s timeout), so one shuffle would leave a
    static stack for most of it. Stops as soon as the ready screen goes away. */
-var _shufTO=null;
-/* The flight used to be a 1.7s one-shot that had to be re-armed every 4.2s. The
-   animation loops now, so re-arming would restart all three flyers mid-arc and show
-   as a stutter every four seconds. Kept as a no-op rather than deleted because ready()
-   and the orientation handler both call it. */
-function shufReplay(){ clearTimeout(_shufTO); }
+
+
 function checkOrientation(){ if(awaitingLandscape && isLandscape()){ awaitingLandscape=false; startCountdown(); } }
 function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 /* The Beginner/Superfan pills are gone: the choice changed no game behaviour, and next
@@ -1770,7 +1620,6 @@ function startCountdown(){
   if(counting) return; counting=true; clearTimeout(_readyTO);
   document.body.classList.add('lock-ls'); tryLockLandscape();   // fake-landscape the Face-the-Music + 3-2-1 screens (iOS)
   document.getElementById('rotateMsg').style.display='none';
-  try{ clearTimeout(_shufTO); document.getElementById('stage').classList.remove('shuf'); }catch(e){}
   var gr=document.getElementById('getReady'), big=document.getElementById('big');
   big.style.display='none';
   gr.style.display='block'; gr.classList.add('pulsing');
