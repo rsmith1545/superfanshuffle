@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v221"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v222"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -37,7 +37,7 @@
    -90deg for landscape, so a swipe the player reads as horizontal arrives as
    vertical in element space - testing an axis would work in one orientation and
    silently fail in the other. Distance alone is orientation-proof.
-   Threshold is deliberately long (120px): this abandons a round in progress. */
+   It now takes TWO fingers as well - see the note on the listener for why. */
 #quitBack{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
  justify-content:center;gap:2.4vmin;border-radius:32px;z-index:20;
  background-color:var(--cardbg,#2a1257);
@@ -1500,16 +1500,32 @@ function quitToHome(){
 }
 (function(){
  var g=document.getElementById('sGame'); if(!g) return;
- var sx=0,sy=0,on=false;
+ /* WAS: any ONE-finger drag of 120px, any direction, any speed, ended the round.
+    Measured: 120px is 29% of a 412px screen. This game is played with the phone
+    pressed to your forehead and tilted hard, so the player's fingers are on the
+    glass the entire round - a thumb sliding on the grip is exactly that gesture.
+    Rounds were being abandoned by accident, and the branded back-face flipping up
+    read as a card animation rather than as "your round just ended".
+
+    The original note is right that testing an AXIS is unsafe: the stage is rotated
+    -90deg in play, so "horizontal" to the player is vertical in element space and a
+    direction test would work in one orientation and silently fail in the other.
+    So direction stays out of it. TWO FINGERS is the discriminator instead - it is
+    orientation-proof like distance is, but a grip does not produce it. */
+ var sx=0,sy=0,on=false,t0=0;
  g.addEventListener('touchstart',function(e){
-   if(!playing||!e.touches||e.touches.length!==1){ on=false; return; }
-   sx=e.touches[0].clientX; sy=e.touches[0].clientY; on=true;
+   if(!playing||!e.touches||e.touches.length!==2){ on=false; return; }
+   sx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+   sy=(e.touches[0].clientY+e.touches[1].clientY)/2;
+   t0=nowMs(); on=true;
  },{passive:true});
  g.addEventListener('touchend',function(e){
    if(!on) return; on=false;
    var t=e.changedTouches&&e.changedTouches[0]; if(!t) return;
    var dx=t.clientX-sx, dy=t.clientY-sy;
-   if(Math.sqrt(dx*dx+dy*dy)>=120) quitToHome();
+   /* deliberate: far enough to be a swipe, quick enough to be a swipe and not a
+      two-handed regrip that happens to drift */
+   if(Math.sqrt(dx*dx+dy*dy)>=110 && (nowMs()-t0)<=700) quitToHome();
  },{passive:true});
 })();
 function endGame(){
