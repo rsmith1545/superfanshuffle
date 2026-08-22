@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v225"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v226"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -903,12 +903,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
     <div class="rcBtns"><button class="rcBtn primary" id="againBtn">&#8635; PLAY AGAIN</button><button class="rcBtn ghost" id="backBtn">&#8962; HOME / PLAY</button></div>
     <div class="rcActions"><a id="customBtn">&#9881; CUSTOMIZE</a><i id="rcSep">|</i><a id="shareBtn">&#10548; SHARE RESULT</a></div>
     <div class="rcSimilar" id="rcSimilar"><div class="rcSimHd">Artists similar to <span id="rcSimArtist"></span></div><div class="rcSimList" id="rcSimList"></div></div>
-    <div class="rcCustOv" id="rcCustOv"><div class="rcCustSheet">
-    <div class="rcCustHd">CUSTOMIZE GAME<span class="rcCustX" id="rcCustX">&#10005;</span></div>
-    <div class="rcCustLbl">DECK</div>
-    <div class="rcCustRow" id="rcEdRow"><button class="rcOpt" data-ed="Standard"><b>Standard</b><span>The essential tracks everyone knows.</span></button><button class="rcOpt" data-ed="Deluxe"><b>Deluxe</b><span>Every track — deep cuts &amp; features.</span></button></div>
-    <button class="rcCustGo" id="rcCustGo">&#8635; PLAY WITH THESE</button>
-  </div></div>
+
    </div>
   </div>
 </div>
@@ -938,6 +933,18 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 </div>
 <div id="rfPosterOv" onclick="this.style.display='none'"></div>
 <div class="toast" id="toast"></div>
+<!-- The customize sheet used to live INSIDE #sReport, the MUSIC results card.
+     .screen{display:none} means every descendant of an inactive screen is hidden,
+     so on Film & TV and Sports - where #sReportFilm is the active card and
+     #sReport is not - openCust() added .on to an element whose parent was
+     display:none and nothing appeared. The button was firing the whole time.
+     It is position:fixed, so it belongs at body level where no screen owns it. -->
+<div class="rcCustOv" id="rcCustOv"><div class="rcCustSheet">
+    <div class="rcCustHd">CUSTOMIZE GAME<span class="rcCustX" id="rcCustX">&#10005;</span></div>
+    <div class="rcCustLbl">DECK</div>
+    <div class="rcCustRow" id="rcEdRow"><button class="rcOpt" data-ed="Standard"><b>Standard</b><span>The essential tracks everyone knows.</span></button><button class="rcOpt" data-ed="Deluxe"><b>Deluxe</b><span>Every track — deep cuts &amp; features.</span></button></div>
+    <button class="rcCustGo" id="rcCustGo">&#8635; PLAY WITH THESE</button>
+  </div></div>
 <script>
 /* ---------- sample deck (placeholder — content TBD) ---------- */
 var DECK=["Bohemian Rhapsody","Sweet Child O' Mine","Billie Jean","Don't Stop Believin'","Wonderwall","Smells Like Teen Spirit","Poker Face","Mr. Brightside","Hotel California","Rolling in the Deep","Under Pressure","Africa","Take On Me","Uptown Funk","Purple Rain","Livin' on a Prayer","Bad Guy","Shake It Off","Hey Jude","Seven Nation Army","Stairway to Heaven","Dancing Queen","Wannabe","Zombie","Creep","Toxic","Umbrella","Blinding Lights","Hips Don't Lie","Yeah!"];
