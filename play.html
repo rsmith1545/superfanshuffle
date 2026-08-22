@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v223"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v224"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -316,43 +316,59 @@
     catches the light. It works on any plate because it commits to no colour. */
  background-color:rgba(255,255,255,.06);
  opacity:0;pointer-events:none;z-index:6;transform-origin:50% 50%}
-/* the deck body: two cards fanned a hair, static. They are the pile, not performers. */
-#stage.shuf .deckGhost.g1{animation:deckRest1 1.7s ease-out forwards}
-#stage.shuf .deckGhost.g2{animation:deckRest2 1.7s ease-out forwards}
-#stage.shuf .deckFly{animation:deckFly 1.7s cubic-bezier(.33,.02,.30,1) forwards}
-#stage.shuf #app{animation:deckSettle 1.7s cubic-bezier(.33,.02,.30,1) forwards}
-/* Lift, travel over the pile, drop back square. The scale bump is the whole trick -
-   without it the card slides rather than flies, because nothing signals height. */
+/* ===== overhand shuffle =====
+   Third attempt, and the first two failed the same way: ONE full-size card lifting,
+   wandering and landing once every 4.2s does not read as shuffling. A person watching
+   sees a single card wobble. A hand shuffle reads because packets come off the deck in
+   a STREAM - one card is always in the air, another is always landing, and it does not
+   stop. So: three flyers on the same arc, staggered a third of a cycle apart, looping
+   for as long as the player is holding the phone. A card leaves the pile every 300ms,
+   which is about the cadence of a real overhand shuffle.
+
+   The arc is deliberately one-directional now - out to the right, up and over, down
+   onto the front - instead of the old meander. A hand does the same motion over and
+   over; the repetition is what sells it, and a wandering path reads as drifting.
+
+   Still translucent, and for the same reason as before: these are full-bleed cards
+   sitting on top of "PLACE ON YOUR FOREHEAD", which is the one line the player is on
+   this screen to read. The border and the shadow carry the motion; the words read
+   straight through. */
+#stage.shuf .deckGhost.g1{animation:deckRest1 .9s ease-out infinite}
+#stage.shuf .deckGhost.g2{animation:deckRest2 .9s ease-out infinite}
+#stage.shuf .deckFly{animation:deckFly .9s cubic-bezier(.36,.05,.28,1) infinite}
+#stage.shuf .deckFly.f2{animation-delay:.3s}
+#stage.shuf .deckFly.f3{animation-delay:.6s}
+/* the pile takes a knock every time a packet lands - once per 300ms, not once per flight */
+#stage.shuf #app{animation:deckSettle .3s cubic-bezier(.33,.02,.30,1) infinite}
 @keyframes deckFly{
- /* Peak opacity is .58, NOT 1. The flyer is a full-size card sitting on top of the
-    instruction, and at full opacity it hid "PLACE ON YOUR FOREHEAD" for most of every
-    cycle - the one line the player is on this screen to read. Translucent, the border
-    and shadow still carry the motion while the words read straight through it. */
- 0%  {opacity:0;transform:translate(0,0) rotate(0deg) scale(1);box-shadow:0 0 0 rgba(0,0,0,0)}
- 8%  {opacity:.58;transform:translate(0,-1vmin) rotate(-1deg) scale(.975);
-      box-shadow:0 2vmin 3vmin rgba(0,0,0,.4)}
- 36% {opacity:.58;transform:translate(3vmin,-2vmin) rotate(-4deg) scale(.87);
+ 0%  {opacity:0;   transform:translate(0,0) rotate(0deg) scale(1);
+      box-shadow:0 0 0 rgba(0,0,0,0)}
+ /* Travel and rotation are both bounded by the SIDES of the phone, not by taste.
+    A 380x883 card rotated 6.5deg is 430px across inside a 412px viewport - measured,
+    it hung 28px off the right edge at the top of the arc. Rotation costs width far
+    faster than translation does, so the tilt is the part that had to come down. */
+ 10% {opacity:.52; transform:translate(1.8vmin,-1.4vmin) rotate(-2.2deg) scale(.955);
+      box-shadow:0 2vmin 3vmin rgba(0,0,0,.42)}
+ 42% {opacity:.55; transform:translate(2.6vmin,-4.4vmin) rotate(-3.8deg) scale(.875);
       box-shadow:0 6vmin 9vmin rgba(0,0,0,.5)}
- 62% {opacity:.58;transform:translate(-2.5vmin,-3.2vmin) rotate(3deg) scale(.875);
-      box-shadow:0 6.5vmin 10vmin rgba(0,0,0,.5)}
- 86% {opacity:.5;transform:translate(0,.4vmin) rotate(.8deg) scale(1.004);
-      box-shadow:0 1vmin 2vmin rgba(0,0,0,.35)}
- 94% {opacity:.3;transform:translate(0,0) rotate(0deg) scale(1);
-      box-shadow:0 .3vmin .8vmin rgba(0,0,0,.25)}
- 100%{opacity:0;transform:translate(0,0) rotate(0deg) scale(1);box-shadow:0 0 0 rgba(0,0,0,0)}}
-/* the pile takes the landing: a small compression on the frame the card touches down */
+ 70% {opacity:.5;  transform:translate(.5vmin,-3vmin) rotate(-1.4deg) scale(.9);
+      box-shadow:0 5vmin 8vmin rgba(0,0,0,.46)}
+ 88% {opacity:.34; transform:translate(0,.3vmin) rotate(.6deg) scale(1.006);
+      box-shadow:0 .8vmin 1.8vmin rgba(0,0,0,.3)}
+ 100%{opacity:0;   transform:translate(0,0) rotate(0deg) scale(1);
+      box-shadow:0 0 0 rgba(0,0,0,0)}}
 @keyframes deckSettle{
- 0%,80%{transform:translate(0,0) scale(1)}
- 88%   {transform:translate(0,.35%) scale(.994)}
+ 0%,55%{transform:translate(0,0) scale(1)}
+ 72%   {transform:translate(0,.28%) scale(.9955)}
  100%  {transform:translate(0,0) scale(1)}}
+/* the pile itself: fanned, and it STAYS - it is the deck being shuffled, so it cannot
+   fade out between flights the way it did when the animation was a one-shot */
 @keyframes deckRest1{
- 0%{opacity:0;transform:translate(0,0) rotate(0deg)}
- 12%,88%{opacity:.8;transform:translate(1.4vw,.35vh) rotate(1.4deg)}
- 100%{opacity:0;transform:translate(1.4vw,.35vh) rotate(1.4deg)}}
+ 0%,100%{opacity:.8;transform:translate(1.4vw,.35vh) rotate(1.4deg)}
+ 60%    {opacity:.8;transform:translate(1.6vw,.45vh) rotate(1.7deg)}}
 @keyframes deckRest2{
- 0%{opacity:0;transform:translate(0,0) rotate(0deg)}
- 12%,88%{opacity:.55;transform:translate(2.8vw,.7vh) rotate(2.8deg)}
- 100%{opacity:0;transform:translate(2.8vw,.7vh) rotate(2.8deg)}}
+ 0%,100%{opacity:.55;transform:translate(2.8vw,.7vh) rotate(2.8deg)}
+ 60%    {opacity:.55;transform:translate(3.1vw,.85vh) rotate(3.2deg)}}
 @media (prefers-reduced-motion:reduce){
  #stage.shuf .deckGhost,#stage.shuf #app,#stage.shuf .deckFly{animation:none}}
 
@@ -973,7 +989,9 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 <div id="stage">
 <div class="deckGhost g2" aria-hidden="true"></div>
 <div class="deckGhost g1" aria-hidden="true"></div>
-<div class="deckFly" aria-hidden="true"></div>
+<div class="deckFly f1" aria-hidden="true"></div>
+<div class="deckFly f2" aria-hidden="true"></div>
+<div class="deckFly f3" aria-hidden="true"></div>
 <div id="app">
   <!-- START -->
   <div class="screen on" id="sStart">
@@ -1726,19 +1744,11 @@ function ready(){
    The wait is user-paced (up to the 20s timeout), so one shuffle would leave a
    static stack for most of it. Stops as soon as the ready screen goes away. */
 var _shufTO=null;
-function shufReplay(){
- clearTimeout(_shufTO);
- _shufTO=setTimeout(function(){
-   var st=document.getElementById('sReady');
-   var rm=document.getElementById('rotateMsg');
-   if(!st||!st.classList.contains('on')||!rm||rm.style.display==='none') return;
-   var stg=document.getElementById('stage');
-   stg.classList.remove('shuf'); void stg.offsetWidth; stg.classList.add('shuf');
-   shufReplay();
- }, 4200);   /* the flight is 1.7s. Leaving a clear gap after it lands matters more
-                than continuous motion: the instruction has to be readable, and the
-                wait here can run to 20s. */
-}
+/* The flight used to be a 1.7s one-shot that had to be re-armed every 4.2s. The
+   animation loops now, so re-arming would restart all three flyers mid-arc and show
+   as a stutter every four seconds. Kept as a no-op rather than deleted because ready()
+   and the orientation handler both call it. */
+function shufReplay(){ clearTimeout(_shufTO); }
 function checkOrientation(){ if(awaitingLandscape && isLandscape()){ awaitingLandscape=false; startCountdown(); } }
 function popEl(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 /* The Beginner/Superfan pills are gone: the choice changed no game behaviour, and next
