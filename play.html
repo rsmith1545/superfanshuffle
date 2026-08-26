@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v226"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v227"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -554,6 +554,21 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 .rcSimTile{flex:1;min-width:0;text-align:center;cursor:pointer}
 .rcSimTile img{width:100%;aspect-ratio:1/1;border-radius:12px;object-fit:cover;background:#1a1230;display:block;border:1px solid rgba(255,255,255,.08)}
 .rcSimTile .snn{font-size:13px;font-weight:700;color:#fff;margin-top:6px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ===== TEST HUD =====
+   Temporary instrumentation, not product. One flag at the top of the script turns the
+   whole thing off (TESTMODE=false) and nothing else needs touching.
+   Lives at BODY level on purpose: #rcMode and the customize sheet were both nested
+   inside #sReport, the music card, which is why neither ever appeared on Film or
+   Sports. A readout that silently works on one edition out of three is worse than
+   no readout. */
+#testHUD{position:fixed;left:0;right:0;bottom:0;z-index:400;display:none;
+ font:700 11px/1.45 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.02em;
+ background:rgba(4,3,10,.92);color:#8CF5B0;border-top:1px solid rgba(140,245,176,.35);
+ padding:6px 10px calc(6px + env(safe-area-inset-bottom));text-align:center;
+ pointer-events:none;white-space:pre-wrap}
+#testHUD.on{display:block}
+#testHUD b{color:#FFD86B}
+#testHUD i{color:#FF8C8C;font-style:normal}
 .rcCustOv{position:fixed;inset:0;z-index:130;background:rgba(5,3,12,.72);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
 .rcCustOv.on{display:flex}
 .rcCustSheet{width:100%;max-width:520px;background:linear-gradient(180deg,#180f2e,#0d0819);border-top:1.5px solid rgba(126,86,224,.6);border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.55)}
@@ -939,6 +954,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
      #sReport is not - openCust() added .on to an element whose parent was
      display:none and nothing appeared. The button was firing the whole time.
      It is position:fixed, so it belongs at body level where no screen owns it. -->
+<div id="testHUD" aria-hidden="true"></div>
 <div class="rcCustOv" id="rcCustOv"><div class="rcCustSheet">
     <div class="rcCustHd">CUSTOMIZE GAME<span class="rcCustX" id="rcCustX">&#10005;</span></div>
     <div class="rcCustLbl">DECK</div>
@@ -1419,6 +1435,13 @@ function endGame(){
 /* tier verdict = the payoff (hero); score is support */
 var ED=(Q.get('ed')||'music');
 (function(){ var CLUES={sports:'Say the first name &middot; Position and years &middot; Awards, All-Star games, big moments',filmtv:'Name the actors &middot; Use the year on the card &middot; Mention awards it won &middot; Act out a scene',music:'Hum it &middot; Sing a line &middot; Describe it &middot; Act it out'}; var el=document.getElementById('clueLine'); if(el){ var nm=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME+' ':''; el.innerHTML='<span class="clueLbl">For this '+nm+'Vault:</span> '+(CLUES[ED]||CLUES.music); } })();
+/* ===== TEST MODE =====
+   Set to false for production. Shows a footer readout of how much of the deck this
+   player has actually seen, which is the only way to tell "the shuffle is repeating"
+   apart from "you have played through all 87 cards and it started a second pass".
+   ?test=0 forces it off without a redeploy; ?test=1 forces it on. */
+var TESTMODE=true;
+try{ var _t=Q.get('test'); if(_t==='0') TESTMODE=false; if(_t==='1') TESTMODE=true; }catch(e){}
 var REDITION=Q.get('edition')||'Standard', RXS=Q.get('xs')||'', RXSN=Q.get('xsn')||'', RXSE=Q.get('xse')||'', RXSL=Q.get('xsl')||'';
 var RP1=Q.get('p1')||'', RP2=Q.get('p2')||'', RCITY=Q.get('city')||'', RTEAM=Q.get('team')||'';
 function hexA(h,a){ h=(h||'').replace('#',''); if(h.length!==6) return 'rgba(40,50,80,'+a+')'; return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+a+')'; }
@@ -1565,7 +1588,32 @@ function rfBgFor(ed){ return ed==='sports' ? "url('res-sports.jpg?v=1')" : "url(
    simply untrue. Only the deck is a fact about the game that was played. */
 function stampMode(){ try{ var m=document.getElementById('rcMode');
   if(m) m.textContent=(REDITION||'Standard').toUpperCase()+' DECK'; }catch(e){} }
-function showReport(){ stampMode(); syncCustAvail(); if(ED==='filmtv'||ED==='sports'){ buildReportFilm();
+/* How much of this vault has this player actually been dealt? Reads the same
+   localStorage set that dealOrder() uses, so it reports the real state, not a guess. */
+function deckCounts(){
+  var d = (DECKS && DECKS[VAULT_ID]) ? DECKS[VAULT_ID] : null;
+  var std = d ? (d.standard||[]).length : DECK.length;
+  var dlx = d ? (d.deluxe||[]).length : 0;
+  var seen = 0;
+  try{ seen = Object.keys(JSON.parse(localStorage.getItem(_seenKey(REDITION))||'{}')).length; }catch(e){}
+  return {std:std, dlx:dlx, seen:seen, active:activeDeck().length};
+}
+function renderTestHUD(){
+  var h=document.getElementById('testHUD'); if(!h) return;
+  if(!TESTMODE){ h.classList.remove('on'); return; }
+  var c=deckCounts();
+  var left=Math.max(0, c.active - c.seen);
+  var pass = c.active ? Math.floor(c.seen/c.active)+1 : 1;
+  var txt = 'TEST \u00b7 ' + (VAULT_NAME||VAULT_ID) + ' \u00b7 ' + REDITION.toUpperCase()
+    + '  \u2014  seen <b>' + c.seen + ' / ' + c.active + '</b>'
+    + '  \u00b7  ' + (left ? (left + ' fresh left') : '<i>deck exhausted \u2014 next round starts a new pass</i>')
+    + '  \u00b7  this round ' + (results?results.length:0);
+  var det = 'standard ' + c.std + (c.dlx ? ('  \u00b7  deluxe +' + c.dlx + ' (' + (c.std+c.dlx) + ' total)')
+                                        : '  \u00b7  no deluxe deck for this vault');
+  h.innerHTML = txt + '\n' + det;
+  h.classList.add('on');
+}
+function showReport(){ stampMode(); syncCustAvail(); renderTestHUD(); if(ED==='filmtv'||ED==='sports'){ buildReportFilm();
   try{ document.getElementById('sReportFilm').style.setProperty('--rfbg', rfBgFor(ED)); }catch(e){}
   show('sReportFilm'); } else { buildReport(); show('sReport'); } }
 function doShare(){
