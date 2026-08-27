@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v227"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v228"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -87,6 +87,7 @@
 .fbGlyph svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 14px rgba(0,0,0,.55))}
 /* the answer is not the message any more - the verdict is */
 #app.fbon #card{opacity:.12;transition:opacity .12s ease}
+#app.fbon #cardType{opacity:0;transition:opacity .12s ease}
 .fbGlyph.correct{color:#35E27F}.fbGlyph.pass{color:#FF9D2E}.fbGlyph.timeup{color:#fff}
 .fbWord{font-family:var(--disp);font-size:16vmin;letter-spacing:4px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45)}
 @keyframes fbpop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.14);opacity:1}100%{transform:scale(1)}}
@@ -204,7 +205,7 @@
    future plate without anyone tuning a mask. .filmcard sets text-shadow:none to let
    the stroke do the work; art cards put a shadow back. */
 #app.hasart #card{text-shadow:0 0 5px rgba(4,2,10,.98),0 0 11px rgba(4,2,10,.95),0 2px 16px rgba(4,2,10,.92),0 0 30px rgba(4,2,10,.85),0 0 54px rgba(4,2,10,.6)}
-#app.hasart #timer,#app.hasart #score{text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 20px rgba(4,2,10,.7)}
+#app.hasart #timer,#app.hasart #score,#app.hasart #cardType{text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 20px rgba(4,2,10,.7)}
 /* light plates: dark ink, cream stroke, and the scrim LIFTS the centre instead of
    darkening it - the job is the same (separate type from picture), the direction
    is opposite. */
@@ -214,7 +215,7 @@
  -webkit-text-stroke-width:var(--olw,2.2vmin);paint-order:stroke;letter-spacing:.1em;
  -webkit-text-stroke-color:var(--cardoutline,#FFF6E0);
  text-shadow:0 0 6px rgba(255,250,238,.96),0 0 15px rgba(255,250,238,.9),0 2px 22px rgba(255,250,238,.75),0 0 40px rgba(255,250,238,.5)}
-#app.hasart.lightart #timer,#app.hasart.lightart #score{
+#app.hasart.lightart #timer,#app.hasart.lightart #score,#app.hasart.lightart #cardType{
  color:var(--cardink,#241546);text-shadow:0 0 10px rgba(255,250,238,.95),0 0 20px rgba(255,250,238,.8)}
 #app.hasart.lightart::after{background:
   radial-gradient(ellipse 64% 58% at 50% 48%, rgba(255,250,238,.46), rgba(255,250,238,.20) 62%, rgba(255,250,238,0) 100%),
@@ -227,7 +228,7 @@
  -webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;letter-spacing:.1em}
 /* the score sits in the corner in the app's default cyan, which fights a crimson
    and gold plate. On inked cards it takes the plate's own accent. */
-#app.hasart.inked #score{color:var(--cardoutline,#fff)}
+#app.hasart.inked #score,#app.hasart.inked #cardType{color:var(--cardoutline,#fff)}
 /* The pre-play screens now wear the SAME LETTERING as the answer card: white fill,
    the plate's own stroke colour, dark halo underneath. They used to keep the app's
    default neon - cyan instruction, white countdown - which was right when every card
@@ -294,6 +295,12 @@
  #card{font-family:var(--disp);font-size:18vmin;color:#eafcff;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 14px rgba(87,230,255,.55),2px 3px 0 rgba(0,0,0,.45);line-height:.98;padding:0 14px;max-width:96vw}
  #big{font-family:var(--disp);font-size:34vmin;color:#fff;line-height:1;text-shadow:0 0 22px rgba(87,230,255,.6),3px 4px 0 rgba(0,0,0,.4)}
  #timer{font-family:var(--disp);font-size:11vmin;color:#eafcff;letter-spacing:2px;text-shadow:0 0 10px rgba(87,230,255,.5),2px 2px 0 rgba(0,0,0,.4)}
+/* Opposite corner to #score, which sits top-right. Sized well below the score so it
+    reads as a label, not a second number, and letter-spaced so it scans as a tag. */
+ #cardType{position:absolute;top:18px;left:20px;display:none;font-family:var(--disp);
+  font-size:3.6vmin;letter-spacing:.16em;color:var(--cyan);opacity:.95;
+  text-shadow:0 0 10px rgba(87,230,255,.55),1px 1px 0 rgba(0,0,0,.45)}
+ #cardType.on{display:block}
  #score{position:absolute;top:14px;right:20px;font-family:var(--disp);font-size:8vmin;color:var(--cyan);letter-spacing:1px;text-shadow:0 0 10px rgba(87,230,255,.6)}
  #hint{position:absolute;bottom:12px;left:0;right:0;font-size:3.4vmin;color:rgba(255,255,255,.8);letter-spacing:.5px}
  /* debug */
@@ -789,6 +796,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 /* #timer was left out of this group, so it kept its default cyan while the score beside
    it took the team colour. On a navy Giants card cyan reads as plain white - "the
    numbers look white and gray". Both numbers now carry the team's stroke. */
+#app:is(.sportcard,.filmcard) #cardType,
 #app:is(.sportcard,.filmcard) #timer,
 #app:is(.sportcard,.filmcard) .wallHead{
  color:#fff;-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;
@@ -880,6 +888,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div>
   <!-- GAME -->
   <div class="screen" id="sGame">
+    <div id="cardType" aria-hidden="true"></div>
     <div id="score">0</div>
     <div id="card">—</div>
     <div id="timer">1:00</div>
@@ -978,7 +987,7 @@ var DECKS=null;
    All three now look for their own file; a missing one is not an error, the edition just
    has no Deluxe yet and the UI hides the choice (see custAvail). Drop music-decks.json
    in and it lights up with no code change. */
-var DECKFILE={filmtv:'film-decks.json?v=136', music:'music-decks.json?v=1', sports:'sports-decks.json?v=1'};
+var DECKFILE={filmtv:'film-decks.json?v=228', music:'music-decks.json?v=1', sports:'sports-decks.json?v=1'};
 (function(){
   var f=DECKFILE[Q.get('ed')||'music']; if(!f) return;
   fetch(f).then(function(r){ if(!r.ok) throw 0; return r.json(); })
@@ -996,7 +1005,40 @@ function syncCustAvail(){
     var el=document.getElementById(id); if(el) el.style.display = on ? '' : 'none';
   });
 }
-function activeDeck(){ if(DECKS && DECKS[VAULT_ID]){ var d=DECKS[VAULT_ID]; var std=(d.standard||[]).slice(); if(PREVIEW || REDITION!=='Deluxe') return std; return std.concat(d.deluxe||[]); } return DECK.slice(); }
+/* Decks can now carry CHARACTER cards alongside titles: stdChars rides with standard,
+   dlxChars with deluxe. They are separate arrays rather than a type flag on each card
+   because every consumer of a card - the seen-set key, the results list, the share
+   text - treats a card as a plain string, and changing that shape would touch all of
+   them. Membership in these arrays is the only thing the badge needs. */
+function activeDeck(){
+  if(DECKS && DECKS[VAULT_ID]){
+    var d=DECKS[VAULT_ID];
+    var out=(d.standard||[]).concat(d.stdChars||[]);
+    if(PREVIEW || REDITION!=='Deluxe') return out;
+    return out.concat(d.deluxe||[], d.dlxChars||[]);
+  }
+  return DECK.slice();
+}
+var _CHARSET=null;
+function charSet(){
+  if(_CHARSET) return _CHARSET;
+  _CHARSET={};
+  try{ var d=DECKS&&DECKS[VAULT_ID];
+    if(d){ (d.stdChars||[]).concat(d.dlxChars||[]).forEach(function(c){ _CHARSET[c]=1; }); }
+  }catch(e){}
+  return _CHARSET;
+}
+/* The card is a bare string, so nothing on screen says whether you are guessing a FILM
+   or a CHARACTER. With both in one deck that is the difference between a fair clue and
+   a confused one, so the type is stamped in the corner opposite the score. */
+function stampCardType(w){
+  var el=document.getElementById('cardType'); if(!el) return;
+  var d=DECKS&&DECKS[VAULT_ID];
+  var has=!!(d && ((d.stdChars||[]).length || (d.dlxChars||[]).length));
+  if(!has || !w){ el.classList.remove('on'); return; }
+  el.textContent = charSet()[w] ? 'CHARACTER' : 'MOVIE';
+  el.classList.add('on');
+}
 var VAULT_NAME=Q.get('n')||'this vault';
 /* persisted seen-set per user per vault+edition (localStorage). Powers the Standard->Deluxe nudge. */
 function _seenKey(ed){ return 'sfs_seen_'+(VAULT_ID||'x')+'_'+(ed||REDITION||'Standard'); }
@@ -1273,7 +1315,7 @@ function sndBuzzer(){ initAudio(); tone(160,0.6,'sawtooth',0.36,0); tone(168,0.6
 function fmt(t){ var m=Math.floor(t/60), sec=t%60; return m+':'+(sec<10?'0':'')+sec; }
 var playing=false, idx=0, order=[], results=[], score=0, timeLeft=60, tHandle=null;
 var qCount=0, ended=false, previewSafety=null;
-function newCard(){ if(idx>=order.length){ order=dealOrder(); idx=0; } var w=order[idx++]; recordSeen(w); document.getElementById('card').textContent=w; return w; }
+function newCard(){ if(idx>=order.length){ order=dealOrder(); idx=0; } var w=order[idx++]; recordSeen(w); document.getElementById('card').textContent=w; stampCardType(w); return w; }
 var current='';
 function mark(good){
   results.push({w:current,good:good});
