@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v229"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v230"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -292,7 +292,19 @@
  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #000}
  .small{font-size:4vw;color:var(--sand);opacity:.85}
  /* GAME */
- #card{font-family:var(--disp);font-size:18vmin;color:#eafcff;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 14px rgba(87,230,255,.55),2px 3px 0 rgba(0,0,0,.45);line-height:.98;padding:0 14px;max-width:96vw}
+ /* max-width WAS 96vw. During play #stage is rotated -90deg, so the card's LAYOUT
+    width runs along the app's long axis (~784px) while 96vw measured the viewport's
+    SHORT axis (396px). The card wrapped at half the width it actually had, ran to
+    five lines and overflowed a 331px-tall box - "The SpongeBob SquarePants Movie"
+    has been clipped top and bottom since the day it shipped. 94% of the flex parent
+    is right in the rotated frame and in real landscape both. The size is then fitted
+    in fitCard(), because even at full width a long name still needs three lines. */
+ #card{font-family:var(--disp);font-size:18vmin;color:#eafcff;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 14px rgba(87,230,255,.55),2px 3px 0 rgba(0,0,0,.45);line-height:.98;padding:0 14px;max-width:94%}
+ /* The film rides inside the card STRING - "Odie (Garfield)" is one plain card, which
+    is what keeps the seen-set, the results list and the share text working unchanged.
+    Only the DRAWING splits it, so the name stays the hero and the film reads as a
+    caption underneath instead of competing with it for the same type size. */
+ #card .fl{display:block;font-size:.42em;letter-spacing:.08em;opacity:.85;margin-top:.24em;-webkit-text-stroke-width:calc(var(--olw,2.2vmin)*.5)}
  #big{font-family:var(--disp);font-size:34vmin;color:#fff;line-height:1;text-shadow:0 0 22px rgba(87,230,255,.6),3px 4px 0 rgba(0,0,0,.4)}
  #timer{font-family:var(--disp);font-size:11vmin;color:#eafcff;letter-spacing:2px;text-shadow:0 0 10px rgba(87,230,255,.5),2px 2px 0 rgba(0,0,0,.4)}
 /* Opposite corner to #score, which sits top-right. Sized well below the score so it
@@ -993,7 +1005,7 @@ var DECKS=null;
    All three now look for their own file; a missing one is not an error, the edition just
    has no Deluxe yet and the UI hides the choice (see custAvail). Drop music-decks.json
    in and it lights up with no code change. */
-var DECKFILE={filmtv:'film-decks.json?v=228', music:'music-decks.json?v=1', sports:'sports-decks.json?v=1'};
+var DECKFILE={filmtv:'film-decks.json?v=230', music:'music-decks.json?v=1', sports:'sports-decks.json?v=1'};
 (function(){
   var f=DECKFILE[Q.get('ed')||'music']; if(!f) return;
   fetch(f).then(function(r){ if(!r.ok) throw 0; return r.json(); })
@@ -1321,7 +1333,40 @@ function sndBuzzer(){ initAudio(); tone(160,0.6,'sawtooth',0.36,0); tone(168,0.6
 function fmt(t){ var m=Math.floor(t/60), sec=t%60; return m+':'+(sec<10?'0':'')+sec; }
 var playing=false, idx=0, order=[], results=[], score=0, timeLeft=60, tHandle=null;
 var qCount=0, ended=false, previewSafety=null;
-function newCard(){ if(idx>=order.length){ order=dealOrder(); idx=0; } var w=order[idx++]; recordSeen(w); document.getElementById('card').textContent=w; stampCardType(w); return w; }
+/* A card is still a plain string everywhere it matters - dealt, stored in the seen
+   set, pushed to results, pasted into the share text. setCardText is the only place
+   that knows "Odie (Garfield)" has two parts, and it only knows it for drawing. */
+function setCardText(w){
+  var c=document.getElementById('card'); if(!c) return;
+  var m=/^(.+?)\s+\(([^()]+)\)$/.exec(w||'');
+  if(m){
+    c.textContent=m[1];
+    var s=document.createElement('span'); s.className='fl'; s.textContent=m[2];
+    c.appendChild(s);
+  } else {
+    c.textContent=w;
+  }
+  fitCard();
+}
+/* Shrink until it fits. The play area is short (about 331px across the card's
+   layout height) and the timer sits under the card in the same flex column, so the
+   budget is the screen minus the timer minus the gap. Multiplicative steps, capped,
+   and floored at 20px so a pathological string degrades instead of vanishing. */
+function fitCard(){
+  var c=document.getElementById('card'), g=document.getElementById('sGame'),
+      t=document.getElementById('timer');
+  if(!c||!g) return;
+  var H=g.clientHeight, W=g.clientWidth;
+  if(!H||!W) return;
+  c.style.fontSize='';                                   // back to the 18vmin base
+  var fs=parseFloat(getComputedStyle(c).fontSize)||Math.round(Math.min(W,H)*0.18);
+  var availH=H-(t?t.offsetHeight:0)-26, availW=W*0.94, n=0;
+  while(n++<40 && fs>20 && (c.offsetHeight>availH || c.scrollWidth>availW+1)){
+    fs=Math.max(20, Math.round(fs*0.93));
+    c.style.fontSize=fs+'px';
+  }
+}
+function newCard(){ if(idx>=order.length){ order=dealOrder(); idx=0; } var w=order[idx++]; recordSeen(w); setCardText(w); stampCardType(w); return w; }
 var current='';
 function mark(good){
   results.push({w:current,good:good});
@@ -1640,8 +1685,11 @@ function stampMode(){ try{ var m=document.getElementById('rcMode');
    localStorage set that dealOrder() uses, so it reports the real state, not a guess. */
 function deckCounts(){
   var d = (DECKS && DECKS[VAULT_ID]) ? DECKS[VAULT_ID] : null;
-  var std = d ? (d.standard||[]).length : DECK.length;
-  var dlx = d ? (d.deluxe||[]).length : 0;
+  /* Counts the CHARACTER arrays too. Without them the readout said "standard 87"
+     while the dealer was working a 179-card deck - the one number the HUD exists
+     to make trustworthy was the one number that was wrong. */
+  var std = d ? (d.standard||[]).length + (d.stdChars||[]).length : DECK.length;
+  var dlx = d ? (d.deluxe||[]).length + (d.dlxChars||[]).length : 0;
   var seen = 0;
   try{ seen = Object.keys(JSON.parse(localStorage.getItem(_seenKey(REDITION))||'{}')).length; }catch(e){}
   return {std:std, dlx:dlx, seen:seen, active:activeDeck().length};
@@ -1675,6 +1723,9 @@ function tryLockLandscape(){ try{ if(screen.orientation&&screen.orientation.lock
 function tryUnlock(){ try{ if(screen.orientation&&screen.orientation.unlock){ screen.orientation.unlock(); } }catch(e){} }
 window.addEventListener('load',function(){ if(!document.body.classList.contains('lock-ls')) tryPortrait(); });
 window.addEventListener('orientationchange',function(){ if(!document.body.classList.contains('lock-ls')) tryPortrait(); });
+/* The fitted size is measured against the play area, so it has to be re-measured
+   whenever that area changes size - rotating the phone, or the URL bar collapsing. */
+window.addEventListener('resize', function(){ setTimeout(fitCard, 60); });
 function tryPortrait(){ try{ if(screen.orientation&&screen.orientation.lock){ screen.orientation.lock('portrait').catch(function(){ tryUnlock(); }); } else { tryUnlock(); } }catch(e){ tryUnlock(); } }
 /* ---------- keep the screen awake during play (Wake Lock API: Android Chrome + iOS 16.4+) ---------- */
 var _wake=null;
