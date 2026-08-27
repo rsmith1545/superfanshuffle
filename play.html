@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v228"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v229"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -205,7 +205,7 @@
    future plate without anyone tuning a mask. .filmcard sets text-shadow:none to let
    the stroke do the work; art cards put a shadow back. */
 #app.hasart #card{text-shadow:0 0 5px rgba(4,2,10,.98),0 0 11px rgba(4,2,10,.95),0 2px 16px rgba(4,2,10,.92),0 0 30px rgba(4,2,10,.85),0 0 54px rgba(4,2,10,.6)}
-#app.hasart #timer,#app.hasart #score,#app.hasart #cardType{text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 20px rgba(4,2,10,.7)}
+#app.hasart #timer,#app.hasart #score{text-shadow:0 2px 10px rgba(4,2,10,.9),0 0 20px rgba(4,2,10,.7)}
 /* light plates: dark ink, cream stroke, and the scrim LIFTS the centre instead of
    darkening it - the job is the same (separate type from picture), the direction
    is opposite. */
@@ -215,7 +215,7 @@
  -webkit-text-stroke-width:var(--olw,2.2vmin);paint-order:stroke;letter-spacing:.1em;
  -webkit-text-stroke-color:var(--cardoutline,#FFF6E0);
  text-shadow:0 0 6px rgba(255,250,238,.96),0 0 15px rgba(255,250,238,.9),0 2px 22px rgba(255,250,238,.75),0 0 40px rgba(255,250,238,.5)}
-#app.hasart.lightart #timer,#app.hasart.lightart #score,#app.hasart.lightart #cardType{
+#app.hasart.lightart #timer,#app.hasart.lightart #score{
  color:var(--cardink,#241546);text-shadow:0 0 10px rgba(255,250,238,.95),0 0 20px rgba(255,250,238,.8)}
 #app.hasart.lightart::after{background:
   radial-gradient(ellipse 64% 58% at 50% 48%, rgba(255,250,238,.46), rgba(255,250,238,.20) 62%, rgba(255,250,238,0) 100%),
@@ -228,7 +228,7 @@
  -webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;letter-spacing:.1em}
 /* the score sits in the corner in the app's default cyan, which fights a crimson
    and gold plate. On inked cards it takes the plate's own accent. */
-#app.hasart.inked #score,#app.hasart.inked #cardType{color:var(--cardoutline,#fff)}
+#app.hasart.inked #score{color:var(--cardoutline,#fff)}
 /* The pre-play screens now wear the SAME LETTERING as the answer card: white fill,
    the plate's own stroke colour, dark halo underneath. They used to keep the app's
    default neon - cyan instruction, white countdown - which was right when every card
@@ -297,9 +297,16 @@
  #timer{font-family:var(--disp);font-size:11vmin;color:#eafcff;letter-spacing:2px;text-shadow:0 0 10px rgba(87,230,255,.5),2px 2px 0 rgba(0,0,0,.4)}
 /* Opposite corner to #score, which sits top-right. Sized well below the score so it
     reads as a label, not a second number, and letter-spaced so it scans as a tag. */
- #cardType{position:absolute;top:18px;left:20px;display:none;font-family:var(--disp);
-  font-size:3.6vmin;letter-spacing:.16em;color:var(--cyan);opacity:.95;
-  text-shadow:0 0 10px rgba(87,230,255,.55),1px 1px 0 rgba(0,0,0,.45)}
+ /* The type has to be readable across a room, on 93 different plates, some pale and
+    some near-black. Chasing the plate's own colours for this one label is how it ended
+    up dim gold on a dark blue card. It carries its OWN ground instead - a dark chip
+    with white type - so it is self-contained and identical everywhere, which is what
+    "stands out" actually requires. Nothing about the plate can wash it out. */
+ #cardType{position:absolute;top:16px;left:16px;display:none;font-family:var(--disp);
+  font-size:5.4vmin;line-height:1;letter-spacing:.12em;color:#fff;
+  background:rgba(4,3,10,.72);border:.28vmin solid rgba(255,255,255,.5);
+  border-radius:2.2vmin;padding:1.1vmin 2vmin 1vmin;
+  box-shadow:0 .5vmin 1.6vmin rgba(0,0,0,.5)}
  #cardType.on{display:block}
  #score{position:absolute;top:14px;right:20px;font-family:var(--disp);font-size:8vmin;color:var(--cyan);letter-spacing:1px;text-shadow:0 0 10px rgba(87,230,255,.6)}
  #hint{position:absolute;bottom:12px;left:0;right:0;font-size:3.4vmin;color:rgba(255,255,255,.8);letter-spacing:.5px}
@@ -796,7 +803,6 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
 /* #timer was left out of this group, so it kept its default cyan while the score beside
    it took the team colour. On a navy Giants card cyan reads as plain white - "the
    numbers look white and gray". Both numbers now carry the team's stroke. */
-#app:is(.sportcard,.filmcard) #cardType,
 #app:is(.sportcard,.filmcard) #timer,
 #app:is(.sportcard,.filmcard) .wallHead{
  color:#fff;-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;
@@ -1124,51 +1130,51 @@ function filmCard(){ var v=FILM_CARD[VAULT_ID];
 var ART_TYPE={
  adele       :{outline:'#F4A330'},
  arianagrande:{light:1, ink:'#241546', outline:'#FFF6E0'},
- ate         :{outline:'#E69B57'},
+ ate         :{outline:'#DAA459'},
  beatles     :{light:1, ink:'#241546', outline:'#FFF6E0'},
  beyonce     :{outline:'#FDB728'},
  biggie      :{outline:'#FDC472'},
  billieeilish:{outline:'#B9C709'},
  billyjoel   :{outline:'#DBB17D'},
  bonjovi     :{light:1, ink:'#241546', outline:'#FFF6E0'},
- bowie       :{outline:'#F8C58A'},
+ bowie       :{outline:'#F7AF7C'},
  brunomars   :{outline:'#FEA928'},
  carrieunderwood:{outline:'#D9B87A'},
- ccr         :{outline:'#DEA24C'},
- chrisstapleton:{outline:'#E9BC86'},
- codyjohnson :{outline:'#D0AD7B'},
+ ccr         :{outline:'#F2C772'},
+ chrisstapleton:{outline:'#F2BA7D'},
+ codyjohnson :{outline:'#85C9EB'},
  coldplay    :{outline:'#E9BA87'},
- dmb         :{outline:'#E5AC66'},
+ dmb         :{outline:'#2A1305'},
  dualipa     :{outline:'#A3ABC1'},
- eagles      :{light:1, ink:'#241546', outline:'#FFF6E0'},
- edsheeran   :{outline:'#E7AC88'},
- ellalangley :{outline:'#FF9051'},
- eminem      :{outline:'#C4BCB2'},
- faithhill   :{light:1, ink:'#241546', outline:'#FFF6E0'},
- fleetwoodmac:{outline:'#E9A049'},
- foo         :{outline:'#DDA294'},
- fthc        :{outline:'#ECA943'},
+ eagles      :{outline:'#261C12'},
+ edsheeran   :{outline:'#ECAB84'},
+ ellalangley :{outline:'#F1987E'},
+ eminem      :{outline:'#D1B99F'},
+ faithhill   :{outline:'#F3A63D'},
+ fleetwoodmac:{outline:'#BEC5C8'},
+ foo         :{outline:'#F69F6D'},
+ fthc        :{outline:'#3D3717'},
  gratefuldead:{light:1, ink:'#241546', outline:'#FFF6E0'},
- greenday    :{outline:'#CCBDA2'},
+ greenday    :{outline:'#CEB799'},
  grunge90s   :{outline:'#EFC973'},
  harrystyles :{outline:'#F99B37'},
  hendrix     :{light:1, ink:'#241546', outline:'#FFF6E0'},
- jasonaldean :{outline:'#F2BF79'},
- jellyroll   :{outline:'#E1A122'},
+ jasonaldean :{outline:'#EAAE5F'},
+ jellyroll   :{outline:'#301407'},
  justintimberlake:{outline:'#B1C1D3'},
  katyperry   :{outline:'#3DC2D8'},
- kennychesney:{light:1, ink:'#241546', outline:'#FFF6E0'},
+ kennychesney:{outline:'#F6C587'},
  kidstoybox  :{outline:'#002848'},
  ladygaga    :{outline:'#FFBD46'},
  laineywilson:{light:1, ink:'#241546', outline:'#FFF6E0'},
- ledzeppelin :{outline:'#DBAC68'},
- lukebryan   :{outline:'#4C2F08'},
- lukecombs   :{outline:'#F9C765'},
+ ledzeppelin :{outline:'#E6AE57'},
+ lukebryan   :{outline:'#332818'},
+ lukecombs   :{outline:'#F19F31'},
  maroon5     :{outline:'#642F09'},
- metallica   :{outline:'#D9AC96'},
- morganwallen:{outline:'#CFAD87'},
+ metallica   :{outline:'#EABE95'},
+ morganwallen:{outline:'#DB9D94'},
  mv_action   :{outline:'#F0AD51'},
- mv_animated :{outline:'#F6B956'},
+ mv_animated :{light:1, ink:'#241546', outline:'#FFF6E0'},
  mv_comedy   :{light:1, ink:'#241546', outline:'#FFF6E0'},
  mv_crime    :{outline:'#F0AF37'},
  mv_drama    :{outline:'#DCA969'},
@@ -1179,24 +1185,24 @@ var ART_TYPE={
  mv_sports   :{light:1, ink:'#241546', outline:'#FFF6E0'},
  mv_superhero:{outline:'#1C1B26'},
  mv_war      :{outline:'#1F150C'},
- nirvana     :{outline:'#E7BD7A'},
- oasis       :{outline:'#D8BA97'},
+ nirvana     :{outline:'#CACACB'},
+ oasis       :{outline:'#DDBA92'},
  onedirection:{outline:'#F4A62D'},
  pearljam    :{light:1, ink:'#241546', outline:'#FFF6E0'},
  postmalone  :{outline:'#FBA874'},
- queen       :{outline:'#F0BD7C'},
+ queen       :{outline:'#F1BE78'},
  rhcp        :{light:1, ink:'#241546', outline:'#FFF6E0'},
  rihanna     :{outline:'#BBAB97'},
  selenagomez :{light:1, ink:'#241546', outline:'#FFF6E0'},
- shaboozey   :{outline:'#ECA283'},
- smashingpumpkins:{outline:'#C2ABB0'},
- springsteen :{outline:'#CDAC8C'},
+ shaboozey   :{outline:'#DEB177'},
+ smashingpumpkins:{outline:'#BCAEC2'},
+ springsteen :{outline:'#E6A59C'},
  stones      :{light:1, ink:'#241546', outline:'#FFF6E0'},
- stp         :{outline:'#F3B57C'},
+ stp         :{light:1, ink:'#241546', outline:'#FFF6E0'},
  summerbeach :{light:1, ink:'#241546', outline:'#FFF6E0'},
  taylorswift :{outline:'#D4A26D'},
- thewho      :{outline:'#E3A94B'},
- timmcgraw   :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ thewho      :{outline:'#F0C382'},
+ timmcgraw   :{outline:'#251C0A'},
  tompetty    :{light:1, ink:'#241546', outline:'#FFF6E0'},
  tv_binge    :{outline:'#D9B87A'},
  tv_cartoon  :{outline:'#171F6C'},
@@ -1205,8 +1211,8 @@ var ART_TYPE={
  tv_oldschool:{outline:'#D9B87A'},
  tv_scifi    :{outline:'#66BBF7'},
  tv_sitcom   :{outline:'#C8AE93'},
- u2          :{outline:'#F79950'},
- zachbryan   :{outline:'#BAB49B'}
+ u2          :{outline:'#7EC0F2'},
+ zachbryan   :{outline:'#191F15'}
 };
 function applyCardArt(){
   if(!VAULT_ID) return;
