@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v230"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v231"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -1005,7 +1005,7 @@ var DECKS=null;
    All three now look for their own file; a missing one is not an error, the edition just
    has no Deluxe yet and the UI hides the choice (see custAvail). Drop music-decks.json
    in and it lights up with no code change. */
-var DECKFILE={filmtv:'film-decks.json?v=230', music:'music-decks.json?v=1', sports:'sports-decks.json?v=1'};
+var DECKFILE={filmtv:'film-decks.json?v=231', music:'music-decks.json?v=1', sports:'sports-decks.json?v=1'};
 (function(){
   var f=DECKFILE[Q.get('ed')||'music']; if(!f) return;
   fetch(f).then(function(r){ if(!r.ok) throw 0; return r.json(); })
