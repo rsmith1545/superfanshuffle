@@ -343,8 +343,21 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .v5sheet.v5rainbow{border:2px solid transparent!important;background:linear-gradient(180deg,#140b22,#0b0714) padding-box,linear-gradient(96deg,#ff4d4d,#ff9a2e,#ffe14d,#4dff69,#38c6ff,#8a5cff,#ff5cf0) border-box!important;box-shadow:0 -12px 40px rgba(0,0,0,.6),0 0 30px rgba(120,180,255,.35),0 0 30px rgba(255,120,240,.3),inset 0 1px 0 rgba(255,255,255,.08)!important}
 .v5sheet{background:radial-gradient(135% 85% at 50% -6%,rgba(var(--tint),.34),rgba(20,12,6,.98) 62%),linear-gradient(180deg,rgba(var(--tint),.16),#0b0805)!important;border:2px solid var(--artist)!important;box-shadow:0 -12px 40px rgba(0,0,0,.6),0 0 40px var(--artist-glow),inset 0 1px 0 rgba(255,255,255,.08)!important;padding:18px 16px 16px!important}
 .v5main{display:flex;gap:14px;align-items:flex-start;margin:2px 0 4px}
-.v5poster{width:118px;flex:none;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08)}
+.v5poster{position:relative;width:118px;flex:none;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08)}
 .v5poster img{width:100%;display:block}
+/* The poster is 900x1200 and it was being shown at 118px wide with no way to see it
+   any bigger. Tapping it opens the full thing. The corner glyph is there because a
+   thumbnail that happens to be tappable is a secret - nobody hunts for it. */
+.v5poster.v5zoomable{cursor:zoom-in}
+.v5zoom{position:absolute;right:5px;bottom:5px;width:22px;height:22px;border-radius:6px;background:rgba(4,2,10,.68);border:1px solid rgba(255,255,255,.36);color:#fff;font:600 12px/20px system-ui,sans-serif;text-align:center;pointer-events:none}
+/* Body level, NOT inside the sheet. The vault sheet lives in a 3D-transformed flip
+   card, and a transformed ancestor becomes the containing block for position:fixed -
+   nested here it would be trapped inside the card instead of covering the screen.
+   z-index 96 clears the vault overlay (90) and the toast (95). */
+#artZoom{position:fixed;inset:0;z-index:96;background:rgba(4,2,10,.95);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+#artZoom.on{display:flex}
+#artZoom img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.75)}
+#azClose{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:16px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);border:1.5px solid rgba(255,255,255,.38);color:#fff;font-size:18px;line-height:1;cursor:pointer}
 .v5poster.v5noart{aspect-ratio:2/3;background:linear-gradient(160deg,rgba(var(--tint),.5),#160f08);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px}
 .v5poster.v5noart span{font-family:var(--disp);font-size:22px;color:#fff;line-height:.9}
 .v5head{min-width:0;flex:1}
@@ -571,6 +584,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 <div id="iosHint">Install: tap <b>Share ⬆︎</b> then <b>“Add to Home Screen”</b></div>
 <div class="ov" id="ov"><div id="sheet" style="width:100%;max-width:420px;display:flex;justify-content:center"></div></div>
 <div class="toast" id="toast"></div>
+<div id="artZoom" onclick="closeZoom()" aria-hidden="true"><button id="azClose" onclick="closeZoom()" aria-label="Close">✕</button><img id="azImg" src="" alt=""></div>
 
 <nav class="bnav">
   <button id="nav-play" class="on" onclick="setView('play')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>Play</button>
@@ -834,7 +848,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    page arrives with ?open=, so the lookup returned '0' and every plate URL was busted
    with ?v=0 forever - an updated plate would never reach anyone who had opened that
    sheet once. Kept in step with the printed build tag by the release step. */
-var SFSBUILD='v231';
+var SFSBUILD='v232';
 var CARDART={"adele":{"o":"#F4A330"},"arianagrande":{"o":"#FFF6E0","l":1},"ate":{"o":"#DAA459"},"beatles":{"o":"#FFF6E0","l":1},"beyonce":{"o":"#FDB728"},"biggie":{"o":"#FDC472"},"billieeilish":{"o":"#B9C709"},"billyjoel":{"o":"#DBB17D"},"bonjovi":{"o":"#FFF6E0","l":1},"bowie":{"o":"#F7AF7C"},"brunomars":{"o":"#FEA928"},"carrieunderwood":{"o":"#D9B87A"},"ccr":{"o":"#F2C772"},"chrisstapleton":{"o":"#F2BA7D"},"codyjohnson":{"o":"#85C9EB"},"coldplay":{"o":"#E9BA87"},"dmb":{"o":"#2A1305"},"dualipa":{"o":"#A3ABC1"},"eagles":{"o":"#261C12"},"edsheeran":{"o":"#ECAB84"},"ellalangley":{"o":"#F1987E"},"eminem":{"o":"#D1B99F"},"faithhill":{"o":"#F3A63D"},"fleetwoodmac":{"o":"#BEC5C8"},"foo":{"o":"#F69F6D"},"fthc":{"o":"#3D3717"},"gratefuldead":{"o":"#FFF6E0","l":1},"greenday":{"o":"#CEB799"},"grunge90s":{"o":"#EFC973"},"harrystyles":{"o":"#F99B37"},"hendrix":{"o":"#FFF6E0","l":1},"jasonaldean":{"o":"#EAAE5F"},"jellyroll":{"o":"#301407"},"justintimberlake":{"o":"#B1C1D3"},"katyperry":{"o":"#3DC2D8"},"kennychesney":{"o":"#F6C587"},"kidstoybox":{"o":"#002848"},"ladygaga":{"o":"#FFBD46"},"laineywilson":{"o":"#FFF6E0","l":1},"ledzeppelin":{"o":"#E6AE57"},"lukebryan":{"o":"#332818"},"lukecombs":{"o":"#F19F31"},"maroon5":{"o":"#642F09"},"metallica":{"o":"#EABE95"},"morganwallen":{"o":"#DB9D94"},"mv_action":{"o":"#F0AD51"},"mv_animated":{"o":"#FFF6E0","l":1},"mv_comedy":{"o":"#FFF6E0","l":1},"mv_crime":{"o":"#F0AF37"},"mv_drama":{"o":"#DCA969"},"mv_fantasy":{"o":"#FAAA41"},"mv_horror":{"o":"#DBC27D"},"mv_romance":{"o":"#FFF6E0","l":1},"mv_scifi":{"o":"#26BDF5"},"mv_sports":{"o":"#FFF6E0","l":1},"mv_superhero":{"o":"#1C1B26"},"mv_war":{"o":"#1F150C"},"nirvana":{"o":"#CACACB"},"oasis":{"o":"#DDBA92"},"onedirection":{"o":"#F4A62D"},"pearljam":{"o":"#FFF6E0","l":1},"postmalone":{"o":"#FBA874"},"queen":{"o":"#F1BE78"},"rhcp":{"o":"#FFF6E0","l":1},"rihanna":{"o":"#BBAB97"},"selenagomez":{"o":"#FFF6E0","l":1},"shaboozey":{"o":"#DEB177"},"smashingpumpkins":{"o":"#BCAEC2"},"springsteen":{"o":"#E6A59C"},"stones":{"o":"#FFF6E0","l":1},"stp":{"o":"#FFF6E0","l":1},"summerbeach":{"o":"#FFF6E0","l":1},"taylorswift":{"o":"#D4A26D"},"thewho":{"o":"#F0C382"},"timmcgraw":{"o":"#251C0A"},"tompetty":{"o":"#FFF6E0","l":1},"tv_binge":{"o":"#D9B87A"},"tv_cartoon":{"o":"#171F6C"},"tv_gameshow":{"o":"#000B4D"},"tv_growingup":{"o":"#86B6F7"},"tv_oldschool":{"o":"#D9B87A"},"tv_scifi":{"o":"#66BBF7"},"tv_sitcom":{"o":"#C8AE93"},"u2":{"o":"#7EC0F2"},"zachbryan":{"o":"#191F15"}};
 function coverHTML(v,label){
  var e=eraOf(v);
@@ -1192,11 +1206,24 @@ var FILMDATA={
  tv_growingup:{blurb:"The shows that defined your childhood, the ones you rushed home for, and the moments burned into your memory. From Boy Meets World and Saved by the Bell to Full House, Hey Arnold!, Lizzie McGuire and Recess — how well do you know the shows we grew up on?",std:"The shows everyone grew up on.",dlx:"Deep cuts, cult favorites, and the ones you forgot you loved."},
  tv_gameshow:{blurb:"The buzzers, the catchphrases, and the shows you yelled answers at from the couch. From Jeopardy! and Wheel of Fortune to The Price Is Right, Family Feud, Who Wants to Be a Millionaire and Press Your Luck — how well do you know the shows that made us all contestants?",std:"The game shows everyone knows.",dlx:"Deep cuts, cult classics, and the ones only true fans remember."}
 };
+/* Full-size poster view. Tapping anywhere closes it, image included - hunting for the
+   X on a phone is the wrong ask, and there is nothing to interact with underneath. */
+function zoomArt(src){
+  var z=document.getElementById('artZoom'), i=document.getElementById('azImg');
+  if(!z||!i||!src) return;
+  i.src=src+'?v='+SFSBUILD;
+  z.classList.add('on'); z.setAttribute('aria-hidden','false');
+}
+function closeZoom(){
+  var z=document.getElementById('artZoom');
+  if(z){ z.classList.remove('on'); z.setAttribute('aria-hidden','true'); }
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeZoom(); });
 function openVault(id){
  var v=byId(id); if(!v) return; V5ED='Standard'; V5SPORT=false; V5FILM=false;
  if(v.sp) return openSportsVault(v);
  var rk=artistColor(v); var d=SDATA[v.id]||{song:'Songs',last:v.name.split(' ').pop(),album:'Albums'};
- var poster = ART[v.id] ? '<div class="v5poster"><img src="'+ART[v.id]+'?v=7" alt=""></div>'
+ var poster = ART[v.id] ? '<div class="v5poster v5zoomable" onclick="zoomArt(\''+ART[v.id]+'\')" title="Tap to view the full poster"><img src="'+ART[v.id]+'?v=7" alt=""><span class="v5zoom">⤢</span></div>'
                         : '<div class="v5poster v5noart"><span>'+v.name.toUpperCase()+'</span></div>';
  var isFilm=(v.edition==='filmtv'); V5FILM=isFilm;
  var fdata=FILMDATA[v.id]||{blurb:'One shuffle of the moments only true fans remember \u2014 the ones you quote, replay, and never forget.',std:'The essentials everyone knows and loves.',dlx:'Deeper cuts and forgotten favorites.'};
@@ -1353,4 +1380,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v231</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v232</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
