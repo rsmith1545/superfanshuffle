@@ -55,7 +55,7 @@ body.brandbar-on #brandBar{transform:translateY(0);opacity:1;pointer-events:auto
 .tabs button{font-family:var(--disp);font-size:18px;letter-spacing:1px;padding:5px 16px;border-radius:22px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:var(--dim);cursor:pointer}
 .tabs button.on{color:#12002a;background:var(--accent);border-color:transparent;box-shadow:0 0 14px -2px var(--accent)}
 h2{font-family:var(--disp);font-size:23px;letter-spacing:1px;margin:20px 4px 8px;text-transform:uppercase;color:#fff}
-h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;padding:2px 8px;border-radius:20px;background:rgba(255,92,240,.22);color:#ffd7f6;font-family:var(--body);font-weight:700}
+h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;padding:2px 8px;border-radius:20px;background:rgba(255,92,240,.22);color:#ffd7f6;font-family:var(--body);font-weight:700;white-space:nowrap;display:inline-block}
 .row{display:flex;gap:13px;overflow-x:auto;padding:4px 4px 12px;scroll-snap-type:x mandatory}
 .row::-webkit-scrollbar{display:none}
 /* vault tile — photoreal era-object on a translucent purple frosted container; artist name rendered below. */
@@ -624,8 +624,8 @@ function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)ret
    No counts stored for display; free tiles show only "FREE" (countdown removed until a rotation calendar is real). */
 var VAULTS=[
  /* --- 64 brackets (feeder = CYC), Kworb-sorted within each category --- */
- {id:'kidstoybox', name:"Kids Toybox", edition:'music', cat:'', bk:'', badge:'free', c:['#3aa0d8','#f05aa0'], dark:1},
- {id:'summerbeach', name:"Summer Beach Bash", edition:'music', cat:'', bk:'', badge:'free', c:['#f0983a','#f05a7a'], dark:1},
+ {id:'kidstoybox', name:"Kids Toybox", edition:'family', playAs:'music', cat:'', bk:'', badge:'free', c:['#3aa0d8','#f05aa0'], dark:1},
+ {id:'summerbeach', name:"Summer Beach Bash", edition:'family', playAs:'music', cat:'', bk:'', badge:'free', c:['#f0983a','#f05a7a'], dark:1},
  {id:'taylorswift', name:"Taylor Swift", edition:'music', cat:'Pop', bk:'taylorswift', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
  {id:'arianagrande', name:"Ariana Grande", edition:'music', cat:'Pop', bk:'arianagrande', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
  {id:'edsheeran', name:"Ed Sheeran", edition:'music', cat:'Pop', bk:'edsheeran', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
@@ -863,7 +863,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    page arrives with ?open=, so the lookup returned '0' and every plate URL was busted
    with ?v=0 forever - an updated plate would never reach anyone who had opened that
    sheet once. Kept in step with the printed build tag by the release step. */
-var SFSBUILD='v236';
+var SFSBUILD='v237';
 var CARDART={"adele":{"o":"#F4A330"},"arianagrande":{"o":"#FFF6E0","l":1},"ate":{"o":"#DAA459"},"beatles":{"o":"#FFF6E0","l":1},"beyonce":{"o":"#FDB728"},"biggie":{"o":"#FDC472"},"billieeilish":{"o":"#B9C709"},"billyjoel":{"o":"#DBB17D"},"bonjovi":{"o":"#FFF6E0","l":1},"bowie":{"o":"#F7AF7C"},"brunomars":{"o":"#FEA928"},"carrieunderwood":{"o":"#D9B87A"},"ccr":{"o":"#F2C772"},"chrisstapleton":{"o":"#F2BA7D"},"codyjohnson":{"o":"#85C9EB"},"coldplay":{"o":"#E9BA87"},"dmb":{"o":"#2A1305"},"dualipa":{"o":"#A3ABC1"},"eagles":{"o":"#261C12"},"edsheeran":{"o":"#ECAB84"},"ellalangley":{"o":"#F1987E"},"eminem":{"o":"#D1B99F"},"faithhill":{"o":"#F3A63D"},"fleetwoodmac":{"o":"#BEC5C8"},"foo":{"o":"#F69F6D"},"fthc":{"o":"#3D3717"},"gratefuldead":{"o":"#FFF6E0","l":1},"greenday":{"o":"#CEB799"},"grunge90s":{"o":"#EFC973"},"harrystyles":{"o":"#F99B37"},"hendrix":{"o":"#FFF6E0","l":1},"jasonaldean":{"o":"#EAAE5F"},"jellyroll":{"o":"#301407"},"justintimberlake":{"o":"#B1C1D3"},"katyperry":{"o":"#3DC2D8"},"kennychesney":{"o":"#F6C587"},"kidstoybox":{"o":"#002848"},"ladygaga":{"o":"#FFBD46"},"laineywilson":{"o":"#FFF6E0","l":1},"ledzeppelin":{"o":"#E6AE57"},"lukebryan":{"o":"#332818"},"lukecombs":{"o":"#F19F31"},"maroon5":{"o":"#642F09"},"metallica":{"o":"#EABE95"},"morganwallen":{"o":"#DB9D94"},"mv_action":{"o":"#F0AD51"},"mv_animated":{"o":"#FFF6E0","l":1},"mv_comedy":{"o":"#FFF6E0","l":1},"mv_crime":{"o":"#F0AF37"},"mv_drama":{"o":"#DCA969"},"mv_fantasy":{"o":"#FAAA41"},"mv_horror":{"o":"#DBC27D"},"mv_romance":{"o":"#FFF6E0","l":1},"mv_scifi":{"o":"#26BDF5"},"mv_sports":{"o":"#FFF6E0","l":1},"mv_superhero":{"o":"#1C1B26"},"mv_war":{"o":"#1F150C"},"nirvana":{"o":"#CACACB"},"oasis":{"o":"#DDBA92"},"onedirection":{"o":"#F4A62D"},"pearljam":{"o":"#FFF6E0","l":1},"postmalone":{"o":"#FBA874"},"queen":{"o":"#F1BE78"},"rhcp":{"o":"#FFF6E0","l":1},"rihanna":{"o":"#BBAB97"},"selenagomez":{"o":"#FFF6E0","l":1},"shaboozey":{"o":"#DEB177"},"smashingpumpkins":{"o":"#BCAEC2"},"springsteen":{"o":"#E6A59C"},"stones":{"o":"#FFF6E0","l":1},"stp":{"o":"#FFF6E0","l":1},"summerbeach":{"o":"#FFF6E0","l":1},"taylorswift":{"o":"#D4A26D"},"thewho":{"o":"#F0C382"},"timmcgraw":{"o":"#251C0A"},"tompetty":{"o":"#FFF6E0","l":1},"tv_binge":{"o":"#D9B87A"},"tv_cartoon":{"o":"#171F6C"},"tv_gameshow":{"o":"#000B4D"},"tv_growingup":{"o":"#86B6F7"},"tv_oldschool":{"o":"#D9B87A"},"tv_scifi":{"o":"#66BBF7"},"tv_sitcom":{"o":"#C8AE93"},"u2":{"o":"#7EC0F2"},"zachbryan":{"o":"#191F15"}};
 function coverHTML(v,label){
  var e=eraOf(v);
@@ -949,11 +949,12 @@ function playHTML(){
  var ed=curEdition, h='';
  var vaults=VAULTS.filter(function(v){return onShelf(v,ed);});
  var freeV=vaults.filter(function(v){return v.badge==='free';});
- /* Built once, placed differently per edition. On MUSIC the free shelf sits below
-    Featured of the Week - the first screen should lead with the marquee vault, not
-    with the taster. Other editions still open with it. */
+ /* Built once, placed differently per edition, and now only Family has anything in
+    it - both free tasters were moved off the Music shelf. The row still leads every
+    non-music world and still sits below Featured of the Week on Music, so if a free
+    vault is ever shelved back on Music nothing needs rewriting. */
  var freeHTML = freeV.length
-   ? '<h2>Try for Free <span class="pill">5-question taste</span></h2><div class="row">'+freeV.map(function(v){return tileHTML(v);}).join('')+'</div>'
+   ? '<h2>Play for Free <span class="pill">5-question taste</span></h2><div class="row">'+freeV.map(function(v){return tileHTML(v);}).join('')+'</div>'
    : '';
  if(ed!=='music') h+=freeHTML;
  if(ed==='music'){
@@ -1138,7 +1139,11 @@ function render(){
 }
 
 /* vault tap: free → 5-question taste; paid → fly-in detail card */
-function launchURL(v){ var u='/play.html?vault='+encodeURIComponent(v.id)+'&n='+encodeURIComponent(v.name)+'&ed='+encodeURIComponent(v.edition||'music')
+/* playAs: a vault can be shelved in one world and played by another world's engine.
+   The two free tasters sit on Family but deal songs, so they must launch as music -
+   otherwise play.html loses the clue chips, the copy and the quick-play grid, all of
+   which are keyed off ed=. Shelf position and deck flavour are separate questions. */
+function launchURL(v){ var u='/play.html?vault='+encodeURIComponent(v.id)+'&n='+encodeURIComponent(v.name)+'&ed='+encodeURIComponent(v.playAs||v.edition||'music')
  /* selEd() set V5ED on the vault sheet and it was never put on the URL, so play.html
     always fell back to its defaults and choosing Deluxe before a game did nothing.
     Edition is the only real setting here - it swaps the deck. The Beginner/Superfan
@@ -1410,4 +1415,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v236</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v237</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
