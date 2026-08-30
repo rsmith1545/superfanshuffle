@@ -1005,12 +1005,18 @@ var DECKS=null;
    All three now look for their own file; a missing one is not an error, the edition just
    has no Deluxe yet and the UI hides the choice (see custAvail). Drop music-decks.json
    in and it lights up with no code change. */
-var DECKFILE={filmtv:'film-decks.json?v=231', music:'music-decks.json?v=1', sports:'sports-decks.json?v=1'};
+var DECKFILE={filmtv:'film-decks.json?v=231', music:'music-decks.json?v=1', sports:'sports-decks.json?v=1', family:'family-decks.json?v=1'};
+/* DECKS===null meant two different things and the difference matters: "the file for
+   this edition does not exist yet" and "the file loaded and this vault simply is not
+   in it". Both fell through to the built-in music DECK, which is why a Cartoon TV
+   vault dealt Bohemian Rhapsody. Only the first case may fall back. */
+var DECKSTATE='none';
 (function(){
   var f=DECKFILE[Q.get('ed')||'music']; if(!f) return;
+  DECKSTATE='loading';
   fetch(f).then(function(r){ if(!r.ok) throw 0; return r.json(); })
-          .then(function(j){ DECKS=j; try{ syncCustAvail(); }catch(e){} })
-          .catch(function(){});
+          .then(function(j){ DECKS=j; DECKSTATE='ok'; try{ syncCustAvail(); }catch(e){} })
+          .catch(function(){ DECKSTATE='none'; });
 })();
 /* Does THIS vault actually have a second deck to switch to? */
 function hasDeluxe(){
@@ -1035,6 +1041,10 @@ function activeDeck(){
     if(PREVIEW || REDITION!=='Deluxe') return out;
     return out.concat(d.deluxe||[], d.dlxChars||[]);
   }
+  /* The file loaded and this vault is not in it - it has no deck yet. Dealing the
+     music list here is worse than dealing nothing, because nothing is visibly broken
+     and songs in a Cartoon TV vault are not. */
+  if(DECKSTATE!=='none') return [];   /* 'loading' counts: better empty for a moment than wrong forever */
   return DECK.slice();
 }
 var _CHARSET=null;
@@ -1075,6 +1085,18 @@ function persistSeen(){ try{ var k=_seenKey(REDITION); var cur=JSON.parse(localS
    through the deck begins. */
 function seenSet(){ try{ return JSON.parse(localStorage.getItem(_seenKey(REDITION))||'{}'); }catch(e){ return {}; } }
 function clearSeen(){ try{ localStorage.removeItem(_seenKey(REDITION)); }catch(e){} }
+/* Shown instead of a round when a vault has no cards. Says which vault, so a report
+   of "it just bounced me back" is actionable. */
+function noDeckNotice(){
+  var el=document.getElementById('sStart')||document.body;
+  var n=document.getElementById('noDeckMsg');
+  if(!n){ n=document.createElement('div'); n.id='noDeckMsg';
+    n.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:99999;max-width:82%;padding:18px 20px;border-radius:14px;background:rgba(12,10,20,.96);border:1px solid rgba(255,255,255,.18);color:#fff;font:600 15px/1.45 system-ui,sans-serif;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.6)';
+    document.body.appendChild(n); }
+  n.innerHTML='<b>'+(VAULT_NAME||'This vault')+'</b> is still being built.<br><span style="opacity:.75;font-weight:500">Its cards are not ready yet \u2014 pick another vault.</span>'
+    +'<div style="margin-top:14px"><button style="font:700 14px system-ui;padding:9px 18px;border-radius:999px;border:0;background:#3EDBFF;color:#04202a" onclick="qpgExit()">Back to vaults</button></div>';
+  n.style.display='';
+}
 function dealOrder(){
   var deck=activeDeck();
   if(deck.length<2) return deck.slice();
@@ -1411,7 +1433,14 @@ function flash(good,label){
     if(last2){ endPreview(); return; }
     app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }, good?620:550);
 }
+var _startWait=0;
 function startGame(){
+  /* The deck file is fetched async. Tapping PLAY before it lands used to deal the
+     built-in music list; now activeDeck() is empty until it resolves, so wait for it
+     rather than starting a round we would have to throw away. */
+  if(DECKSTATE==='loading' && _startWait<20){ _startWait++; setTimeout(startGame,120); return; }
+  _startWait=0;
+  if(activeDeck().length<5){ noDeckNotice(); return; }
   order=dealOrder(); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
   document.getElementById('score').textContent='0';
   show('sGame'); app.classList.remove('st-correct','st-pass','st-timeup');
@@ -1527,7 +1556,7 @@ function endGame(){
 }
 /* tier verdict = the payoff (hero); score is support */
 var ED=(Q.get('ed')||'music');
-(function(){ var CLUES={sports:'Say the first name &middot; Position and years &middot; Awards, All-Star games, big moments',filmtv:'Name the actors &middot; Use the year on the card &middot; Mention awards it won &middot; Act out a scene',music:'Hum it &middot; Sing a line &middot; Describe it &middot; Act it out'}; var el=document.getElementById('clueLine'); if(el){ var nm=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME+' ':''; el.innerHTML='<span class="clueLbl">For this '+nm+'Vault:</span> '+(CLUES[ED]||CLUES.music); } })();
+(function(){ var CLUES={sports:'Say the first name &middot; Position and years &middot; Awards, All-Star games, big moments',filmtv:'Name the actors &middot; Use the year on the card &middot; Mention awards it won &middot; Act out a scene',music:'Hum it &middot; Sing a line &middot; Describe it &middot; Act it out',family:'Say what it looks like &middot; Say where you find it &middot; Say what you do with it &middot; Make the sound it makes'}; var el=document.getElementById('clueLine'); if(el){ var nm=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME+' ':''; el.innerHTML='<span class="clueLbl">For this '+nm+'Vault:</span> '+(CLUES[ED]||CLUES.music); } })();
 /* ===== TEST MODE =====
    Set to false for production. Shows a footer readout of how much of the deck this
    player has actually seen, which is the only way to tell "the shuffle is repeating"
@@ -1541,7 +1570,8 @@ function hexA(h,a){ h=(h||'').replace('#',''); if(h.length!==6) return 'rgba(40,
 var EDTHEME={
  music:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(124,64,224,.34),transparent 60%),linear-gradient(180deg,rgba(26,13,51,.86) 0%,rgba(13,8,25,.80) 60%,rgba(8,5,17,.72) 100%)",bord:"rgba(126,86,224,.55)"},
  filmtv:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(150,110,30,.30),transparent 60%),linear-gradient(180deg,rgba(20,16,9,.86) 0%,rgba(11,10,16,.80) 60%,rgba(8,7,10,.72) 100%)",bord:"rgba(242,193,78,.45)"},
- sports:{grad:"radial-gradient(110% 60% at 88% -6%,rgba(255,120,30,.24),transparent 55%),radial-gradient(95% 60% at 6% 6%,rgba(22,44,86,.55),transparent 60%),linear-gradient(180deg,rgba(14,22,38,.86) 0%,rgba(10,14,24,.80) 60%,rgba(7,9,15,.72) 100%)",bord:"rgba(255,138,42,.45)"}
+ sports:{grad:"radial-gradient(110% 60% at 88% -6%,rgba(255,120,30,.24),transparent 55%),radial-gradient(95% 60% at 6% 6%,rgba(22,44,86,.55),transparent 60%),linear-gradient(180deg,rgba(14,22,38,.86) 0%,rgba(10,14,24,.80) 60%,rgba(7,9,15,.72) 100%)",bord:"rgba(255,138,42,.45)"},
+ family:{grad:"radial-gradient(120% 75% at 50% -8%,rgba(61,214,140,.26),transparent 60%),linear-gradient(180deg,rgba(10,34,26,.86) 0%,rgba(8,22,18,.80) 60%,rgba(6,14,11,.72) 100%)",bord:"rgba(61,214,140,.45)"}
 };
 var ICON={
  rookie:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3l7 2.2v5.1c0 5-3.4 8.3-7 10.2-3.6-1.9-7-5.2-7-10.2V5.2z"/></svg>',
@@ -1574,7 +1604,12 @@ var EDCOPY={
          mix:'players, coaches, stadiums &amp; team lore',
          std:'The names every fan knows.',
          dlx:'The full roster \u2014 depth, history &amp; role players.',
-         share:'Know Your Team'}
+         share:'Know Your Team'},
+ family:{hero:'Who Knows Best?',
+         mix:'toys, treats &amp; everyday things',
+         std:'The ones every kid knows.',
+         dlx:'Everything \u2014 trickier picks for big kids.',
+         share:'Who Knows Best?'}
 };
 function edCopy(){ return EDCOPY[ED] || EDCOPY.music; }
 function applyEdCopy(){
@@ -1905,7 +1940,7 @@ function qpgU(){return '<svg width="55%" height="55%" viewBox="0 0 24 24" fill="
    so the guide is app chrome: the sports edition orange plus the standing light blue.
    Team colours still drive the GAME screens via #app:is(.sportcard,.filmcard) - that is unchanged. */
 var QPG_BG='#0e1c2e';
-var QPG_ACCENT={sports:'#FF8A2A', music:'#ff5cf0', filmtv:'#F2C14E'};  /* each = that edition's tint in the store */
+var QPG_ACCENT={sports:'#FF8A2A', music:'#ff5cf0', filmtv:'#F2C14E', family:'#3DD68C'};  /* each = that edition's tint in the store */
 var QPG_SECOND='#5fa8e8';
 function _qRgb(h){ h=(h||'').replace('#',''); if(h.length!==6) return null;
  return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)]; }
@@ -1943,7 +1978,14 @@ var QPGCFG={
    ['hands','ACT IT OUT','Use actions, gestures or movement.','qo']],
   clues:[['disc','Album'],['cal','Year'],['star','Artist<br>Facts'],['heart',"What It's<br>About"]],
   beg:['Hum it. Sing it. Say it.',''],
-  sup:['Lyrics only.','No chorus.']}
+  sup:['Lyrics only.','No chorus.']},
+ family:{cls:'q4', clueHead:'OTHER CLUES YOU CAN USE', how:[
+   ['bubble','DESCRIBE IT','Say what it looks like without naming it.','qb'],
+   ['hands','ACT IT OUT','Show how you use it.','qo'],
+   ['note','SOUND IT OUT','The noise it makes counts.','qb']],
+  clues:[['star','What It<br>Looks Like'],['heart','Where You<br>Find It'],['cal','When You<br>Use It'],['disc','What You<br>Do With It']],
+  beg:['Anything but the word itself.',''],
+  sup:['One word clues only.','No acting.']}
 };
 function qpgFilmIco(n){
  if(n=='clap')return '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="8.5" width="19" height="12" rx="2"/><path d="M2.9 8.5l2.6-4 4.4-.9-2.6 4zM9.9 7.6l2.6-4 4.4-.9-2.6 4zM16.9 6.7l2.6-4 2 1.4-2 3.1z" fill="currentColor" stroke="none"/></svg>';
@@ -2052,7 +2094,7 @@ function qpgExit(){
  try{ if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen(); }catch(e){}
  if(history.length>1){ history.back(); } else { location.href='index.html'; }
 }
-if(ED==='sports'||ED==='music'||ED==='filmtv'){ try{ renderQPG(); }catch(e){} }
+if(QPGCFG[ED]){ try{ renderQPG(); }catch(e){} }   /* was a hardcoded list of three; family was silently excluded */
 
 /* sports vaults get their own card colours + wall copy from the very first screen */
 if(ED==='filmtv'){ try{ applyFilmCard(); }catch(e){} }

@@ -616,6 +616,18 @@ var EDITIONS=[
 /* A vault has one HOME edition - the world whose theme and legal line it inherits -
    and may be shelved in others via also:[]. onShelf is the only question the vault
    lists should ask; v.edition stays the home and is what theming still keys off. */
+/* A seasonal vault shelves itself. season:{from,to} are MM-DD and the window may wrap
+   the year end (Holiday runs 11-15 to 01-02), so a wrapping window is "outside the
+   inverted range" rather than "between the two dates". Vaults without a season are
+   evergreen and always in. Deliberately local time: the shelf should turn over on the
+   player's Halloween, not UTC's. */
+function inSeason(v,now){
+  if(!v.season) return true;
+  var d=now||new Date();
+  var t=('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+  var a=v.season.from, b=v.season.to;
+  return (a<=b) ? (t>=a && t<=b) : (t>=a || t<=b);
+}
 function onShelf(v,ed){ return v.edition===ed || (v.also && v.also.indexOf(ed)>=0); }
 function editionVisible(e){ return e.enabled || DEV_PREVIEW; }
 function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)return EDITIONS[i];}
@@ -624,8 +636,10 @@ function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)ret
    No counts stored for display; free tiles show only "FREE" (countdown removed until a rotation calendar is real). */
 var VAULTS=[
  /* --- 64 brackets (feeder = CYC), Kworb-sorted within each category --- */
- {id:'kidstoybox', name:"Kids Toybox", edition:'family', playAs:'music', cat:'', bk:'', badge:'free', c:['#3aa0d8','#f05aa0'], dark:1},
- {id:'summerbeach', name:"Summer Beach Bash", edition:'family', playAs:'music', cat:'', bk:'', badge:'free', c:['#f0983a','#f05a7a'], dark:1},
+ {id:'kidstoybox', name:"Kids Toybox", edition:'family', cat:'', bk:'', badge:'free', c:['#3aa0d8','#f05aa0'], dark:1},
+ {id:'fam_halloween', name:"Spooky Season", edition:'family', season:{from:'09-11',to:'11-10'}, cat:'', bk:'', badge:'free', c:['#f07a1e','#6a2a9e'], dark:1},
+ {id:'fam_holiday', name:"Holiday Countdown", edition:'family', season:{from:'11-11',to:'01-02'}, cat:'', bk:'', badge:'free', c:['#c8102e','#1e7a4a'], dark:1},
+ {id:'summerbeach', name:"Summer Beach Bash", edition:'family', season:{from:'05-15',to:'09-10'}, cat:'', bk:'', badge:'free', c:['#f0983a','#f05a7a'], dark:1},
  {id:'taylorswift', name:"Taylor Swift", edition:'music', cat:'Pop', bk:'taylorswift', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
  {id:'arianagrande', name:"Ariana Grande", edition:'music', cat:'Pop', bk:'arianagrande', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
  {id:'edsheeran', name:"Ed Sheeran", edition:'music', cat:'Pop', bk:'edsheeran', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
@@ -863,7 +877,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    page arrives with ?open=, so the lookup returned '0' and every plate URL was busted
    with ?v=0 forever - an updated plate would never reach anyone who had opened that
    sheet once. Kept in step with the printed build tag by the release step. */
-var SFSBUILD='v237';
+var SFSBUILD='v238';
 var CARDART={"adele":{"o":"#F4A330"},"arianagrande":{"o":"#FFF6E0","l":1},"ate":{"o":"#DAA459"},"beatles":{"o":"#FFF6E0","l":1},"beyonce":{"o":"#FDB728"},"biggie":{"o":"#FDC472"},"billieeilish":{"o":"#B9C709"},"billyjoel":{"o":"#DBB17D"},"bonjovi":{"o":"#FFF6E0","l":1},"bowie":{"o":"#F7AF7C"},"brunomars":{"o":"#FEA928"},"carrieunderwood":{"o":"#D9B87A"},"ccr":{"o":"#F2C772"},"chrisstapleton":{"o":"#F2BA7D"},"codyjohnson":{"o":"#85C9EB"},"coldplay":{"o":"#E9BA87"},"dmb":{"o":"#2A1305"},"dualipa":{"o":"#A3ABC1"},"eagles":{"o":"#261C12"},"edsheeran":{"o":"#ECAB84"},"ellalangley":{"o":"#F1987E"},"eminem":{"o":"#D1B99F"},"faithhill":{"o":"#F3A63D"},"fleetwoodmac":{"o":"#BEC5C8"},"foo":{"o":"#F69F6D"},"fthc":{"o":"#3D3717"},"gratefuldead":{"o":"#FFF6E0","l":1},"greenday":{"o":"#CEB799"},"grunge90s":{"o":"#EFC973"},"harrystyles":{"o":"#F99B37"},"hendrix":{"o":"#FFF6E0","l":1},"jasonaldean":{"o":"#EAAE5F"},"jellyroll":{"o":"#301407"},"justintimberlake":{"o":"#B1C1D3"},"katyperry":{"o":"#3DC2D8"},"kennychesney":{"o":"#F6C587"},"kidstoybox":{"o":"#002848"},"ladygaga":{"o":"#FFBD46"},"laineywilson":{"o":"#FFF6E0","l":1},"ledzeppelin":{"o":"#E6AE57"},"lukebryan":{"o":"#332818"},"lukecombs":{"o":"#F19F31"},"maroon5":{"o":"#642F09"},"metallica":{"o":"#EABE95"},"morganwallen":{"o":"#DB9D94"},"mv_action":{"o":"#F0AD51"},"mv_animated":{"o":"#FFF6E0","l":1},"mv_comedy":{"o":"#FFF6E0","l":1},"mv_crime":{"o":"#F0AF37"},"mv_drama":{"o":"#DCA969"},"mv_fantasy":{"o":"#FAAA41"},"mv_horror":{"o":"#DBC27D"},"mv_romance":{"o":"#FFF6E0","l":1},"mv_scifi":{"o":"#26BDF5"},"mv_sports":{"o":"#FFF6E0","l":1},"mv_superhero":{"o":"#1C1B26"},"mv_war":{"o":"#1F150C"},"nirvana":{"o":"#CACACB"},"oasis":{"o":"#DDBA92"},"onedirection":{"o":"#F4A62D"},"pearljam":{"o":"#FFF6E0","l":1},"postmalone":{"o":"#FBA874"},"queen":{"o":"#F1BE78"},"rhcp":{"o":"#FFF6E0","l":1},"rihanna":{"o":"#BBAB97"},"selenagomez":{"o":"#FFF6E0","l":1},"shaboozey":{"o":"#DEB177"},"smashingpumpkins":{"o":"#BCAEC2"},"springsteen":{"o":"#E6A59C"},"stones":{"o":"#FFF6E0","l":1},"stp":{"o":"#FFF6E0","l":1},"summerbeach":{"o":"#FFF6E0","l":1},"taylorswift":{"o":"#D4A26D"},"thewho":{"o":"#F0C382"},"timmcgraw":{"o":"#251C0A"},"tompetty":{"o":"#FFF6E0","l":1},"tv_binge":{"o":"#D9B87A"},"tv_cartoon":{"o":"#171F6C"},"tv_gameshow":{"o":"#000B4D"},"tv_growingup":{"o":"#86B6F7"},"tv_oldschool":{"o":"#D9B87A"},"tv_scifi":{"o":"#66BBF7"},"tv_sitcom":{"o":"#C8AE93"},"u2":{"o":"#7EC0F2"},"zachbryan":{"o":"#191F15"}};
 function coverHTML(v,label){
  var e=eraOf(v);
@@ -948,7 +962,7 @@ function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(functi
 function playHTML(){
  var ed=curEdition, h='';
  var vaults=VAULTS.filter(function(v){return onShelf(v,ed);});
- var freeV=vaults.filter(function(v){return v.badge==='free';});
+ var freeV=vaults.filter(function(v){return v.badge==='free' && inSeason(v);});
  /* Built once, placed differently per edition, and now only Family has anything in
     it - both free tasters were moved off the Music shelf. The row still leads every
     non-music world and still sits below Featured of the Week on Music, so if a free
@@ -1415,4 +1429,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v237</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v238</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
