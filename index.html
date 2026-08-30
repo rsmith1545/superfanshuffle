@@ -613,6 +613,10 @@ var EDITIONS=[
     gold and orange, and green is the only primary left that reads at pill size. */
  {id:'family', label:'Family',    enabled:true,  accent:'#3DD68C'}
 ];
+/* A vault has one HOME edition - the world whose theme and legal line it inherits -
+   and may be shelved in others via also:[]. onShelf is the only question the vault
+   lists should ask; v.edition stays the home and is what theming still keys off. */
+function onShelf(v,ed){ return v.edition===ed || (v.also && v.also.indexOf(ed)>=0); }
 function editionVisible(e){ return e.enabled || DEV_PREVIEW; }
 function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)return EDITIONS[i];}
 
@@ -689,7 +693,7 @@ var VAULTS=[
  {id:'grunge90s', name:"90s Grunge", edition:'music', cat:'Party', bk:null, badge:'prem', c:['#2a3a3a','#5a7a7a'], dark:1},
  /* --- Sports edition: one LIVE free seed + generic placeholders --- */
  /* --- Film & TV edition: Movies row + TV row (art posters) --- */
- {id:'mv_animated', name:'Animated Movie', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_animated', name:'Animated Movie', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Shows & Movies'},
  {id:'mv_drama', name:'Drama Movie', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_scifi', name:'Sci-Fi Movie', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_fantasy', name:'Fantasy Movie', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
@@ -859,7 +863,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    page arrives with ?open=, so the lookup returned '0' and every plate URL was busted
    with ?v=0 forever - an updated plate would never reach anyone who had opened that
    sheet once. Kept in step with the printed build tag by the release step. */
-var SFSBUILD='v233';
+var SFSBUILD='v234';
 var CARDART={"adele":{"o":"#F4A330"},"arianagrande":{"o":"#FFF6E0","l":1},"ate":{"o":"#DAA459"},"beatles":{"o":"#FFF6E0","l":1},"beyonce":{"o":"#FDB728"},"biggie":{"o":"#FDC472"},"billieeilish":{"o":"#B9C709"},"billyjoel":{"o":"#DBB17D"},"bonjovi":{"o":"#FFF6E0","l":1},"bowie":{"o":"#F7AF7C"},"brunomars":{"o":"#FEA928"},"carrieunderwood":{"o":"#D9B87A"},"ccr":{"o":"#F2C772"},"chrisstapleton":{"o":"#F2BA7D"},"codyjohnson":{"o":"#85C9EB"},"coldplay":{"o":"#E9BA87"},"dmb":{"o":"#2A1305"},"dualipa":{"o":"#A3ABC1"},"eagles":{"o":"#261C12"},"edsheeran":{"o":"#ECAB84"},"ellalangley":{"o":"#F1987E"},"eminem":{"o":"#D1B99F"},"faithhill":{"o":"#F3A63D"},"fleetwoodmac":{"o":"#BEC5C8"},"foo":{"o":"#F69F6D"},"fthc":{"o":"#3D3717"},"gratefuldead":{"o":"#FFF6E0","l":1},"greenday":{"o":"#CEB799"},"grunge90s":{"o":"#EFC973"},"harrystyles":{"o":"#F99B37"},"hendrix":{"o":"#FFF6E0","l":1},"jasonaldean":{"o":"#EAAE5F"},"jellyroll":{"o":"#301407"},"justintimberlake":{"o":"#B1C1D3"},"katyperry":{"o":"#3DC2D8"},"kennychesney":{"o":"#F6C587"},"kidstoybox":{"o":"#002848"},"ladygaga":{"o":"#FFBD46"},"laineywilson":{"o":"#FFF6E0","l":1},"ledzeppelin":{"o":"#E6AE57"},"lukebryan":{"o":"#332818"},"lukecombs":{"o":"#F19F31"},"maroon5":{"o":"#642F09"},"metallica":{"o":"#EABE95"},"morganwallen":{"o":"#DB9D94"},"mv_action":{"o":"#F0AD51"},"mv_animated":{"o":"#FFF6E0","l":1},"mv_comedy":{"o":"#FFF6E0","l":1},"mv_crime":{"o":"#F0AF37"},"mv_drama":{"o":"#DCA969"},"mv_fantasy":{"o":"#FAAA41"},"mv_horror":{"o":"#DBC27D"},"mv_romance":{"o":"#FFF6E0","l":1},"mv_scifi":{"o":"#26BDF5"},"mv_sports":{"o":"#FFF6E0","l":1},"mv_superhero":{"o":"#1C1B26"},"mv_war":{"o":"#1F150C"},"nirvana":{"o":"#CACACB"},"oasis":{"o":"#DDBA92"},"onedirection":{"o":"#F4A62D"},"pearljam":{"o":"#FFF6E0","l":1},"postmalone":{"o":"#FBA874"},"queen":{"o":"#F1BE78"},"rhcp":{"o":"#FFF6E0","l":1},"rihanna":{"o":"#BBAB97"},"selenagomez":{"o":"#FFF6E0","l":1},"shaboozey":{"o":"#DEB177"},"smashingpumpkins":{"o":"#BCAEC2"},"springsteen":{"o":"#E6A59C"},"stones":{"o":"#FFF6E0","l":1},"stp":{"o":"#FFF6E0","l":1},"summerbeach":{"o":"#FFF6E0","l":1},"taylorswift":{"o":"#D4A26D"},"thewho":{"o":"#F0C382"},"timmcgraw":{"o":"#251C0A"},"tompetty":{"o":"#FFF6E0","l":1},"tv_binge":{"o":"#D9B87A"},"tv_cartoon":{"o":"#171F6C"},"tv_gameshow":{"o":"#000B4D"},"tv_growingup":{"o":"#86B6F7"},"tv_oldschool":{"o":"#D9B87A"},"tv_scifi":{"o":"#66BBF7"},"tv_sitcom":{"o":"#C8AE93"},"u2":{"o":"#7EC0F2"},"zachbryan":{"o":"#191F15"}};
 function coverHTML(v,label){
  var e=eraOf(v);
@@ -943,7 +947,7 @@ function legalFooterHTML(){
 function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(function(v){return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'</div>';}).join(''); return '<h2>'+title+'</h2><div class="row">'+t+'</div>'; }
 function playHTML(){
  var ed=curEdition, h='';
- var vaults=VAULTS.filter(function(v){return v.edition===ed;});
+ var vaults=VAULTS.filter(function(v){return onShelf(v,ed);});
  var freeV=vaults.filter(function(v){return v.badge==='free';});
  /* Built once, placed differently per edition. On MUSIC the free shelf sits below
     Featured of the Week - the first screen should lead with the marquee vault, not
@@ -964,6 +968,18 @@ function playHTML(){
  } else if(ed==='filmtv'){
    h+=shelf('Movies', vaults.filter(function(v){return v.cat==='Movies';}), 1, true);
    h+=shelf('TV', vaults.filter(function(v){return v.cat==='TV';}), 1, true);
+ } else if(ed==='family'){
+   /* Two rows, split the way a parent shops rather than by what the content is:
+      the fandom half a child asks for by name, and the concrete-noun half a parent
+      picks because it suits the age. A row with nothing on it is not rendered - an
+      empty shelf reads as broken in a way "Coming soon" does not. */
+   var famRows=[['Shows & Movies','Shows & Movies'],['Everyday Fun','Everyday Fun']];
+   var anyFam=false;
+   famRows.forEach(function(r){
+     var inRow=vaults.filter(function(v){return (v.famcat||v.cat)===r[1];});
+     if(inRow.length){ anyFam=true; h+=shelf(r[0], inRow, 1, true); }
+   });
+   if(!anyFam) h+='<div class="note">Coming soon.</div>';
  } else {
    h+='<div class="note">Coming soon.</div>';
  }
@@ -1007,7 +1023,7 @@ function browseRow(v,showCat){
 }
 function edVaults(ed,q){
  return VAULTS.filter(function(v){
-   if(v.edition!==ed) return false;
+   if(!onShelf(v,ed)) return false;
    if(ed==='sports' && !v.sp) return false;
    if(v.edition==='music' && v.cat==='Best Of') return false;
    return !q || v.name.toLowerCase().indexOf(q)>=0;
@@ -1043,7 +1059,10 @@ function browseList(q){
  return h;
 }
 function browseOpen(id){ var v=byId(id); if(!v) return;
- if(v.edition && v.edition!==curEdition){
+ /* Only jump worlds if the vault is not on the CURRENT shelf. Without this a
+    Family player tapping a shared vault gets silently thrown into Film & TV
+    with a gold header. */
+ if(v.edition && !onShelf(v,curEdition)){
    curEdition=v.edition; var e=edById(v.edition);
    if(e) document.documentElement.style.setProperty('--accent', e.accent);
    applyTheme(v.edition,false); renderEdTabs(); renderMiniTabs();
@@ -1337,7 +1356,7 @@ window.addEventListener('scroll',brandBarState,{passive:true});
 window.addEventListener('resize',brandBarState);
 try{var _iq=new URLSearchParams(location.search);var _ied=_iq.get('ed');if(_ied&&edById(_ied)){curEdition=_ied;var _iee=edById(_ied);if(_iee)document.documentElement.style.setProperty('--accent',_iee.accent);}}catch(e){}
 render(); applyTheme(curEdition||'music',false); preloadThemes();
-try{var _io=new URLSearchParams(location.search).get('open');if(_io){var _iv=byId(_io);if(_iv){if(_iv.edition&&_iv.edition!==curEdition)setEdition(_iv.edition);openVault(_io);}}}catch(e){}
+try{var _io=new URLSearchParams(location.search).get('open');if(_io){var _iv=byId(_io);if(_iv){if(_iv.edition&&!onShelf(_iv,curEdition))setEdition(_iv.edition);openVault(_io);}}}catch(e){}
 /* Play-screen edition flick: swipe left/right cycles Music <-> Movies&TV <-> Sports */
 (function(){
   var app=document.getElementById('app'); if(!app) return;
@@ -1391,4 +1410,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v233</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v234</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
