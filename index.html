@@ -375,9 +375,15 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
    card, and a transformed ancestor becomes the containing block for position:fixed -
    nested here it would be trapped inside the card instead of covering the screen.
    z-index 96 clears the vault overlay (90) and the toast (95). */
-#artZoom{position:fixed;inset:0;z-index:96;background:rgba(4,2,10,.95);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+#artZoom{position:fixed;inset:0;z-index:96;background:rgba(4,2,10,.95);backdrop-filter:blur(6px);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;cursor:zoom-out}
 #artZoom.on{display:flex}
-#artZoom img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.75)}
+#artZoom img{max-width:100%;max-height:calc(100% - 52px);width:auto;height:auto;object-fit:contain;border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.75)}
+/* The poster is the one thing in the app that ever fills the screen on its own.
+   Everywhere else the tile caption carries the name and the vault kind; here there
+   was nothing, so a screenshot of this view travelled unlabelled. */
+#azCap{text-align:center;line-height:1.35;max-width:88%}
+#azCap b{display:block;font-family:var(--disp);font-size:16px;letter-spacing:.5px;text-transform:uppercase;color:#f3eaff}
+#azCap span{display:block;font-family:var(--body);font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#9587b5;margin-top:3px}
 #azClose{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:16px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);border:1.5px solid rgba(255,255,255,.38);color:#fff;font-size:18px;line-height:1;cursor:pointer}
 .v5poster.v5noart{aspect-ratio:2/3;background:linear-gradient(160deg,rgba(var(--tint),.5),#160f08);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px}
 .v5poster.v5noart span{font-family:var(--disp);font-size:22px;color:#fff;line-height:.9}
@@ -605,7 +611,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 <div id="iosHint">Install: tap <b>Share ⬆︎</b> then <b>“Add to Home Screen”</b></div>
 <div class="ov" id="ov"><div id="sheet" style="width:100%;max-width:420px;display:flex;justify-content:center"></div></div>
 <div class="toast" id="toast"></div>
-<div id="artZoom" onclick="closeZoom()" aria-hidden="true"><button id="azClose" onclick="closeZoom()" aria-label="Close">✕</button><img id="azImg" src="" alt=""></div>
+<div id="artZoom" onclick="closeZoom()" aria-hidden="true"><button id="azClose" onclick="closeZoom()" aria-label="Close">✕</button><img id="azImg" src="" alt=""><div id="azCap"></div></div>
 
 <nav class="bnav">
   <button id="nav-play" class="on" onclick="setView('play')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>Play</button>
@@ -905,7 +911,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    page arrives with ?open=, so the lookup returned '0' and every plate URL was busted
    with ?v=0 forever - an updated plate would never reach anyone who had opened that
    sheet once. Kept in step with the printed build tag by the release step. */
-var SFSBUILD='v244';
+var SFSBUILD='v245';
 var CARDART={"adele":{"o":"#F4A330"},"arianagrande":{"o":"#FFF6E0","l":1},"ate":{"o":"#DAA459"},"beatles":{"o":"#FFF6E0","l":1},"beyonce":{"o":"#FDB728"},"biggie":{"o":"#FDC472"},"billieeilish":{"o":"#B9C709"},"billyjoel":{"o":"#DBB17D"},"bonjovi":{"o":"#FFF6E0","l":1},"bowie":{"o":"#F7AF7C"},"brunomars":{"o":"#FEA928"},"carrieunderwood":{"o":"#D9B87A"},"ccr":{"o":"#F2C772"},"chrisstapleton":{"o":"#F2BA7D"},"codyjohnson":{"o":"#85C9EB"},"coldplay":{"o":"#E9BA87"},"dmb":{"o":"#2A1305"},"dualipa":{"o":"#A3ABC1"},"eagles":{"o":"#261C12"},"edsheeran":{"o":"#ECAB84"},"ellalangley":{"o":"#F1987E"},"eminem":{"o":"#D1B99F"},"faithhill":{"o":"#F3A63D"},"fleetwoodmac":{"o":"#BEC5C8"},"foo":{"o":"#F69F6D"},"fthc":{"o":"#3D3717"},"gratefuldead":{"o":"#FFF6E0","l":1},"greenday":{"o":"#CEB799"},"grunge90s":{"o":"#EFC973"},"harrystyles":{"o":"#F99B37"},"hendrix":{"o":"#FFF6E0","l":1},"jasonaldean":{"o":"#EAAE5F"},"jellyroll":{"o":"#301407"},"justintimberlake":{"o":"#B1C1D3"},"katyperry":{"o":"#3DC2D8"},"kennychesney":{"o":"#F6C587"},"kidstoybox":{"o":"#002848"},"ladygaga":{"o":"#FFBD46"},"laineywilson":{"o":"#FFF6E0","l":1},"ledzeppelin":{"o":"#E6AE57"},"lukebryan":{"o":"#332818"},"lukecombs":{"o":"#F19F31"},"maroon5":{"o":"#642F09"},"metallica":{"o":"#EABE95"},"morganwallen":{"o":"#DB9D94"},"mv_action":{"o":"#F0AD51"},"mv_animated":{"o":"#FFF6E0","l":1},"mv_comedy":{"o":"#FFF6E0","l":1},"mv_crime":{"o":"#F0AF37"},"mv_drama":{"o":"#DCA969"},"mv_fantasy":{"o":"#FAAA41"},"mv_horror":{"o":"#DBC27D"},"mv_romance":{"o":"#FFF6E0","l":1},"mv_scifi":{"o":"#26BDF5"},"mv_sports":{"o":"#FFF6E0","l":1},"mv_superhero":{"o":"#1C1B26"},"mv_war":{"o":"#1F150C"},"nirvana":{"o":"#CACACB"},"oasis":{"o":"#DDBA92"},"onedirection":{"o":"#F4A62D"},"pearljam":{"o":"#FFF6E0","l":1},"postmalone":{"o":"#FBA874"},"queen":{"o":"#F1BE78"},"rhcp":{"o":"#FFF6E0","l":1},"rihanna":{"o":"#BBAB97"},"selenagomez":{"o":"#FFF6E0","l":1},"shaboozey":{"o":"#DEB177"},"smashingpumpkins":{"o":"#BCAEC2"},"springsteen":{"o":"#E6A59C"},"stones":{"o":"#FFF6E0","l":1},"stp":{"o":"#FFF6E0","l":1},"summerbeach":{"o":"#FFF6E0","l":1},"taylorswift":{"o":"#D4A26D"},"thewho":{"o":"#F0C382"},"timmcgraw":{"o":"#251C0A"},"tompetty":{"o":"#FFF6E0","l":1},"tv_binge":{"o":"#D9B87A"},"tv_cartoon":{"o":"#171F6C"},"tv_gameshow":{"o":"#000B4D"},"tv_growingup":{"o":"#86B6F7"},"tv_oldschool":{"o":"#D9B87A"},"tv_scifi":{"o":"#66BBF7"},"tv_sitcom":{"o":"#C8AE93"},"u2":{"o":"#7EC0F2"},"zachbryan":{"o":"#191F15"}};
 function coverHTML(v,label){
  var e=eraOf(v);
@@ -1303,9 +1309,11 @@ var FILMDATA={
 };
 /* Full-size poster view. Tapping anywhere closes it, image included - hunting for the
    X on a phone is the wrong ask, and there is nothing to interact with underneath. */
-function zoomArt(src){
-  var z=document.getElementById('artZoom'), i=document.getElementById('azImg');
+function zoomArt(src,id){
+  var z=document.getElementById('artZoom'), i=document.getElementById('azImg'),
+      c=document.getElementById('azCap'), v=id?byId(id):null;
   if(!z||!i||!src) return;
+  if(c) c.innerHTML = v ? '<b>'+vTitle(v)+'</b><span>'+VAULT_KIND+'</span>' : '';
   i.src=src+'?v='+SFSBUILD;
   z.classList.add('on'); z.setAttribute('aria-hidden','false');
 }
@@ -1318,7 +1326,7 @@ function openVault(id){
  var v=byId(id); if(!v) return; V5ED='Standard'; V5SPORT=false; V5FILM=false;
  if(v.sp) return openSportsVault(v);
  var rk=artistColor(v); var d=SDATA[v.id]||{song:'Songs',last:v.name.split(' ').pop(),album:'Albums'};
- var poster = ART[v.id] ? '<div class="v5poster v5zoomable" onclick="zoomArt(\''+ART[v.id]+'\')" title="Tap to view the full poster"><img src="'+ART[v.id]+'?v=7" alt=""><span class="v5zoom">⤢</span></div>'
+ var poster = ART[v.id] ? '<div class="v5poster v5zoomable" onclick="zoomArt(\''+ART[v.id]+'\',\''+v.id+'\')" title="Tap to view the full poster"><img src="'+ART[v.id]+'?v=7" alt=""><span class="v5zoom">⤢</span></div>'
                         : '<div class="v5poster v5noart"><span>'+vTitle(v).toUpperCase()+'</span></div>';
  var isFilm=(v.edition==='filmtv'); V5FILM=isFilm;
  var fdata=FILMDATA[v.id]||{blurb:'One shuffle of the moments only true fans remember \u2014 the ones you replay, argue about, and never forget.',std:'The essentials everyone knows and loves.',dlx:'Deeper cuts and forgotten favorites.'};
@@ -1481,4 +1489,4 @@ brandBarState();
  setTimeout(go, 1500);
 })();
 </script>
-<div id="buildtag">v244</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>
+<div id="buildtag">v245</div><style>#buildtag{position:fixed;left:5px;bottom:3px;z-index:99999;font:700 9px/1 system-ui,sans-serif;color:rgba(255,255,255,.30);pointer-events:none;letter-spacing:.5px}</style></body></html>

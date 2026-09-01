@@ -490,7 +490,7 @@
 .rfTileN{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#e9e2f5;text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #rfPosterOv{position:fixed;inset:0;z-index:200;background:rgba(3,3,8,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px}
 #rfPosterOv img{max-width:88vw;max-height:78vh;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
-#rfPosterOv .rfPX{font-family:var(--disp);letter-spacing:1px;color:#cbb9e6;font-size:13px}
+#rfPosterOv .rfPCap{text-align:center;line-height:1.35;max-width:88%}#rfPosterOv .rfPCap b{display:block;font-family:var(--disp);font-size:16px;letter-spacing:.5px;text-transform:uppercase;color:#f3eaff}#rfPosterOv .rfPCap span{display:block;font-family:var(--body);font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#9587b5;margin-top:3px}#rfPosterOv .rfPX{font-family:var(--disp);letter-spacing:1px;color:#cbb9e6;font-size:13px}
 /* The results screens now sit on the edition's own intro image, blurred right back.
    Music was a flat #05040a, and sports was borrowing the MOVIE set - the three intro
    plates map one-to-one onto the editions (stage / film set / stadium), so each
@@ -1665,7 +1665,15 @@ function switchToDeluxe(){ REDITION='Deluxe'; goFullscreen(); unlockAudio(); rea
 var IC_HITF='<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#20E468" stroke-width="2"/><path d="M7.4 12.4l3 3 6-6.6" stroke="#20E468" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var IC_PASSF='<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#FF9D2E" stroke-width="2"/><path d="M7.5 12h8M12 8l4 4-4 4" stroke="#FF9D2E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function rfHome(){ location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1'; }
-function rfViewPoster(){ if(!VAULT_ID) return; var o=document.getElementById('rfPosterOv'); if(!o) return; o.innerHTML='<img src="art-'+VAULT_ID+'.jpg?v=7" alt=""><div class="rfPX">tap to close</div>'; o.style.display='flex'; }
+/* Same gap as the shelf lightbox: a full-screen poster with nothing naming it.
+   VAULT_NAME already arrives carrying " Trivia" from index, so this only has to
+   add the vault kind under it. */
+function rfViewPoster(){ if(!VAULT_ID) return; var o=document.getElementById('rfPosterOv'); if(!o) return;
+  var nm=(VAULT_NAME&&VAULT_NAME!=='this vault')?VAULT_NAME:'';
+  o.innerHTML='<img src="art-'+VAULT_ID+'.jpg?v=7" alt="">'
+    +(nm?'<div class="rfPCap"><b>'+nm+'</b><span>Unofficial SFS Vault</span></div>':'')
+    +'<div class="rfPX">tap to close</div>';
+  o.style.display='flex'; }
 function buildReportFilm(){
   var cur=-1,i; for(i=0;i<LADDER.length;i++){ if(score>=LADDER[i].min) cur=i; } if(cur<0) cur=0;
   var L=LADDER[cur];
