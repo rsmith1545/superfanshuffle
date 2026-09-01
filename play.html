@@ -1677,7 +1677,7 @@ function buildReportFilm(){
        alone. It now keeps the stadium underneath, with the team colours washed over
        it - so the edition finishes in the room it started in, still in team colours. */
     if(_photo) _photo.style.display='block';
-    if(_tp){ _tp.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_p1,.95)+','+hexA(_p1,0)+' 62%),linear-gradient(158deg,'+_p1+' 0%,'+_p2+' 100%)'; _tp.innerHTML='<div class="rfTPvault">SUPERFAN VAULT</div><div class="rfTPcity">'+(RCITY||'').toUpperCase()+'</div><div class="rfTPteam">'+((RTEAM||VAULT_NAME)||'').toUpperCase()+'</div>'; _tp.style.display='flex'; }
+    if(_tp){ _tp.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_p1,.95)+','+hexA(_p1,0)+' 62%),linear-gradient(158deg,'+_p1+' 0%,'+_p2+' 100%)'; _tp.innerHTML='<div class="rfTPvault">UNOFFICIAL SFS VAULT</div><div class="rfTPcity">'+(RCITY||'').toUpperCase()+'</div><div class="rfTPteam">'+((RTEAM||VAULT_NAME)||'').toUpperCase()+'</div>'; _tp.style.display='flex'; }
     if(pv) pv.style.display='none'; if(_pb) _pb.style.display='none';
   } else {
     if(_grad) _grad.style.display='none'; if(_photo) _photo.style.display=''; if(_tp) _tp.style.display='none'; if(_pb) _pb.style.display='';
