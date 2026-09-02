@@ -150,6 +150,18 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .feat .go{margin-top:6px;color:var(--cyan);font-weight:800;font-size:12.5px;letter-spacing:.5px}
 /* vault-detail fly-in (Heads-Up float) */
 .ov{position:fixed;inset:0;z-index:90;background:rgba(8,4,20,.74);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:16px}
+/* Legal & Credits. Its own overlay rather than the sheet's: openLegal is reachable
+   from inside a vault sheet, and reusing #ov would blow the sheet away behind it. */
+.lgov{position:fixed;inset:0;z-index:95;background:rgba(8,4,20,.82);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center}
+.lgov.on{display:flex}
+.lgcard{width:100%;max-width:520px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#150e26;border:1px solid rgba(255,255,255,.14);border-radius:20px 20px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 28px);box-shadow:0 -12px 40px rgba(0,0,0,.5)}
+.lgcard h3{font-family:var(--disp);font-size:26px;letter-spacing:.5px;margin:0 0 2px;color:#fff}
+.lgcard h4{font-family:var(--body);font-size:11px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:var(--accent);margin:18px 0 6px}
+.lgcard p{font-size:12.5px;line-height:1.6;color:#c8bfe0;margin:0 0 8px}
+.lgcard a{color:var(--cyan)}
+.lgcard .lgtop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.lgcard .lgx{flex:0 0 auto;background:rgba(255,255,255,.08);border:0;color:#fff;font-size:16px;line-height:1;width:32px;height:32px;border-radius:50%;cursor:pointer}
+.lgcard .lgcopy{margin-top:18px;padding-top:12px;border-top:1px solid rgba(255,255,255,.10);font-size:11px;color:#8f83aa}
 .ov.on{display:flex}
 .vcard{position:relative;width:100%;max-width:420px;background:linear-gradient(180deg,#241645,#180d33);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:16px 16px 20px;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:vpop .34s cubic-bezier(.2,1.3,.35,1)}
 @keyframes vpop{0%{transform:translateY(26px) scale(.62);opacity:0}60%{transform:translateY(0) scale(1.04);opacity:1}100%{transform:scale(1)}}
@@ -182,7 +194,7 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:24px;font-size:13px;font-weight:700;z-index:95;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center}
 .toast.on{opacity:.95}
 .note{text-align:center;color:var(--dim);font-size:10.5px;margin:16px;line-height:1.5}
-.legal-footer{margin:14px 8px 20px;padding:16px 10px 46px;border-top:1px solid rgba(255,255,255,.10);text-align:center;color:#8f83aa;font-size:10.5px;line-height:1.55}
+.legal-footer{margin:14px 8px 20px;padding:16px 10px calc(env(safe-area-inset-bottom,0px) + 86px);border-top:1px solid rgba(255,255,255,.10);text-align:center;color:#8f83aa;font-size:10.5px;line-height:1.55}
 .legal-footer button,.purchase-legal{border:0;background:none;color:#b9a8e0;text-decoration:underline;text-underline-offset:3px;font:inherit;cursor:pointer}
 .legal-footer .links{display:block;margin-top:8px;color:#a99abd;font-weight:700;letter-spacing:.25px}
 .purchase-legal{display:block;width:100%;margin:10px auto -3px;font-size:10.5px;line-height:1.4;text-align:center}
@@ -612,6 +624,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 <button id="installBtn">📲 Install App</button>
 <div id="iosHint">Install: tap <b>Share ⬆︎</b> then <b>“Add to Home Screen”</b></div>
 <div class="ov" id="ov"><div id="sheet" style="width:100%;max-width:420px;display:flex;justify-content:center"></div></div>
+<div class="lgov" id="lgov" aria-hidden="true"></div>
 <div class="toast" id="toast"></div>
 <div id="artZoom" onclick="closeZoom()" aria-hidden="true"><button id="azClose" onclick="closeZoom()" aria-label="Close">✕</button><img id="azImg" src="" alt=""><div id="azCap"></div></div>
 
@@ -1004,6 +1017,53 @@ function renderMiniTabs(){
 function legalFooterHTML(){
  return '<footer class="legal-footer">SuperFan Shuffle is an independent fan-trivia game and is not affiliated with or endorsed by any featured artist, label, studio, league or rights holder.'
   +'<span class="links">© 2026 SuperFan Shuffle · <button onclick="openLegal()">Legal &amp; Credits</button></span></footer>';
+}
+/* Legal & Credits.
+   openLegal() is referenced from the footer and from the legal line on both vault
+   sheets, and until now it was defined nowhere - every one of those three was a dead
+   click. Nothing here is a legal opinion; it states what the app is and is not.
+   LEGAL_CONTACT is intentionally blank: the rights-holder block only renders once a
+   real address exists, so no placeholder can ship. */
+var LEGAL_CONTACT='';
+function legalBodyHTML(){
+ var h='<div class="lgtop"><h3>Legal &amp; Credits</h3><button class="lgx" onclick="closeLegal()" aria-label="Close">&#10005;</button></div>';
+ h+='<h4>Unofficial fan-made game</h4>'
+   +'<p>SuperFan Shuffle is an independent, fan-created party game. It is not affiliated with, '
+   +'authorised by, licensed by, endorsed by or sponsored by any artist, band, athlete, team, '
+   +'league, studio, network, publisher, label or other rights holder named anywhere in the app.</p>';
+ h+='<h4>Names and trademarks</h4>'
+   +'<p>Artist, band, team, film, television and brand names are the trademarks of their '
+   +'respective owners. They are used here only to identify the subject matter of a set of '
+   +'trivia questions. No sponsorship, endorsement or association is claimed or implied.</p>';
+ h+='<h4>Original content</h4>'
+   +'<p>Every question, description, illustration and design in this app was created for '
+   +'SuperFan Shuffle. No album artwork, band logo, team logo, photograph, film still or song '
+   +'lyric belonging to any rights holder is reproduced. Vault artwork is original illustration '
+   +'and is not a copy of any existing cover, poster or promotional image.</p>';
+ h+='<h4>Crown Your Champion</h4>'
+   +'<p>Crown Your Champion is a separate free fan-made bracket game by the same creator. Its '
+   +'brackets are also unofficial and are not affiliated with or endorsed by any featured artist '
+   +'or rights holder.</p>';
+ if(LEGAL_CONTACT){
+  h+='<h4>Rights holders</h4>'
+    +'<p>If you represent a rights holder and would like content relating to you removed, '
+    +'write to <a href="mailto:'+LEGAL_CONTACT+'">'+LEGAL_CONTACT+'</a> and it will be taken '
+    +'down promptly.</p>';
+ }
+ h+='<h4>Credits</h4>'
+   +'<p>Typefaces: Bebas Neue and Barlow, served by Google Fonts under the SIL Open Font '
+   +'License. Game design, artwork, questions and code by SuperFan Shuffle.</p>';
+ h+='<div class="lgcopy">&copy; 2026 SuperFan Shuffle. All rights reserved.</div>';
+ return h;
+}
+function openLegal(){
+ var el=document.getElementById('lgov'); if(!el) return;
+ el.innerHTML='<div class="lgcard" onclick="event.stopPropagation()">'+legalBodyHTML()+'</div>';
+ el.classList.add('on'); el.setAttribute('aria-hidden','false');
+}
+function closeLegal(){
+ var el=document.getElementById('lgov'); if(!el) return;
+ el.classList.remove('on'); el.setAttribute('aria-hidden','true'); el.innerHTML='';
 }
 function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(function(v){return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'</div>';}).join(''); return '<h2>'+title+'</h2><div class="row">'+t+'</div>'; }
 function playHTML(){
@@ -1418,6 +1478,8 @@ function buy(id){ var v=byId(id); toast('Checkout: '+(v?v.name:'vault')+' · $0.
 var tHandle;
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(tHandle);tHandle=setTimeout(function(){t.classList.remove('on');},2400);}
 document.getElementById('ov').addEventListener('click',function(e){if(e.target.id==='ov')closeOv();});
+document.getElementById('lgov').addEventListener('click',function(e){if(e.target.id==='lgov')closeLegal();});
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ var l=document.getElementById('lgov'); if(l&&l.classList.contains('on')) closeLegal(); } });
 document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.vault,.feat');if(t)window.__vorigin=t.getBoundingClientRect();},true);
 
 /* PWA install + fullscreen */
