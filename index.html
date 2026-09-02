@@ -459,13 +459,13 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
     <div class="triP p2"><div class="triBg"></div><div class="triTxt">Lights, Camera, Action</div></div>
     <div class="triP p3"><div class="triBg"></div><div class="triTxt">Settle the Score</div></div>
   </div>
-  <div class="descP" id="descP"><img src="intro-desc.jpg?v=4" alt="Everyone's a superfan of something"></div>
+  <div class="descP" id="descP"><img src="intro-desc.jpg?v=5" alt="Everyone's a superfan of something"></div>
   <div class="spSkip" id="spSkip">Tap to skip</div>
 </div>
 <div id="bgfx"></div>
 <!-- FULL-SCREEN INTRO (shows every app open: brand card -> how-to-play -> store) -->
 <div id="introOv" aria-label="Welcome to SuperFan Shuffle">
-  <div class="introSlide idesc" id="introDesc"><img src="intro-desc.jpg?v=4" alt="Everyone&rsquo;s a superfan of something"><div class="idescHint">TAP TO CONTINUE <span>&#9654;</span></div></div>
+  <div class="introSlide idesc" id="introDesc"><img src="intro-desc.jpg?v=5" alt="Everyone&rsquo;s a superfan of something"><div class="idescHint">TAP TO CONTINUE <span>&#9654;</span></div></div>
   </div>
 <style>
 #introOv{position:fixed;inset:0;z-index:100000;background:#0b0714;display:none}
@@ -1483,7 +1483,7 @@ brandBarState();
    at(4850, endIntro);
    if(repeat){ at(300,function(){ $('#spSkip').classList.add('on'); }); sp.addEventListener('click', endIntro); }
  }
- var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=4'];
+ var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=1','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=5'];
  var left=srcs.length, started=false;
  function go(){ if(started)return; started=true; run(); }
  srcs.forEach(function(u){ var i=new Image(); i.onload=i.onerror=function(){ if(--left<=0) go(); }; i.src=u; });
