@@ -225,6 +225,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .bk .t{color:#8f8468;font-size:9.5px;font-weight:600;margin-top:3px;letter-spacing:.5px;text-transform:uppercase}
 .cyc-cta{display:block;width:100%;text-align:center;background:linear-gradient(180deg,#ffc23d,#f0a500);color:#231800;font-weight:800;font-size:15px;padding:13px;border-radius:12px;box-shadow:0 4px 14px rgba(240,165,0,.35);border:none;text-decoration:none}
 .cyc-note{text-align:center;color:#8f8468;font-size:10px;margin-top:8px}
+.cyc-legal{text-align:center;color:#a1957a;font-size:10.5px;line-height:1.45;margin:-6px 12px 14px}
 .match{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px;display:flex;align-items:center;gap:13px;margin-bottom:12px;text-decoration:none}
 .mdisc{width:52px;height:52px;border-radius:50%;flex:none;background:radial-gradient(circle at 50% 50%,#f0a500 0 20%,#0d0d0d 21% 24%,transparent 24%),repeating-radial-gradient(circle,#141414 0 2px,#262626 2px 4px),#0d0d0d}
 .mbody{flex:1}.mbody .h{color:#fff;font-size:14px;font-weight:700}.mbody .s{color:var(--dim);font-size:11.5px;margin-top:2px}
@@ -1051,16 +1052,21 @@ var CYC_URL='https://crownyourchampion.com';
 function crownSVG(){ return '<svg style="display:block;margin:2px auto 8px" width="46" height="30" viewBox="0 0 46 30"><path d="M3 27 L6 8 L15 18 L23 4 L31 18 L40 8 L43 27 Z" fill="#f0a500" stroke="#ffce5c" stroke-width="1"/><circle cx="6" cy="8" r="2.5" fill="#ffce5c"/><circle cx="23" cy="4" r="2.5" fill="#ffce5c"/><circle cx="40" cy="8" r="2.5" fill="#ffce5c"/><rect x="3" y="27" width="40" height="3" fill="#ffce5c"/></svg>'; }
 function cycBk(n){ return '<a class="bk" href="'+CYC_URL+'" target="_blank" rel="noopener"><div class="n">'+n+'</div><div class="t">Vote now</div></a>'; }
 function matchRow(hh,ss){ return '<a class="match" href="'+CYC_URL+'" target="_blank" rel="noopener"><div class="mdisc"></div><div class="mbody"><div class="h">'+hh+'</div><div class="s">'+ss+'</div></div><div class="mgo">▶</div></a>'; }
+/* Crown Your Champion is a separate free game, but the promo names artists, so it
+   carries the same non-affiliation statement the vaults do - and it sits directly
+   under the description, above the artist chips, not buried at the bottom. */
+var CYC_LEGAL='Unofficial fan-created brackets. Not affiliated with or endorsed by any featured artist or rights holder.';
 function cycDoorwayHTML(){
  var h='<div class="exlabel">The free bracket game</div>';
  h+='<div class="cyc">'+crownSVG()+'<div class="cyc-word">Crown Your<br>Champion</div>'
    +'<div class="cyc-sub">Free 64-song bracket battles. Vote your favorites, crown a champion, challenge your friends.</div>'
+   +'<div class="cyc-legal">'+CYC_LEGAL+'</div>'
    +'<div class="bkrow">'+cycBk('Pearl Jam')+cycBk('Nirvana')+cycBk('Foo Fighters')+'</div>'
    +'<a class="cyc-cta" href="'+CYC_URL+'" target="_blank" rel="noopener">Get Crown Your Champion — Free →</a>'
    +'<div class="cyc-note">Free forever · no download needed · play in your browser</div></div>';
  h+='<div class="exlabel">Because you play these here</div>';
- h+=matchRow('Pearl Jam bracket','Crown their best song — free.');
- h+=matchRow('Dave Matthews Band bracket','64 songs, one champion. Free to play.');
+ h+=matchRow('Unofficial Pearl Jam fan bracket','Crown their best song — free.');
+ h+=matchRow('Unofficial Dave Matthews Band fan bracket','64 songs, one champion. Free to play.');
  h+='<a class="crowd" href="'+CYC_URL+'" target="_blank" rel="noopener"><div class="h">👑 See What the Crowd Decided</div>'
    +'<div class="s">Biggest upsets, closest finals, most controversial matchups — data from thousands of votes.</div>'
    +'<div class="link">Explore Crowd Results →</div></a>';
@@ -1150,7 +1156,8 @@ function myVaultsHTML(){
    h+='</div>';
  });
  return '<div class="mv-top">'+h+'</div>'
-   +'<div class="mv-cross"><div class="xhead">More ways to play</div>'+cycDoorwayHTML()+'</div>';
+   +'<div class="mv-cross"><div class="xhead">More ways to play</div>'+cycDoorwayHTML()+'</div>'
+   +legalFooterHTML();
 }
 function mvJump(ed){ var el=document.getElementById('mv-'+ed); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
 function mvBrowse(ed){ curEdition=ed; var e=edById(ed); if(e) document.documentElement.style.setProperty('--accent',e.accent); applyTheme(ed,false); setView('browse'); }
