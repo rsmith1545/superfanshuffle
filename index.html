@@ -1202,7 +1202,7 @@ function browseOpen(id){ var v=byId(id); if(!v) return;
 }
 function brSearch(){ var el=document.getElementById('brq'); if(!el) return; var L=document.getElementById('brList'); if(L) L.innerHTML=browseList(el.value); }
 /* owned vaults (payments not wired yet — seed one so the full owned round + report card is playable) */
-var OWNED=['taylorswift','mv_comedy','mv_horror','mv_sports','mv_animated','mv_superhero','mv_fantasy','mv_war'];
+var OWNED=['taylorswift','mv_comedy','mv_horror','mv_sports','mv_animated','mv_superhero','mv_fantasy','mv_war','fo-chicago-bears','ba-chicago-bulls','ba-new-york-mets','ho-new-york-islanders'];
 function playOwned(id){ var v=byId(id); if(v) location.href=launchURL(v)+'&mode=full'; }
 function ownedTile(v){ return '<div class="vault" onclick="openVault(\''+v.id+'\')">'+coverHTML(v)+vcap(vTitle(v))+'</div>'; }
 function lpMap(){try{return JSON.parse(localStorage.getItem('sfs_lp')||'{}');}catch(e){return {};}}
