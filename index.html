@@ -915,7 +915,13 @@ var SPORTS=[
 {id:"ho-ottawa-senators",name:"Ottawa Senators",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#C52032","#C2912C"],sp:{p:"#C52032",s:"#C2912C",t:"#000000",city:"Ottawa",team:"Senators",yr:1992}},
 {id:"ho-philadelphia-flyers",name:"Philadelphia Flyers",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#F74902","#000000"],sp:{p:"#F74902",s:"#000000",t:"#FFFFFF",city:"Philadelphia",team:"Flyers",yr:1967}},
 {id:"ho-pittsburgh-penguins",name:"Pittsburgh Penguins",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#FCB514","#000000"],sp:{p:"#FCB514",s:"#000000",t:"#000000",city:"Pittsburgh",team:"Penguins",yr:1967}},
-{id:"ho-salt-lake-city-utah-mammoth",name:"Utah Mammoth",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#71AFE5","#010101"],sp:{p:"#71AFE5",s:"#010101",t:"#000000",city:"Utah",team:"Mammoth",yr:2024}},
+/* Utah Mammoth is parked, not deleted. The franchise relocated in 2024 and has
+   two seasons of history - 37 Standard cards, about four rounds before the deck
+   repeats. Every other vault clears eight. It is not incomplete, it is young, so
+   there is nothing to fix and nothing to charge for yet. Its deck still ships in
+   sports-decks.json and its colours stay in SPDATA/SPCARD; restore the tile by
+   uncommenting the line below once the roster has grown. */
+/* {id:"ho-salt-lake-city-utah-mammoth",name:"Utah Mammoth",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#71AFE5","#010101"],sp:{p:"#71AFE5",s:"#010101",t:"#000000",city:"Utah",team:"Mammoth",yr:2024}}, */
 {id:"ho-san-jose-sharks",name:"San Jose Sharks",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#006D75","#EA7200"],sp:{p:"#006D75",s:"#EA7200",t:"#FFFFFF",city:"San Jose",team:"Sharks",yr:1991}},
 {id:"ho-seattle-kraken",name:"Seattle Kraken",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#001628","#99D9D9"],sp:{p:"#001628",s:"#99D9D9",t:"#68A2B9",city:"Seattle",team:"Kraken",yr:2021}},
 {id:"ho-st-louis-blues",name:"St. Louis Blues",edition:"sports",cat:"Hockey",badge:"prem",dark:1,c:["#002F87","#FCB514"],sp:{p:"#002F87",s:"#FCB514",t:"#FFFFFF",city:"St. Louis",team:"Blues",yr:1967}},
@@ -953,7 +959,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v295';
+var SFSBUILD='v296';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
