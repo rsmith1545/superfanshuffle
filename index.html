@@ -953,7 +953,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v285';
+var SFSBUILD='v286';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -979,11 +979,10 @@ function spWeave(col,yr){var svg="<svg xmlns='http://www.w3.org/2000/svg' width=
 var VAULT_KIND='Unofficial SFS Vault';
 function vTitle(v){
   var n=(v&&v.name)||'';
-  /* Family vaults keep their own name. "Zoo & Farm Animals Trivia" and "1st Grade
-     Trivia" read like a pub quiz for people who cannot yet read, and the Star Student
-     series is sold on a child being the expert rather than on general knowledge.
-     Every other edition still gets the suffix. */
-  if(v && v.edition==='family') return n;
+  /* Family briefly lost the " Trivia" suffix in v285. Reverted: My Vaults stacks the
+     edition trays on one scrolling screen, so a family tile sits directly under a music
+     one and any difference reads as a bug rather than a choice. If the word ever changes
+     it changes for every edition at once. */
   return /\bTrivia$/.test(n) ? n : n+' Trivia';
 }
 function vcap(name){ return '<div class="vname"><span class="vn1">'+name+'</span><span class="vn2">'+VAULT_KIND+'</span></div>'; }
@@ -1241,7 +1240,7 @@ function ownedTile(v){ return '<div class="vault" onclick="openVault(\''+v.id+'\
 function lpMap(){try{return JSON.parse(localStorage.getItem('sfs_lp')||'{}');}catch(e){return {};}}
 function myVaultsHTML(){
  var owned=OWNED.map(byId).filter(Boolean);
- var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Movies & TV',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'}];
+ var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Movies & TV',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'},{id:'family',label:'Family',acc:'#7ED957'}];
  var cnt={}; order.forEach(function(e){ cnt[e.id]=owned.filter(function(v){return (v.edition||'music')===e.id;}).length; });
  var LP=lpMap(); var h='';
  h+='<div class="mvpills">'+order.map(function(e){return '<button class="mvpill" style="--pa:'+e.acc+'" onclick="mvJump(\''+e.id+'\')">'+e.label+' <span>'+cnt[e.id]+'</span></button>';}).join('')+'</div>';
