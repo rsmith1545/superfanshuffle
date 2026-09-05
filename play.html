@@ -507,7 +507,7 @@
 .rfTile img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.1);display:block;background:#0c0906}
 .rfBgGrad{position:absolute;inset:0;display:none}
 #rfBgPhoto{position:absolute;inset:0}
-.rfTeamPoster{display:none;width:100%;aspect-ratio:3/4;border-radius:11px;border:1px solid rgba(255,255,255,.16);overflow:hidden;position:relative;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 4px 14px rgba(0,0,0,.4)}
+.rfTeamPoster{display:none;width:100%;aspect-ratio:3/4;border-radius:11px;border:1px solid rgba(255,255,255,.16);overflow:hidden;position:relative;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 8px 12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 4px 14px rgba(0,0,0,.4)}
 .rfTPvault{position:absolute;top:8px;left:0;right:0;font-family:var(--disp);font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.7)}
 .rfTPcity{font-family:var(--disp);font-size:15px;letter-spacing:2px;color:rgba(255,255,255,.92);line-height:1;margin-bottom:2px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .rfTPteam{font-family:var(--disp);font-size:clamp(18px,5.4vw,30px);letter-spacing:.5px;color:#fff;
@@ -515,7 +515,7 @@
 /* ISLANDERS was breaking after the R and dropping a lone S onto the next line.
    overflow-wrap:break-word did that. Long single words now shrink instead, the
    way the shelf tile's .spteam.fit does. */
-.rfTPteam.fit{font-size:clamp(13px,3.9vw,21px)}
+.rfTPteam.fit{font-size:clamp(12px,3.4vw,18px)}
 .rfTPlbl{font-family:var(--body);font-weight:800;font-size:8px;letter-spacing:1.4px;text-transform:uppercase;
  opacity:.85;border-top:2px solid currentColor;padding-top:5px;margin-top:7px;color:rgba(255,255,255,.9)}
 .rfTileG{width:100%;aspect-ratio:3/4;border-radius:9px;border:3px solid rgba(255,255,255,.12);display:flex;
@@ -1033,7 +1033,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v299';
+var SFSBUILD='v300';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1740,7 +1740,16 @@ function buildReportFilm(){
        alone. It now keeps the stadium underneath, with the team colours washed over
        it - so the edition finishes in the room it started in, still in team colours. */
     if(_photo) _photo.style.display='block';
-    if(_tp){ _tp.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_p1,.95)+','+hexA(_p1,0)+' 62%),linear-gradient(158deg,'+_p1+' 0%,'+_p2+' 100%)'; var _tm=((RTEAM||VAULT_NAME)||'').toUpperCase(), _long=_tm.replace(/[^A-Z0-9]/g,'').length>8&&_tm.indexOf(' ')<0;
+    if(_tp){ _tp.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_p1,.95)+','+hexA(_p1,0)+' 62%),linear-gradient(158deg,'+_p1+' 0%,'+_p2+' 100%)'; /* RTEAM arrives empty on the resume path, and the fallback was VAULT_NAME - which
+   is "New York Islanders Trivia". The city was printed twice and " Trivia" ran into
+   the label, straight over the UNOFFICIAL SFS VAULT line above it. Strip the suffix,
+   then strip the city off the front, and shrink on total length rather than only on
+   single words. */
+var _tm=(RTEAM||'').toUpperCase();
+      if(!_tm){ _tm=((VAULT_NAME||'').replace(/\s+Trivia$/i,'')).toUpperCase();
+        var _ct=(RCITY||'').toUpperCase();
+        if(_ct && _tm.indexOf(_ct)===0) _tm=_tm.slice(_ct.length).trim(); }
+      var _n=_tm.replace(/[^A-Z0-9]/g,'').length, _long=_n>8;
       _tp.innerHTML='<div class="rfTPvault">UNOFFICIAL SFS VAULT</div><div class="rfTPcity">'+(RCITY||'').toUpperCase()+'</div><div class="rfTPteam'+(_long?' fit':'')+'">'+_tm+'</div><div class="rfTPlbl">Trivia</div>';
       _tp.style.borderColor=_p2; _tp.style.borderWidth='4px'; _tp.style.display='flex'; }
     if(pv) pv.style.display='none'; if(_pb) _pb.style.display='none';
@@ -1797,11 +1806,17 @@ function deckCounts(){
   /* Counts the CHARACTER arrays too. Without them the readout said "standard 87"
      while the dealer was working a 179-card deck - the one number the HUD exists
      to make trustworthy was the one number that was wrong. */
-  var std = d ? (d.standard||[]).length + (d.stdChars||[]).length : DECK.length;
+  /* This fell through to DECK.length when the vault was not in DECKS - and DECK is
+     the 30-song music placeholder. An Islanders round therefore reported "standard 30
+     - no deluxe deck for this vault" against a real 164/95 deck. The one number the
+     HUD exists to make trustworthy was the one number that was wrong, again. It now
+     says it does not know rather than quoting somebody else's deck. */
+  var known = !!d;
+  var std = d ? (d.standard||[]).length + (d.stdChars||[]).length : 0;
   var dlx = d ? (d.deluxe||[]).length + (d.dlxChars||[]).length : 0;
   var seen = 0;
   try{ seen = Object.keys(JSON.parse(localStorage.getItem(_seenKey(REDITION))||'{}')).length; }catch(e){}
-  return {std:std, dlx:dlx, seen:seen, active:activeDeck().length};
+  return {std:std, dlx:dlx, seen:seen, active:activeDeck().length, known:known, state:DECKSTATE};
 }
 function renderTestHUD(){
   var h=document.getElementById('testHUD'); if(!h) return;
@@ -1813,8 +1828,11 @@ function renderTestHUD(){
     + '  \u2014  seen <b>' + c.seen + ' / ' + c.active + '</b>'
     + '  \u00b7  ' + (left ? (left + ' fresh left') : '<i>deck exhausted \u2014 next round starts a new pass</i>')
     + '  \u00b7  this round ' + (results?results.length:0);
-  var det = 'standard ' + c.std + (c.dlx ? ('  \u00b7  deluxe +' + c.dlx + ' (' + (c.std+c.dlx) + ' total)')
-                                        : '  \u00b7  no deluxe deck for this vault');
+  var det = c.known
+    ? ('standard ' + c.std + (c.dlx ? ('  \u00b7  deluxe +' + c.dlx + ' (' + (c.std+c.dlx) + ' total)')
+                                    : '  \u00b7  no deluxe deck for this vault'))
+    : (c.state==='loading' ? 'deck still loading \u2014 counts unavailable'
+                           : 'deck not loaded for this vault (' + (VAULT_ID||'no id') + ')');
   h.innerHTML = txt + '\n' + det;
   h.classList.add('on');
 }
