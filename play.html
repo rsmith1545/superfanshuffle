@@ -1039,7 +1039,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v301';
+var SFSBUILD='v302';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1992,6 +1992,38 @@ if(Q.get('demo')){ try{
   }
   showReport();
 }catch(e){} }
+/* ?preview=results jumps straight to Round Complete without playing a round.
+   It deals a plausible ten cards from THIS vault's real deck, so the tile, the
+   colours, the scoreboard and the carousel are all the live thing rather than
+   a mock. Nothing is written to the seen set - previewing does not burn cards,
+   and the HUD's "fresh left" is unchanged afterwards.
+     ?preview=results          10 cards, roughly two thirds hit
+     &n=6                      deal six instead
+     &hits=6                   force exactly six correct
+   Works on any vault: superfanshuffle.com/play.html?ed=sports&open=... &preview=results */
+function previewResults(){
+  var d=[]; try{ d=activeDeck()||[]; }catch(e){}
+  if(!d.length) return false;
+  var pool=d.slice(), n=Math.min(parseInt(Q.get('n'),10)||10, pool.length);
+  var forced=Q.get('hits'); forced = forced===null?null:Math.max(0,Math.min(n,parseInt(forced,10)||0));
+  results=[]; score=0;
+  for(var i=0;i<n;i++){
+    var w=pool.splice(Math.floor(Math.random()*pool.length),1)[0];
+    var good = forced===null ? (Math.random()<0.65) : (i<forced);
+    results.push({w:w,good:good}); if(good) score++;
+  }
+  if(forced!==null){ for(var j=results.length-1;j>0;j--){ var k=Math.floor(Math.random()*(j+1)); var t=results[j]; results[j]=results[k]; results[k]=t; } }
+  qCount=n; ended=true; playing=false;
+  try{ showReport(); }catch(e){ return false; }
+  return true;
+}
+if(Q.get('preview')==='results'){
+  (function(){ var tries=0;
+    (function go(){ if(previewResults()) return;
+      if(++tries>60) return;                      /* ~6s, then give up quietly */
+      setTimeout(go,100); })();
+  })();
+}
 if(Q.get('resume')){ try{ var _st=JSON.parse(sessionStorage.getItem('sfs_resume')||'null'); if(_st){ score=_st.score||0; results=_st.results||[]; ED=_st.ED||'music'; VAULT_ID=_st.vault||''; VAULT_NAME=_st.n||'this vault'; REDITION=_st.edition||'Standard'; RXS=_st.xs||''; RXSL=_st.xsl||''; RXSN=_st.xsn||''; RXSE=_st.xse||''; showReport(); } }catch(e){} }
 /* unlock wall */
 try{document.getElementById('wallBuy').textContent='Unlock full vault · '+SFSPRICE;}catch(e){}
