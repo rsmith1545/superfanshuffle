@@ -511,8 +511,18 @@
 .rfTPvault{position:absolute;top:8px;left:0;right:0;font-family:var(--disp);font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.7)}
 .rfTPcity{font-family:var(--disp);font-size:15px;letter-spacing:2px;color:rgba(255,255,255,.92);line-height:1;margin-bottom:2px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .rfTPteam{font-family:var(--disp);font-size:clamp(18px,5.4vw,30px);letter-spacing:.5px;color:#fff;
- line-height:.95;text-shadow:0 2px 12px rgba(0,0,0,.55);max-width:100%;overflow-wrap:break-word}
-.rfTileG{width:100%;aspect-ratio:3/4;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:block}
+ line-height:.95;text-shadow:0 2px 12px rgba(0,0,0,.55);max-width:100%;overflow-wrap:normal}
+/* ISLANDERS was breaking after the R and dropping a lone S onto the next line.
+   overflow-wrap:break-word did that. Long single words now shrink instead, the
+   way the shelf tile's .spteam.fit does. */
+.rfTPteam.fit{font-size:clamp(13px,3.9vw,21px)}
+.rfTPlbl{font-family:var(--body);font-weight:800;font-size:8px;letter-spacing:1.4px;text-transform:uppercase;
+ opacity:.85;border-top:2px solid currentColor;padding-top:5px;margin-top:7px;color:rgba(255,255,255,.9)}
+.rfTileG{width:100%;aspect-ratio:3/4;border-radius:9px;border:3px solid rgba(255,255,255,.12);display:flex;
+ flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px 4px;overflow:hidden}
+.rfTGc{font-family:var(--disp);font-size:9px;letter-spacing:1.2px;line-height:1;opacity:.92}
+.rfTGt{font-family:var(--disp);font-size:17px;line-height:.92;letter-spacing:.3px;margin-top:3px;overflow-wrap:normal}
+.rfTGt.fit{font-size:12px}
 .rfTileN{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#e9e2f5;text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #rfPosterOv{position:fixed;inset:0;z-index:200;background:rgba(3,3,8,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px}
 #rfPosterOv img{max-width:88vw;max-height:78vh;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
@@ -1023,7 +1033,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v297';
+var SFSBUILD='v298';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1705,6 +1715,10 @@ function buildReport(){
 function switchToDeluxe(){ REDITION='Deluxe'; goFullscreen(); unlockAudio(); ready(); }
 var IC_HITF='<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#20E468" stroke-width="2"/><path d="M7.4 12.4l3 3 6-6.6" stroke="#20E468" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var IC_PASSF='<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#FF9D2E" stroke-width="2"/><path d="M7.5 12h8M12 8l4 4-4 4" stroke="#FF9D2E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+/* The card string carries its own sub-line - "Walter Payton (1975-1987 - RB)".
+   The scoreboard wants the man, not his resume. Only a parenthetical that STARTS
+   with a year is stripped, so family disambiguators like "Odie (Garfield)" stay. */
+function cardName(w){ return String(w==null?'':w).replace(/\s*\(\d{4}[^()]*\)\s*$/,''); }
 function rfHome(){ location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1'; }
 /* Same gap as the shelf lightbox: a full-screen poster with nothing naming it.
    VAULT_NAME already arrives carrying " Trivia" from index, so this only has to
@@ -1726,7 +1740,9 @@ function buildReportFilm(){
        alone. It now keeps the stadium underneath, with the team colours washed over
        it - so the edition finishes in the room it started in, still in team colours. */
     if(_photo) _photo.style.display='block';
-    if(_tp){ _tp.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_p1,.95)+','+hexA(_p1,0)+' 62%),linear-gradient(158deg,'+_p1+' 0%,'+_p2+' 100%)'; _tp.innerHTML='<div class="rfTPvault">UNOFFICIAL SFS VAULT</div><div class="rfTPcity">'+(RCITY||'').toUpperCase()+'</div><div class="rfTPteam">'+((RTEAM||VAULT_NAME)||'').toUpperCase()+'</div>'; _tp.style.display='flex'; }
+    if(_tp){ _tp.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_p1,.95)+','+hexA(_p1,0)+' 62%),linear-gradient(158deg,'+_p1+' 0%,'+_p2+' 100%)'; var _tm=((RTEAM||VAULT_NAME)||'').toUpperCase(), _long=_tm.replace(/[^A-Z0-9]/g,'').length>8&&_tm.indexOf(' ')<0;
+      _tp.innerHTML='<div class="rfTPvault">UNOFFICIAL SFS VAULT</div><div class="rfTPcity">'+(RCITY||'').toUpperCase()+'</div><div class="rfTPteam'+(_long?' fit':'')+'">'+_tm+'</div><div class="rfTPlbl">Trivia</div>';
+      _tp.style.borderColor=_p2; _tp.style.borderWidth='4px'; _tp.style.display='flex'; }
     if(pv) pv.style.display='none'; if(_pb) _pb.style.display='none';
   } else {
     if(_grad) _grad.style.display='none'; if(_photo) _photo.style.display=''; if(_tp) _tp.style.display='none'; if(_pb) _pb.style.display='';
@@ -1740,7 +1756,7 @@ function buildReportFilm(){
   if(cur<LADDER.length-1){ var nxt=LADDER[cur+1]; sub.innerHTML=(nxt.min-score)+' more correct to reach <b>'+nxt.name.toUpperCase()+'</b>'; }
   else { sub.textContent='Top tier — untouchable.'; }
   var ul=document.getElementById('rfList'); ul.innerHTML='';
-  results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="rfNum">'+(ix+1)+'</span><span class="rfIc">'+(r.good?IC_HITF:IC_PASSF)+'</span><span class="rfName"></span>'; li.querySelector('.rfName').textContent=r.w; ul.appendChild(li); });
+  results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="rfNum">'+(ix+1)+'</span><span class="rfIc">'+(r.good?IC_HITF:IC_PASSF)+'</span><span class="rfName"></span>'; li.querySelector('.rfName').textContent=cardName(r.w); ul.appendChild(li); });
   var sims=[]; try{ if(RXSL) sims=JSON.parse(RXSL); }catch(e){}
   if(!sims.length && RXS){ sims=[{id:RXS,name:RXSN,cat:RXSE}]; }
   var keep=document.getElementById('rfKeep'), kl=document.getElementById('rfKeepList');
@@ -1748,7 +1764,16 @@ function buildReportFilm(){
     kl.innerHTML=sims.slice(0,3).map(function(v){ return '<div class="rfTile"><img alt=""><div class="rfTileN">'+(v.name||'Vault')+'</div></div>'; }).join('');
     var rows=kl.querySelectorAll('.rfTile');
     sims.slice(0,3).forEach(function(v,ix){ var row=rows[ix]; if(!row) return; var img=row.querySelector('img');
-      if(ED==='sports' && v.c && v.c[0]){ var g=document.createElement('div'); g.className='rfTileG'; g.style.background='linear-gradient(158deg,'+v.c[0]+' 0%,'+(v.c[1]||v.c[0])+' 100%)'; if(img&&img.parentNode) img.parentNode.replaceChild(g,img); }
+      /* These were bare colour blocks. The payload never carried city or team, so
+         there was nothing to draw - now it does, and the tile matches the shelf. */
+      if(ED==='sports' && v.c && v.c[0]){ var g=document.createElement('div'); g.className='rfTileG';
+        var _a=v.p||v.c[0], _b=v.s||v.c[1]||v.c[0], _tc=v.t||'#fff';
+        g.style.background='radial-gradient(120% 75% at 50% 6%,'+hexA(_a,.95)+','+hexA(_a,0)+' 62%),linear-gradient(158deg,'+_a+' 0%,'+_b+' 100%)';
+        g.style.borderColor=_b; g.style.color=_tc;
+        var _t2=(v.tm||v.name||'').replace(/ Trivia$/,'').toUpperCase();
+        var _f2=_t2.replace(/[^A-Z0-9]/g,'').length>8&&_t2.indexOf(' ')<0;
+        g.innerHTML='<span class="rfTGc">'+(v.ct||'').toUpperCase()+'</span><span class="rfTGt'+(_f2?' fit':'')+'">'+_t2+'</span>';
+        if(img&&img.parentNode) img.parentNode.replaceChild(g,img); }
       else if(img){ img.src='art-'+v.id+'.jpg?v=7'; img.onerror=function(){this.onerror=null;this.style.background='#3a2a6e';}; }
       row.onclick=function(){ try{ sessionStorage.setItem('sfs_resume', JSON.stringify({score:score,results:results,ED:ED,vault:VAULT_ID,n:VAULT_NAME,edition:REDITION,xsl:RXSL,xs:RXS,xsn:RXSN,xse:RXSE})); }catch(e){} location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1&open='+encodeURIComponent(v.id)+'&ret=results'; }; });
   } else { keep.style.display='none'; }
@@ -2195,7 +2220,7 @@ function openReportCard(){
     results.forEach(function(r,i){
       var row=rows[i]; if(!row) return;
       var name=r.w||'';
-      row.querySelector('.rgN').textContent=name;
+      row.querySelector('.rgN').textContent=cardName(name);
       var dEl=row.querySelector('.rgD'); if(dEl) dEl.textContent=d[name]||'';
     });
     el.classList.add('on');
