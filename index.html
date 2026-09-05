@@ -691,6 +691,17 @@ var VAULTS=[
  {id:'fam_jobs', name:"When I Grow Up", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#623414','#2d3b07'], dark:1},
  {id:'fam_geography', name:"USA Geography & Landmarks", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#b7934d','#007876'], dark:1},
  {id:'fam_presidents', name:"American History", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#b76f48','#7e6136'], dark:1},
+ /* Star Student - one vault per grade, cards pitched at what that year is actually
+    teaching. The shelf heading carries the series name so the tile only has to say
+    the grade; "Star Student: 1st Grade" on a 150px tile is three ideas stacked.
+    The point of the series is not teaching, it is the one shelf where a six-year-old
+    beats the adults, so the grades run youngest-first like the rest of Family. */
+ {id:'fam_grade1', name:"1st Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#d4462f','#f0a01e'], dark:1},
+ {id:'fam_grade2', name:"2nd Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#e07a1e','#c9a227'], dark:1},
+ {id:'fam_grade3', name:"3rd Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#2f9e5a','#8ec63f'], dark:1},
+ {id:'fam_grade4', name:"4th Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#1f7fb5','#3fb6d9'], dark:1},
+ {id:'fam_grade5', name:"5th Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#4b3fa8','#8a6fd4'], dark:1},
+ {id:'fam_grade6', name:"6th Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#8a2f6b','#d4569e'], dark:1},
  {id:'fam_halloween', name:"Spooky Season", edition:'family', season:{from:'09-11',to:'11-10'}, cat:'', bk:'', badge:'free', c:['#f07a1e','#6a2a9e'], dark:1},
  {id:'fam_holiday', name:"Holiday Countdown", edition:'family', season:{from:'11-11',to:'01-02'}, cat:'', bk:'', badge:'free', c:['#c8102e','#1e7a4a'], dark:1},
  {id:'summerbeach', name:"Summer Beach Bash", edition:'family', season:{from:'05-15',to:'09-10'}, cat:'', bk:'', badge:'free', c:['#f0983a','#f05a7a'], dark:1},
@@ -942,7 +953,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v284';
+var SFSBUILD='v285';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -968,6 +979,11 @@ function spWeave(col,yr){var svg="<svg xmlns='http://www.w3.org/2000/svg' width=
 var VAULT_KIND='Unofficial SFS Vault';
 function vTitle(v){
   var n=(v&&v.name)||'';
+  /* Family vaults keep their own name. "Zoo & Farm Animals Trivia" and "1st Grade
+     Trivia" read like a pub quiz for people who cannot yet read, and the Star Student
+     series is sold on a child being the expert rather than on general knowledge.
+     Every other edition still gets the suffix. */
+  if(v && v.edition==='family') return n;
   return /\bTrivia$/.test(n) ? n : n+' Trivia';
 }
 function vcap(name){ return '<div class="vname"><span class="vn1">'+name+'</span><span class="vn2">'+VAULT_KIND+'</span></div>'; }
@@ -1116,7 +1132,7 @@ function playHTML(){
       the fandom half a child asks for by name, and the concrete-noun half a parent
       picks because it suits the age. A row with nothing on it is not rendered - an
       empty shelf reads as broken in a way "Coming soon" does not. */
-   var famRows=[['Shows & Movies','Shows & Movies'],['Everyday Fun','Everyday Fun']];
+   var famRows=[['Star Student','Star Student'],['Shows & Movies','Shows & Movies'],['Everyday Fun','Everyday Fun']];
    var anyFam=false;
    famRows.forEach(function(r){
      var inRow=vaults.filter(function(v){return (v.famcat||v.cat)===r[1];});
