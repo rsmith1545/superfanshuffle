@@ -959,7 +959,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v300';
+var SFSBUILD='v301';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1325,7 +1325,11 @@ function launchURL(v){ var u='/play.html?vault='+encodeURIComponent(v.id)+'&n='+
 var pool=VAULTS.filter(function(x){ if(x.id===v.id) return false;
   if(x.edition!==v.edition) return false;
   if(v.edition==='sports') return !!x.sp && x.cat===v.cat;
-  return true; }); if(pool.length){ var _p=pool.slice(),_pk=[]; for(var _i=0;_i<3&&_p.length;_i++){ _pk.push(_p.splice(Math.floor(Math.random()*_p.length),1)[0]); } var _xsl=_pk.map(function(x){return {id:x.id,name:vTitle(x),cat:x.cat||VAULT_KIND,c:x.c||null,ct:(x.sp&&x.sp.city)||'',tm:(x.sp&&x.sp.team)||'',p:(x.sp&&x.sp.p)||'',s:(x.sp&&x.sp.s)||'',t:(x.sp&&x.sp.t)||''};}); u+='&xsl='+encodeURIComponent(JSON.stringify(_xsl))+'&xs='+encodeURIComponent(_pk[0].id)+'&xsn='+encodeURIComponent(vTitle(_pk[0]))+'&xse='+encodeURIComponent(_pk[0].cat||VAULT_KIND); } }catch(e){} if(v.sp){ u+='&p1='+encodeURIComponent(v.sp.p||(v.c&&v.c[0])||'')+'&p2='+encodeURIComponent(v.sp.s||(v.c&&v.c[1])||'')+'&city='+encodeURIComponent(v.sp.city||'')+'&team='+encodeURIComponent(v.sp.team||v.name); } return u; }
+  return true; }); if(pool.length){ var _p=pool.slice(),_pk=[]; for(var _i=0;_i<3&&_p.length;_i++){ _pk.push(_p.splice(Math.floor(Math.random()*_p.length),1)[0]); } var _xsl=_pk.map(function(x){return {id:x.id,name:vTitle(x),cat:x.cat||VAULT_KIND,c:x.c||null,ct:(x.sp&&x.sp.city)||'',tm:(x.sp&&x.sp.team)||'',p:(x.sp&&x.sp.p)||'',s:(x.sp&&x.sp.s)||'',t:(x.sp&&x.sp.t)||'',yr:(x.sp&&x.sp.yr)||'',ft:(x.sp&&x.sp.fit)?1:0};}); u+='&xsl='+encodeURIComponent(JSON.stringify(_xsl))+'&xs='+encodeURIComponent(_pk[0].id)+'&xsn='+encodeURIComponent(vTitle(_pk[0]))+'&xse='+encodeURIComponent(_pk[0].cat||VAULT_KIND); } }catch(e){} if(v.sp){ u+='&p1='+encodeURIComponent(v.sp.p||(v.c&&v.c[0])||'')+'&p2='+encodeURIComponent(v.sp.s||(v.c&&v.c[1])||'')+'&city='+encodeURIComponent(v.sp.city||'')+'&team='+encodeURIComponent(v.sp.team||v.name)
+   /* The results screen was rebuilding the shelf tile from p1/p2 alone and getting a
+      lookalike. It needs the same three the shelf uses: the text colour, the founding
+      year that draws the weave, and the fit flag. */
+   +'&tc='+encodeURIComponent(v.sp.t||'')+'&yr='+encodeURIComponent(v.sp.yr||'')+'&fit='+(v.sp.fit?1:0); } return u; }
 function pickVault(id){ var v=byId(id); if(!v) return; openVault(id); }
 function vkSel(el){ var p=el.parentNode; var ms=p.querySelectorAll('.vkmode'); for(var i=0;i<ms.length;i++) ms[i].classList.remove('sel'); el.classList.add('sel'); }
 var ARTCOLOR={fam_letters:['#E8B33C','232,179,60'], fam_school:['#4FB08A','79,176,138'], fam_grade1:['#E0503A','224,80,58'], fam_grade2:['#E88A2E','232,138,46'], fam_grade3:['#5FB35F','95,179,95'], fam_grade4:['#4FA9DB','79,169,219'], fam_grade5:['#9B7FE0','155,127,224'], fam_grade6:['#DB6BAA','219,107,170'], fam_animals:['#8CC44F','140,196,79'], fam_food:['#E8703C','232,112,60'], fam_nursery:['#CE8FDB','206,143,219'], fam_storybook:['#D99A50','217,154,80'], fam_instruments:['#D46B94','212,107,148'], fam_sportswords:['#E0AE33','224,174,51'], fam_jobs:['#57A8D4','87,168,212'], fam_geography:['#5FC0A3','95,192,163'], fam_presidents:['#D46150','212,97,80'], fam_characters:['#EC7FB4','236,127,180'], fam_videogames:['#8B9CEC','139,156,236'], fam_halloween:['#F0821E','240,130,30'], fam_holiday:['#E04A4A','224,74,74'], /* Party Vault accents. Without an entry here these fall through colorOf() to the
