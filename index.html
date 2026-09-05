@@ -953,7 +953,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v289';
+var SFSBUILD='v290';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1234,7 +1234,7 @@ function browseOpen(id){ var v=byId(id); if(!v) return;
 }
 function brSearch(){ var el=document.getElementById('brq'); if(!el) return; var L=document.getElementById('brList'); if(L) L.innerHTML=browseList(el.value); }
 /* owned vaults (payments not wired yet — seed one so the full owned round + report card is playable) */
-var OWNED=['taylorswift','mv_comedy','mv_horror','mv_sports','mv_animated','mv_superhero','mv_fantasy','mv_war','fo-chicago-bears','ba-chicago-bulls','ba-new-york-mets','ho-new-york-islanders'];
+var OWNED=['taylorswift','mv_comedy','mv_horror','mv_sports','mv_animated','mv_superhero','mv_fantasy','mv_war','fo-chicago-bears','ba-chicago-bulls','ba-new-york-mets','ho-new-york-islanders','fam_grade1','fam_grade2','fam_grade3','fam_grade4','fam_grade5','fam_grade6'];
 function playOwned(id){ var v=byId(id); if(v) location.href=launchURL(v)+'&mode=full'; }
 function ownedTile(v){ return '<div class="vault" onclick="openVault(\''+v.id+'\')">'+coverHTML(v)+vcap(vTitle(v))+'</div>'; }
 function lpMap(){try{return JSON.parse(localStorage.getItem('sfs_lp')||'{}');}catch(e){return {};}}
