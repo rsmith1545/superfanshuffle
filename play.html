@@ -398,6 +398,32 @@
 
 
 /* ===== Movies & TV Result Card ===== */
+
+/* ===== Report Card =====
+   Family only. The round just played, with the definition under every card, so a
+   parent can explain the ones that got passed. Deliberately NOT shown during play -
+   on screen mid-round it stops being a guessing game and becomes read-aloud.
+   Sits outside body.lock-ls, so it is upright while the game stage is rotated. */
+#sReportCard{position:fixed;inset:0;z-index:130;display:none;background:#0b0a14;color:#fff;
+  overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;font-family:'Inter',system-ui,sans-serif}
+#sReportCard.on{display:block}
+#sReportCard .rgHd{position:sticky;top:0;background:linear-gradient(180deg,#141024,#0b0a14);
+  padding:18px 18px 12px;border-bottom:1px solid rgba(255,255,255,.10)}
+#sReportCard .rgT{font-family:var(--disp);font-size:26px;letter-spacing:1px}
+#sReportCard .rgS{font-size:12px;opacity:.62;margin-top:2px}
+#sReportCard .rgX{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:#fff;font-size:16px;cursor:pointer}
+#sReportCard .rgList{padding:8px 14px 4px}
+#sReportCard .rgRow{display:flex;gap:11px;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.07)}
+#sReportCard .rgIc{flex:none;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:12px;font-weight:900;margin-top:1px}
+#sReportCard .rgRow.hit .rgIc{background:rgba(96,222,138,.16);color:#60de8a}
+#sReportCard .rgRow.miss .rgIc{background:rgba(255,120,120,.16);color:#ff7878}
+#sReportCard .rgN{font-weight:800;font-size:16px;line-height:1.25}
+#sReportCard .rgRow.miss .rgN{color:#ffd9d9}
+#sReportCard .rgD{font-size:13.5px;line-height:1.5;opacity:.74;margin-top:3px}
+#sReportCard .rgC{font-size:10px;letter-spacing:.09em;text-transform:uppercase;opacity:.42;margin-top:5px}
+#sReportCard .rgFoot{padding:16px 18px 34px;font-size:11.5px;opacity:.45;text-align:center}
 #sReportFilm{position:fixed;inset:0;z-index:120;display:none;background:#04060c;color:#fff;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;font-family:'Inter',sans-serif}
 #sReportFilm.on{display:block}
 .rfBg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#04060c}
@@ -926,6 +952,13 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
     </div>
   </div>
   <!-- REPORT CARD (end of a full, owned round — owner-only) -->
+
+  <div id="sReportCard">
+    <div class="rgHd"><div class="rgT">Report Card</div><div class="rgS" id="rgSub"></div>
+      <button class="rgX" id="rgClose">&#10005;</button></div>
+    <div class="rgList" id="rgList"></div>
+    <div class="rgFoot">Every card from the round just played.</div>
+  </div>
   <div class="screen" id="sReport">
    <div class="rcCard">
     <div class="rcTop">
@@ -942,7 +975,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
     </div>
     <div class="rcLevels" id="rcLevels"></div>
     <div class="rcDeep" id="rcDeep" style="display:none"></div>
-    <div class="rcBtns"><button class="rcBtn primary" id="againBtn">&#8635; PLAY AGAIN</button><button class="rcBtn ghost" id="backBtn">&#8962; HOME / PLAY</button></div>
+    <div class="rcBtns"><button class="rcBtn primary" id="againBtn">&#8635; PLAY AGAIN</button><button class="rcBtn ghost" id="backBtn">&#8962; HOME / PLAY</button><button class="rcBtn ghost" id="reportCardBtn" style="display:none">&#128209; REPORT CARD</button></div>
     <div class="rcActions"><a id="customBtn">&#9881; CUSTOMIZE</a><i id="rcSep">|</i><a id="shareBtn">&#10548; SHARE RESULT</a></div>
     <div class="rcSimilar" id="rcSimilar"><div class="rcSimHd">Artists similar to <span id="rcSimArtist"></span></div><div class="rcSimList" id="rcSimList"></div></div>
 
@@ -989,6 +1022,10 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
     <button class="rcCustGo" id="rcCustGo">&#8635; PLAY WITH THESE</button>
   </div></div>
 <script>
+/* mirrors SFSBUILD in index.html - keep in step */
+var SFSBUILD='v287';
+window.SFSBUILD=SFSBUILD;
+
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
 var SFSPRICE='$1.99';
 
@@ -1644,6 +1681,7 @@ function buildReport(){
   if(cur<LADDER.length-1){ nx.innerHTML=(LADDER[cur+1].min-score)+' more to reach <b>'+LADDER[cur+1].name.toUpperCase()+'</b>'; } else { nx.textContent='Top tier \u2014 untouchable.'; }
   var fillPct=cur<=0?0:(cur/(LADDER.length-1))*100;
   document.getElementById('rcLevels').innerHTML='<div class="rlTrack"></div><div class="rlFill" style="--fill:'+fillPct+'"></div>'+LADDER.map(function(L,ix){ return '<div class="rclv'+(ix===cur?' on':'')+'" style="--tc:'+L.col+'"><div class="rlic">'+(ICON[L.key]||'')+'</div><div class="rlname">'+L.name+'</div><div class="rlrange">'+L.range+'</div></div>'; }).join('');
+  var _rcb=document.getElementById('reportCardBtn'); if(_rcb) _rcb.style.display=hasReportCard()?'':'none';
   var ul=document.getElementById('recap'); ul.innerHTML='';
   results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="n">'+(ix+1)+'</span><span class="ic">'+(r.good?'\u2713':'\u2717')+'</span><span class="t"></span>'; li.querySelector('.t').textContent=r.w; ul.appendChild(li); });
   document.getElementById('rcSimArtist').textContent=artist;
@@ -2122,4 +2160,51 @@ if(ED==='sports'){ try{ applySportCard(); }catch(e){} }
 <!-- iOS 17.4+ haptic shim. Hidden but NOT display:none - Safari will not fire the
      system haptic for an element it does not lay out. See buzz() below. -->
 <input type="checkbox" switch id="hapSw" tabindex="-1" aria-hidden="true" style="position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none">
+<script>
+/* ===== Report Card =====
+   DEFS is a side file, not part of the deck: cards stay bare strings so no existing
+   deck changes shape, and 108KB of definitions is only fetched if someone opens this.
+   Keyed grade -> name -> text because 386 cards repeat across grades with a DIFFERENT
+   definition each time (Simile appears in eight), so a flat map would collide. */
+var DEFS=null, DEFSTATE='none';
+function loadDefs(cb){
+  if(DEFSTATE==='ok') return cb();
+  if(DEFSTATE==='loading') return setTimeout(function(){loadDefs(cb);},120);
+  DEFSTATE='loading';
+  fetch('family-defs.json?v='+(window.SFSBUILD||'1')).then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(j){ DEFS=j; DEFSTATE='ok'; cb(); })
+    .catch(function(){ DEFSTATE='none'; cb(); });
+}
+function hasReportCard(){ return !!(VAULT_ID && VAULT_ID.indexOf('fam_grade')===0); }
+function openReportCard(){
+  var el=document.getElementById('sReportCard'); if(!el) return;
+  loadDefs(function(){
+    var d=(DEFS&&DEFS[VAULT_ID])||{};
+    var hit=0; results.forEach(function(r){ if(r.good) hit++; });
+    var sub=document.getElementById('rgSub');
+    if(sub) sub.textContent=hit+' of '+results.length+' correct';
+    document.getElementById('rgList').innerHTML = results.map(function(r){
+      var name=r.w||'';
+      var def=d[name]||'';
+      return '<div class="rgRow '+(r.good?'hit':'miss')+'">'
+        +'<div class="rgIc">'+(r.good?'\u2713':'\u2717')+'</div>'
+        +'<div><div class="rgN"></div>'+(def?'<div class="rgD"></div>':'')+'</div></div>';
+    }).join('');
+    /* textContent, never innerHTML, for anything out of the deck */
+    var rows=document.getElementById('rgList').querySelectorAll('.rgRow');
+    results.forEach(function(r,i){
+      var row=rows[i]; if(!row) return;
+      var name=r.w||'';
+      row.querySelector('.rgN').textContent=name;
+      var dEl=row.querySelector('.rgD'); if(dEl) dEl.textContent=d[name]||'';
+    });
+    el.classList.add('on');
+  });
+}
+(function(){
+  var b=document.getElementById('reportCardBtn'), x=document.getElementById('rgClose');
+  if(b) b.onclick=openReportCard;
+  if(x) x.onclick=function(){ document.getElementById('sReportCard').classList.remove('on'); };
+})();
+</script>
 </body></html>
