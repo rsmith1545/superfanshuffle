@@ -1039,7 +1039,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v302';
+var SFSBUILD='v304';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1057,14 +1057,28 @@ var SPCARD={'ba-arizona-diamondbacks':{b:'#A71930',o:'#E3D4AD',lb:0}, 'ba-atlant
    wrong place - a zero-width space, already written, that I had been reinventing. */
 function spWeave(col,yr){var svg="<svg xmlns='http://www.w3.org/2000/svg' width='300' height='396'><defs>"+"<pattern id='w' width='132' height='58' patternUnits='userSpaceOnUse' patternTransform='rotate(-18)'>"+"<text x='2' y='22' font-family='Arial Narrow,Arial,sans-serif' font-weight='700' font-size='22' letter-spacing='2' fill='"+col+"' fill-opacity='0.30'>"+yr+"</text>"+"<text x='68' y='50' font-family='Arial Narrow,Arial,sans-serif' font-weight='700' font-size='22' letter-spacing='2' fill='"+col+"' fill-opacity='0.30'>"+yr+"</text>"+"</pattern></defs><rect width='100%' height='100%' fill='url(#w)'/></svg>";return "url('data:image/svg+xml,"+encodeURIComponent(svg).replace(/'/g,"%27")+"')";}
 function spTeamDisp(t){ var m={'Diamondbacks':'Diamond\u200Bbacks','Timberwolves':'Timber\u200Bwolves','Blackhawks':'Black\u200Bhawks'}; return m[t]||t; }
-function spTileHTML(o,small){
-  var p=o.p||'#243b6b', s=o.s||'#0b1a3a', t=o.t||'#fff';
-  return '<div class="sptile'+(small?' sm':'')+'" style="--p:'+p+';--s:'+s+';--t:'+t+'">'
-    +(o.yr?'<div class="spweave" style="background-image:'+spWeave(s,o.yr)+'"></div>':'')
+function spTileInner(o){
+  var s=o.s||'#0b1a3a';
+  return (o.yr?'<div class="spweave" style="background-image:'+spWeave(s,o.yr)+'"></div>':'')
     +'<div class="spcity">'+(o.city||'')+'</div>'
     +'<div class="spteam'+(o.fit?' fit':'')+'">'+spTeamDisp(o.team||'')+'</div>'
     +'<div class="sptriv">Trivia</div>'
-    +'<div class="splbl">Unofficial SFS Vault</div></div>';
+    +'<div class="splbl">Unofficial SFS Vault</div>';
+}
+function spTileVars(o){
+  return '--p:'+(o.p||'#243b6b')+';--s:'+(o.s||'#0b1a3a')+';--t:'+(o.t||'#fff');
+}
+function spTileHTML(o,small){
+  return '<div class="sptile'+(small?' sm':'')+'" style="'+spTileVars(o)+'">'+spTileInner(o)+'</div>';
+}
+/* The results tile has to BE the sptile, not contain one. Wrapping it left the old
+   .rfTeamPoster box in place - its own aspect-ratio, border and 30px of padding - with
+   a second full-size tile inside, so the card sat in a box and got clipped. Taking the
+   class off is what stops those rules applying. */
+function spTileApply(el,o,small){
+  el.className='sptile'+(small?' sm':'');
+  el.style.cssText=spTileVars(o)+';display:flex';
+  el.innerHTML=spTileInner(o);
 }
 function spCard(){ return (ED==='sports' && typeof SPCARD!=='undefined' && SPCARD[VAULT_ID]) ? SPCARD[VAULT_ID] : null; }
 var DECKS=null;
@@ -1128,11 +1142,23 @@ function charSet(){
 /* The card is a bare string, so nothing on screen says whether you are guessing a FILM
    or a CHARACTER. With both in one deck that is the difference between a fair clue and
    a confused one, so the type is stamped in the corner opposite the score. */
+/* Sports has the same problem film had, and worse: a deck mixes people with events,
+   so "Terrible Towel" and "Walter Payton" arrive looking identical and the room does
+   not know whether to clue a man or a moment. The card string already says which -
+   a player carries a year in its sub-line, a coach carries the word Coach there, and
+   lore carries no parenthetical at all - so nothing in the deck data has to change. */
+function sportsCardType(w){
+  var m=/\((\d{4}[^()]*)\)\s*$/.exec(String(w||''));
+  if(!m) return 'LORE';
+  return /coach/i.test(m[1]) ? 'COACH' : 'PLAYER';
+}
 function stampCardType(w){
   var el=document.getElementById('cardType'); if(!el) return;
+  if(!w){ el.classList.remove('on'); return; }
+  if(ED==='sports'){ el.textContent=sportsCardType(w); el.classList.add('on'); return; }
   var d=DECKS&&DECKS[VAULT_ID];
   var has=!!(d && ((d.stdChars||[]).length || (d.dlxChars||[]).length));
-  if(!has || !w){ el.classList.remove('on'); return; }
+  if(!has){ el.classList.remove('on'); return; }
   el.textContent = charSet()[w] ? 'CHARACTER' : 'MOVIE';
   el.classList.add('on');
 }
@@ -1763,10 +1789,9 @@ function buildReportFilm(){
     /* Was a hand-built lookalike: a gradient where the shelf has a solid ground, no
        weave, its own shrink rule. It is now the shelf tile itself, same markup, same
        CSS, just the frame around it removed so the tile IS the element. */
-    if(_tp){ _tp.innerHTML=spTileHTML({p:_p1,s:_p2,t:RTC,city:RCITY,
+    if(_tp){ spTileApply(_tp,{p:_p1,s:_p2,t:RTC,city:RCITY,
         team:RTEAM||(VAULT_NAME||'').replace(/\s+Trivia$/i,'').replace(new RegExp('^'+(RCITY||'\u0000')+'\\s*','i'),''),
-        yr:RYR,fit:RFIT},false);
-      _tp.style.cssText='display:block;width:100%'; }
+        yr:RYR,fit:RFIT},false); }
     if(pv) pv.style.display='none'; if(_pb) _pb.style.display='none';
   } else {
     if(_grad) _grad.style.display='none'; if(_photo) _photo.style.display=''; if(_tp) _tp.style.display='none'; if(_pb) _pb.style.display='';
