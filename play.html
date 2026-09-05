@@ -443,7 +443,7 @@
 .rfBIcon{display:flex}
 .rfBIcon svg{width:clamp(16px,5.5vw,24px);height:auto;color:#f2a6ff;filter:drop-shadow(0 0 4px #ee55ff)}
 .rfBName{font-family:var(--disp);font-size:clamp(8px,2.6vw,11px);letter-spacing:.6px;color:#fff;margin-top:1px}
-.rfPoster{flex:0 0 52%;display:flex;flex-direction:column;gap:5px;min-width:0}
+.rfPoster{flex:0 0 52%;display:flex;flex-direction:column;gap:5px;min-width:0;container-type:inline-size}
 .rfScoreCol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
 .rfPoster img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.12);display:block;background:#0c0906}
 .rfPosterBtn{font-family:var(--disp);font-size:clamp(8.5px,2.5vw,10.5px);letter-spacing:.2px;color:#D35BEE;background:none;border:1px solid rgba(211,91,238,.5);border-radius:8px;padding:5px 3px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -503,28 +503,35 @@
 .rfKeep{background:#090D17;border:1.5px solid rgba(198,138,50,.55);border-radius:15px;padding:11px 11px 13px}
 .rfKeepHd{font-family:var(--disp);font-size:19px;letter-spacing:1.5px;color:#F6E5C4;text-align:left;margin:0 2px 9px}
 .rfKeepList{display:flex;gap:9px}
-.rfTile{flex:1;min-width:0;cursor:pointer}
+.rfTile{flex:1;min-width:0;cursor:pointer;container-type:inline-size}
 .rfTile img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:9px;border:1px solid rgba(255,255,255,.1);display:block;background:#0c0906}
 .rfBgGrad{position:absolute;inset:0;display:none}
 #rfBgPhoto{position:absolute;inset:0}
-/* Lifted from index, not rebuilt. Every previous version of this was an approximation
-   - a gradient where the shelf has a solid ground, no weave, a hand-rolled shrink -
-   and it read as a different object. Same rules, two sizes. */
-.sptile{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;border:6px solid var(--s);background:var(--p);color:var(--t);padding:12px 9px;box-shadow:5px 8px 18px rgba(0,0,0,.45);position:relative;border-radius:11px;width:100%;aspect-ratio:3/4}
-.sptile>*{position:relative;z-index:1}
+/* Lifted from index, not rebuilt - but sized in container units rather than the
+   shelf's fixed pixels. The shelf cover is 150px wide and the carousel tile is ~90px;
+   hard-coding 35px for the team name fits the first and clips the second, which is why
+   ISLANDERS arrived as SLANDERS with the label cut to UNOFFICIAL. Every ratio below is
+   taken from index - 35/150, 17/150, 12/150 - so one rule now reproduces the shelf
+   tile and the small one from the same numbers, at any width.
+   The px value is declared first so a browser without container queries still gets a
+   sane tile rather than nothing. */
+.sptile{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:var(--p);color:var(--t);position:relative;width:100%;aspect-ratio:3/4;
+ border:6px solid var(--s);border-width:4cqw;
+ padding:12px 9px;padding:8cqw 6cqw;
+ border-radius:11px;border-radius:7cqw;
+ box-shadow:5px 8px 18px rgba(0,0,0,.45)}
+.sptile>*{position:relative;z-index:1;max-width:100%}
 .sptile .spweave{position:absolute;inset:0;z-index:0;background-repeat:no-repeat;background-position:center;background-size:cover;pointer-events:none}
-.sptile .spcity{font-family:var(--body);font-size:17px;font-weight:800;letter-spacing:.4px;line-height:1.1;opacity:.95}
-.sptile .spteam{font-family:var(--disp);font-size:35px;line-height:.92;letter-spacing:.5px;text-transform:uppercase;margin:5px 2px 3px;overflow-wrap:normal}
-.sptile .spteam.fit{font-size:25px}
-.sptile .sptriv{font-family:var(--disp);font-size:15px;line-height:1;letter-spacing:2px;text-transform:uppercase;opacity:.9;margin:0 0 9px}
-.sptile .splbl{font-family:var(--body);font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;opacity:.85;border-top:2px solid currentColor;padding-top:7px}
-.sptile.sm{padding:4px 3px;border-width:3px;border-radius:9px}
-.sptile.sm>*{display:block}
-.sptile.sm .spcity{font-size:7px;line-height:1;margin:0;opacity:.92}
-.sptile.sm .spteam{font-size:13px;line-height:.88;margin:2px 0 1px;letter-spacing:.2px}
-.sptile.sm .spteam.fit{font-size:10px}
-.sptile.sm .sptriv{font-size:6px;letter-spacing:.5px;margin:0 0 2px}
-.sptile.sm .splbl{font-size:5px;letter-spacing:.5px;padding-top:2px;margin-top:1px;border-top-width:1px}
+.sptile .spcity{font-family:var(--body);font-weight:800;letter-spacing:.4px;line-height:1.1;opacity:.95;
+ font-size:17px;font-size:11.3cqw}
+.sptile .spteam{font-family:var(--disp);line-height:.92;letter-spacing:.5px;text-transform:uppercase;overflow-wrap:normal;
+ font-size:35px;font-size:23.3cqw;margin:5px 2px 3px;margin:3.3cqw 1.3cqw 2cqw}
+.sptile .spteam.fit{font-size:25px;font-size:16.6cqw}
+.sptile .sptriv{font-family:var(--disp);line-height:1;letter-spacing:2px;text-transform:uppercase;opacity:.9;
+ font-size:15px;font-size:10cqw;letter-spacing:1.3cqw;margin:0 0 9px;margin:0 0 6cqw}
+.sptile .splbl{font-family:var(--body);font-weight:800;text-transform:uppercase;opacity:.85;border-top:2px solid currentColor;
+ font-size:12px;font-size:8cqw;letter-spacing:1.6px;letter-spacing:1.06cqw;
+ padding-top:7px;padding-top:4.6cqw;border-top-width:1.3cqw;white-space:nowrap}
 .rfTeamPoster{display:none;width:100%;aspect-ratio:3/4;border-radius:11px;border:1px solid rgba(255,255,255,.16);overflow:hidden;position:relative;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 8px 12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 4px 14px rgba(0,0,0,.4)}
 /* ISLANDERS was breaking after the R and dropping a lone S onto the next line.
    overflow-wrap:break-word did that. Long single words now shrink instead, the
@@ -1039,7 +1046,7 @@ body.report-on #app{top:0!important;right:0!important;bottom:0!important;left:0!
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v304';
+var SFSBUILD='v306';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
