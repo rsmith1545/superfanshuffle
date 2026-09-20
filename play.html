@@ -1080,7 +1080,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v318';
+var SFSBUILD='v330';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1147,7 +1147,7 @@ var DECKS=null;
    All three now look for their own file; a missing one is not an error, the edition just
    has no Deluxe yet and the UI hides the choice (see custAvail). Drop music-decks.json
    in and it lights up with no code change. */
-var DECKFILE={filmtv:'film-decks.json?v=231', music:'music-decks.json?v=5', sports:'sports-decks.json?v=8', family:'family-decks.json?v=2'};
+var DECKFILE={filmtv:'film-decks.json?v=234', music:'music-decks.json?v=5', sports:'sports-decks.json?v=9', family:'family-decks.json?v=2'};
 /* DECKS===null meant two different things and the difference matters: "the file for
    this edition does not exist yet" and "the file loaded and this vault simply is not
    in it". Both fell through to the built-in music DECK, which is why a Cartoon TV
@@ -1225,9 +1225,19 @@ function sportsCardType(w){
   if(!m) return 'LORE';
   return /coach/i.test(m[1]) ? 'COACH' : 'PLAYER';
 }
+/* A deck may now carry its own corner labels: decks.<vault>.labels maps a card string
+   to the word stamped in the corner. Theatre District needs it because one pile holds
+   a show, a song, a person and a house, and a room that cannot tell which it is
+   holding gives the wrong clue - the same problem the CHARACTER/MOVIE badge solved for
+   film, except the answer there was only ever two words. A deck with no labels block is
+   untouched and falls through to the per-edition rules below. */
+function deckLabel(w){
+  try{ var d=DECKS&&DECKS[VAULT_ID]; return (d&&d.labels&&d.labels[w])||''; }catch(e){ return ''; }
+}
 function stampCardType(w){
   var el=document.getElementById('cardType'); if(!el) return;
   if(!w){ el.classList.remove('on'); return; }
+  var _dl=deckLabel(w); if(_dl){ el.textContent=_dl; el.classList.add('on'); return; }
   if(ED==='sports'){ el.textContent=sportsCardType(w); el.classList.add('on'); return; }
   if(ED==='music'){
     var dm=DECKS&&DECKS[VAULT_ID];
@@ -1272,6 +1282,41 @@ function noDeckNotice(){
     +'<div style="margin-top:14px"><button style="font:700 14px system-ui;padding:9px 18px;border-radius:999px;border:0;background:#3EDBFF;color:#04202a" onclick="qpgExit()">Back to vaults</button></div>';
   n.style.display='';
 }
+/* Passing is fine. Passing five times in a row reads as a broken deck rather than a
+   hard one, and the difference is clustering, not difficulty: with a fraction p of hard
+   cards the odds of a five-run in a ten-card round are about 6*p^5, so it goes from
+   1-in-500 at p=0.2 to 1-in-5 at p=0.5. Deluxe is where the hard cards live by
+   construction, so spacing by tier spaces difficulty for free - no new data.
+   Never deal three Deluxe cards in a row: look a few places ahead for a Standard card
+   and swap it forward. The window is short on purpose, so the unseen-first dealing
+   order below survives essentially intact. */
+var _HARDSET=null;
+function hardSet(){
+  if(_HARDSET) return _HARDSET;
+  _HARDSET={};
+  try{ var d=DECKS&&DECKS[VAULT_ID];
+    if(d){ (d.deluxe||[]).concat(d.dlxChars||[]).forEach(function(c){ _HARDSET[c]=1; }); }
+  }catch(e){}
+  return _HARDSET;
+}
+/* First cut swapped a Standard card forward whenever three Deluxe landed together.
+   That fails exactly where it is needed: the Bears deck is 68% Deluxe and Springsteen
+   70%, so the neighbours are Deluxe too and there is nothing to swap in. The limit is
+   arithmetic - with H hard and E easy cards the shortest achievable worst run is
+   ceil(H/E), and no local fix beats it. So deal the two piles proportionally instead
+   (Bresenham-style), which hits that bound exactly: alternating at 50/50, runs of two
+   at 2:1, and never the run of eleven a plain shuffle produced. */
+function spaceHard(order){
+  var hard=hardSet(), H=[], E=[];
+  for(var i=0;i<order.length;i++) (hard[order[i]] ? H : E).push(order[i]);
+  if(!H.length || !E.length) return order;
+  var out=[], hi=0, ei=0;
+  while(hi<H.length || ei<E.length){
+    if(ei>=E.length || (hi<H.length && hi*E.length <= ei*H.length)) out.push(H[hi++]);
+    else out.push(E[ei++]);
+  }
+  return out;
+}
 function dealOrder(){
   var deck=activeDeck();
   if(deck.length<2) return deck.slice();
@@ -1282,8 +1327,8 @@ function dealOrder(){
   for(var w in SEEN_RUN) seen[w]=1;
   var fresh=[], used=[];
   for(var i=0;i<deck.length;i++){ (seen[deck[i]] ? used : fresh).push(deck[i]); }
-  if(!fresh.length){ clearSeen(); SEEN_RUN={}; return shuffle(deck.slice()); }
-  return shuffle(fresh).concat(shuffle(used));
+  if(!fresh.length){ clearSeen(); SEEN_RUN={}; return spaceHard(shuffle(deck.slice())); }
+  return spaceHard(shuffle(fresh).concat(shuffle(used)));
 }
 function seenCount(ed){ try{ return Object.keys(JSON.parse(localStorage.getItem(_seenKey(ed))||'{}')).length; }catch(e){ return 0; } }
 var PREVIEW=Q.get('mode')!=='full';   // default = 5-question preview; ?mode=full = owned round → report card
@@ -1321,7 +1366,11 @@ var FILM_CARD={
  tv_cartoon  :['#0A4E5C','#FFD23F'], tv_sitcom   :['#7A3E0C','#FFC96B'],
  tv_scifi    :['#10233F','#5FD3FF'], tv_binge    :['#3A1050','#E070FF'],
  tv_oldschool:['#33291C','#D8B98A'], tv_growingup:['#14456B','#7FD4FF'],
- tv_gameshow :['#5C0F52','#FFD23F']};
+ tv_gameshow :['#5C0F52','#FFD23F'],
+ /* Stage does not belong to a film genre, so it gets the room instead of the genre:
+    house red walls, marquee gold lettering. #4A0F1E against #E8C56A clears the same
+    bars every pair above does. */
+ st_theatre  :['#4A0F1E','#E8C56A']};
 /* Fallback is the edition's own black + gold, so a film vault added later without a
    genre entry still gets a coherent card rather than the default purple. */
 var FILM_BG='#1F1F24', FILM_OUTLINE='#F2C14E';

@@ -645,7 +645,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 var DEV_PREVIEW=true;
 var EDITIONS=[
  {id:'music',  label:'Music',     enabled:true,  accent:'#3EDBFF'},
- {id:'filmtv', label:'Movies & TV', enabled:true, accent:'#F2C14E'},
+ {id:'filmtv', label:'Stage & Screen', enabled:true, accent:'#F2C14E'},
  {id:'sports', label:'Sports',    enabled:true,  accent:'#FF8A2A'},
  /* Family is the fourth world. Green because the other three already own cyan,
     gold and orange, and green is the only primary left that reads at pill size. */
@@ -667,6 +667,16 @@ function inSeason(v,now){
   return (a<=b) ? (t>=a && t<=b) : (t>=a || t<=b);
 }
 function onShelf(v,ed){ return v.edition===ed || (v.also && v.also.indexOf(ed)>=0); }
+/* The 96 league team vaults are built but not in the first release. Each one carries a
+   city, a franchise name and a team colourway; the four Legends vaults carry none of
+   that, which is why they stay and the leagues wait. One flag rather than 96 edits.
+   vaultLive() is deliberately separate from onShelf(): onShelf answers "which world does
+   this belong to" and still drives theming and deep links, so a direct URL keeps working
+   for testing. This only removes them from what the app SHOWS - shelves, browse, search
+   and the owned row. Set true to bring the leagues back. */
+var LEAGUES_LIVE=false;
+var LEAGUE_CATS={Football:1,Basketball:1,Baseball:1,Hockey:1};
+function vaultLive(v){ return !!v && (LEAGUES_LIVE || !LEAGUE_CATS[v.cat]); }
 function editionVisible(e){ return e.enabled || DEV_PREVIEW; }
 function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)return EDITIONS[i];}
 
@@ -790,16 +800,30 @@ var VAULTS=[
  {id:'tv_binge', name:'TV Binge Worthy', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
  {id:'tv_oldschool', name:'Old School TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
  {id:'tv_growingup', name:'Growing Up TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
- {id:'tv_gameshow', name:'Game Show TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1}
+ {id:'tv_gameshow', name:'Game Show TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
+ /* Stage is the third cat inside filmtv, not a fifth edition. It shares the edition's
+    theme, its gold chrome and its LEGAL_TITLES line, because a Broadway title is the
+    same kind of referenced work a film title is. cat only decides which shelf it lands
+    on, which is the whole reason cat exists. Colours are house red and marquee gold
+    rather than the movie purple or the TV blue, so the row reads as its own thing at
+    tile size. No ART entry yet - the filmtv placeholder cover catches that on purpose,
+    and a name in ART pointing at a file that is not there is the broken-tile bug. */
+ {id:'st_theatre', name:'Theatre District', edition:'filmtv', cat:'Stage', badge:'prem', c:['#4a1526','#8c2b43'], dark:1}
 ];
 var SPORTS=[
 /* Party Vaults - cross-era concept vaults not tied to a franchise. No sp block, so
    coverHTML falls through to the poster in ART. cat is its own bucket so they shelf
    above the four leagues instead of inside one of them. */
-{id:"fo_legends",name:"Football Legends",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#7a4a24","#d89b45"]},
-{id:"ba_legends",name:"Basketball Legends",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#d2531f","#1a1410"]},
-{id:"bs_legends",name:"Baseball Legends",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#c9b48a","#8a4a2a"]},
-{id:"ho_legends",name:"Hockey Legends",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#e01b24","#2a4a6a"]},
+{id:"fo_legends",name:"Football All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#7a4a24","#d89b45"]},
+{id:"ba_legends",name:"Basketball All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#d2531f","#1a1410"]},
+{id:"bs_legends",name:"Baseball All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#c9b48a","#8a4a2a"]},
+{id:"ho_legends",name:"Hockey All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#e01b24","#2a4a6a"]},
+{id:"so_legends",name:"Soccer All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#146b3a","#e9e5db"]},
+{id:"te_legends",name:"Tennis All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#b7d84a","#1f4f2a"]},
+{id:"gf_legends",name:"Golf All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#1f5c3a","#d8cfa8"]},
+{id:"bx_legends",name:"Boxing All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#8a1220","#c8a24a"]},
+{id:"mm_legends",name:"MMA All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#c0392b","#1a1a1e"]},
+{id:"ra_legends",name:"Racing All-Time Greats",edition:"sports",cat:"Party Vaults",badge:"prem",dark:1,c:["#c8102e","#101014"]},
 {id:"fo-arizona-cardinals",name:"Arizona Cardinals",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#97233F","#000000"],sp:{p:"#97233F",s:"#000000",t:"#FFB612",city:"Arizona",team:"Cardinals",fit:1,yr:1898}},
 {id:"fo-atlanta-falcons",name:"Atlanta Falcons",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#A71930","#000000"],sp:{p:"#A71930",s:"#000000",t:"#FFFFFF",city:"Atlanta",team:"Falcons",yr:1966}},
 {id:"fo-baltimore-ravens",name:"Baltimore Ravens",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#241773","#000000"],sp:{p:"#241773",s:"#000000",t:"#FFD100",city:"Baltimore",team:"Ravens",yr:1996}},
@@ -959,7 +983,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v318';
+var SFSBUILD='v330';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -969,7 +993,7 @@ var CARDART={"adele":{"o":"#F4A330"},"arianagrande":{"o":"#FFF6E0","l":1},"ate":
 function coverHTML(v,label){
  var e=eraOf(v);
  var badge=v.badge==='free'?'<div class="badge free">Free</div>':'';
- if(v.edition==='filmtv' && !ART[v.id]) return '<div class="cover phcover" style="background:linear-gradient(160deg,'+((v.c&&v.c[0])||'#3a2a6e')+' 0%,'+((v.c&&v.c[1])||'#6a4aa0')+' 100%)">'+badge+'<span class="phname">'+v.name+'</span></div>';
+ if((v.edition==='filmtv' || (v.edition==='sports' && !v.sp)) && !ART[v.id]) return '<div class="cover phcover" style="background:linear-gradient(160deg,'+((v.c&&v.c[0])||'#3a2a6e')+' 0%,'+((v.c&&v.c[1])||'#6a4aa0')+' 100%)">'+badge+'<span class="phname">'+v.name+'</span></div>';
  if(v.sp) return '<div class="cover sptile" style="--p:'+v.sp.p+';--s:'+v.sp.s+';--t:'+v.sp.t+'">'+(v.sp.yr?'<div class="spweave" style="background-image:'+spWeave(v.sp.s,v.sp.yr)+'"></div>':'')+badge+'<div class="spcity">'+v.sp.city+'</div><div class="spteam'+(v.sp.fit?" fit":"")+'">'+spTeamDisp(v.sp.team)+'</div><div class="sptriv">Trivia</div><div class="splbl">'+VAULT_KIND+'</div></div>';
  if(ART[v.id]) return '<div class="cover artcover">'+badge+'<img class="artimg" src="'+ART[v.id]+'?v='+SFSBUILD+'" alt="" draggable="false"></div>';
  if(e==='neon') return streamTileHTML(v,label);
@@ -1063,9 +1087,14 @@ function legalFooterHTML(){
    openLegal() is referenced from the footer and from the legal line on both vault
    sheets, and until now it was defined nowhere - every one of those three was a dead
    click. Nothing here is a legal opinion; it states what the app is and is not.
-   LEGAL_CONTACT is intentionally blank: the rights-holder block only renders once a
-   real address exists, so no placeholder can ship. */
-var LEGAL_CONTACT='';
+   LEGAL_CONTACT gates the rights-holder block: it only renders once a real address
+   exists, so no placeholder can ship. The address matters more than the wording around
+   it. Decks are JSON fetched at runtime, so a vault can be pulled in minutes without an
+   App Store review - which means a rights holder who writes here gets a faster result
+   than one who files a claim with Apple. Giving them the faster path is the whole point:
+   a complaint routed to this mailbox costs one deck, the same complaint routed to Apple
+   can cost the app. THIS MAILBOX MUST ACTUALLY RECEIVE MAIL BEFORE SUBMISSION. */
+var LEGAL_CONTACT='legal@superfanshuffle.com';
 function legalBodyHTML(){
  var h='<div class="lgtop"><h3>Legal &amp; Credits</h3><button class="lgx" onclick="closeLegal()" aria-label="Close">&#10005;</button></div>';
  h+='<h4>Unofficial fan-made game</h4>'
@@ -1086,10 +1115,13 @@ function legalBodyHTML(){
    +'brackets are also unofficial and are not affiliated with or endorsed by any featured artist '
    +'or rights holder.</p>';
  if(LEGAL_CONTACT){
-  h+='<h4>Rights holders</h4>'
-    +'<p>If you represent a rights holder and would like content relating to you removed, '
-    +'write to <a href="mailto:'+LEGAL_CONTACT+'">'+LEGAL_CONTACT+'</a> and it will be taken '
-    +'down promptly.</p>';
+  h+='<h4>Rights holders — removal requests</h4>'
+    +'<p>If you represent a rights holder and want any content relating to you removed, '
+    +'write to <a href="mailto:'+LEGAL_CONTACT+'">'+LEGAL_CONTACT+'</a>. Please name the vault '
+    +'or cards concerned. Requests are honoured — we do not require you to explain why.</p>'
+    +'<p class="legal-small">Vault content is served from our own site rather than bundled into '
+    +'the app, so material can be removed within one business day of a request, without waiting '
+    +'on an app store update. Writing to us is the fastest route to removal.</p>';
  }
  h+='<h4>Credits</h4>'
    +'<p>Typefaces: Bebas Neue and Barlow, served by Google Fonts under the SIL Open Font '
@@ -1109,7 +1141,7 @@ function closeLegal(){
 function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(function(v){return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'</div>';}).join(''); return '<h2>'+title+'</h2><div class="row">'+t+'</div>'; }
 function playHTML(){
  var ed=curEdition, h='';
- var vaults=VAULTS.filter(function(v){return onShelf(v,ed);});
+ var vaults=VAULTS.filter(function(v){return onShelf(v,ed) && vaultLive(v);});
  var freeV=vaults.filter(function(v){return v.badge==='free' && inSeason(v);});
  /* Built once, placed differently per edition, and now only Family has anything in
     it - both free tasters were moved off the Music shelf. The row still leads every
@@ -1132,6 +1164,9 @@ function playHTML(){
  } else if(ed==='filmtv'){
    h+=shelf('Movies', vaults.filter(function(v){return v.cat==='Movies';}), 1, true);
    h+=shelf('TV', vaults.filter(function(v){return v.cat==='TV';}), 1, true);
+   /* minN is 1 here, same as the rows above, so Stage renders while it holds a single
+      vault. An empty row does not render at all rather than showing a bare heading. */
+   h+=shelf('Stage', vaults.filter(function(v){return v.cat==='Stage';}), 1, true);
  } else if(ed==='family'){
    /* Two rows, split the way a parent shops rather than by what the content is:
       the fandom half a child asks for by name, and the concrete-noun half a parent
@@ -1192,7 +1227,7 @@ function browseRow(v,showCat){
 }
 function edVaults(ed,q){
  return VAULTS.filter(function(v){
-   if(!onShelf(v,ed)) return false;
+   if(!onShelf(v,ed) || !vaultLive(v)) return false;
    if(ed==='sports' && !v.sp && !ART[v.id]) return false;
    if(v.edition==='music' && v.cat==='Best Of') return false;
    return !q || v.name.toLowerCase().indexOf(q)>=0;
@@ -1245,8 +1280,8 @@ function playOwned(id){ var v=byId(id); if(v) location.href=launchURL(v)+'&mode=
 function ownedTile(v){ return '<div class="vault" onclick="openVault(\''+v.id+'\')">'+coverHTML(v)+vcap(vTitle(v))+'</div>'; }
 function lpMap(){try{return JSON.parse(localStorage.getItem('sfs_lp')||'{}');}catch(e){return {};}}
 function myVaultsHTML(){
- var owned=OWNED.map(byId).filter(Boolean);
- var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Movies & TV',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'},{id:'family',label:'Family',acc:'#7ED957'}];
+ var owned=OWNED.map(byId).filter(Boolean).filter(vaultLive);
+ var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Stage & Screen',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'},{id:'family',label:'Family',acc:'#7ED957'}];
  var cnt={}; order.forEach(function(e){ cnt[e.id]=owned.filter(function(v){return (v.edition||'music')===e.id;}).length; });
  var LP=lpMap(); var h='';
  h+='<div class="mvpills">'+order.map(function(e){return '<button class="mvpill" style="--pa:'+e.acc+'" onclick="mvJump(\''+e.id+'\')">'+e.label+' <span>'+cnt[e.id]+'</span></button>';}).join('')+'</div>';
@@ -1286,8 +1321,8 @@ function renderBrandBar(v){
  var BBBG={music:'#1a0d33',filmtv:'#0e0e12',sports:'#14274d',family:'#10281f'};
  bb.style.background=(v==='vaults'?'#120a20':(BBBG[curEdition]||'#1a0d33'));
  if(v==='vaults'){
-   var owned=OWNED.map(byId).filter(Boolean);
-   var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Movies & TV',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'}];
+   var owned=OWNED.map(byId).filter(Boolean).filter(vaultLive);
+   var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Stage & Screen',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'}];
    var pills=order.map(function(e){var c=owned.filter(function(x){return (x.edition||'music')===e.id;}).length; return '<button class="mvpill" style="--pa:'+e.acc+'" onclick="mvJump(\''+e.id+'\')">'+e.label+' <span>'+c+'</span></button>';}).join('');
    bb.innerHTML='<button class="mini-brand" onclick="setView(\'play\');window.scrollTo(0,0)" aria-label="Home"><img src="myvaults-logo.png?v=2" alt=""></button><div class="bbsec">'+pills+'</div>';
  } else if(v==='browse'){
@@ -1463,6 +1498,7 @@ function vaultLegal(v){ if(!v) return LEGAL_GEN;
  if(v.edition==='family') return v.ip ? LEGAL_TITLES : LEGAL_GEN;
  return 'Unofficial fan-created content. Not affiliated with or endorsed by '+v.name+', their management, or affiliated companies.'; }
 var FILMDATA={
+ st_theatre:{blurb:"Forty-second Street and everything it gave the rest of us \u2014 the shows, the songs, the houses, the superstitions and the legends who filled them. From Hamilton and Les Mis\u00e9rables to A Chorus Line, Gypsy, Rent and Sweeney Todd, plus the West End, the road and the words only theatre people use \u2014 how deep does your fandom go?",std:"The shows, songs and legends anyone who has been to a theatre knows.",dlx:"Deeper cuts, older houses and the jargon that gives away a regular."},
  mv_comedy:{blurb:"The jokes you still steal and the scenes that had you laughing so hard you cried. From Animal House and Monty Python and the Holy Grail to Coming to America, Dumb and Dumber, Happy Gilmore, Meet the Parents, The Hangover and Bridesmaids — how well do you know the movies that made us laugh?",std:"The greatest hits of comedy — the movies you know by heart.",dlx:"More laughs, more favorites, and movies you may have forgotten you loved."},
  mv_animated:{blurb:"The films you grew up on and the ones you now share with your own kids — the moments you know by heart and the scenes that still get you. From The Lion King and Toy Story to Shrek, Finding Nemo, Frozen and Spirited Away — how well do you know the movies that made us feel like kids again?",std:"The animated classics everyone knows and loves.",dlx:"Hidden gems, deeper cuts, and the ones you forgot you loved."},
  mv_drama:{blurb:"The movies that gutted you, moved you, and stuck with you long after the credits rolled. The performances, the twists, the endings you never saw coming. From The Shawshank Redemption and Forrest Gump to The Godfather, Good Will Hunting, Fight Club and Whiplash — how well do you know the movies that made us feel everything?",std:"The essential dramas everyone has seen.",dlx:"Deeper cuts, festival favorites, and the ones worth a second watch."},
@@ -1498,6 +1534,28 @@ function closeZoom(){
   if(z){ z.classList.remove('on'); z.setAttribute('aria-hidden','true'); }
 }
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeZoom(); });
+/* Legends vaults were falling through to the music branch, exactly as Family once did:
+   a Boxing Legends buy page promised "songs, albums, lore and deep cuts" and showed a
+   sample card reading ALBUM / ALBUMS. They also have no Deluxe, so the edition drawer
+   was offering one that does not exist. Own branch, own copy, no drawer. */
+/* GENERATED - vaults that actually contain Deluxe cards. Regenerate from the deck
+   files whenever a Deluxe tier is added; the buy sheet offers the edition drawer
+   only for ids listed here. 31 vaults were offering a Deluxe that did not exist -
+   Adele, Nirvana, CCR, every Family grade and every Legends vault. */
+var HASDLX={"arianagrande":1,"ate":1,"ba-atlanta-hawks":1,"ba-boston-celtics":1,"ba-charlotte-hornets":1,"ba-chicago-bulls":1,"ba-cleveland-cavaliers":1,"ba-dallas-mavericks":1,"ba-denver-nuggets":1,"ba-detroit-pistons":1,"ba-houston-rockets":1,"ba-indianapolis-pacers":1,"ba-los-angeles-clippers":1,"ba-los-angeles-lakers":1,"ba-memphis-grizzlies":1,"ba-miami-heat":1,"ba-milwaukee-bucks":1,"ba-minnesota-timberwolves":1,"ba-new-orleans-pelicans":1,"ba-new-york-knicks":1,"ba-new-york-nets":1,"ba-oklahoma-city-thunder":1,"ba-orlando-magic":1,"ba-philadelphia-76ers":1,"ba-phoenix-suns":1,"ba-portland-trail-blazers":1,"ba-sacramento-kings":1,"ba-salt-lake-city-jazz":1,"ba-san-antonio-spurs":1,"ba-san-francisco-golden-state-warriors":1,"ba-toronto-raptors":1,"ba-washington-wizards":1,"beatles":1,"beyonce":1,"biggie":1,"billyjoel":1,"bonjovi":1,"bowie":1,"carrieunderwood":1,"codyjohnson":1,"coldplay":1,"dmb":1,"eagles":1,"edsheeran":1,"eminem":1,"faithhill":1,"fleetwoodmac":1,"fo-arizona-cardinals":1,"fo-atlanta-falcons":1,"fo-baltimore-ravens":1,"fo-buffalo-bills":1,"fo-carolina-panthers":1,"fo-chicago-bears":1,"fo-cincinnati-bengals":1,"fo-cleveland-browns":1,"fo-dallas-cowboys":1,"fo-denver-broncos":1,"fo-detroit-lions":1,"fo-green-bay-packers":1,"fo-houston-texans":1,"fo-indianapolis-colts":1,"fo-jacksonville-jaguars":1,"fo-kansas-city-chiefs":1,"fo-las-vegas-raiders":1,"fo-los-angeles-chargers":1,"fo-los-angeles-rams":1,"fo-miami-dolphins":1,"fo-minnesota-vikings":1,"fo-nashville-titans":1,"fo-new-england-patriots":1,"fo-new-orleans-saints":1,"fo-new-york-giants":1,"fo-new-york-jets":1,"fo-philadelphia-eagles":1,"fo-pittsburgh-steelers":1,"fo-san-francisco-49ers":1,"fo-seattle-seahawks":1,"fo-tampa-bay-buccaneers":1,"fo-washington-commanders":1,"foo":1,"fthc":1,"gratefuldead":1,"greenday":1,"grunge90s":1,"hendrix":1,"ho-anaheim-ducks":1,"ho-boston-bruins":1,"ho-buffalo-sabres":1,"ho-calgary-flames":1,"ho-carolina-hurricanes":1,"ho-chicago-blackhawks":1,"ho-columbus-blue-jackets":1,"ho-dallas-stars":1,"ho-denver-avalanche":1,"ho-detroit-red-wings":1,"ho-edmonton-oilers":1,"ho-fl-panthers":1,"ho-las-vegas-golden-knights":1,"ho-los-angeles-kings":1,"ho-minnesota-wild":1,"ho-montreal-canadiens":1,"ho-nashville-predators":1,"ho-new-york-islanders":1,"ho-new-york-rangers":1,"ho-nj-devils":1,"ho-ottawa-senators":1,"ho-philadelphia-flyers":1,"ho-pittsburgh-penguins":1,"ho-salt-lake-city-utah-mammoth":1,"ho-san-jose-sharks":1,"ho-seattle-kraken":1,"ho-st-louis-blues":1,"ho-tampa-bay-lightning":1,"ho-toronto-maple-leafs":1,"ho-vancouver-canucks":1,"ho-washington-capitals":1,"ho-winnipeg-jets":1,"jasonaldean":1,"jellyroll":1,"justintimberlake":1,"katyperry":1,"kennychesney":1,"ladygaga":1,"laineywilson":1,"ledzeppelin":1,"lukebryan":1,"lukecombs":1,"metallica":1,"morganwallen":1,"mv_animated":1,"mv_comedy":1,"mv_fantasy":1,"mv_horror":1,"mv_sports":1,"mv_superhero":1,"newpopqueens":1,"oasis":1,"onedirection":1,"pearljam":1,"postmalone":1,"queen":1,"rhcp":1,"rihanna":1,"selenagomez":1,"smashingpumpkins":1,"springsteen":1,"stones":1,"stp":1,"taylorswift":1,"thewho":1,"timmcgraw":1,"tompetty":1,"u2":1,"zachbryan":1};
+var LEGDATA={
+ fo_legends:{b:'The men who built the game \u2014 from leather helmets to the modern quarterback. Backs, receivers, linemen, linebackers and the coaches who ran them.',p1:'Jim Brown',p2:'Jerry Rice',c1:'Vince Lombardi'},
+ ba_legends:{b:'Every era of the game in one shuffle \u2014 the big men, the guards who changed it, and the coaches who won with them.',p1:'Bill Russell',p2:'Magic Johnson',c1:'Phil Jackson'},
+ bs_legends:{b:'A century and a half of the game \u2014 the hitters, the arms, the Negro Leagues greats and the managers who ran the dugout.',p1:'Willie Mays',p2:'Satchel Paige',c1:'Casey Stengel'},
+ ho_legends:{b:'The greatest ever to lace them up \u2014 scorers, defencemen, goaltenders and the coaches behind the dynasties.',p1:'Bobby Orr',p2:'Maurice Richard',c1:'Scotty Bowman'},
+ so_legends:{b:'The global game\u2019s greatest \u2014 strikers, playmakers, defenders and keepers, from Pel\u00e9 to Mbapp\u00e9.',p1:'Diego Maradona',p2:'Lev Yashin',c1:'Rinus Michels'},
+ te_legends:{b:'Everyone who ever held a racket and mattered \u2014 from Laver and Billie Jean King to Federer, Serena and Alcaraz.',p1:'Rod Laver',p2:'Martina Navratilova',c1:'Nick Bollettieri'},
+ gf_legends:{b:'The names on every trophy \u2014 Hogan, Nicklaus, Palmer, Tiger, and the modern players chasing them.',p1:'Ben Hogan',p2:'Annika S\u00f6renstam',c1:'Harvey Penick'},
+ bx_legends:{b:'The fighters who defined the sport \u2014 every division, every era, and the trainers in their corner.',p1:'Sugar Ray Robinson',p2:'Joe Louis',c1:'Angelo Dundee'},
+ mm_legends:{b:'Thirty years of the cage \u2014 the champions, the pioneers, and the fights people still argue about.',p1:'Royce Gracie',p2:'Amanda Nunes',c1:'Greg Jackson'},
+ ra_legends:{b:'Speed in every form \u2014 Formula 1, NASCAR, IndyCar, rally, Le Mans and MotoGP, in one shuffle.',p1:'Juan Manuel Fangio',p2:'Richard Petty',c1:'Enzo Ferrari'}
+};
+var LEGDEF={b:'The greatest to ever do it \u2014 every era, in one shuffle.',p1:'Players',p2:'All-Time Greats',c1:'Coaches'};
 function openVault(id){
  var v=byId(id); if(!v) return; V5ED='Standard'; V5SPORT=false; V5FILM=false;
  if(v.sp) return openSportsVault(v);
@@ -1506,6 +1564,8 @@ function openVault(id){
                         : '<div class="v5poster v5noart"><span>'+vTitle(v).toUpperCase()+'</span></div>';
  var isFilm=(v.edition==='filmtv'); V5FILM=isFilm;
  var isFam=(v.edition==='family');
+ var isLeg=(v.edition==='sports' && !v.sp);
+ var lg=LEGDATA[v.id]||LEGDEF;
  var fam=FAMDATA[v.id]||FAMDEF;
  var fdata=FILMDATA[v.id]||{blurb:'One shuffle of the moments only true fans remember \u2014 the ones you replay, argue about, and never forget.',std:'The essentials everyone knows and loves.',dlx:'Deeper cuts and forgotten favorites.'};
  var fan, blurbHTML, catsHTML, drawer, subTxt, custLbl, custPre;
@@ -1528,6 +1588,21 @@ function openVault(id){
    drawer='<div class="v5cust" id="v5cust">'
      +'<div class="v5opts"><button class="v5opt sel" id="ed-Standard" onclick="selEd(\'Standard\')"><b>Standard Edition</b><span>'+fdata.std+'</span></button>'
        +'<button class="v5opt" id="ed-Deluxe" onclick="selEd(\'Deluxe\')"><b>Deluxe Edition</b><span>'+fdata.dlx+'</span></button></div>'
+     +'</div>';
+ } else if(isLeg){
+   var _cl=CARDART[v.id];
+   fan='<div class="vkfan'+(_cl&&_cl.l?' lightfan':'')+'"'+(_cl?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+_cl.o+'"':'')+'>'
+     +'<div class="vksamp vs1"><div class="typ">\ud83c\udfc5 Player</div><div class="q">'+lg.p1+'</div><div class="smp">Sample</div></div>'
+     +'<div class="vksamp vs2"><div class="typ">\ud83c\udfc5 Player</div><div class="q">'+lg.p2+'</div><div class="smp">Sample</div></div>'
+     +'<div class="vksamp vs3"><div class="typ">\ud83d\udccb Coach</div><div class="q">'+lg.c1+'</div><div class="smp">Sample</div></div>'
+     +'</div>';
+   blurbHTML='<p class="v5blurb">'+lg.b+'</p>';
+   catsHTML='';
+   subTxt='One Edition';
+   custLbl='Choose Your Edition'; custPre='Know the deep bench? Try Deluxe \u2014 already included. ';
+   drawer='<div class="v5cust" id="v5cust">'
+     +'<div class="v5opts"><button class="v5opt sel" id="ed-Standard" onclick="selEd(\'Standard\')"><b>Standard Edition</b><span>The names everyone knows.</span></button>'
+       +'<button class="v5opt" id="ed-Deluxe" onclick="selEd(\'Deluxe\')"><b>Deluxe Edition</b><span>Deeper eras and the ones only real fans name.</span></button></div>'
      +'</div>';
  } else if(isFam){
    /* Family used to fall through to the music branch: music sample cards, music
@@ -1563,6 +1638,9 @@ function openVault(id){
        +'<button class="v5opt" id="ed-Deluxe" onclick="selEd(\'Deluxe\')"><b>Deluxe Edition</b><span>Adds deep cuts &amp; B-sides \u2014 tougher to clue.</span></button></div>'
      +'</div>';
  }
+ /* A vault with no Deluxe cards must not advertise one. This is the last word on it,
+    after every branch above has had its say. */
+ if(!HASDLX[v.id]){ drawer=''; custLbl=''; custPre=''; subTxt='One Edition'; }
  var sheet='<div class="vksheet v5sheet'+(RAINBOW[v.id]?' v5rainbow':'')+'">'
    +'<button class="vkclose" onclick="closeOv()">✕</button>'+'<div class="v5legal" onclick="openLegal()">'+vaultLegal(v)+'</div>'
    +'<div class="v5main">'+poster
@@ -1570,7 +1648,7 @@ function openVault(id){
      +blurbHTML+catsHTML
      +'</div></div>'
    +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">▶ PLAY</span><span class="v5sub" id="v5sub">'+subTxt+'</span></button>'
-   +'<div class="v5custrow">'+(custPre?'<span class="v5dare">'+custPre+'</span>':'')+'<button class="v5custbtn" onclick="toggleCust()">'+custLbl+' <span id="v5carat">▾</span></button></div>'
+   +(custLbl?'<div class="v5custrow">'+(custPre?'<span class="v5dare">'+custPre+'</span>':'')+'<button class="v5custbtn" onclick="toggleCust()">'+custLbl+' <span id="v5carat">▾</span></button></div>':'')
    +drawer
    +'</div>';
  var back='<div class="vkback" style="--artist:'+rk.acc+';--artist-glow:rgba('+rk.tint+',.5);--tint:'+rk.tint+'">'+fan+sheet+'</div>';
