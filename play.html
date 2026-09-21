@@ -1080,7 +1080,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v334';
+var SFSBUILD='v335';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1147,7 +1147,7 @@ var DECKS=null;
    All three now look for their own file; a missing one is not an error, the edition just
    has no Deluxe yet and the UI hides the choice (see custAvail). Drop music-decks.json
    in and it lights up with no code change. */
-var DECKFILE={filmtv:'film-decks.json?v=234', music:'music-decks.json?v=5', sports:'sports-decks.json?v=9', family:'family-decks.json?v=2'};
+var DECKFILE={filmtv:'film-decks.json?v=234', music:'music-decks.json?v=5', sports:'sports-decks.json?v=10', family:'family-decks.json?v=3'};
 /* DECKS===null meant two different things and the difference matters: "the file for
    this edition does not exist yet" and "the file loaded and this vault simply is not
    in it". Both fell through to the built-in music DECK, which is why a Cartoon TV
@@ -1386,6 +1386,11 @@ function filmCard(){ var v=FILM_CARD[VAULT_ID];
    light plates the fill goes dark, the stroke goes cream, and the halo turns from
    shadow into glow. Same lettering language, photographic negative of it. */
 var ART_TYPE={
+ /* Motorsport split, September build. Both plates measured on the lower-right text
+    zone: white lettering scored 6.45:1 on Open Wheel and 5.03:1 on Stock Car against
+    2.63:1 and 3.37:1 for dark ink, so both keep white. Pop Quiz scored 12.65:1. */
+ ow_legends    :{outline:'#F7A63C'}, sc_legends    :{outline:'#E8804A'},
+ fam_popquiz   :{outline:'#E9AA6D'},
  /* Family plates, September build. Contrast measured on each one's lower-right text
     zone: white lettering scored 11.1:1 (the chalkboard, lowest) to 20.8:1. Not one
     needs the light-plate flip, unlike three of the sports plates. Outlines pick up
