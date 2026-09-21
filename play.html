@@ -26,7 +26,7 @@
    charcoal with gold. Only background-COLOR is set, so #app's radial sheen and
    its two 45deg repeating gradients (the line/check weave) carry through. */
 #app:is(.sportcard,.filmcard){background-color:var(--cardbg,#2a1257)}
-#app:is(.sportcard,.filmcard) #card{color:#fff;-webkit-text-stroke-width:var(--olw,2.2vmin);-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;text-shadow:none;letter-spacing:.1em}
+#app:is(.sportcard,.filmcard) #card{color:#fff;-webkit-text-stroke-width:var(--olw,0.16em);-webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;text-shadow:none;letter-spacing:.1em}
 
 /* ===== swipe-to-quit: the card flips, then we land on the home screen =====
    A single-element flip. #quitBack lives INSIDE #app pre-rotated 180deg, so
@@ -190,17 +190,29 @@
    of 0.173 - it was already darker than anything the scrim needed to protect
    against, and all the scrim did was bury the scene. Art drawn to this spec
    arrives dark; the scrim is insurance for a bright hotspot, not a dimmer. */
-#app.hasart{background-image:none;background-size:cover;background-position:center;
+/* Doubled class on purpose. The genre pattern rules above are #app.filmcard.fx-camo
+   and friends - one id and TWO classes - so they outrank a single-class #app.hasart and
+   were setting background-size back to their 263px tile. War Movies is the only vault
+   that carries both a pattern and a plate, and its art was tiling instead of covering:
+   a small picture in the corner of the card for the whole round. Repeating .hasart
+   matches their weight, and this block sits later in the sheet, so the plate wins. */
+#app.hasart.hasart{background-image:none;background-size:cover;background-position:center;
  background-repeat:no-repeat}
 #app.hasart::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
  background:
   radial-gradient(ellipse 64% 58% at 50% 48%, rgba(6,3,14,.50), rgba(6,3,14,.22) 62%, rgba(6,3,14,0) 100%),
   linear-gradient(to bottom, rgba(6,3,14,.20), rgba(6,3,14,0) 26%, rgba(6,3,14,0) 76%, rgba(6,3,14,.24))}
-/* Legibility on art cards is bought with a halo behind the GLYPHS, not by
-   darkening the plate. Darkening loses the thing that makes the art worth having -
-   on this plate the hotspot IS the moon. A pre-pass that pulled the moon down only
-   moved the worst case 1.75 to 2.21 anyway, because the wide feather that stops it
-   looking like a cutout also dilutes it right at the peak.
+/* SUPERSEDED, Sept 2026 - kept because the reasoning still explains this scrim.
+   The rule used to be: legibility is bought with a halo behind the GLYPHS, never by
+   darkening the plate, since darkening loses the thing that makes the art worth having.
+   That held while contrast was judged on the AVERAGE luminance under the word. Measured
+   on the worst local PATCH instead - a cell the size of a letter slid across the zone -
+   53 of 118 plates sat under 3.0:1 and the average had hidden every one of them; Pearl
+   Jam read 6.79:1 average and 1.01:1 at its hotspot. The halo alone could not answer
+   that, so 53 plates now carry a feathered scrim across the band the word occupies,
+   corners untouched, and the twenty light-mode plates went back to white type. The
+   earlier finding that a pre-pass moved the worst case only 1.75 to 2.21 was measured on
+   a global pre-pass; a band-limited one clears the floor on every plate.
    The halo travels with the text, so it protects every title length and every
    future plate without anyone tuning a mask. .filmcard sets text-shadow:none to let
    the stroke do the work; art cards put a shadow back. */
@@ -212,7 +224,7 @@
 #app.hasart.lightart #card{color:var(--cardink,#241546);
  /* stroke WIDTH only came from the .sportcard/.filmcard rule, so a music light plate
     got a stroke colour and no stroke. Set it here so the format holds everywhere. */
- -webkit-text-stroke-width:var(--olw,2.2vmin);paint-order:stroke;letter-spacing:.1em;
+ -webkit-text-stroke-width:var(--olw,0.16em);paint-order:stroke;letter-spacing:.1em;
  -webkit-text-stroke-color:var(--cardoutline,#FFF6E0);
  text-shadow:0 0 6px rgba(255,250,238,.96),0 0 15px rgba(255,250,238,.9),0 2px 22px rgba(255,250,238,.75),0 0 40px rgba(255,250,238,.5)}
 #app.hasart.lightart #timer,#app.hasart.lightart #score{
@@ -220,22 +232,39 @@
 #app.hasart.lightart::after{background:
   radial-gradient(ellipse 64% 58% at 50% 48%, rgba(255,250,238,.46), rgba(255,250,238,.20) 62%, rgba(255,250,238,0) 100%),
   linear-gradient(to bottom, rgba(255,250,238,.18), rgba(255,250,238,0) 26%, rgba(255,250,238,0) 76%, rgba(255,250,238,.20))}
+/* Stroke weight is em-relative, not an absolute length. fitCard() shrinks the FONT for
+   a long answer - as far as 20px - but an absolute stroke does not shrink with it, so a
+   short card got a 12% outline and a long one got 28%: a fat halo that closed up the
+   counters. 0.16em is 16% of whatever size the word ends up at, short or long, and it is
+   heavier than the old 12% at full size, which is what carries a letter across a bright
+   patch of plate. Measured on the worst local patch under the word rather than the
+   average, 53 of 118 plates sat under 3.0:1 - the average hid every one of them. */
 /* Purpose-made plates get the SFS lettering format even outside Film & TV. Derived
    poster plates deliberately do not - a stroke keyed to one colour cannot suit 66
    crops of wildly different artwork, whereas a hand-made plate has a palette to
    answer to. */
-#app.hasart.inked #card{color:#fff;-webkit-text-stroke-width:var(--olw,2.2vmin);
+#app.hasart.inked #card{color:#fff;-webkit-text-stroke-width:var(--olw,0.16em);
  -webkit-text-stroke-color:var(--cardoutline,#000);paint-order:stroke;letter-spacing:.1em}
 /* the score sits in the corner in the app's default cyan, which fights a crimson
-   and gold plate. On inked cards it takes the plate's own accent. */
-#app.hasart.inked #score{color:var(--cardoutline,#fff)}
+   and gold plate. On inked cards it takes the plate's own accent - but as a STROKE,
+   not as the fill. Taking it as the fill meant a near-black accent printed a near-black
+   score onto a near-black corner: measured across all 118 plates, fifteen scored under
+   2.0:1 against the corner they sit on and two under 1.1:1, with the drop shadow behind
+   them dark as well, so the halo meant to lift them was the same tone as everything
+   else. White fill with an accent stroke keeps the plate's colour on the number, holds
+   on any plate without a per-vault exception list, and matches how the answer word is
+   already drawn. Thin stroke: the card word is 2.2vmin and the score is smaller, where
+   a heavy stroke closes up the counters. */
+#app.hasart.inked #score{color:#fff;
+ -webkit-text-stroke:.35vmin var(--cardoutline,#000);paint-order:stroke}
 /* The pre-play screens now wear the SAME LETTERING as the answer card: white fill,
    the plate's own stroke colour, dark halo underneath. They used to keep the app's
    default neon - cyan instruction, white countdown - which was right when every card
    was flat purple and looks like a different product now that the card behind them is
    a photograph with gold or bone lettering.
-   Stroke width is per element, not shared: #card is 18vmin so 2.2vmin reads as a trim
-   edge, but the instruction is a third that size and the same width would swallow it. */
+   Stroke width is per element, not shared: #card carries its own em-relative stroke
+   (0.16em, so it tracks whatever fitCard settles on), while these run a third that size
+   and would be swallowed by the same width, so they keep an absolute one. */
 #app.hasart .fhText,#app.hasart #big,#app.hasart #getReady{
  color:#fff;-webkit-text-stroke-color:var(--cardoutline,#1a1020);paint-order:stroke}
 #app.hasart .fhText{-webkit-text-stroke-width:.85vmin;
@@ -304,7 +333,7 @@
     is what keeps the seen-set, the results list and the share text working unchanged.
     Only the DRAWING splits it, so the name stays the hero and the film reads as a
     caption underneath instead of competing with it for the same type size. */
- #card .fl{display:block;font-size:.42em;letter-spacing:.08em;opacity:.85;margin-top:.24em;-webkit-text-stroke-width:calc(var(--olw,2.2vmin)*.5)}
+ #card .fl{display:block;font-size:.42em;letter-spacing:.08em;opacity:.85;margin-top:.24em;-webkit-text-stroke-width:calc(var(--olw,0.16em)*.5)}
  #big{font-family:var(--disp);font-size:34vmin;color:#fff;line-height:1;text-shadow:0 0 22px rgba(87,230,255,.6),3px 4px 0 rgba(0,0,0,.4)}
  #timer{font-family:var(--disp);font-size:11vmin;color:#eafcff;letter-spacing:2px;text-shadow:0 0 10px rgba(87,230,255,.5),2px 2px 0 rgba(0,0,0,.4)}
 /* Opposite corner to #score, which sits top-right. Sized well below the score so it
@@ -908,10 +937,22 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
 #app:is(.sportcard,.filmcard) #timer   {-webkit-text-stroke-width:.85vmin;text-shadow:0 2px 9px rgba(0,0,0,.5)}
 #app:is(.sportcard,.filmcard) .wallHead{-webkit-text-stroke-width:1.2vmin}
 #app:is(.sportcard,.filmcard) .fhHint{color:rgba(255,255,255,.86);text-shadow:0 1px 6px rgba(0,0,0,.5)}
-#app:is(.sportcard,.filmcard) .wallTaste{color:var(--cardoutline,#fff);text-shadow:0 2px 9px rgba(0,0,0,.5);opacity:1}
+/* The unlock wall sits straight on the card plate - #sWall has no background of its
+   own - so anything here painted IN the plate's accent is a colour chosen to work as a
+   STROKE on that art being reused as a FILL over it. Measured on the rendered wall for
+   all 20 Film & TV vaults: the taste line ran under 2.0:1 on six of them (War 1.26,
+   Cartoons 1.27, Comedy 1.41) and the buy button under 1.3:1 on War, which is no button
+   at all. Both now keep the accent without depending on it: the line is white with the
+   accent as a stroke, the way the card word and the score are drawn, and the button
+   gets a dark body so it always reads as a raised control, with the accent on its
+   border and glow. Neither can vanish on a plate nobody has made yet. */
+#app:is(.sportcard,.filmcard) .wallTaste{color:#fff;
+ -webkit-text-stroke:.45vmin var(--cardoutline,#fff);paint-order:stroke;
+ text-shadow:0 2px 9px rgba(0,0,0,.5);opacity:1}
 #app:is(.sportcard,.filmcard) .btn.buy{border-color:var(--cardoutline,#fff);
- background:linear-gradient(180deg,var(--cardoutline,#333),rgba(0,0,0,.34));
- color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);box-shadow:0 6px 18px rgba(0,0,0,.5)}
+ background:linear-gradient(180deg,rgba(10,7,16,.72),rgba(6,4,12,.88));
+ color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);
+ box-shadow:0 6px 18px rgba(0,0,0,.55),0 0 18px -4px var(--cardoutline,#fff),inset 0 1px 0 rgba(255,255,255,.10)}
 
  .q2{margin-bottom:min(7px,.8vh)}
  .qtalk{margin-bottom:min(9px,1vh)}
@@ -1080,7 +1121,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v336';
+var SFSBUILD='v337';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1390,6 +1431,13 @@ var ART_TYPE={
     zone: white lettering scored 6.45:1 on Open Wheel and 5.03:1 on Stock Car against
     2.63:1 and 3.37:1 for dark ink, so both keep white. Pop Quiz scored 12.65:1. */
  so_legends    :{outline:'#EFC559'},
+/* Seventeen plates that used to run light mode - dark ink on a pale picture - were
+   darkened across the band the word sits in and moved back to white type. Measured on
+   the WORST LOCAL PATCH rather than the average, they ran as low as 1.00:1; the average
+   said 7:1 and hid every one. Their cream stroke could not come with them, since cream
+   around a white fill is no stroke at all, so each took a fresh accent sampled from its
+   own darkened art. Hendrix, Selena Gomez and Summer Beach already cleared the floor and
+   were left alone, so light mode is reduced to those three rather than retired. */
  ow_legends    :{outline:'#F7A63C'}, sc_legends    :{outline:'#E8804A'},
  fam_popquiz   :{outline:'#E9AA6D'},
  /* Family plates, September build. Contrast measured on each one's lower-right text
@@ -1415,19 +1463,19 @@ var ART_TYPE={
  bx_legends  :{outline:'#F3CA91'},
  gf_legends  :{outline:'#C59B3C'},
  te_legends  :{outline:'#A59B6D'},
- ba_legends  :{light:1, ink:'#241546', outline:'#FFF6E0'},
- ho_legends  :{light:1, ink:'#241546', outline:'#FFF6E0'},
- mm_legends  :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ ba_legends  :{outline:'#A97138'},
+ ho_legends  :{outline:'#7B642B'},
+ mm_legends  :{outline:'#6F4E35'},
  st_theatre  :{outline:'#E8C56A'},
  adele       :{outline:'#F4A330'},
- arianagrande:{light:1, ink:'#241546', outline:'#FFF6E0'},
+ arianagrande:{outline:'#CDB79B'},
  ate         :{outline:'#DAA459'},
- beatles     :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ beatles     :{outline:'#B3944B'},
  beyonce     :{outline:'#FDB728'},
  biggie      :{outline:'#FDC472'},
  billieeilish:{outline:'#B9C709'},
  billyjoel   :{outline:'#DBB17D'},
- bonjovi     :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ bonjovi     :{outline:'#3F7BAC'},
  bowie       :{outline:'#F7AF7C'},
  brunomars   :{outline:'#FEA928'},
  carrieunderwood:{outline:'#D9B87A'},
@@ -1445,7 +1493,7 @@ var ART_TYPE={
  fleetwoodmac:{outline:'#BEC5C8'},
  foo         :{outline:'#F69F6D'},
  fthc        :{outline:'#3D3717'},
- gratefuldead:{light:1, ink:'#241546', outline:'#FFF6E0'},
+ gratefuldead:{outline:'#A08442'},
  greenday    :{outline:'#CEB799'},
  grunge90s   :{outline:'#EFC973'},
  harrystyles :{outline:'#F99B37'},
@@ -1457,7 +1505,7 @@ var ART_TYPE={
  kennychesney:{outline:'#F6C587'},
  kidstoybox  :{outline:'#002848'},
  ladygaga    :{outline:'#FFBD46'},
- laineywilson:{light:1, ink:'#241546', outline:'#FFF6E0'},
+ laineywilson:{outline:'#AC7D39'},
  ledzeppelin :{outline:'#E6AE57'},
  lukebryan   :{outline:'#332818'},
  lukecombs   :{outline:'#F19F31'},
@@ -1465,39 +1513,39 @@ var ART_TYPE={
  metallica   :{outline:'#EABE95'},
  morganwallen:{outline:'#DB9D94'},
  mv_action   :{outline:'#F0AD51'},
- mv_animated :{light:1, ink:'#241546', outline:'#FFF6E0'},
- mv_comedy   :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ mv_animated :{outline:'#49B0BD'},
+ mv_comedy   :{outline:'#3683A1'},
  mv_crime    :{outline:'#F0AF37'},
  mv_drama    :{outline:'#DCA969'},
  mv_fantasy  :{outline:'#FAAA41'},
  mv_horror   :{outline:'#DBC27D'},
- mv_romance  :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ mv_romance  :{outline:'#AC604A'},
  mv_scifi    :{outline:'#26BDF5'},
- mv_sports   :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ mv_sports   :{outline:'#6793BE'},
  mv_superhero:{outline:'#1C1B26'},
  mv_war      :{outline:'#1F150C'},
  nirvana     :{outline:'#CACACB'},
  oasis       :{outline:'#DDBA92'},
  onedirection:{outline:'#F4A62D'},
- pearljam    :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ pearljam    :{outline:'#975D17'},
  postmalone  :{outline:'#FBA874'},
  queen       :{outline:'#F1BE78'},
- rhcp        :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ rhcp        :{outline:'#297486'},
  rihanna     :{outline:'#BBAB97'},
  selenagomez :{light:1, ink:'#241546', outline:'#FFF6E0'},
  shaboozey   :{outline:'#DEB177'},
  smashingpumpkins:{outline:'#BCAEC2'},
  springsteen :{outline:'#E6A59C'},
- stones      :{light:1, ink:'#241546', outline:'#FFF6E0'},
- stp         :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ stones      :{outline:'#916A1B'},
+ stp         :{outline:'#A2803F'},
  summerbeach :{light:1, ink:'#241546', outline:'#FFF6E0'},
  taylorswift :{outline:'#D4A26D'},
  thewho      :{outline:'#F0C382'},
  timmcgraw   :{outline:'#251C0A'},
- tompetty    :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ tompetty    :{outline:'#C6A98A'},
  tv_binge    :{outline:'#D9B87A'},
  tv_cartoon  :{outline:'#171F6C'},
- tv_gameshow :{outline:'#000B4D'},
+ tv_gameshow :{outline:'#AF7842'},
  tv_growingup:{outline:'#86B6F7'},
  tv_oldschool:{outline:'#D9B87A'},
  tv_scifi    :{outline:'#66BBF7'},
@@ -1537,12 +1585,12 @@ function applyFilmCard(){
  app.style.setProperty('--cardbg',fc.b); app.style.setProperty('--cardoutline',fc.o);
  _stageVars(fc.b,fc.o);
  app.classList.remove('fx-tiedye','fx-camo','fx-haze'); if(fc.fx) app.classList.add('fx-'+fc.fx);
- app.style.setProperty('--olw','2.2vmin'); app.classList.add('filmcard'); return true; }
+ app.style.setProperty('--olw','0.16em'); app.classList.add('filmcard'); return true; }
 function applySportCard(){
  var _sc=spCard(); if(!_sc) return false;
  app.style.setProperty('--cardbg',_sc.b); app.style.setProperty('--cardoutline',_sc.o);
  _stageVars(_sc.b,_sc.o);
- app.style.setProperty('--olw','2.2vmin'); app.classList.add('sportcard'); return true; }
+ app.style.setProperty('--olw','0.16em'); app.classList.add('sportcard'); return true; }
 
 function show(id){['sStart','sReady','sGame','sWall','sReport','sReportFilm'].forEach(function(s){var _e=document.getElementById(s); if(_e) _e.classList.toggle('on',s===id);}); document.body.classList.toggle('report-on', id==='sReport'||id==='sReportFilm'); if(id==='sStart'||id==='sWall'||id==='sReport'||id==='sReportFilm'){ document.body.classList.remove('lock-ls'); tryPortrait(); } }
 var tHandle2=null;
