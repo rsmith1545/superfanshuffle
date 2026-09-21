@@ -1080,7 +1080,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v330';
+var SFSBUILD='v332';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1386,6 +1386,18 @@ function filmCard(){ var v=FILM_CARD[VAULT_ID];
    light plates the fill goes dark, the stroke goes cream, and the halo turns from
    shadow into glow. Same lettering language, photographic negative of it. */
 var ART_TYPE={
+ /* Sports All-Time Greats plates. Measured, not guessed: WCAG contrast of white fill vs
+    dark ink over each plate's lower-right text zone. Basketball (3.03 vs 6.03), Hockey
+    (1.80 vs 10.12) and MMA (3.42 vs 5.34) all lose with white, so those three invert. */
+ fo_legends  :{outline:'#D4B484'},
+ bs_legends  :{outline:'#D1A179'},
+ bx_legends  :{outline:'#F3CA91'},
+ gf_legends  :{outline:'#C59B3C'},
+ te_legends  :{outline:'#A59B6D'},
+ ba_legends  :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ ho_legends  :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ mm_legends  :{light:1, ink:'#241546', outline:'#FFF6E0'},
+ st_theatre  :{outline:'#E8C56A'},
  adele       :{outline:'#F4A330'},
  arianagrande:{light:1, ink:'#241546', outline:'#FFF6E0'},
  ate         :{outline:'#DAA459'},
