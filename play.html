@@ -1199,7 +1199,7 @@ var DECKS=null;
    All three now look for their own file; a missing one is not an error, the edition just
    has no Deluxe yet and the UI hides the choice (see custAvail). Drop music-decks.json
    in and it lights up with no code change. */
-var DECKFILE={filmtv:'film-decks.json?v=235', music:'music-decks.json?v=5', sports:'sports-decks.json?v=10', family:'family-decks.json?v=17'};
+var DECKFILE={filmtv:'film-decks.json?v=235', music:'music-decks.json?v=6', sports:'sports-decks.json?v=10', family:'family-decks.json?v=17'};
 /* DECKS===null meant two different things and the difference matters: "the file for
    this edition does not exist yet" and "the file loaded and this vault simply is not
    in it". Both fell through to the built-in music DECK, which is why a Cartoon TV
@@ -1224,7 +1224,10 @@ function syncCustAvail(){
   });
 }
 /* Decks can now carry CHARACTER cards alongside titles: stdChars rides with standard,
-   dlxChars with deluxe. They are separate arrays rather than a type flag on each card
+   dlxChars with deluxe. Music does the same with stdAlbums, stdLore and dlxLore.
+   These arrays are ADDITIVE: a card listed in one must NOT also be listed in
+   standard/deluxe or it is dealt twice, and a lore card put in stdLore is a Standard
+   card no matter what tier a spreadsheet says - the tier is which array it lives in. They are separate arrays rather than a type flag on each card
    because every consumer of a card - the seen-set key, the results list, the share
    text - treats a card as a plain string, and changing that shape would touch all of
    them. Membership in these arrays is the only thing the badge needs. */
@@ -1233,7 +1236,7 @@ function activeDeck(){
     var d=DECKS[VAULT_ID];
     var out=(d.standard||[]).concat(d.stdChars||[], d.stdAlbums||[], d.stdLore||[]);
     if(PREVIEW || REDITION!=='Deluxe') return out;
-    return out.concat(d.deluxe||[], d.dlxChars||[]);
+    return out.concat(d.deluxe||[], d.dlxChars||[], d.dlxLore||[]);
   }
   /* The file loaded and this vault is not in it - it has no deck yet. Dealing the
      music list here is worse than dealing nothing, because nothing is visibly broken
@@ -1260,7 +1263,7 @@ function musicSet(){
   _MUSICSET={};
   try{ var d=DECKS&&DECKS[VAULT_ID];
     if(d){ (d.stdAlbums||[]).forEach(function(c){ _MUSICSET[c]='ALBUM'; });
-           (d.stdLore||[]).forEach(function(c){ _MUSICSET[c]='LORE'; }); }
+           (d.stdLore||[]).concat(d.dlxLore||[]).forEach(function(c){ _MUSICSET[c]='LORE'; }); }
   }catch(e){}
   return _MUSICSET;
 }
@@ -1293,7 +1296,7 @@ function stampCardType(w){
   if(ED==='sports'){ el.textContent=sportsCardType(w); el.classList.add('on'); return; }
   if(ED==='music'){
     var dm=DECKS&&DECKS[VAULT_ID];
-    var hasM=!!(dm && ((dm.stdAlbums||[]).length || (dm.stdLore||[]).length));
+    var hasM=!!(dm && ((dm.stdAlbums||[]).length || (dm.stdLore||[]).length || (dm.dlxLore||[]).length));
     if(!hasM){ el.classList.remove('on'); return; }   /* song-only vault: a badge saying SONG on every card is noise */
     el.textContent = musicSet()[w] || 'SONG';
     el.classList.add('on'); return;
@@ -1347,7 +1350,7 @@ function hardSet(){
   if(_HARDSET) return _HARDSET;
   _HARDSET={};
   try{ var d=DECKS&&DECKS[VAULT_ID];
-    if(d){ (d.deluxe||[]).concat(d.dlxChars||[]).forEach(function(c){ _HARDSET[c]=1; }); }
+    if(d){ (d.deluxe||[]).concat(d.dlxChars||[], d.dlxLore||[]).forEach(function(c){ _HARDSET[c]=1; }); }
   }catch(e){}
   return _HARDSET;
 }
@@ -2106,7 +2109,7 @@ function deckCounts(){
      says it does not know rather than quoting somebody else's deck. */
   var known = !!d;
   var std = d ? (d.standard||[]).length + (d.stdChars||[]).length + (d.stdAlbums||[]).length + (d.stdLore||[]).length : 0;
-  var dlx = d ? (d.deluxe||[]).length + (d.dlxChars||[]).length : 0;
+  var dlx = d ? (d.deluxe||[]).length + (d.dlxChars||[]).length + (d.dlxLore||[]).length : 0;
   var seen = 0;
   try{ seen = Object.keys(JSON.parse(localStorage.getItem(_seenKey(REDITION))||'{}')).length; }catch(e){}
   return {std:std, dlx:dlx, seen:seen, active:activeDeck().length, known:known, state:DECKSTATE};
