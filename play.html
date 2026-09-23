@@ -1358,6 +1358,34 @@ function spaceHard(order){
   }
   return out;
 }
+/* ===== the five-card taste is curated, not dealt =====
+   A new player's whole first impression of a vault is these five cards, so they are
+   picked to show the SPREAD of the deck - one per category, the most recognisable
+   card in each - instead of coming off the shuffle. It is also what tells a parent
+   the level of a vault, which is why no vault carries an age label.
+   Any name not in the current deck is skipped and the shuffle fills that slot, so
+   cutting a card can never leave a vault with a broken preview. */
+var PREVIEW5={
+ "fam_animals":["Lion", "Dog", "Dolphin", "Butterfly", "Moo"],
+ "fam_food":["Pizza", "Ice Cream", "Popcorn", "Banana", "Fork"],
+ "fam_sportswords":["Basketball", "Touchdown", "Helmet", "Quarterback", "Tailgate"],
+ "fam_jobs":["Firefighter", "Teacher", "Camera", "Chef's Hat", "Classroom"],
+ "fam_geography":["Texas", "Grand Canyon", "Empire State Building", "The Big Apple", "Philly Cheesesteak"],
+ "fam_instruments":["Guitar", "Piano", "Drums", "Country", "Encore"],
+ "fam_popquiz":["Recess", "Metaphor", "Long Division", "Gravity", "The Boston Tea Party"],
+ "kidstoybox":["Teddy Bear", "Crayons", "Jigsaw Puzzle", "Dollhouse", "Monkey Bars"],
+ "summerbeach":["Sandcastle", "Sunscreen", "Ice Cream Truck", "Starfish", "Ferris Wheel"],
+ "fam_halloween":["Jack-o'-Lantern", "Ghost", "Candy Corn", "Black Cat", "Haunted House"],
+ "fam_holiday":["Christmas Tree", "Santa Claus", "Snowman", "Candy Cane", "Menorah"]};
+function hoistPreview(ord){
+  var want=PREVIEW5[VAULT_ID]; if(!want||!want.length) return ord;
+  var have={},i; for(i=0;i<ord.length;i++) have[ord[i]]=1;
+  var head=[],pick={};
+  for(i=0;i<want.length;i++){ if(have[want[i]] && !pick[want[i]]){ head.push(want[i]); pick[want[i]]=1; } }
+  if(!head.length) return ord;
+  var rest=[]; for(i=0;i<ord.length;i++){ if(!pick[ord[i]]) rest.push(ord[i]); }
+  return head.concat(rest);
+}
 function dealOrder(){
   var deck=activeDeck();
   if(deck.length<2) return deck.slice();
@@ -1693,7 +1721,7 @@ function fitCard(){
     c.style.fontSize=fs+'px';
   }
 }
-function newCard(){ if(idx>=order.length){ order=dealOrder(); idx=0; } var w=order[idx++]; recordSeen(w); setCardText(w); stampCardType(w); return w; }
+function newCard(){ if(idx>=order.length){ order=dealOrder(); if(PREVIEW) order=hoistPreview(order); idx=0; } var w=order[idx++]; recordSeen(w); setCardText(w); stampCardType(w); return w; }
 var current='';
 function mark(good){
   results.push({w:current,good:good});
