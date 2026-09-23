@@ -343,11 +343,22 @@
     up dim gold on a dark blue card. It carries its OWN ground instead - a dark chip
     with white type - so it is self-contained and identical everywhere, which is what
     "stands out" actually requires. Nothing about the plate can wash it out. */
- #cardType{position:absolute;top:16px;left:16px;display:none;font-family:var(--disp);
-  font-size:5.4vmin;line-height:1;letter-spacing:.12em;color:#fff;
-  background:rgba(4,3,10,.72);border:.28vmin solid rgba(255,255,255,.5);
-  border-radius:2.2vmin;padding:1.1vmin 2vmin 1vmin;
-  box-shadow:0 .5vmin 1.6vmin rgba(0,0,0,.5)}
+ /* The corner label is read by the ROOM, not the player wearing the card - they are
+   three to five feet away. It was the one element on screen that never scaled: the
+   word runs through fitCard() and resizes itself, this sat pinned at 5.4vmin, which
+   is 21px on a phone in landscape. Size was only half of it - the plate was 72%
+   opaque behind a 50%-white hairline, so over busy vault art the edge dissolved at
+   distance and the badge lost its shape before it lost its size. Tracking came in
+   from .12em because wide tracking on all-caps is exactly what makes letters float
+   apart when you are far away, and it buys back the width the bigger type costs.
+   Checked against the longest label in Family, CIVICS & GEOGRAPHY: 47% of the card
+   width, still clear of the score. */
+#cardType{position:absolute;top:16px;left:16px;display:none;font-family:var(--disp);
+  font-size:7.2vmin;line-height:1;letter-spacing:.10em;color:#fff;
+  background:rgba(4,3,10,.90);border:.36vmin solid rgba(255,255,255,.78);
+  border-radius:2.4vmin;padding:1.15vmin 2.1vmin 1.05vmin;
+  text-shadow:0 .2vmin .5vmin rgba(0,0,0,.9);
+  box-shadow:0 .6vmin 2vmin rgba(0,0,0,.6)}
  #cardType.on{display:block}
  #score{position:absolute;top:14px;right:20px;font-family:var(--disp);font-size:8vmin;color:var(--cyan);letter-spacing:1px;text-shadow:0 0 10px rgba(87,230,255,.6)}
  #hint{position:absolute;bottom:12px;left:0;right:0;font-size:3.4vmin;color:rgba(255,255,255,.8);letter-spacing:.5px}
@@ -1473,7 +1484,7 @@ var ART_TYPE={
     needs the light-plate flip, unlike three of the sports plates. Outlines pick up
     each vault's own ARTCOLOR accent so the card and the tile glow agree. */
  fam_halloween :{outline:'#F0821E'}, fam_holiday   :{outline:'#E04A4A'},
- kidstoybox    :{outline:'#FFCE5C'}, fam_grade1    :{outline:'#E0503A'},
+ kidstoybox    :{outline:'#3AA0D8'}, fam_grade1    :{outline:'#E0503A'},
  fam_grade2    :{outline:'#E88A2E'}, fam_grade3    :{outline:'#5FB35F'},
  fam_grade4    :{outline:'#4FA9DB'}, fam_grade5    :{outline:'#9B7FE0'},
  fam_grade6    :{outline:'#DB6BAA'}, fam_presidents:{outline:'#D46150'},
@@ -1531,7 +1542,6 @@ var ART_TYPE={
  justintimberlake:{outline:'#B1C1D3'},
  katyperry   :{outline:'#3DC2D8'},
  kennychesney:{outline:'#F6C587'},
- kidstoybox  :{outline:'#002848'},
  ladygaga    :{outline:'#FFBD46'},
  laineywilson:{outline:'#AC7D39'},
  ledzeppelin :{outline:'#E6AE57'},
