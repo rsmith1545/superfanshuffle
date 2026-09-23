@@ -1024,7 +1024,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v346';
+var SFSBUILD='v347';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1499,7 +1499,7 @@ var FAMDATA={
  fam_storybook:{b:'One shuffle. Story characters, places and the things that turn up in every picture book.',c:['Characters','Places','Stories','Facts'],s:'The stories everyone grew up on.',d:'Adds deeper cuts from the bookshelf.'},
  fam_instruments:{b:"One shuffle. Strings, keys, brass, woodwind and percussion \u2014 plus the genres, the parts of the instrument, the marks on the page, the gear on the stage and everything that happens at a concert.",c:["Instruments","Genres","Concerts","Notation"],s:"The instruments, genres and concert words everyone knows.",d:"The rarer instruments, the notation, and the words from backstage."},
  fam_school:{b:'One shuffle. Classroom objects, subjects, school words and the things in every backpack.',c:['Subjects','Objects','Places','Words'],s:'Everyday school words and objects.',d:'Adds trickier subjects and terms.'},
- fam_sportswords:{b:"One shuffle. Every sport, the gear you wear, the positions you play, the plays you run, the rules that stop the clock \u2014 and the whole circus in the stands. Not one athlete, not one team.",c:["Sports","Gear","Positions","Game Day"],s:"What a kid shouts from the stands.",d:"What the announcer says."},
+ fam_sportswords:{b:"One shuffle. Every sport, the positions you play, the plays you run, the rules that stop the clock, and the gear you wear to do it. Not one athlete, not one team.",c:["Sports","Positions","Plays","Rules"],s:"The words every fan already knows.",d:"Tougher to clue, just as fun."},
  fam_jobs:{b:"One shuffle. Hundreds of jobs, the tools they're done with, the uniform they're done in, and the places people go to do them.",c:["Jobs","Tools","Uniforms","Workplaces"],s:"Jobs a kid can picture, and the tools that go with them.",d:"The jobs you'd have to explain first."},
  fam_geography:{b:"One shuffle. All fifty states and their capitals, the big cities and the nicknames they go by, the landmarks and the natural wonders \u2014 plus the mountain ranges, rivers and islands, the theme parks, the airports, the great road trips, and the food a city is famous for.",c:["States","Landmarks","Cities","Wonders"],s:"The states, cities and landmarks everyone can place.",d:"The harder capitals, the rivers and ranges, and the regional food."},
  fam_popquiz:{b:"One shuffle. Biology, chemistry, physics and earth science. Math, English and the assigned reading. US history, world history and civics \u2014 plus everything that happened between classes. All the things you were taught, tested on, and allowed to forget.",c:["Science","Math & English","History","School Life"],s:"The lesson that stuck.",d:"The one you only half remember."},
