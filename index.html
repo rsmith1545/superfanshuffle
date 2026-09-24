@@ -1024,7 +1024,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v350';
+var SFSBUILD='v351';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1467,7 +1467,7 @@ function selEd(n){ V5ED=n; ['Standard','Deluxe'].forEach(function(x){var b=docum
 function _lum(h){h=String(h||'').trim().replace('#','');if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];if(h.length!==6)return 0;var f=function(c){c=parseInt(c,16)/255;return c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4);};return .2126*f(h.substr(0,2))+.7152*f(h.substr(2,2))+.0722*f(h.substr(4,2));}
 function _contrast(a,b){var x=_lum(a),y=_lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
 function pickAccent(sp){var c=[sp.s,sp.p,sp.t],i;for(i=0;i<c.length;i++){if(c[i]&&_contrast(c[i],'#171208')>=3.0)return c[i];}return '#ffffff';}
-function flipFront(v){ if(v.sp) return '<div class="ffront spfront" style="--p:'+v.sp.p+';--s:'+v.sp.s+';--t:'+v.sp.t+'">'+(v.sp.yr?'<div class="spweave" style="background-image:'+spWeave(v.sp.s,v.sp.yr)+'"></div>':'')+'<div class="spc">'+v.sp.city+'</div><div class="spt'+(v.sp.fit?" fit":"")+'">'+spTeamDisp(v.sp.team)+'</div><div class="sptriv">Trivia</div><div class="spl">'+VAULT_KIND+'</div></div>'; if(ART[v.id]) return '<div class="ffront"><img class="ffart" src="'+ART[v.id]+'?v=7" alt=""></div>'; var rk=artistColor(v); return '<div class="ffront" style="--acc:'+rk.acc+';--tint:'+rk.tint+'"><div class="ffname">'+v.name.toUpperCase()+'</div></div>'; }
+function flipFront(v){ if(v.sp) return '<div class="ffront spfront" style="--p:'+v.sp.p+';--s:'+v.sp.s+';--t:'+v.sp.t+'">'+(v.sp.yr?'<div class="spweave" style="background-image:'+spWeave(v.sp.s,v.sp.yr)+'"></div>':'')+'<div class="spc">'+v.sp.city+'</div><div class="spt'+(v.sp.fit?" fit":"")+'">'+spTeamDisp(v.sp.team)+'</div><div class="sptriv">Trivia</div><div class="spl">'+VAULT_KIND+'</div></div>'; if(ART[v.id]) return '<div class="ffront"><img class="ffart" src="'+ART[v.id]+'?v=8" alt=""></div>'; var rk=artistColor(v); return '<div class="ffront" style="--acc:'+rk.acc+';--tint:'+rk.tint+'"><div class="ffname">'+v.name.toUpperCase()+'</div></div>'; }
 var IC_SONG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 18V6l10-2v12" stroke-linecap="round"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>';
 var IC_ALB='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.3"/></svg>';
 var IC_LORE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h7a2 2 0 012 2v12a2 2 0 00-2-2H4z"/><path d="M20 5h-7a2 2 0 00-2 2v12a2 2 0 012-2h7z"/></svg>';
@@ -1640,7 +1640,7 @@ function openVault(id){
  var v=byId(id); if(!v) return; V5ED='Standard'; V5SPORT=false; V5FILM=false;
  if(v.sp) return openSportsVault(v);
  var rk=artistColor(v); var d=SDATA[v.id]||{song:'Songs',last:v.name.split(' ').pop(),album:'Albums'};
- var poster = ART[v.id] ? '<div class="v5poster v5zoomable" onclick="zoomArt(\''+ART[v.id]+'\',\''+v.id+'\')" title="Tap to view the full poster"><img src="'+ART[v.id]+'?v=7" alt=""><span class="v5zoom">⤢</span></div>'
+ var poster = ART[v.id] ? '<div class="v5poster v5zoomable" onclick="zoomArt(\''+ART[v.id]+'\',\''+v.id+'\')" title="Tap to view the full poster"><img src="'+ART[v.id]+'?v=8" alt=""><span class="v5zoom">⤢</span></div>'
                         : '<div class="v5poster v5noart"><span>'+vTitle(v).toUpperCase()+'</span></div>';
  var isFilm=(v.edition==='filmtv'); V5FILM=isFilm;
  var isFam=(v.edition==='family');
