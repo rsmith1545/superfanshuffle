@@ -1024,7 +1024,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v351';
+var SFSBUILD='v352';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1418,7 +1418,8 @@ var pool=VAULTS.filter(function(x){ if(x.id===v.id) return false;
    +'&tc='+encodeURIComponent(v.sp.t||'')+'&yr='+encodeURIComponent(v.sp.yr||'')+'&fit='+(v.sp.fit?1:0); } return u; }
 function pickVault(id){ var v=byId(id); if(!v) return; openVault(id); }
 function vkSel(el){ var p=el.parentNode; var ms=p.querySelectorAll('.vkmode'); for(var i=0;i<ms.length;i++) ms[i].classList.remove('sel'); el.classList.add('sel'); }
-var ARTCOLOR={st_theatre:['#E8C56A','232,197,106'],  /* the gold CARDART and ART_TYPE already use - without it this vault fell back to its maroon tile gradient and the sheet disagreed with the card */
+var ARTCOLOR={st_theatre:['#E8C56A','232,197,106'],
+ ow_legends:['#F7A63C','247,166,60'], sc_legends:['#E8804A','232,128,74'], mm_legends:['#6F4E35','111,78,53'], gf_legends:['#C59B3C','197,155,60'], so_legends:['#EFC559','239,197,89'], bx_legends:['#F3CA91','243,202,145'], te_legends:['#A59B6D','165,155,109'],  /* seven sports plates had no entry, so the sheet fell back to the default cyan while the fan wore the plate's own gold - seeded from each one's CARDART colour */  /* the gold CARDART and ART_TYPE already use - without it this vault fell back to its maroon tile gradient and the sheet disagreed with the card */
  fam_popquiz:['#E9AA6D','233,170,109'], fam_letters:['#E8B33C','232,179,60'], fam_school:['#4FB08A','79,176,138'], fam_grade1:['#E0503A','224,80,58'], fam_grade2:['#E88A2E','232,138,46'], fam_grade3:['#5FB35F','95,179,95'], fam_grade4:['#4FA9DB','79,169,219'], fam_grade5:['#9B7FE0','155,127,224'], fam_grade6:['#DB6BAA','219,107,170'], fam_animals:['#8CC44F','140,196,79'], fam_food:['#E8703C','232,112,60'], fam_nursery:['#CE8FDB','206,143,219'], fam_storybook:['#D99A50','217,154,80'], fam_instruments:['#D46B94','212,107,148'], fam_sportswords:['#E0AE33','224,174,51'], fam_jobs:['#57A8D4','87,168,212'], fam_geography:['#5FC0A3','95,192,163'], fam_presidents:['#D46150','212,97,80'], fam_characters:['#EC7FB4','236,127,180'], fam_videogames:['#8B9CEC','139,156,236'], fam_halloween:['#F0821E','240,130,30'], fam_holiday:['#E04A4A','224,74,74'], /* Party Vault accents. Without an entry here these fall through colorOf() to the
    #37E0FF default, which is why every Legends sheet drew light blue. Each is taken
    from its own poster and each clears the 3.0 contrast gate on the #171208 sheet.
@@ -1654,7 +1655,7 @@ function openVault(id){
       It gets the same three cards as music, wearing the same plate the player is
       about to see. */
    var _cf=CARDART[v.id];
-   fan=_cf ? '<div class="vkfan'+(_cf.l?' lightfan':'')+'" style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+_cf.o+'">'
+   fan=_cf ? '<div class="vkfan'+(_cf.l?' lightfan':'')+'" style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+artistColor(v).acc+'">'
      +'<div class="vksamp vs1"><div class="typ">\ud83c\udfac Movie</div><div class="q">'+v.name.replace(/ Movies?$| TV$/,'')+'</div><div class="smp">Sample</div></div>'
      +(v.chars
         ? '<div class="vksamp vs2"><div class="typ">\ud83c\udfad Character</div><div class="q">Characters</div><div class="smp">Sample</div></div>'
@@ -1671,7 +1672,7 @@ function openVault(id){
      +'</div>';
  } else if(isLeg){
    var _cl=CARDART[v.id];
-   fan='<div class="vkfan'+(_cl&&_cl.l?' lightfan':'')+'"'+(_cl?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+_cl.o+'"':'')+'>'
+   fan='<div class="vkfan'+(_cl&&_cl.l?' lightfan':'')+'"'+(_cl?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+artistColor(v).acc+'"':'')+'>'
      +'<div class="vksamp vs1"><div class="typ">\ud83c\udfc5 Player</div><div class="q">'+lg.p1+'</div><div class="smp">Sample</div></div>'
      +'<div class="vksamp vs2"><div class="typ">\ud83c\udfc5 Player</div><div class="q">'+lg.p2+'</div><div class="smp">Sample</div></div>'
      +'<div class="vksamp vs3"><div class="typ">\ud83d\udccb Coach</div><div class="q">'+lg.c1+'</div><div class="smp">Sample</div></div>'
@@ -1689,7 +1690,7 @@ function openVault(id){
       categories, "Just the hits", "Adds deep cuts & B-sides". None of it described
       what is actually in a family vault. */
    var _cm=CARDART[v.id];
-   fan='<div class="vkfan'+(_cm&&_cm.l?' lightfan':'')+'"'+(_cm?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+_cm.o+'"':'')+'>'
+   fan='<div class="vkfan'+(_cm&&_cm.l?' lightfan':'')+'"'+(_cm?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+artistColor(v).acc+'"':'')+'>'
      +'<div class="vksamp vs1"><div class="typ">\u2b50 Standard</div><div class="q">'+fam.c[0]+'</div><div class="smp">Sample</div></div>'
      +'<div class="vksamp vs2"><div class="typ">\ud83c\udfaf Inside</div><div class="q">'+fam.c[1]+' \u00b7 '+fam.c[2]+'</div><div class="smp">Sample</div></div>'
      +'<div class="vksamp vs3"><div class="typ">\ud83d\udc8e Deluxe</div><div class="q">'+fam.c[3]+'</div><div class="smp">Sample</div></div>'
@@ -1704,7 +1705,7 @@ function openVault(id){
      +'</div>';
  } else {
    var _ca=CARDART[v.id];
-   fan='<div class="vkfan'+(_ca&&_ca.l?' lightfan':'')+'"'+(_ca?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+_ca.o+'"':'')+'>'
+   fan='<div class="vkfan'+(_ca&&_ca.l?' lightfan':'')+'"'+(_ca?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+artistColor(v).acc+'"':'')+'>'
      +'<div class="vksamp vs1"><div class="typ">🎵 Song</div><div class="q">'+d.song+'</div><div class="smp">Sample</div></div>'
      +'<div class="vksamp vs2"><div class="typ">📖 Lore</div><div class="q">'+(d.lore||d.last||'')+'</div><div class="smp">Sample</div></div>'
      +'<div class="vksamp vs3"><div class="typ">💿 Album</div><div class="q">'+d.album+'</div><div class="smp">Sample</div></div>'
