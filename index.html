@@ -194,6 +194,9 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:24px;font-size:13px;font-weight:700;z-index:95;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center}
 .toast.on{opacity:.95}
 .note{text-align:center;color:var(--dim);font-size:10.5px;margin:16px;line-height:1.5}
+/* Replaces the Play for Free row. It is a statement of terms, not a shelf, so it reads
+   at caption weight above the first heading rather than competing with one. */
+.freeline{color:var(--dim);font-size:11px;line-height:1.45;margin:2px 2px 14px;letter-spacing:.01em}
 .legal-footer{margin:14px 8px 20px;padding:16px 10px calc(env(safe-area-inset-bottom,0px) + 86px);border-top:1px solid rgba(255,255,255,.10);text-align:center;color:#8f83aa;font-size:10.5px;line-height:1.55}
 .legal-footer button,.purchase-legal{border:0;background:none;color:#b9a8e0;text-decoration:underline;text-underline-offset:3px;font:inherit;cursor:pointer}
 .legal-footer .links{display:block;margin-top:8px;color:#a99abd;font-weight:700;letter-spacing:.25px}
@@ -678,6 +681,19 @@ function inSeason(v,now){
   return (a<=b) ? (t>=a && t<=b) : (t>=a || t<=b);
 }
 function onShelf(v,ed){ return v.edition===ed || (v.also && v.also.indexOf(ed)>=0); }
+/* Holidays & Seasons is a permanent shelf now - a seasonal vault is bought, not rented,
+   so it never leaves. What changes is the ORDER: whatever is in season leads, and the
+   rest queue by how soon they open. daysToSeason rolls a start date that has already
+   passed into next year, so in October Summer reads as 222 days out, not -143. */
+function daysToSeason(v,now){
+  if(!v.season) return 9999;
+  var d=now||new Date(), p=v.season.from.split('-');
+  var today=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  var start=new Date(d.getFullYear(),+p[0]-1,+p[1]);
+  if(start<today) start=new Date(d.getFullYear()+1,+p[0]-1,+p[1]);
+  return Math.round((start-today)/86400000);
+}
+function seasonRank(v,now){ if(!v.season) return 9999; return inSeason(v,now) ? -1 : daysToSeason(v,now); }
 /* The 96 league team vaults are built but not in the first release. Each one carries a
    city, a franchise name and a team colourway; the four Legends vaults carry none of
    that, which is why they stay and the leagues wait. One flag rather than 96 edits.
@@ -695,23 +711,23 @@ function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)ret
    No counts stored for display; free tiles show only "FREE" (countdown removed until a rotation calendar is real). */
 var VAULTS=[
  /* --- 64 brackets (feeder = CYC), Kworb-sorted within each category --- */
- {id:'kidstoybox', name:"Kids Toybox", edition:'family', cat:'', bk:'', badge:'free', c:['#3aa0d8','#f05aa0'], dark:1},
+ {id:'kidstoybox', name:"Kids Toybox", edition:'family', cat:'', bk:'', famcat:'Little Kids', badge:'free', c:['#3aa0d8','#f05aa0'], dark:1},
 /* The twelve Family posters, ordered youngest-first inside each row so a parent
    scanning left to right meets the toddler vaults before the big-kid ones. None of
    them has a deck yet - they show the "still being built" notice until one lands. */
- {id:'fam_characters', name:"Animated Characters", edition:'family', cat:'', famcat:'Shows & Movies', badge:'prem', ip:1, c:['#8a6c01','#2b5c65'], dark:1},
- {id:'fam_videogames', name:"Video Game Universe", edition:'family', cat:'', famcat:'Shows & Movies', badge:'prem', ip:1, c:['#009bb7','#17013c'], dark:1},
- {id:'fam_animals', name:"Animals A to Z", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#472d0d','#005d21'], dark:1},
- {id:'fam_food', name:"Food & Snack Time", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#b1492f','#ac7400'], dark:1},
- {id:'fam_nursery', name:"Fairy Tales & Storytime", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', ip:1, c:['#ab512b','#353f1b'], dark:1},
- {id:'fam_instruments', name:"The Band Room", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#b78f15','#286669'], dark:1},
- {id:'fam_sportswords', name:"Know the Game", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#a35e05','#095b45'], dark:1},
- {id:'fam_jobs', name:"When I Grow Up", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#623414','#2d3b07'], dark:1},
+ {id:'fam_characters', name:"Animated Characters", edition:'family', cat:'', famcat:'Screen Time', badge:'prem', ip:1, c:['#8a6c01','#2b5c65'], dark:1},
+ {id:'fam_videogames', name:"Video Game Universe", edition:'family', cat:'', famcat:'Screen Time', badge:'prem', ip:1, c:['#009bb7','#17013c'], dark:1},
+ {id:'fam_animals', name:"Animals A to Z", edition:'family', cat:'', famcat:'Everyday Things', badge:'prem', c:['#472d0d','#005d21'], dark:1},
+ {id:'fam_food', name:"Food & Snack Time", edition:'family', cat:'', famcat:'Everyday Things', badge:'prem', c:['#b1492f','#ac7400'], dark:1},
+ {id:'fam_nursery', name:"Fairy Tales & Storytime", edition:'family', cat:'', famcat:'Little Kids', badge:'prem', ip:1, c:['#ab512b','#353f1b'], dark:1},
+ {id:'fam_instruments', name:"The Band Room", edition:'family', cat:'', famcat:'Music & Sports', badge:'prem', c:['#b78f15','#286669'], dark:1},
+ {id:'fam_sportswords', name:"Know the Game", edition:'family', cat:'', famcat:'Music & Sports', badge:'prem', c:['#a35e05','#095b45'], dark:1},
+ {id:'fam_jobs', name:"When I Grow Up", edition:'family', cat:'', famcat:'Everyday Things', badge:'prem', c:['#623414','#2d3b07'], dark:1},
  /* Everybody Passed, Nobody Remembers is school content aimed at the people who left
     school. It sits in Everyday Fun rather than Star Student because Star Student is
     a child's shelf carrying a report card - this one is the joke that the adults
     forgot all of it, so it gets no report card and no place beside the grades. */
- {id:'fam_popquiz', name:"Everybody Passed, Nobody Remembers", edition:'family', cat:'', famcat:'Everyday Fun', badge:'prem', c:['#b3763f','#3a2a18'], dark:1},
+ {id:'fam_popquiz', name:"Everybody Passed, Nobody Remembers", edition:'family', cat:'', famcat:'School by Grade', badge:'prem', c:['#b3763f','#3a2a18'], dark:1},
  /* Star Student - one vault per grade, cards pitched at what that year is actually
     teaching. The shelf heading carries the series name so the tile only has to say
     the grade; "Star Student: 1st Grade" on a 150px tile is three ideas stacked.
@@ -722,18 +738,18 @@ var VAULTS=[
     then the two subjects that carry the same report-card hook. Letters & Numbers was
     cut rather than parked: a pre-reader cannot hold a card to their own forehead and
     read a clue off someone else's face, so the vault had no game in it. */
- {id:'fam_grade1', name:"1st Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#d4462f','#f0a01e'], dark:1},
- {id:'fam_grade2', name:"2nd Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#e07a1e','#c9a227'], dark:1},
- {id:'fam_grade3', name:"3rd Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#2f9e5a','#8ec63f'], dark:1},
- {id:'fam_grade4', name:"4th Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#1f7fb5','#3fb6d9'], dark:1},
- {id:'fam_grade5', name:"5th Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#4b3fa8','#8a6fd4'], dark:1},
- {id:'fam_grade6', name:"6th Grade", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#8a2f6b','#d4569e'], dark:1},
- {id:'fam_school', name:"School Is in Session", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#853f19','#7c5e09'], dark:1},
- {id:'fam_presidents', name:"American History", edition:'family', cat:'', famcat:'Star Student', badge:'prem', c:['#b76f48','#7e6136'], dark:1},
- {id:'fam_geography', name:"USA Geography & Landmarks", edition:'family', ip:1, cat:'', famcat:'Star Student', badge:'prem', c:['#b7934d','#007876'], dark:1},
- {id:'fam_halloween', name:"Spooky Season", edition:'family', season:{from:'09-11',to:'11-10'}, cat:'', bk:'', badge:'free', c:['#f07a1e','#6a2a9e'], dark:1},
- {id:'fam_holiday', name:"Holiday Countdown", edition:'family', season:{from:'11-11',to:'01-02'}, cat:'', bk:'', badge:'free', c:['#c8102e','#1e7a4a'], dark:1},
- {id:'summerbeach', name:"Summer Beach Bash", edition:'family', season:{from:'05-15',to:'09-10'}, cat:'', bk:'', badge:'free', c:['#f0983a','#f05a7a'], dark:1},
+ {id:'fam_grade1', name:"1st Grade", edition:'family', cat:'', famcat:'School by Grade', badge:'prem', c:['#d4462f','#f0a01e'], dark:1},
+ {id:'fam_grade2', name:"2nd Grade", edition:'family', cat:'', famcat:'School by Grade', badge:'prem', c:['#e07a1e','#c9a227'], dark:1},
+ {id:'fam_grade3', name:"3rd Grade", edition:'family', cat:'', famcat:'School by Grade', badge:'prem', c:['#2f9e5a','#8ec63f'], dark:1},
+ {id:'fam_grade4', name:"4th Grade", edition:'family', cat:'', famcat:'School by Grade', badge:'prem', c:['#1f7fb5','#3fb6d9'], dark:1},
+ {id:'fam_grade5', name:"5th Grade", edition:'family', cat:'', famcat:'School by Grade', badge:'prem', c:['#4b3fa8','#8a6fd4'], dark:1},
+ {id:'fam_grade6', name:"6th Grade", edition:'family', cat:'', famcat:'School by Grade', badge:'prem', c:['#8a2f6b','#d4569e'], dark:1},
+ {id:'fam_school', name:"School Is in Session", edition:'family', cat:'', famcat:'School Subjects', badge:'prem', c:['#853f19','#7c5e09'], dark:1},
+ {id:'fam_presidents', name:"American History", edition:'family', cat:'', famcat:'School Subjects', badge:'prem', c:['#b76f48','#7e6136'], dark:1},
+ {id:'fam_geography', name:"USA Geography & Landmarks", edition:'family', ip:1, cat:'', famcat:'School Subjects', badge:'prem', c:['#b7934d','#007876'], dark:1},
+ {id:'fam_halloween', name:"Spooky Season", edition:'family', season:{from:'09-11',to:'11-10'}, cat:'', bk:'', famcat:'Holidays & Seasons', badge:'free', c:['#f07a1e','#6a2a9e'], dark:1},
+ {id:'fam_holiday', name:"Holiday Countdown", edition:'family', season:{from:'11-11',to:'01-31'}, cat:'', bk:'', famcat:'Holidays & Seasons', badge:'free', c:['#c8102e','#1e7a4a'], dark:1},
+ {id:'summerbeach', name:"Summer Beach Bash", edition:'family', season:{from:'05-15',to:'09-10'}, cat:'', bk:'', famcat:'Holidays & Seasons', badge:'free', c:['#f0983a','#f05a7a'], dark:1},
  {id:'taylorswift', name:"Taylor Swift", edition:'music', cat:'Pop', bk:'taylorswift', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
  {id:'arianagrande', name:"Ariana Grande", edition:'music', cat:'Pop', bk:'arianagrande', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
  {id:'edsheeran', name:"Ed Sheeran", edition:'music', cat:'Pop', bk:'edsheeran', badge:'prem', c:['#6a3a8a','#c98ae0'], dark:1},
@@ -809,19 +825,19 @@ var VAULTS=[
  {id:'grunge90s', name:"90s Grunge", edition:'music', cat:'Party', bk:null, badge:'prem', c:['#2a3a3a','#5a7a7a'], dark:1},
  /* --- Sports edition: one LIVE free seed + generic placeholders --- */
  /* --- Film & TV edition: Movies row + TV row (art posters) --- */
- {id:'mv_animated', name:'Animated Movies', edition:'filmtv', cat:'Movies', badge:'prem', chars:1, c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Shows & Movies'},
+ {id:'mv_animated', name:'Animated Movies', edition:'filmtv', cat:'Movies', badge:'prem', chars:1, c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'mv_drama', name:'Drama Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_scifi', name:'Sci-Fi Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_fantasy', name:'Fantasy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_fantasy', name:'Fantasy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'mv_action', name:'Action Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_superhero', name:'Superhero Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_superhero', name:'Superhero Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'mv_comedy', name:'Comedy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_romance', name:'Romance Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_crime', name:'Crime Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_war', name:'War Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_sports', name:'Sports Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_sports', name:'Sports Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'mv_horror', name:'Horror Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'tv_cartoon', name:'Cartoon TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
+ {id:'tv_cartoon', name:'Cartoon TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'tv_sitcom', name:'TV Sitcoms', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
  {id:'tv_scifi', name:'Sci-Fi & Fantasy TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
  {id:'tv_binge', name:'TV Binge Worthy', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
@@ -1023,7 +1039,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v359';
+var SFSBUILD='v358';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1188,25 +1204,20 @@ function closeLegal(){
  var el=document.getElementById('lgov'); if(!el) return;
  el.classList.remove('on'); el.setAttribute('aria-hidden','true'); el.innerHTML='';
 }
-function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(function(v){return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+(v.sp?'':vcap(vTitle(v)))+'</div>';}).join(''); return '<h2>'+title+'</h2><div class="row">'+t+'</div>'; }
+function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(function(v){return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'</div>';}).join(''); return '<h2>'+title+'</h2><div class="row">'+t+'</div>'; }
 function playHTML(){
  var ed=curEdition, h='';
  var vaults=VAULTS.filter(function(v){return onShelf(v,ed) && vaultLive(v);});
- var freeV=vaults.filter(function(v){return v.badge==='free' && inSeason(v);});
- /* Built once, placed differently per edition, and now only Family has anything in
-    it - both free tasters were moved off the Music shelf. The row still leads every
-    non-music world and still sits below Featured of the Week on Music, so if a free
-    vault is ever shelved back on Music nothing needs rewriting. */
- var freeHTML = freeV.length
-   ? '<h2>Play for Free <span class="pill">5-question taste</span></h2><div class="row">'+freeV.map(function(v){return tileHTML(v);}).join('')+'</div>'
-   : '';
- if(ed!=='music') h+=freeHTML;
+ /* The free row is gone. It advertised a 5-question taste that EVERY vault already
+    gives, so it sold nothing the rest of the shelf does not, and it parked the two
+    impulse buys (Spooky Season, Holiday Countdown) behind an inSeason() gate that
+    made them vanish for most of the year. One line of copy says the same thing
+    without spending a row on it, and the free vaults keep their FREE tile badge. */
  if(ed==='music'){
    h+=shelf('Party Vaults', BEST_OF.map(byId), 1);
    var feat=byId('taylorswift');
    h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
      +'<div class="fmeta"><div class="k">'+vTitle(feat)+'</div><div class="kind">'+VAULT_KIND+'</div><div class="s">How deep does your fandom go?</div><div class="go">Tap to open ▸</div></div></div>';
-   h+=freeHTML;
    CAT_ORDER.forEach(function(cat){ h+=numShelf(CAT_LABEL[cat]||cat, vaults.filter(function(v){return v.cat===cat;})); });
  } else if(ed==='sports'){
    ['Team Sports','Individual','Automotive'].forEach(function(r){ h+=sportsShelf(r, vaults.filter(function(v){return v.cat===r;})); });
@@ -1218,17 +1229,33 @@ function playHTML(){
       vault. An empty row does not render at all rather than showing a bare heading. */
    h+=shelf('Stage', vaults.filter(function(v){return v.cat==='Stage';}), 1, true);
  } else if(ed==='family'){
-   /* Two rows, split the way a parent shops rather than by what the content is:
-      the fandom half a child asks for by name, and the concrete-noun half a parent
-      picks because it suits the age. A row with nothing on it is not rendered - an
-      empty shelf reads as broken in a way "Coming soon" does not. */
-   var famRows=[['Star Student','Star Student'],['Shows & Movies','Shows & Movies'],['Everyday Fun','Everyday Fun']];
+   /* Seven rows, ordered by how a parent arrives rather than by what the content is.
+      Holidays & Seasons leads because it is the impulse buy - a kid who knows it is
+      Halloween week wants to play tonight, and burying that row last lost the sale.
+      School splits in two: the six grades are a series a child reads left to right,
+      so the three school-adjacent vaults were being read as "7th, 8th, 9th grade"
+      and never reached. Rows are explicit id lists, not a famcat filter, because
+      Screen Time has to run Video Games -> Animated Movies -> Cartoon TV regardless
+      of where those vaults sit in VAULTS. An id that is not on this shelf (or not
+      live) drops out silently, and an empty row does not render at all. */
+   var FAM_ROWS=[
+     ['Holidays & Seasons', ['fam_halloween','fam_holiday','summerbeach'], 1],
+     ['Little Kids',        ['kidstoybox','fam_nursery']],
+     ['Everyday Things',    ['fam_animals','fam_food','fam_jobs']],
+     ['Music & Sports',     ['fam_instruments','fam_sportswords']],
+     ['Screen Time',        ['fam_videogames','mv_animated','tv_cartoon','mv_superhero','mv_fantasy','mv_sports','fam_characters']],
+     ['School Subjects',    ['fam_presidents','fam_geography','fam_school']],
+     ['School by Grade',    ['fam_grade1','fam_grade2','fam_grade3','fam_grade4','fam_grade5','fam_grade6','fam_popquiz']]
+   ];
+   var onFam={}; vaults.forEach(function(v){ onFam[v.id]=v; });
    var anyFam=false;
-   famRows.forEach(function(r){
-     var inRow=vaults.filter(function(v){return (v.famcat||v.cat)===r[1];});
+   FAM_ROWS.forEach(function(r){
+     var inRow=r[1].map(function(id){return onFam[id];}).filter(Boolean);
+     if(r[2]) inRow.sort(function(a,b){return seasonRank(a)-seasonRank(b);});
      if(inRow.length){ anyFam=true; h+=shelf(r[0], inRow, 1, true); }
    });
-   if(!anyFam) h+='<div class="note">Coming soon.</div>';
+   if(anyFam) h='<div class="freeline">Every vault plays 5 questions free \u2014 and Kids Toybox is free forever.</div>'+h;
+   else h+='<div class="note">Coming soon.</div>';
  } else {
    h+='<div class="note">Coming soon.</div>';
  }
@@ -1752,10 +1779,9 @@ function closeOv(){ if(/[?&]ret=results/.test(location.search)){ location.replac
  }, 430); }
 
 
-/* A vault badged 'free' is FREE. It carries a pink FREE chip, it sits under a
-   heading that says Play for Free - and it was still handing out the 5-question
-   paywall preview, because badge and ownership were unrelated flags. The badge is
-   the promise; ownership has to honour it. */
+/* A vault badged 'free' is FREE. It carries a pink FREE chip and it was still
+   handing out the 5-question paywall preview, because badge and ownership were
+   unrelated flags. The badge is the promise; ownership has to honour it. */
 function isOwned(id){ var v=byId(id); return OWNED.indexOf(id)>=0 || !!(v && v.badge==='free'); }
 function tryFree(id){ var v=byId(id); if(!v) return; try{var _lp=JSON.parse(localStorage.getItem('sfs_lp')||'{}');_lp[id]=Date.now();localStorage.setItem('sfs_lp',JSON.stringify(_lp));}catch(e){} var u=launchURL(v); if(isOwned(id)) u+='&mode=full'; location.href=u; }
 function buy(id){ var v=byId(id); toast('Checkout: '+(v?v.name:'vault')+' · '+SFSPRICE+' — payments not wired yet'); }
