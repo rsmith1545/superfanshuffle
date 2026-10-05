@@ -715,7 +715,7 @@ var LEAGUE_CATS={Football:1,Basketball:1,Baseball:1,Hockey:1};
    fill a quota. The decks stay in family-decks.json and the vault entries stay
    here; set GRADES_LIVE true to bring the row back. */
 var GRADES_LIVE=false;
-var GRADE_IDS={fam_grade1:1,fam_grade2:1,fam_grade3:1,fam_grade4:1,fam_grade5:1,fam_grade6:1};
+var GRADE_IDS={fam_grade1:1,fam_grade2:1,fam_grade3:1,fam_grade4:1,fam_grade5:1,fam_grade6:1,fam_characters:1};
 function vaultLive(v){ return !!v && (LEAGUES_LIVE || !LEAGUE_CATS[v.cat]) && (GRADES_LIVE || !GRADE_IDS[v.id]); }
 function editionVisible(e){ return e.enabled || DEV_PREVIEW; }
 function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)return EDITIONS[i];}
@@ -841,14 +841,14 @@ var VAULTS=[
  {id:'mv_animated', name:'Animated Movies', edition:'filmtv', cat:'Movies', badge:'prem', chars:1, c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'mv_drama', name:'Drama Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_scifi', name:'Sci-Fi Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_fantasy', name:'Fantasy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
+ {id:'mv_fantasy', name:'Fantasy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_action', name:'Action Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_superhero', name:'Superhero Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
+ {id:'mv_superhero', name:'Superhero Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_comedy', name:'Comedy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_romance', name:'Romance Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_crime', name:'Crime Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_war', name:'War Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_sports', name:'Sports Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
+ {id:'mv_sports', name:'Sports Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_horror', name:'Horror Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'tv_cartoon', name:'Cartoon TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'tv_sitcom', name:'TV Sitcoms', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
@@ -1257,12 +1257,22 @@ function playHTML(){
       which is the one thing an adult vault must not look like. Rows are explicit id lists, not a famcat filter, because
       Screen Time has to run Video Games -> Animated Movies -> Cartoon TV regardless
       of where those vaults sit in VAULTS. An id that is not on this shelf (or not
-      live) drops out silently, and an empty row does not render at all. */
+      live) drops out silently, and an empty row does not render at all.
+      Screen Time holds only decks built FOR this shelf. Superhero, Fantasy and
+      Sports Movies were flagged onto Family and then pulled: they are film-edition
+      decks written for an adult film audience, and the flag moved the tile without
+      touching a card. Sports Movies is 209 cards of North Dallas Forty, Pumping
+      Iron, Cobb and Foxcatcher; Fantasy carries Pan's Labyrinth and The Witches of
+      Eastwick; Superhero carries Sin City and Kingsman. Animated Movies passes
+      clean - 101 Dalmatians, Lilo & Stitch, Inside Out, Shrek - which is why it
+      stays. A superhero vault for Family is a good idea; it needs its own deck,
+      not a flag. Animated Characters is retired with them: it had no deck and
+      duplicated Animated Movies outright. */
    var FAM_ROWS=[
      ['Holidays & Seasons', ['fam_halloween','fam_holiday','summerbeach'], 1],
      ['Everyday Things',    ['kidstoybox','fam_nursery','fam_animals','fam_food','fam_jobs']],
      ['Music & Sports',     ['fam_instruments','fam_sportswords']],
-     ['Screen Time',        ['fam_videogames','mv_animated','tv_cartoon','mv_superhero','mv_fantasy','mv_sports','fam_characters']],
+     ['Screen Time',        ['fam_videogames','mv_animated','tv_cartoon']],
      ['School Subjects',    ['fam_presidents','fam_geography','fam_school','fam_popquiz']]
    ];
    var onFam={}; vaults.forEach(function(v){ onFam[v.id]=v; });
