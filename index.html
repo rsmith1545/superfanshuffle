@@ -711,7 +711,7 @@ function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)ret
    No counts stored for display; free tiles show only "FREE" (countdown removed until a rotation calendar is real). */
 var VAULTS=[
  /* --- 64 brackets (feeder = CYC), Kworb-sorted within each category --- */
- {id:'kidstoybox', name:"Kids Toybox", edition:'family', cat:'', bk:'', famcat:'Little Kids', badge:'free', c:['#3aa0d8','#f05aa0'], dark:1},
+ {id:'kidstoybox', name:"Kids Toybox", edition:'family', cat:'', bk:'', famcat:'Everyday Things', badge:'free', c:['#3aa0d8','#f05aa0'], dark:1},
 /* The twelve Family posters, ordered youngest-first inside each row so a parent
    scanning left to right meets the toddler vaults before the big-kid ones. None of
    them has a deck yet - they show the "still being built" notice until one lands. */
@@ -719,7 +719,7 @@ var VAULTS=[
  {id:'fam_videogames', name:"Video Game Universe", edition:'family', cat:'', famcat:'Screen Time', badge:'prem', ip:1, c:['#009bb7','#17013c'], dark:1},
  {id:'fam_animals', name:"Animals A to Z", edition:'family', cat:'', famcat:'Everyday Things', badge:'prem', c:['#472d0d','#005d21'], dark:1},
  {id:'fam_food', name:"Food & Snack Time", edition:'family', cat:'', famcat:'Everyday Things', badge:'prem', c:['#b1492f','#ac7400'], dark:1},
- {id:'fam_nursery', name:"Fairy Tales & Storytime", edition:'family', cat:'', famcat:'Little Kids', badge:'prem', ip:1, c:['#ab512b','#353f1b'], dark:1},
+ {id:'fam_nursery', name:"Fairy Tales & Storytime", edition:'family', cat:'', famcat:'Everyday Things', badge:'prem', ip:1, c:['#ab512b','#353f1b'], dark:1},
  {id:'fam_instruments', name:"The Band Room", edition:'family', cat:'', famcat:'Music & Sports', badge:'prem', c:['#b78f15','#286669'], dark:1},
  {id:'fam_sportswords', name:"Know the Game", edition:'family', cat:'', famcat:'Music & Sports', badge:'prem', c:['#a35e05','#095b45'], dark:1},
  {id:'fam_jobs', name:"When I Grow Up", edition:'family', cat:'', famcat:'Everyday Things', badge:'prem', c:['#623414','#2d3b07'], dark:1},
@@ -727,7 +727,7 @@ var VAULTS=[
     school. It sits in Everyday Fun rather than Star Student because Star Student is
     a child's shelf carrying a report card - this one is the joke that the adults
     forgot all of it, so it gets no report card and no place beside the grades. */
- {id:'fam_popquiz', name:"Everybody Passed, Nobody Remembers", edition:'family', cat:'', famcat:'School by Grade', badge:'prem', c:['#b3763f','#3a2a18'], dark:1},
+ {id:'fam_popquiz', name:"Everybody Passed, Nobody Remembers", edition:'family', cat:'', famcat:'School Subjects', badge:'prem', c:['#b3763f','#3a2a18'], dark:1},
  /* Star Student - one vault per grade, cards pitched at what that year is actually
     teaching. The shelf heading carries the series name so the tile only has to say
     the grade; "Star Student: 1st Grade" on a 150px tile is three ideas stacked.
@@ -1039,7 +1039,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v358';
+var SFSBUILD='v362';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1232,20 +1232,26 @@ function playHTML(){
    /* Seven rows, ordered by how a parent arrives rather than by what the content is.
       Holidays & Seasons leads because it is the impulse buy - a kid who knows it is
       Halloween week wants to play tonight, and burying that row last lost the sale.
+      Everyday Things is the concrete-noun row and Fairy Tales belongs in it: a
+      storybook is an everyday object, and the deck carries a whole Standard run of
+      them (Hardcover, The Bookmark, The Pop-Up Book, The Night Light). It was in a
+      row called Little Kids, which claimed an age its 27 middle-grade titles break -
+      a heading has to not mislead, and nobody is misled by a book being everyday.
       School splits in two: the six grades are a series a child reads left to right,
-      so the three school-adjacent vaults were being read as "7th, 8th, 9th grade"
-      and never reached. Rows are explicit id lists, not a famcat filter, because
+      so the school-adjacent vaults were being read as "7th, 8th, 9th grade" and
+      never reached. Everybody Passed sits with the subjects rather than the grades
+      for the same reason - last in a row that counts 1 to 6, it reads as 7th grade,
+      which is the one thing an adult vault must not look like. Rows are explicit id lists, not a famcat filter, because
       Screen Time has to run Video Games -> Animated Movies -> Cartoon TV regardless
       of where those vaults sit in VAULTS. An id that is not on this shelf (or not
       live) drops out silently, and an empty row does not render at all. */
    var FAM_ROWS=[
      ['Holidays & Seasons', ['fam_halloween','fam_holiday','summerbeach'], 1],
-     ['Little Kids',        ['kidstoybox','fam_nursery']],
-     ['Everyday Things',    ['fam_animals','fam_food','fam_jobs']],
+     ['Everyday Things',    ['kidstoybox','fam_nursery','fam_animals','fam_food','fam_jobs']],
      ['Music & Sports',     ['fam_instruments','fam_sportswords']],
      ['Screen Time',        ['fam_videogames','mv_animated','tv_cartoon','mv_superhero','mv_fantasy','mv_sports','fam_characters']],
-     ['School Subjects',    ['fam_presidents','fam_geography','fam_school']],
-     ['School by Grade',    ['fam_grade1','fam_grade2','fam_grade3','fam_grade4','fam_grade5','fam_grade6','fam_popquiz']]
+     ['School Subjects',    ['fam_presidents','fam_geography','fam_school','fam_popquiz']],
+     ['School by Grade',    ['fam_grade1','fam_grade2','fam_grade3','fam_grade4','fam_grade5','fam_grade6']]
    ];
    var onFam={}; vaults.forEach(function(v){ onFam[v.id]=v; });
    var anyFam=false;
