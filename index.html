@@ -1272,20 +1272,20 @@ function playHTML(){
      /* Ordered by what a KID would most want to play, not by deck depth.
         Depth is the spreadsheet's idea of strength; the parent pays, but
         they pay for what the kid will actually pick up, so kid-appeal is
-        the better proxy. A kid points at cartoons instantly, so Screen
-        Time rides at 2. School lands at 3 and seasonal at 4 - high enough
-        that a parent scrolling with intent reaches them, low enough that
-        they are not what greets a kid. Music & Sports sits last because
-        its two tiles are the narrowest on the shelf by audience: Know the
-        Game wants a sporty kid, The Band Room a musical one, where every
-        row above it works for any kid in the room.
-        Holidays keeps the trailing 1: that flag is the per-tile seasonal
-        sort (seasonRank), independent of where the row sits. */
+        the better proxy. A kid points at cartoons instantly and groans at
+        school, so Screen Time rides at 2 while School sits at 4 - a parent
+        scrolls with intent and will reach it, a kid does not scroll at all,
+        so the top rows have to earn the glance. Seasonal sits last because
+        it is the row that finds you: nothing in it is worth a tile eleven
+        months a year, and the one month it matters it is already first by
+        the per-tile seasonal sort.
+        The trailing 1 on Holidays IS that sort (seasonRank). It orders
+        tiles inside the row and is independent of where the row sits. */
      ['Everyday Things',    ['fam_animals','fam_food','fam_nursery','fam_jobs','kidstoybox']],
      ['Screen Time',        ['mv_animated','tv_cartoon','fam_videogames']],
+     ['Music & Sports',     ['fam_sportswords','fam_instruments']],
      ['School Subjects',    ['fam_school','fam_presidents','fam_geography','fam_popquiz']],
-     ['Holidays & Seasons', ['fam_halloween','fam_holiday','summerbeach'], 1],
-     ['Music & Sports',     ['fam_sportswords','fam_instruments']]
+     ['Holidays & Seasons', ['fam_halloween','fam_holiday','summerbeach'], 1]
    ];
    var onFam={}; vaults.forEach(function(v){ onFam[v.id]=v; });
    var anyFam=false;
