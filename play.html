@@ -1026,7 +1026,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   <!-- START -->
   <div class="screen on" id="sStart">
     <h1><span class="l1">SuperFan</span><br><span class="l2">Shuffle</span></h1>
-    <div class="sub">Hold the phone to your forehead.<br><b>Tilt DOWN</b> when you get it • <b>Tilt UP</b> to pass.</div>
+    <div class="sub" id="howSub">Hold the phone to your forehead.<br><b>Tilt DOWN</b> when you get it • <b>Tilt UP</b> to pass.</div>
     <div class="clueLine" id="clueLine"></div>
     <button class="btn" id="startBtn">Tap to Play</button>
     <div class="small">Tilt test build · turn sideways to play</div>
@@ -1392,7 +1392,20 @@ var PREVIEW5={
  "fam_halloween":["Jack-o'-Lantern", "Ghost", "Candy Corn", "Black Cat", "Haunted House"],
  "fam_holiday":["Christmas Tree", "Santa Claus", "Snowman", "Candy Cane", "Menorah"]};
 function hoistPreview(ord){
-  var want=PREVIEW5[VAULT_ID]; if(!want||!want.length) return ord;
+  /* Only 11 of 91 populated vaults carry a curated five. For the rest this used
+     to return the order untouched, so the sample stayed shuffled - and because
+     dealOrder() prefers unseen cards, replaying it actively handed out FRESH
+     cards each time. The fallback below makes every sample deterministic, so a
+     replay serves the same five and the seen-set cannot be farmed. */
+  var want=PREVIEW5[VAULT_ID];
+  if(!want||!want.length){
+    /* Not slice(0,5): most decks are stored alphabetically, so the first five
+       came out as five consecutive A-titles - deterministic but a terrible
+       advert. Evenly spaced picks are just as fixed and show the range. */
+    var d=activeDeck(), step=Math.max(1,Math.floor(d.length/5));
+    want=[]; for(var k=0;k<5 && k*step<d.length;k++) want.push(d[k*step]);
+  }
+  if(!want.length) return ord;
   var have={},i; for(i=0;i<ord.length;i++) have[ord[i]]=1;
   var head=[],pick={};
   for(i=0;i<want.length;i++){ if(have[want[i]] && !pick[want[i]]){ head.push(want[i]); pick[want[i]]=1; } }
@@ -1671,6 +1684,32 @@ function requestPerm(cb){
   else { permGranted=true; attach(); cb(true); }
 }
 
+/* ---------- tap fallback: the game had no input at all without motion ----------
+   Deny the iOS motion prompt and devicemotion/deviceorientation never fire, so
+   gz stays 0, evalTilt() never crosses the threshold, and nothing anywhere calls
+   mark(). The player got a card, a running clock and no way to score or finish.
+   Tap halves rescue only that case - the handler returns immediately when motion
+   was granted, so the tilt path is untouched for everyone else. Bottom half is
+   CORRECT and top half is PASS, matching which way the phone tilts. */
+function attachTapFallback(){
+  var g=document.getElementById('sGame'); if(!g || g._tapWired) return;
+  g._tapWired=true;
+  g.addEventListener('click',function(e){
+    if(permGranted || !playing || ended) return;
+    var r=g.getBoundingClientRect();
+    var y=(e.clientY!=null?e.clientY:(r.top+r.height/2))-r.top;
+    mark(y > r.height/2);
+  });
+}
+/* Swap the how-to line when motion was refused, so the instruction matches the
+   input the player actually has. */
+function syncInputHint(){
+  var el=document.getElementById('howSub'); if(!el) return;
+  el.innerHTML = permGranted
+    ? 'Hold the phone to your forehead.<br><b>Tilt DOWN</b> when you get it • <b>Tilt UP</b> to pass.'
+    : 'Hold the phone to your forehead.<br><b>Tap the bottom</b> when you get it • <b>Tap the top</b> to pass.';
+}
+
 /* ---------- sound (Web Audio, no files) — distinct per event ---------- */
 var AC=null;
 function initAudio(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){} }
@@ -1787,7 +1826,11 @@ function startGame(){
   if(DECKSTATE==='loading' && _startWait<20){ _startWait++; setTimeout(startGame,120); return; }
   _startWait=0;
   if(activeDeck().length<5){ noDeckNotice(); return; }
-  order=dealOrder(); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
+  /* hoistPreview was only applied on a RE-deal, and a 5-card sample off a
+     400-card deck never exhausts the order - so every taste served a random
+     five and the curated openers never fired once. Hoist on the deal that
+     actually gets played. */
+  order=dealOrder(); if(PREVIEW) order=hoistPreview(order); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
   document.getElementById('score').textContent='0';
   show('sGame'); app.classList.remove('st-correct','st-pass','st-timeup');
   applySportCard(); if(!spCard()) { app.classList.remove('sportcard'); app.style.removeProperty('--cardbg'); app.style.removeProperty('--cardoutline'); }
@@ -2250,7 +2293,7 @@ function buzz(p){
   }
 }
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
-document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(35); unlockAudio(); requestPerm(function(ok){ ready(); }); };
+document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(35); unlockAudio(); requestPerm(function(ok){ attachTapFallback(); syncInputHint(); ready(); }); };
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
 function _syncCust(){ var es=document.querySelectorAll('#rcEdRow .rcOpt'); for(var i=0;i<es.length;i++){ es[i].classList.toggle('sel', es[i].getAttribute('data-ed')===custEd); } }
 var custEd='Standard';
@@ -2469,7 +2512,7 @@ function renderQPG(){
  document.getElementById('qpgGo').onclick=function(){
    try{ document.getElementById('app').classList.remove('qpgapp'); }catch(e){}
    try{ var d=document.getElementById('dbgBtn'); if(d) d.style.display=(typeof DBGMODE!=='undefined'&&DBGMODE)?'block':'none'; }catch(e){}
-   goFullscreen(); buzz(35); unlockAudio(); requestPerm(function(ok){ ready(); });
+   goFullscreen(); buzz(35); unlockAudio(); requestPerm(function(ok){ attachTapFallback(); syncInputHint(); ready(); });
  };
  /* Fullscreen needs a user gesture IN THIS DOCUMENT, and the tap on the vault card
     happened back in index.html — gesture context does not survive the navigation. So
