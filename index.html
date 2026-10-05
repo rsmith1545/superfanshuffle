@@ -703,7 +703,20 @@ function seasonRank(v,now){ if(!v.season) return 9999; return inSeason(v,now) ? 
    and the owned row. Set true to bring the leagues back. */
 var LEAGUES_LIVE=false;
 var LEAGUE_CATS={Football:1,Basketball:1,Baseball:1,Hockey:1};
-function vaultLive(v){ return !!v && (LEAGUES_LIVE || !LEAGUE_CATS[v.cat]); }
+/* The six per-year grade vaults are retired, same mechanism as the leagues and
+   for a measurable reason: a forehead game needs cards a room can clue in two
+   words, and school curriculum stops supplying them as the grade rises. The six
+   decks run 100% concrete in 1st grade, 76% in 2nd, then 58, 68, 36 and 39 - so
+   by 5th and 6th they are vocabulary lists (Chromosome, Cell Wall, Rhetorical
+   Question) wearing a party game. The content is not fixable by editing because
+   the curriculum itself is abstract.
+   They are replaced by School Is in Session: Elementary, which draws one 240-card
+   deck from the ~740 concrete cards across all six years and simply never has to
+   fill a quota. The decks stay in family-decks.json and the vault entries stay
+   here; set GRADES_LIVE true to bring the row back. */
+var GRADES_LIVE=false;
+var GRADE_IDS={fam_grade1:1,fam_grade2:1,fam_grade3:1,fam_grade4:1,fam_grade5:1,fam_grade6:1};
+function vaultLive(v){ return !!v && (LEAGUES_LIVE || !LEAGUE_CATS[v.cat]) && (GRADES_LIVE || !GRADE_IDS[v.id]); }
 function editionVisible(e){ return e.enabled || DEV_PREVIEW; }
 function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)return EDITIONS[i];}
 
@@ -1250,8 +1263,7 @@ function playHTML(){
      ['Everyday Things',    ['kidstoybox','fam_nursery','fam_animals','fam_food','fam_jobs']],
      ['Music & Sports',     ['fam_instruments','fam_sportswords']],
      ['Screen Time',        ['fam_videogames','mv_animated','tv_cartoon','mv_superhero','mv_fantasy','mv_sports','fam_characters']],
-     ['School Subjects',    ['fam_presidents','fam_geography','fam_school','fam_popquiz']],
-     ['School by Grade',    ['fam_grade1','fam_grade2','fam_grade3','fam_grade4','fam_grade5','fam_grade6']]
+     ['School Subjects',    ['fam_presidents','fam_geography','fam_school','fam_popquiz']]
    ];
    var onFam={}; vaults.forEach(function(v){ onFam[v.id]=v; });
    var anyFam=false;
