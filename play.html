@@ -1669,11 +1669,17 @@ function evalTilt(){
   if(dir!==holdDir){ holdDir=dir; holdStart=now; return; }   // just crossed: start hold timer
   if(now-holdStart >= HOLD_MS){ armed=false; lastMark=now; holdDir=0; mark(dir>0); }  // held long enough
 }
+/* sawTilt goes true the instant ANY orientation or motion event lands, from
+   either sensor. The tap fallback keys off this rather than off the permission
+   result, because permission granted is not the same as a sensor reporting:
+   desktop has no prompt at all (permGranted=true, no events ever) and a phone
+   can grant and still deliver nothing. */
+var sawTilt=false;
 function onMotion(e){
-  var g=e.accelerationIncludingGravity; if(!g||g.z==null) return; haveMotion=true;
+  var g=e.accelerationIncludingGravity; if(!g||g.z==null) return; haveMotion=true; sawTilt=true;
   gz=g.z; evalTilt(); dbgTick();
 }
-function onOrient(e){ beta=e.beta||0; gamma=e.gamma||0; if(!haveMotion){ /* fallback: no devicemotion */ gz=(beta/90)*9.8; evalTilt(); } if(awaitingLandscape) checkOrientation(); dbgTick(); }
+function onOrient(e){ sawTilt=true; beta=e.beta||0; gamma=e.gamma||0; if(!haveMotion){ /* fallback: no devicemotion */ gz=(beta/90)*9.8; evalTilt(); } if(awaitingLandscape) checkOrientation(); dbgTick(); }
 
 function attach(){ window.addEventListener('devicemotion',onMotion); window.addEventListener('deviceorientation',onOrient); }
 var permGranted=false;
@@ -1695,7 +1701,7 @@ function attachTapFallback(){
   var g=document.getElementById('sGame'); if(!g || g._tapWired) return;
   g._tapWired=true;
   g.addEventListener('click',function(e){
-    if(permGranted || !playing || ended) return;
+    if(sawTilt || !playing || ended) return;   /* a live sensor makes tap inert within ms of the first event */
     var r=g.getBoundingClientRect();
     var y=(e.clientY!=null?e.clientY:(r.top+r.height/2))-r.top;
     mark(y > r.height/2);
@@ -1705,7 +1711,9 @@ function attachTapFallback(){
    input the player actually has. */
 function syncInputHint(){
   var el=document.getElementById('howSub'); if(!el) return;
-  el.innerHTML = permGranted
+  /* Checked a beat later: no event has landed at the moment permission
+     resolves, so deciding now would always say tap. */
+  el.innerHTML = sawTilt
     ? 'Hold the phone to your forehead.<br><b>Tilt DOWN</b> when you get it • <b>Tilt UP</b> to pass.'
     : 'Hold the phone to your forehead.<br><b>Tap the bottom</b> when you get it • <b>Tap the top</b> to pass.';
 }
@@ -2293,7 +2301,7 @@ function buzz(p){
   }
 }
 function goFullscreen(){ try{ var el=document.documentElement; var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen; if(fn && !(document.fullscreenElement||document.webkitFullscreenElement)){ var p=fn.call(el); if(p&&p.catch)p.catch(function(){}); } }catch(e){} }
-document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(35); unlockAudio(); requestPerm(function(ok){ attachTapFallback(); syncInputHint(); ready(); }); };
+document.getElementById('startBtn').onclick=function(){ goFullscreen(); buzz(35); unlockAudio(); requestPerm(function(ok){ attachTapFallback(); syncInputHint(); setTimeout(syncInputHint,500); ready(); }); };
 document.getElementById('againBtn').onclick=function(){ goFullscreen(); unlockAudio(); ready(); };
 function _syncCust(){ var es=document.querySelectorAll('#rcEdRow .rcOpt'); for(var i=0;i<es.length;i++){ es[i].classList.toggle('sel', es[i].getAttribute('data-ed')===custEd); } }
 var custEd='Standard';
@@ -2512,7 +2520,7 @@ function renderQPG(){
  document.getElementById('qpgGo').onclick=function(){
    try{ document.getElementById('app').classList.remove('qpgapp'); }catch(e){}
    try{ var d=document.getElementById('dbgBtn'); if(d) d.style.display=(typeof DBGMODE!=='undefined'&&DBGMODE)?'block':'none'; }catch(e){}
-   goFullscreen(); buzz(35); unlockAudio(); requestPerm(function(ok){ attachTapFallback(); syncInputHint(); ready(); });
+   goFullscreen(); buzz(35); unlockAudio(); requestPerm(function(ok){ attachTapFallback(); syncInputHint(); setTimeout(syncInputHint,500); ready(); });
  };
  /* Fullscreen needs a user gesture IN THIS DOCUMENT, and the tap on the vault card
     happened back in index.html — gesture context does not survive the navigation. So
