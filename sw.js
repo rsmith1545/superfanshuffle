@@ -90,8 +90,20 @@ self.addEventListener('fetch', function(e){
   try{ url = new URL(req.url); }catch(err){ return; }
   if(url.origin !== self.location.origin) return;      /* CDNs, analytics: untouched */
 
+  /* Three tests, not two, and the third is the load-bearing one. The first
+     two ask how the request was MADE - a navigation, or an Accept header
+     naming text/html - and a plain same-origin fetch('/index.html') answers
+     no to both, because fetch() sends a wildcard Accept. Such a request used to
+     fall through to the cache-first branch below and get handed whatever
+     PRECACHE stored on install day, for the life of the worker. Measured on
+     2026-10-05: fetch('/index.html') returned a five-day-old build while the
+     same URL with Accept: text/html returned the live one, and two hours
+     went into blaming GitHub Pages and Cloudflare for it. The pathname test
+     cannot be bypassed by how the request was phrased, so an HTML file is
+     network-first however it is asked for. */
   var isHTML = req.mode === 'navigate' ||
-               (req.headers.get('accept') || '').indexOf('text/html') > -1;
+               (req.headers.get('accept') || '').indexOf('text/html') > -1 ||
+               /(^\/$|\.html$)/.test(url.pathname);
   var isDeck = /-decks(-\d+)?\.json$/.test(url.pathname) ||
                /\/(family-defs|manifest)\.(json|webmanifest)$/.test(url.pathname);
 
