@@ -1269,11 +1269,23 @@ function playHTML(){
       not a flag. Animated Characters is retired with them: it had no deck and
       duplicated Animated Movies outright. */
    var FAM_ROWS=[
+     /* Ordered by what a KID would most want to play, not by deck depth.
+        Depth is the spreadsheet's idea of strength; the parent pays, but
+        they pay for what the kid will actually pick up, so kid-appeal is
+        the better proxy. A kid points at cartoons instantly, so Screen
+        Time rides at 2. School lands at 3 and seasonal at 4 - high enough
+        that a parent scrolling with intent reaches them, low enough that
+        they are not what greets a kid. Music & Sports sits last because
+        its two tiles are the narrowest on the shelf by audience: Know the
+        Game wants a sporty kid, The Band Room a musical one, where every
+        row above it works for any kid in the room.
+        Holidays keeps the trailing 1: that flag is the per-tile seasonal
+        sort (seasonRank), independent of where the row sits. */
+     ['Everyday Things',    ['fam_animals','fam_food','fam_nursery','fam_jobs','kidstoybox']],
+     ['Screen Time',        ['mv_animated','tv_cartoon','fam_videogames']],
+     ['School Subjects',    ['fam_school','fam_presidents','fam_geography','fam_popquiz']],
      ['Holidays & Seasons', ['fam_halloween','fam_holiday','summerbeach'], 1],
-     ['Everyday Things',    ['kidstoybox','fam_nursery','fam_animals','fam_food','fam_jobs']],
-     ['Music & Sports',     ['fam_instruments','fam_sportswords']],
-     ['Screen Time',        ['fam_videogames','mv_animated','tv_cartoon']],
-     ['School Subjects',    ['fam_presidents','fam_geography','fam_school','fam_popquiz']]
+     ['Music & Sports',     ['fam_sportswords','fam_instruments']]
    ];
    var onFam={}; vaults.forEach(function(v){ onFam[v.id]=v; });
    var anyFam=false;
@@ -1384,8 +1396,21 @@ var OWNED=['fam_nursery','taylorswift','dmb','fthc','mv_comedy','mv_horror','mv_
 function playOwned(id){ var v=byId(id); if(v) location.href=launchURL(v)+'&mode=full'; }
 function ownedTile(v){ return '<div class="vault" onclick="openVault(\''+v.id+'\')">'+coverHTML(v)+vcap(vTitle(v))+'</div>'; }
 function lpMap(){try{return JSON.parse(localStorage.getItem('sfs_lp')||'{}');}catch(e){return {};}}
+/* My Vaults built its list from the raw OWNED array while isOwned() ALSO
+   honours badge:'free'. The two disagreed, so Kids Toybox shipped free and
+   fully playable and still never appeared on the My Vaults shelf - no tile,
+   no Play button. Both call sites now go through here, so a vault badged
+   'free' reaches My Vaults without anyone remembering to add it to OWNED
+   as well. OWNED keeps its own order (it is the dev seed list and the
+   eventual purchase order); free vaults are appended after it. */
+function ownedList(){
+ var seen={}, out=[];
+ OWNED.forEach(function(id){ if(seen[id]) return; seen[id]=1; var v=byId(id); if(v) out.push(v); });
+ VAULTS.forEach(function(v){ if(seen[v.id]) return; if(isOwned(v.id)){ seen[v.id]=1; out.push(v); } });
+ return out.filter(vaultLive);
+}
 function myVaultsHTML(){
- var owned=OWNED.map(byId).filter(Boolean).filter(vaultLive);
+ var owned=ownedList();
  var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Stage & Screen',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'},{id:'family',label:'Family',acc:'#7ED957'}];
  var cnt={}; order.forEach(function(e){ cnt[e.id]=owned.filter(function(v){return (v.edition||'music')===e.id;}).length; });
  var LP=lpMap(); var h='';
@@ -1426,7 +1451,7 @@ function renderBrandBar(v){
  var BBBG={music:'#1a0d33',filmtv:'#0e0e12',sports:'#14274d',family:'#10281f'};
  bb.style.background=(v==='vaults'?'#120a20':(BBBG[curEdition]||'#1a0d33'));
  if(v==='vaults'){
-   var owned=OWNED.map(byId).filter(Boolean).filter(vaultLive);
+   var owned=ownedList();
    var order=[{id:'music',label:'Music',acc:'#3EDBFF'},{id:'filmtv',label:'Stage & Screen',acc:'#F2C14E'},{id:'sports',label:'Sports',acc:'#FF8A2A'}];
    var pills=order.map(function(e){var c=owned.filter(function(x){return (x.edition||'music')===e.id;}).length; return '<button class="mvpill" style="--pa:'+e.acc+'" onclick="mvJump(\''+e.id+'\')">'+e.label+' <span>'+c+'</span></button>';}).join('');
    bb.innerHTML='<button class="mini-brand" onclick="setView(\'play\');window.scrollTo(0,0)" aria-label="Home"><img src="myvaults-logo.png?v=2" alt=""></button><div class="bbsec">'+pills+'</div>';
