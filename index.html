@@ -887,12 +887,18 @@ var SPORTS=[
 {id:"bx_legends",name:"Boxing All-Time Greats",edition:"sports",cat:"Individual",badge:"prem",dark:1,c:["#8a1220","#c8a24a"]},
 /* Racing was one vault called "Racing All-Time Greats" with no poster of its own.
    The art was drawn as two - Open Wheel and Stock Car - and the two disciplines share
-   almost no audience, so the vault follows the art. ra_legends is parked below rather
-   than deleted; its deck is the source both of these were split out of. */
+   almost no audience, so the vault follows the art.
+
+   ra_legends was meant to be parked here but its record still carried edition:"sports"
+   and cat:"Automotive", so onShelf() and vaultLive() both passed it and it kept
+   rendering a third tile - artless, and duplicating the other two. The record is now
+   gone. Its deck stays in sports-decks.json because 18 of its 95 cards are in NEITHER
+   of the two that replaced it: MotoGP (Rossi, Marquez, Agostini, Roberts, Doohan,
+   Stoner), Rally (Loeb, McRae, Rohrl, Makinen, Vatanen), Le Mans (Kristensen, Ickx,
+   Bell), NHRA (Garlits, Force, Muldowney) and Carroll Shelby. Those 18 have no home
+   until there is a vault for them - do not delete the deck to save 10KB. */
 {id:"ow_legends",name:"Open Wheel All-Time Greats",edition:"sports",cat:"Automotive",badge:"prem",dark:1,c:["#f0913a","#101014"]},
 {id:"sc_legends",name:"Stock Car All-Time Greats",edition:"sports",cat:"Automotive",badge:"prem",dark:1,c:["#c8102e","#1b1b20"]},
-/* PARKED - superseded by ow_legends + sc_legends above.
-{id:"ra_legends",name:"Racing All-Time Greats",edition:"sports",cat:"Automotive",badge:"prem",dark:1,c:["#c8102e","#101014"]}, */
 {id:"fo-arizona-cardinals",name:"Arizona Cardinals",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#97233F","#000000"],sp:{p:"#97233F",s:"#000000",t:"#FFB612",city:"Arizona",team:"Cardinals",fit:1,yr:1898}},
 {id:"fo-atlanta-falcons",name:"Atlanta Falcons",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#A71930","#000000"],sp:{p:"#A71930",s:"#000000",t:"#FFFFFF",city:"Atlanta",team:"Falcons",yr:1966}},
 {id:"fo-baltimore-ravens",name:"Baltimore Ravens",edition:"sports",cat:"Football",badge:"prem",dark:1,c:["#241773","#000000"],sp:{p:"#241773",s:"#000000",t:"#FFD100",city:"Baltimore",team:"Ravens",yr:1996}},
