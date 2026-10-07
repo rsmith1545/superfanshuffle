@@ -1052,7 +1052,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v377';
+var SFSBUILD='v378';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1217,7 +1217,11 @@ function closeLegal(){
  var el=document.getElementById('lgov'); if(!el) return;
  el.classList.remove('on'); el.setAttribute('aria-hidden','true'); el.innerHTML='';
 }
-function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(function(v){return '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'</div>';}).join(''); return '<h2>'+title+'</h2><div class="row">'+t+'</div>'; }
+/* Team tiles (v.sp) paint city, team and the kind label INSIDE the tile, so they need
+   no caption. Every other sports vault renders as bare artwork, and this shelf was the
+   only one in the app building its own tile instead of calling tileHTML - which is why
+   the eleven All-Time Greats vaults showed a poster and no name. */
+function sportsShelf(title,arr){ if(!arr.length) return ''; var t=arr.map(function(v){ return v.sp ? '<div class="vault" onclick="pickVault(\''+v.id+'\')">'+coverHTML(v)+'</div>' : tileHTML(v); }).join(''); return '<h2>'+title+'</h2><div class="row">'+t+'</div>'; }
 function playHTML(){
  var ed=curEdition, h='';
  var vaults=VAULTS.filter(function(v){return onShelf(v,ed) && vaultLive(v);});
