@@ -1304,7 +1304,12 @@ function playHTML(){
      ['Everyday Things',    ['fam_animals','fam_food','fam_nursery','fam_jobs','kidstoybox']],
      ['Screen Time',        ['mv_animated','tv_cartoon','fam_videogames']],
      ['Music & Sports',     ['fam_sportswords','fam_instruments']],
-     ['School Subjects',    ['fam_school','fam_presidents','fam_geography','fam_popquiz']],
+     /* The two School Is in Session vaults are a named pair and have to sit together -
+        split by American History and USA Geography they read as an accident. High School
+        leads: it is the adult tile (nobody opens this to be quizzed, they open it because
+        they did high school), it is the biggest deck in the edition at 893 cards, and on
+        a 390px phone only 2.3 tiles show, so slot one is the only one everybody sees. */
+     ['School Subjects',    ['fam_popquiz','fam_school','fam_presidents','fam_geography']],
      ['Holidays & Seasons', ['fam_valentine','fam_stpatrick','fam_spring','summerbeach','fam_halloween','fam_thanksgiving','fam_holiday'], 1]
    ];
    var onFam={}; vaults.forEach(function(v){ onFam[v.id]=v; });
