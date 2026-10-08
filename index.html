@@ -1304,12 +1304,14 @@ function playHTML(){
      ['Everyday Things',    ['fam_animals','fam_food','fam_nursery','fam_jobs','kidstoybox']],
      ['Screen Time',        ['mv_animated','tv_cartoon','fam_videogames']],
      ['Music & Sports',     ['fam_sportswords','fam_instruments']],
-     /* The two School Is in Session vaults are a named pair and have to sit together -
-        split by American History and USA Geography they read as an accident. High School
-        leads: it is the adult tile (nobody opens this to be quizzed, they open it because
-        they did high school), it is the biggest deck in the edition at 893 cards, and on
-        a 390px phone only 2.3 tiles show, so slot one is the only one everybody sees. */
-     ['School Subjects',    ['fam_popquiz','fam_school','fam_presidents','fam_geography']],
+     /* The two School Is in Session vaults are a named pair and sit together - split by
+        American History and USA Geography they read as an accident. Elementary leads, not
+        High School, even though High School is the bigger deck: the first tile sets the
+        expectation for the whole row, and opening on lockers, labs and finals says this
+        shelf is going to test you - which is the one frame nobody actually arrives with.
+        Elementary is the snow day and the school bus, playable on sight. High School is
+        the step up, one slot along and still half-visible before any scroll. */
+     ['School Subjects',    ['fam_school','fam_popquiz','fam_presidents','fam_geography']],
      ['Holidays & Seasons', ['fam_valentine','fam_stpatrick','fam_spring','summerbeach','fam_halloween','fam_thanksgiving','fam_holiday'], 1]
    ];
    var onFam={}; vaults.forEach(function(v){ onFam[v.id]=v; });
