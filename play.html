@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v382"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v383"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -1132,7 +1132,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v382';
+var SFSBUILD='v383';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1510,6 +1510,17 @@ var ART_TYPE={
  fam_instruments:{outline:'#D46B94'},fam_sportswords:{outline:'#E0AE33'},
  fam_storybook :{outline:'#D99A50'}, fam_nursery   :{outline:'#CE8FDB'},
  fam_jobs      :{outline:'#57A8D4'},
+ /* The four holiday plates, October build. These are drawn to a different brief from
+    the family plates above: props banked on BOTH sides with the middle left open,
+    rather than the subject held left. That matches where the word actually lands -
+    #app is a centred flex box, so #card sits dead centre, not lower-right. Neither
+    layout is wrong and the shipped ones stay as they are; the centre-open brief just
+    puts the gap where the type is. No darkening on any of the four: #app.hasart
+    stacks five dark shadows behind the white fill and that is what carries
+    legibility - the shipped plates measure 1.24:1 to 8.8:1 across the centre and
+    read fine. */
+ fam_valentine :{outline:'#E8456F'}, fam_stpatrick :{outline:'#3FAE5A'},
+ fam_spring    :{outline:'#7FC95A'}, fam_thanksgiving:{outline:'#D97B2B'},
  /* Sports All-Time Greats plates. Measured, not guessed: WCAG contrast of white fill vs
     dark ink over each plate's lower-right text zone. Basketball (3.03 vs 6.03), Hockey
     (1.80 vs 10.12) and MMA (3.42 vs 5.34) all lose with white, so those three invert. */
