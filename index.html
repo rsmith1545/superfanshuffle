@@ -324,7 +324,18 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .flipwrap.flipped .flipcard{transform:rotateY(180deg)}
 .flipface{border-radius:26px;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 26px 66px rgba(0,0,0,.62)}
 .flipfront{position:absolute;inset:0;overflow:hidden;border-radius:26px}
-.flipbackface{position:absolute;inset:0;transform:rotateY(180deg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+/* overflow MUST stay visible here. .vkfan is absolutely positioned at top:0 with
+   height:0 and its three sample cards rise ABOVE that line, outside the card, so
+   any clipping on this element hides the fan entirely - v390 set overflow-y:auto
+   and the fan disappeared. Nor can the scroll move to .vksheet: inset:0 there
+   collapses the sheet and every vault ends up 288-487px overscrolled.
+   So there is no scroll. 106 of 114 sheets fit inside the 3:4 card exactly; the
+   eight that do not spill 7-48px past the bottom edge until their blurbs are
+   trimmed. Targets, measured at the 322px blurb column: fam_popquiz 251->133
+   chars, fam_geography 268->142, fam_food 178->141, fam_holiday 184->146,
+   summerbeach 174->138, fam_animals 221->200, fam_instruments 193->174,
+   fam_valentine 211->191. Trim those and nothing spills. */
+.flipbackface{position:absolute;inset:0;transform:rotateY(180deg);overflow:visible}
 .ffront{position:absolute;inset:0;background:#0c0913}
 /* The flip card has no height of its own: .flipcard is width:100% and its height
    comes from the BACK face, which is the vault sheet and grows with the blurb. So
@@ -1090,7 +1101,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v391';
+var SFSBUILD='v392';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
