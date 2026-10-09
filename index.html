@@ -425,13 +425,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
    322px and fits ~45 characters a line instead of ~27. Hiding it took the vaults
    overflowing a 3:4 card from 40 to 8. Nothing is lost - the FRONT of this very
    card is the full poster, so flipping back IS the zoom. */
-.v5poster{display:none}
-/* The 118px thumbnail is gone but the zoom is not: this chip rides on the
-   existing "Unofficial SFS Vault" line, so it opens the same full-screen
-   zoomArt overlay and costs zero extra height. Flipping the card back only
-   shows the poster at card size - this is the one place you see it full. */
-.v5zoombtn{margin-left:8px;vertical-align:baseline;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.26);color:#e8e2f6;border-radius:999px;padding:2px 9px;font:700 10.5px/1.35 var(--body),system-ui,sans-serif;letter-spacing:.3px;cursor:zoom-in}
-.v5zoombtn:active{background:rgba(255,255,255,.18)}
+.v5poster{position:relative;width:118px;flex:none;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08)}
 .v5poster img{width:100%;display:block}
 /* The poster is 900x1200 and it was being shown at 118px wide with no way to see it
    any bigger. Tapping it opens the full thing. The corner glyph is there because a
@@ -1107,7 +1101,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v393';
+var SFSBUILD='v394';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1676,7 +1670,7 @@ function openSportsVault(v){
    +'<button class="vkclose" onclick="closeOv()">\u2715</button>'
    +'<div class="v5legal" onclick="openLegal()">'+vaultLegal(v)+'</div>'
    +'<div class="v5main">'+poster
-     +'<div class="v5head"><div class="v5title">'+vTitle(v)+'</div><div class="v5tier">'+VAULT_KIND+(ART[v.id]?'<button class="v5zoombtn" onclick="zoomArt(\''+ART[v.id]+'\',\''+v.id+'\')" title="View the full poster">\u2922 Poster</button>':'')+'</div>'
+     +'<div class="v5head"><div class="v5title">'+vTitle(v)+'</div><div class="v5tier">'+VAULT_KIND+'</div>'
      +'<p class="v5blurb">One shuffle. Players, Coaches, GMs, Stadiums, League Championships, Nicknames and Team Lore.</p>'
      +'</div></div>'
    +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">\u25b6 PLAY</span><span class="v5sub" id="v5sub">Standard Edition</span></button>'
@@ -1874,7 +1868,7 @@ function openVault(id){
  var sheet='<div class="vksheet v5sheet'+(RAINBOW[v.id]?' v5rainbow':'')+'">'
    +'<button class="vkclose" onclick="closeOv()">✕</button>'+'<div class="v5legal" onclick="openLegal()">'+vaultLegal(v)+'</div>'
    +'<div class="v5main">'+poster
-     +'<div class="v5head"><div class="v5title">'+vTitle(v)+'</div><div class="v5tier">'+VAULT_KIND+(ART[v.id]?'<button class="v5zoombtn" onclick="zoomArt(\''+ART[v.id]+'\',\''+v.id+'\')" title="View the full poster">\u2922 Poster</button>':'')+'</div>'
+     +'<div class="v5head"><div class="v5title">'+vTitle(v)+'</div><div class="v5tier">'+VAULT_KIND+'</div>'
      +blurbHTML+catsHTML
      +'</div></div>'
    +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">▶ PLAY</span><span class="v5sub" id="v5sub">'+subTxt+'</span></button>'
