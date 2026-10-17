@@ -700,7 +700,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
 .rcSimHd{font-family:var(--disp);font-size:16px;letter-spacing:1px;color:#fff;text-align:left;margin-bottom:10px;text-transform:uppercase}
 .rcSimList{display:flex;gap:10px}
 .rcSimTile{flex:1;min-width:0;text-align:center;cursor:pointer}
-.rcSimTile img{width:100%;aspect-ratio:1/1;border-radius:12px;object-fit:cover;background:#1a1230;display:block;border:1px solid rgba(255,255,255,.08)}
+.rcSimTile img{width:100%;aspect-ratio:3/4;border-radius:12px;object-fit:cover;object-position:center top;background:#1a1230;display:block;border:1px solid rgba(255,255,255,.08)}
 .rcSimTile .snn{font-size:13px;font-weight:700;color:#fff;margin-top:6px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* ===== TEST HUD =====
    Temporary instrumentation, not product. One flag at the top of the script turns the
@@ -1193,6 +1193,20 @@ function spTileMount(el,o,small){
 function spTileApply(el,o,small){ spTileMount(el,o,small); }
 function spCard(){ return (ED==='sports' && typeof SPCARD!=='undefined' && SPCARD[VAULT_ID]) ? SPCARD[VAULT_ID] : null; }
 var DECKS=null;
+/* A vault with no cards must never be offered at the end of a round. The shelf
+   can hide a vault by leaving it off a row, but the cross-sell was reading the
+   full VAULTS list, so School Is in Session: Elementary and American History -
+   both shelved, neither carrying a deck - could be recommended into a dead end.
+   DECKS holds the whole edition keyed by vault id, so the check is local.
+   DECKS is fetched async: while it is still null we leave the list alone rather
+   than blanking the row. */
+function deckHasCards(id){
+  try{ return !!(DECKS && DECKS[id] && (DECKS[id].standard||[]).length); }catch(e){ return false; }
+}
+function liveSims(sims){
+  if(!DECKS) return sims;
+  return sims.filter(function(v){ return v && v.id && deckHasCards(v.id); });
+}
 /* Only film ever fetched a deck file. Music and sports fell through to the built-in
    30-card DECK, where activeDeck() ignores REDITION entirely - which is the real reason
    CUSTOMIZE "does nothing" on those editions: Standard and Deluxe are the same cards.
@@ -2066,6 +2080,7 @@ function buildReport(){
   results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="n">'+(ix+1)+'</span><span class="ic">'+(r.good?'\u2713':'\u2717')+'</span><span class="t"></span>'; li.querySelector('.t').textContent=r.w; ul.appendChild(li); });
   document.getElementById('rcSimArtist').textContent=artist;
   var sims=[]; try{ if(RXSL) sims=JSON.parse(RXSL); }catch(e){}
+  sims=liveSims(sims);
   if(!sims.length && RXS){ sims=[{id:RXS,name:RXSN,cat:RXSE}]; }
   var simWrap=document.getElementById('rcSimilar'), simList=document.getElementById('rcSimList');
   if(sims.length){
@@ -2131,6 +2146,7 @@ function buildReportFilm(){
   var ul=document.getElementById('rfList'); ul.innerHTML='';
   results.forEach(function(r,ix){ var li=document.createElement('li'); li.className=r.good?'g':'p'; li.innerHTML='<span class="rfNum">'+(ix+1)+'</span><span class="rfIc">'+(r.good?IC_HITF:IC_PASSF)+'</span><span class="rfName"></span>'; li.querySelector('.rfName').textContent=cardName(r.w); ul.appendChild(li); });
   var sims=[]; try{ if(RXSL) sims=JSON.parse(RXSL); }catch(e){}
+  sims=liveSims(sims);
   if(!sims.length && RXS){ sims=[{id:RXS,name:RXSN,cat:RXSE}]; }
   var keep=document.getElementById('rfKeep'), kl=document.getElementById('rfKeepList');
   if(sims.length){ keep.style.display='';

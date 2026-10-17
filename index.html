@@ -881,25 +881,25 @@ var VAULTS=[
  {id:'grunge90s', name:"90s Grunge", edition:'music', cat:'Party', bk:null, badge:'prem', c:['#2a3a3a','#5a7a7a'], dark:1},
  /* --- Sports edition: one LIVE free seed + generic placeholders --- */
  /* --- Film & TV edition: Movies row + TV row (art posters) --- */
- {id:'mv_animated', name:'Animated Movies', edition:'filmtv', cat:'Movies', badge:'prem', chars:1, c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'mv_drama', name:'Drama Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_scifi', name:'Sci-Fi Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_fantasy', name:'Fantasy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_action', name:'Action Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_superhero', name:'Superhero Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_comedy', name:'Comedy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_romance', name:'Romance Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_scifi', name:'Sci-Fi Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_crime', name:'Crime Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_comedy', name:'Comedy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_fantasy', name:'Fantasy Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_romance', name:'Romance Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
+ {id:'mv_horror', name:'Horror Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_war', name:'War Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'mv_sports', name:'Sports Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'mv_horror', name:'Horror Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
- {id:'tv_cartoon', name:'Cartoon TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1, also:['family'], famcat:'Screen Time'},
+ {id:'mv_animated', name:'Animated Movies', edition:'filmtv', cat:'Movies', badge:'prem', chars:1, c:['#3a2a6e','#6a4aa0'], dark:1, also:['family'], famcat:'Screen Time'},
+ {id:'mv_superhero', name:'Superhero Movies', edition:'filmtv', cat:'Movies', badge:'prem', c:['#3a2a6e','#6a4aa0'], dark:1},
  {id:'tv_sitcom', name:'TV Sitcoms', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
+ {id:'tv_growingup', name:'Growing Up TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
+ {id:'tv_gameshow', name:'Game Show TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
+ {id:'tv_cartoon', name:'Cartoon TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1, also:['family'], famcat:'Screen Time'},
  {id:'tv_scifi', name:'Sci-Fi & Fantasy TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
  {id:'tv_binge', name:'TV Binge Worthy', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
  {id:'tv_oldschool', name:'Old School TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
- {id:'tv_growingup', name:'Growing Up TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
- {id:'tv_gameshow', name:'Game Show TV', edition:'filmtv', cat:'TV', badge:'prem', c:['#2a3a6e','#4a6aa0'], dark:1},
  /* Stage is the third cat inside filmtv, not a fifth edition. It shares the edition's
     theme, its gold chrome and its LEGAL_TITLES line, because a Broadway title is the
     same kind of referenced work a film title is. cat only decides which shelf it lands
@@ -1101,7 +1101,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v394';
+var SFSBUILD='v395';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1549,6 +1549,10 @@ function launchURL(v){ var u='/play.html?vault='+encodeURIComponent(v.id)+'&n='+
    baseball round, and a baseball round cannot be played yet. */
 var pool=VAULTS.filter(function(x){ if(x.id===v.id) return false;
   if(x.edition!==v.edition) return false;
+  /* vaultLive() is what hides the leagues and the six grade vaults. The shelf,
+     browse and search all honour it; this list did not, so a vault switched off
+     everywhere else could still be offered at the end of a round. */
+  if(!vaultLive(x)) return false;
   if(v.edition==='sports') return !!x.sp && x.cat===v.cat;
   return true; }); if(pool.length){ var _p=pool.slice(),_pk=[]; for(var _i=0;_i<3&&_p.length;_i++){ _pk.push(_p.splice(Math.floor(Math.random()*_p.length),1)[0]); } var _xsl=_pk.map(function(x){return {id:x.id,name:vTitle(x),cat:x.cat||VAULT_KIND,c:x.c||null,ct:(x.sp&&x.sp.city)||'',tm:(x.sp&&x.sp.team)||'',p:(x.sp&&x.sp.p)||'',s:(x.sp&&x.sp.s)||'',t:(x.sp&&x.sp.t)||'',yr:(x.sp&&x.sp.yr)||'',ft:(x.sp&&x.sp.fit)?1:0};}); u+='&xsl='+encodeURIComponent(JSON.stringify(_xsl))+'&xs='+encodeURIComponent(_pk[0].id)+'&xsn='+encodeURIComponent(vTitle(_pk[0]))+'&xse='+encodeURIComponent(_pk[0].cat||VAULT_KIND); } }catch(e){} if(v.sp){ u+='&p1='+encodeURIComponent(v.sp.p||(v.c&&v.c[0])||'')+'&p2='+encodeURIComponent(v.sp.s||(v.c&&v.c[1])||'')+'&city='+encodeURIComponent(v.sp.city||'')+'&team='+encodeURIComponent(v.sp.team||v.name)
    /* The results screen was rebuilding the shelf tile from p1/p2 alone and getting a
