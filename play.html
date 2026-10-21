@@ -964,6 +964,28 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
  background:linear-gradient(180deg,rgba(10,7,16,.72),rgba(6,4,12,.88));
  color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);
  box-shadow:0 6px 18px rgba(0,0,0,.55),0 0 18px -4px var(--cardoutline,#fff),inset 0 1px 0 rgba(255,255,255,.10)}
+/* The block above fires only on .sportcard and .filmcard, so Family and Music never
+   got it - and a LIGHT plate is the worst ground that treatment can meet. The wall
+   sits straight on the plate, and a light plate under its cream lift measures .84
+   luminance behind the text. Against that: body text 1.18:1, taste line 1.25:1,
+   buy label 1.18:1. That is not washed out, it is an invisible purchase screen,
+   on all sixteen light plates (thirteen family, plus hendrix, selenagomez and
+   summerbeach). Same inversion the card word already uses - dark ink, cream halo,
+   painted as a stroke behind the fill. Measures ~14:1 on every one of them.
+   Dark plates are untouched and were already fine: cyan 13.7, white 20.3. */
+#app.lightart .wallTaste{color:var(--cardink,#241546);
+ -webkit-text-stroke:.3vmin var(--cardoutline,#FFF6E0);paint-order:stroke;
+ text-shadow:0 1px 7px rgba(255,250,238,.85);opacity:1}
+#app.lightart .wallHead{color:var(--cardink,#241546);
+ -webkit-text-stroke:.9vmin var(--cardoutline,#FFF6E0);paint-order:stroke;
+ text-shadow:0 2px 12px rgba(255,250,238,.9)}
+#app.lightart .sub,#app.lightart .sub b{color:var(--cardink,#241546);
+ text-shadow:0 1px 5px rgba(255,250,238,.8)}
+#app.lightart .wlink{color:rgba(36,21,70,.88);text-shadow:0 1px 5px rgba(255,250,238,.8)}
+#app.lightart .btn.buy{border-color:var(--cardink,#241546);
+ background:linear-gradient(180deg,rgba(36,21,70,.90),rgba(20,11,42,.96));
+ color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.5);
+ box-shadow:0 6px 18px rgba(36,21,70,.38),0 0 18px -6px var(--cardink,#241546),inset 0 1px 0 rgba(255,255,255,.12)}
 
  .q2{margin-bottom:min(7px,.8vh)}
  .qtalk{margin-bottom:min(9px,1vh)}
@@ -2036,6 +2058,12 @@ var EDCOPY={
          dlx:'Everything \u2014 trickier picks for big kids.',
          share:'Who Knows Best?'}
 };
+var WALLMIX={fam_characters:'characters, movies, shows &amp; facts',fam_videogames:'games, characters, consoles &amp; facts',fam_letters:'letters, numbers, shapes &amp; colors',fam_animals:'wild, pets, ocean &amp; bugs',fam_food:'meals, snacks, sweets &amp; eating out',fam_nursery:'rhymes, songs, books &amp; tales',fam_instruments:'instruments, genres, concerts &amp; notation',fam_school:'subjects, objects, places &amp; words',fam_sportswords:'sports, positions, plays &amp; rules',fam_abbrev:'texting, business, brands &amp; agencies',fam_jobs:'jobs, tools, uniforms &amp; workplaces',fam_geography:'states, landmarks, cities &amp; wonders',fam_popquiz:'science, math &amp; English, history, school life',fam_presidents:'people, places, symbols &amp; events',fam_valentine:'candy &amp; gifts, the crush, love songs, anti love',fam_stpatrick:'the parade, luck &amp; gold, the table, Ireland',fam_spring:'the egg hunt, new animals, the garden &amp; big days',fam_thanksgiving:'the bird, the sides, the day &amp; after',kidstoybox:'toys, playground, games &amp; make believe',summerbeach:'beach, water, boardwalk &amp; summer food',fam_halloween:'costumes, candy, monsters &amp; haunted',fam_holiday:'the tree, presents, treats &amp; snow'};
+/* The unlock wall used to print one line per EDITION, so every family vault
+   advertised "toys, treats & everyday things" - false for 18 of the 22, including
+   American History and USA Geography. Each vault's own four categories are already
+   authored in FAMDATA over in index.html; WALLMIX mirrors them so the wall names
+   what the player is actually being sold. Falls back to the edition line. */
 function edCopy(){ return EDCOPY[ED] || EDCOPY.music; }
 /* The shelf heading was written for music and never re-read on the other editions -
    a first grader's vault was offering "Artists similar to 1st Grade Trivia". */
@@ -2045,7 +2073,7 @@ function applySimLead(){ try{ var e=document.getElementById('rcSimLead');
 function applyEdCopy(){
   var c=edCopy();
   try{ var g=document.getElementById('getReady'); if(g) g.textContent=c.hero; }catch(e){}
-  try{ var w=document.getElementById('wallMix'); if(w) w.innerHTML=c.mix; }catch(e){}
+  try{ var w=document.getElementById('wallMix'); if(w) w.innerHTML=(WALLMIX[VAULT_ID]||c.mix); }catch(e){}
   try{
     var std=document.querySelector('#rcEdRow .rcOpt[data-ed="Standard"] span');
     var dlx=document.querySelector('#rcEdRow .rcOpt[data-ed="Deluxe"] span');

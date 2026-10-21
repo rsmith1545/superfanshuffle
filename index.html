@@ -1143,7 +1143,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v401';
+var SFSBUILD='v402';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1381,7 +1381,7 @@ function playHTML(){
         the per-tile seasonal sort.
         The trailing 1 on Holidays IS that sort (seasonRank). It orders
         tiles inside the row and is independent of where the row sits. */
-     ['Everyday Things',    ['fam_animals','fam_food','fam_nursery','fam_jobs','kidstoybox','fam_abbrev']],
+     ['Everyday Things',    ['fam_animals','fam_abbrev','fam_food','fam_nursery','fam_jobs','kidstoybox']],
      ['Screen Time',        ['mv_animated','tv_cartoon','fam_videogames']],
      ['Music & Sports',     ['fam_sportswords','fam_instruments']],
      /* The two School Is in Session vaults are a named pair and sit together - split by
