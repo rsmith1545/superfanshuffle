@@ -1154,7 +1154,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v394';
+var SFSBUILD='v406';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1235,7 +1235,7 @@ function liveSims(sims){
    All three now look for their own file; a missing one is not an error, the edition just
    has no Deluxe yet and the UI hides the choice (see custAvail). Drop music-decks.json
    in and it lights up with no code change. */
-var DECKFILE={filmtv:'film-decks.json?v=236', music:'music-decks.json?v=6', sports:'sports-decks.json?v=10', family:'family-decks.json?v=20'};
+var DECKFILE={filmtv:'film-decks.json?v=237', music:'music-decks.json?v=6', sports:'sports-decks.json?v=10', family:'family-decks.json?v=20'};
 /* DECKS===null meant two different things and the difference matters: "the file for
    this edition does not exist yet" and "the file loaded and this vault simply is not
    in it". Both fell through to the built-in music DECK, which is why a Cartoon TV
