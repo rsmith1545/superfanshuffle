@@ -525,7 +525,9 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
     <div class="triP p3"><div class="triBg"></div><div class="triTxt">Settle the Score</div></div>
   </div>
   <div class="descP" id="descP"><img src="intro-desc.jpg?v=5" alt="Everyone's a superfan of something"></div>
-  <div class="spSkip" id="spSkip">Tap to skip</div>
+  <!-- Skip affordance removed with v410: the repeat open is now 1.65s of brand bug,
+       which is too short to skip, and the full open is a pitch that is not skippable
+       by design. The .spSkip CSS is left in place so it is one line to bring back. -->
 </div>
 <div id="bgfx"></div>
 <!-- FULL-SCREEN INTRO (shows every app open: brand card -> how-to-play -> store) -->
@@ -1202,7 +1204,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v409';
+var SFSBUILD='v411';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -2104,21 +2106,35 @@ brandBarState();
  var sp=document.getElementById('splash'); if(!sp) return; var _swr=false; try{ _swr=!!sessionStorage.getItem('sfs_swreload'); if(_swr) sessionStorage.removeItem('sfs_swreload'); }catch(e){} if(_swr || /[?&]nointro=1/.test(location.search)){ if(sp.parentNode) sp.parentNode.removeChild(sp); return; }
  var $=function(x){return sp.querySelector(x);};
  var T=[]; function at(ms,fn){ T.push(setTimeout(fn,ms)); }
- var repeat=false; try{ repeat=!!localStorage.getItem('sfs_seenIntro'); localStorage.setItem('sfs_seenIntro','1'); }catch(e){}
+ /* Two different jobs, so two different lengths.
+      The neon bug -- unlit logo, flicker, lit -- is the brand ident and runs on EVERY
+      open, unskippable, 0 to 1650ms. It is the cost of the name being on the door.
+      The three panels and "Everyone's a superfan of something" are the PITCH, and a
+      pitch is only owed to someone who has not heard it. They run once per device.
+      Count was the tempting knob here and it is the wrong one: nobody wants the pitch
+      exactly five times, and the room at a party is new even when the phone is not.
+      That is what ?intro=1 is for -- it forces the full open on demand, so the show
+      can be performed deliberately instead of charged to every launch. */
+ var full=true; try{ full=!localStorage.getItem('sfs_seenIntro'); localStorage.setItem('sfs_seenIntro','1'); }catch(e){}
+ if(/[?&]intro=1/.test(location.search)) full=true;
  var ended=false;
- function endIntro(){ if(ended) return; ended=true; T.forEach(clearTimeout); sp.classList.add('gone'); setTimeout(function(){ if(sp.parentNode) sp.parentNode.removeChild(sp); },500); if(window.__startIntro) window.__startIntro(); }
+ function endIntro(){ if(ended) return; ended=true; T.forEach(clearTimeout); sp.classList.add('gone'); setTimeout(function(){ if(sp.parentNode) sp.parentNode.removeChild(sp); },500); if(full && window.__startIntro) window.__startIntro(); }
  function run(){
    at(150, function(){ $('#spLogo').classList.add('on'); });
    at(260, function(){ $('#spLit').classList.add('flick'); });
    at(700, function(){ $('#spLogo').classList.add('lit'); });
+   /* Repeat open: the bug lights, holds a beat, and hands over. ~1.65s, not ~8.9s. */
+   if(!full){ at(1650, endIntro); return; }
    at(1650, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
    function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+230,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
    panel('.p1',1650); panel('.p2',2550); panel('.p3',3450);
    at(4550, function(){ $('#triWrap').style.opacity='0'; });
    at(4850, endIntro);
-   if(repeat){ at(300,function(){ $('#spSkip').classList.add('on'); }); sp.addEventListener('click', endIntro); }
  }
- var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=2','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=5'];
+ /* A repeat open waits on the two logo frames only. Preloading four panels it will
+    never draw is what made a cold launch sit on a black screen. */
+ var srcs=full?['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=2','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=5']
+              :['sfs-unlit.png?v=1','sfs-lit.png?v=1'];
  var left=srcs.length, started=false;
  function go(){ if(started)return; started=true; run(); }
  srcs.forEach(function(u){ var i=new Image(); i.onload=i.onerror=function(){ if(--left<=0) go(); }; i.src=u; });
