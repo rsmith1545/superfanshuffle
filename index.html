@@ -1150,7 +1150,7 @@ function byId(id){for(var i=0;i<VAULTS.length;i++)if(VAULTS[i].id===id)return VA
    out silently, so this map can name decks before their posters land. A genre with an
    empty row 1 renders its artist row alone. */
 var GENRE_VAULTS={
- 'Pop':['newpop','classicpop','popgold','onehitwonders'],
+ 'Pop':['popgold','newpop','classicpop','onehitwonders'],
  'Country':['countrygold','newboots','honkytonk'],
  'Alt & Grunge':['grunge90s','hairbands'],
  'Classic Rock':['classicrock','britishinvasion','yachtrock'],
@@ -1163,6 +1163,13 @@ var GENRE_VAULTS={
    Legends spans every genre in the edition, so any section holding it would be
    claiming it as its own. */
 var LEGENDS_ROW=['musiclegends','countrylegends'];
+/* Featured of the Week. Ordered list of candidates: the first one that is actually
+   live wins, the last is the safety net. That lets a pick be queued here before its
+   deck lands -- it promotes itself the day the soon flag comes off. */
+var FEATURED=[
+ {id:'onehitwonders',line:'One song. One shot. Can you name it?'},
+ {id:'taylorswift',line:'How deep does your fandom go?'}
+];
 var RECENTLY_ADDED=["zachbryan", "morganwallen", "shaboozey", "laineywilson", "ellalangley"];
 /* Hip-Hop sits last only because it holds two vaults. A section with two tiles in
    position three reads as broken; move it up the day it is built out and let the
@@ -1190,7 +1197,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v407';
+var SFSBUILD='v408';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1386,9 +1393,10 @@ function playHTML(){
  if(ed==='music'){
    /* Featured leads. It is the one editorial row on the page, so it is the only thing
       here that can change week to week without a code edit. */
-   var feat=byId('taylorswift');
+   var fpick=FEATURED.filter(function(f){var fv=byId(f.id);return fv&&vaultLive(fv);})[0]||FEATURED[FEATURED.length-1];
+   var feat=byId(fpick.id);
    h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
-     +'<div class="fmeta"><div class="k">'+vTitle(feat)+'</div><div class="kind">'+VAULT_KIND+'</div><div class="s">How deep does your fandom go?</div><div class="go">Tap to open ▸</div></div></div>';
+     +'<div class="fmeta"><div class="k">'+vTitle(feat)+'</div><div class="kind">'+VAULT_KIND+'</div><div class="s">'+fpick.line+'</div><div class="go">Tap to open ▸</div></div></div>';
    /* Then Legends, then the genres. The heading names the mechanic because a Legends
       deck and a song deck look alike on a shelf and play nothing alike. */
    h+=numShelf('Legends · Name the Artist', LEGENDS_ROW.map(byId).filter(function(v){return v && vaultLive(v);}));
