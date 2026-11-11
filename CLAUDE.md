@@ -121,9 +121,32 @@ into `_sfs-outbox\_sent\` → prints the new build tag. Refuses to make an empty
 - **Per-edition ACCENT tint** (glows only, chrome stays dark, NEVER aqua=nav): Music=purple, Film&TV=gold/amber,
   Sports=yellow-orange. Chrome = dark header + dark bottom bar framing a **lighter-purple content zone**.
 - **No "X days left" countdown** for now (no rotation calendar yet) — free tiles show just "FREE".
-  Category shelf order (render only if ~3+ tiles; See All when >9): Best Of · Pop · Hip-Hop & R&B · Country ·
-  Alt & Grunge · Classic Rock · Singer-Songwriter · Jam · Indie. Layout: Free This Week → Featured (whole card
-  clickable, no button) → Recently Added → category shelves.
+- **MUSIC PAGE STRUCTURE (Nov 11 2026 — replaces the old category-shelf order).** The standalone
+  "Party Vaults" shelf is RETIRED. It was five artist vaults plus one party vault, which made it a
+  second Featured row rather than a category, and it pushed every genre below the fold. Order is now:
+  **Featured of the Week → Legends · Name the Artist → genre sections.**
+  Genre order: **Pop · Country · Alt & Hard Rock · Classic Rock · Folk · Jam · Indie · Hip-Hop.**
+  Hip-Hop is last only because it holds two vaults; promote it the day it is built out.
+  **Every genre section = ONE heading over TWO rows**: row 1 = the greatest-hits / party decks
+  (`GENRE_VAULTS[cat]`), row 2 = the artist vaults (`v.cat===cat`, order = order in VAULTS).
+  No sub-labels on the rows; See All still appears on whichever row passes nine.
+  Legends is its own section rather than a row inside a genre because it is a different GAME (name
+  the artist, not the song) and Music Legends spans every genre, so no one section can hold it.
+  `GENRE_VAULTS` / `LEGENDS_ROW` may name decks that do not exist yet — an id with no VAULTS entry,
+  no `art-<id>.jpg` or `vaultLive()===false` drops out silently, so the map is also the build list.
+  **`soon:1` = wired but dataless (Nov 11 2026).** All thirteen party-vault posters are in the repo
+  as `art-<id>.jpg` 900×1200, every vault row and ART entry exists, and `music-decks.json` has an
+  empty `{standard:[],deluxe:[]}` stub for each. Each row carries **`soon:1`**, and `vaultLive()` is
+  the single gate that hides it — shelf, search, My Vaults, everywhere. **Shipping a deck = paste the
+  cards into music-decks.json and delete ` soon:1,` from that one VAULTS row. Nothing else changes.**
+  NEVER drop the flag before the deck has cards: the tile would open an empty vault, which is worse
+  than no tile at all.
+  LIVE today: `grunge90s`, `musiclegends` (306 std / 131 dlx), `countrylegends` (158 / 76).
+  Wired + waiting: classicpop, newpop, popgold, onehitwonders, countrygold, newboots, honkytonk,
+  hairbands, classicrock, britishinvasion, yachtrock.
+  Not created at all: `oldschoolhiphop` — it is the only id in GENRE_VAULTS with no poster.
+  **Poster source of truth:** `Crown Your Champion\2. Logos\0. Album  & Poster Art\1. Music\Poster Art\Party Vaults`
+  (tiles, 1086×1448) with the in-game backgrounds in the `Card Art` folder beside it.
 - **Nav:** bottom tabs = **Play · Explore · My Vaults** (Play=home, default; active tab glows aqua). Editions =
   top tabs inside Play. Never ship "Home/Store/My Brackets". Pin **Free This Week** at top of each edition.
 - Charts (Music): Featured of the Week, Top in Pop / Rock / Hip-Hop.
