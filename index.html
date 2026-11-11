@@ -750,8 +750,13 @@ var LEAGUE_CATS={Football:1,Basketball:1,Baseball:1,Hockey:1};
 var GRADES_LIVE=false;
 var GRADE_IDS={fam_grade1:1,fam_grade2:1,fam_grade3:1,fam_grade4:1,fam_grade5:1,fam_grade6:1,fam_characters:1};
 /* soon:1 = wired but no deck yet. One chokepoint, same as the league and grade gates,
-   so a dataless vault cannot leak onto any shelf by a route someone forgot about. */
-function vaultLive(v){ return !!v && !v.soon && (LEAGUES_LIVE || !LEAGUE_CATS[v.cat]) && (GRADES_LIVE || !GRADE_IDS[v.id]); }
+   so a dataless vault cannot leak onto any shelf by a route someone forgot about.
+   DEV_PREVIEW lifts it, same as it lifts the hidden edition tabs: while the site is
+   still a build nobody else can reach, the shelves show the finished shape and the
+   empty tiles are the point. Set DEV_PREVIEW false and every dataless vault vanishes
+   again in one line -- that is the launch switch, and it must be thrown before the
+   first real player arrives, because a soon tile opens a vault with no cards in it. */
+function vaultLive(v){ return !!v && (!v.soon || DEV_PREVIEW) && (LEAGUES_LIVE || !LEAGUE_CATS[v.cat]) && (GRADES_LIVE || !GRADE_IDS[v.id]); }
 function editionVisible(e){ return e.enabled || DEV_PREVIEW; }
 function edById(id){for(var i=0;i<EDITIONS.length;i++)if(EDITIONS[i].id===id)return EDITIONS[i];}
 
@@ -1197,7 +1202,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v408';
+var SFSBUILD='v409';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
