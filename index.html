@@ -1182,7 +1182,7 @@ var RECENTLY_ADDED=["zachbryan", "morganwallen", "shaboozey", "laineywilson", "e
    position three reads as broken; move it up the day it is built out and let the
    move be the announcement. */
 var CAT_ORDER=['Pop','Country','Alt & Grunge','Classic Rock','Singer-Songwriter · Jam · Indie','Hip-Hop & R&B'];
-var CAT_LABEL={'Pop':'Pop','Country':'Country','Hip-Hop & R&B':'Hip-Hop','Alt & Grunge':'Alt & Hard Rock','Classic Rock':'Classic Rock','Singer-Songwriter · Jam · Indie':'Folk · Jam · Indie'};
+var CAT_LABEL={'Pop':'Pop','Country':'Country','Hip-Hop & R&B':'Hip-Hop','Alt & Grunge':'Alt & Hard Rock','Classic Rock':'Classic Rock','Singer-Songwriter · Jam · Indie':'Folk, Jam & Indie'};
 
 /* tile art — Option B: accent sleeve + record peeking right + badge; big Bebas name ON the sleeve.
    withName=true bakes the name onto the sleeve (grid tiles); featured/sheet pass false and show the name in text beside. */
@@ -1204,7 +1204,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v411';
+var SFSBUILD='v412';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1302,7 +1302,13 @@ function genreSection(cat,live){
  var inHits={}; hits.forEach(function(v){inHits[v.id]=1;});
  var acts=live.filter(function(v){return v.cat===cat && !inHits[v.id];});
  if(!hits.length && !acts.length) return '';
- return '<h2>'+lab+'</h2>'+genreRow(lab,hits)+genreRow(lab,acts);
+ /* The heading carries the MECHANIC, not just the genre. A first-time player has no
+    way to tell Pop Legends from Pop Gold by looking -- one is artists, one is songs --
+    and nobody learns a convention before deciding whether to tap. Labelling only the
+    Legends row would not help them either: with nothing to compare against, unlabelled
+    reads as unspecified rather than as the opposite. So both sides say what they are.
+    lab stays bare for the See All control, which is a destination, not a promise. */
+ return '<h2>'+lab+' · Name the Song</h2>'+genreRow(lab,hits)+genreRow(lab,acts);
 }
 function numShelf(title,arr){ if(arr.length<1) return ''; var tiles=arr.map(function(v,i){return tileHTML(v);}).join(''); if(arr.length>9){ tiles+='<div class="vault" onclick="toast(\'See all '+title.replace(/'/g,"")+' — coming soon\')"><div class="cover seeallc">See All '+title+' ▸</div></div>'; } return '<h2>'+title+'</h2><div class="row">'+tiles+'</div>'; }
 
