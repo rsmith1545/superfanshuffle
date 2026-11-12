@@ -140,11 +140,12 @@ h2 .pill{font-style:normal;font-size:11px;vertical-align:middle;margin-left:8px;
 .brow .scard .scname,.brow .scard .scsong,.brow .scard .scbar,.brow .scard .scctl,.brow .scard .scghost,.brow .scard .scpill{display:none}
 .brow .scard .scart{height:100%;margin:0;border-radius:10px}
 /* featured — whole card is the tap target, no button */
-.feat{display:flex;gap:14px;background:linear-gradient(120deg,rgba(176,106,255,.16),rgba(255,92,240,.10));border:1.5px solid var(--accent);border-radius:18px;padding:14px;cursor:pointer;box-shadow:0 0 26px -8px var(--accent);transition:transform .12s}
+.feat{margin-top:8px;display:flex;gap:14px;background:linear-gradient(120deg,rgba(176,106,255,.16),rgba(255,92,240,.10));border:1.5px solid var(--accent);border-radius:18px;padding:14px;cursor:pointer;box-shadow:0 0 26px -8px var(--accent);transition:transform .12s}
 .feat:active{transform:scale(.985)}
 .feat .cover{height:200px;width:136px;flex:0 0 auto}
 .feat .fmeta{display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0}
-.feat .fmeta .k{font-family:var(--disp);font-size:23px;letter-spacing:.3px;line-height:1.05;color:#fff}
+.feat .feyebrow{font-family:var(--body);font-size:9.5px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent);margin-bottom:1px}
+.fmeta .k{font-family:var(--disp);font-size:23px;letter-spacing:.3px;line-height:1.05;color:#fff}
 .feat .fmeta .kind{font-family:var(--body);font-size:9.5px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:#9587b5;white-space:nowrap}
 .feat .fmeta .s{color:var(--dim);font-size:12px;font-weight:600;line-height:1.25}
 .feat .go{margin-top:6px;color:var(--cyan);font-weight:800;font-size:12.5px;letter-spacing:.5px}
@@ -1209,7 +1210,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v416';
+var SFSBUILD='v417';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1421,8 +1422,13 @@ function playHTML(){
    h+=numShelf('Legends · Name the Artist', LEGENDS_ROW.map(byId).filter(function(v){return v && vaultLive(v);}));
    var fpick=FEATURED.filter(function(f){var fv=byId(f.id);return fv&&vaultLive(fv);})[0]||FEATURED[FEATURED.length-1];
    var feat=byId(fpick.id);
-   h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
-     +'<div class="fmeta"><div class="k">'+vTitle(feat)+'</div><div class="kind">'+VAULT_KIND+'</div><div class="s">'+fpick.line+'</div><div class="go">Tap to open ▸</div></div></div>';
+   /* The section label lives INSIDE the card, as an eyebrow over the title. As its own
+      <h2> it cost ~55px of vertical space -- heading, its 20px top margin and its 8px
+      bottom margin -- to say two words, and it pushed the Pop row off the first screen.
+      Every other section needs an outside heading because it labels a whole shelf;
+      this one labels a single card, so it can sit on it. */
+   h+='<div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
+     +'<div class="fmeta"><div class="feyebrow">Featured of the Week</div><div class="k">'+vTitle(feat)+'</div><div class="kind">'+VAULT_KIND+'</div><div class="s">'+fpick.line+'</div><div class="go">Tap to open ▸</div></div></div>';
    CAT_ORDER.forEach(function(cat){ h+=genreSection(cat,vaults); });
  } else if(ed==='sports'){
    ['Team Sports','Individual','Automotive'].forEach(function(r){ h+=sportsShelf(r, vaults.filter(function(v){return v.cat===r;})); });
