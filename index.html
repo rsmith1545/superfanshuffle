@@ -1209,7 +1209,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v413';
+var SFSBUILD='v414';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1409,15 +1409,20 @@ function playHTML(){
     made them vanish for most of the year. One line of copy says the same thing
     without spending a row on it, and the free vaults keep their FREE tile badge. */
  if(ed==='music'){
-   /* Featured leads. It is the one editorial row on the page, so it is the only thing
-      here that can change week to week without a code edit. */
+   /* Legends leads. The Featured hero is ~250px tall, so leading with it pushed the
+      Legends tiles to the fold line on a phone and the row opened half-cut. Five premium
+      tiles now land fully in view on first paint. It also puts the mechanic label at the
+      very top, which is where a first-time player needs it -- a hero tile teaches nothing
+      about how this page is organised. The heading names the mechanic because a Legends
+      deck and a song deck look alike on a shelf and play nothing alike.
+      The cost is real: top slot is the best merchandising space, and Featured is the only
+      thing here that changes without a code edit. If it ever becomes genuinely weekly,
+      swap these two back. */
+   h+=numShelf('Legends · Name the Artist', LEGENDS_ROW.map(byId).filter(function(v){return v && vaultLive(v);}));
    var fpick=FEATURED.filter(function(f){var fv=byId(f.id);return fv&&vaultLive(fv);})[0]||FEATURED[FEATURED.length-1];
    var feat=byId(fpick.id);
    h+='<h2>Featured of the Week</h2><div class="feat" onclick="pickVault(\''+feat.id+'\')">'+coverHTML(feat)
      +'<div class="fmeta"><div class="k">'+vTitle(feat)+'</div><div class="kind">'+VAULT_KIND+'</div><div class="s">'+fpick.line+'</div><div class="go">Tap to open ▸</div></div></div>';
-   /* Then Legends, then the genres. The heading names the mechanic because a Legends
-      deck and a song deck look alike on a shelf and play nothing alike. */
-   h+=numShelf('Legends · Name the Artist', LEGENDS_ROW.map(byId).filter(function(v){return v && vaultLive(v);}));
    CAT_ORDER.forEach(function(cat){ h+=genreSection(cat,vaults); });
  } else if(ed==='sports'){
    ['Team Sports','Individual','Automotive'].forEach(function(r){ h+=sportsShelf(r, vaults.filter(function(v){return v.cat===r;})); });
