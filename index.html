@@ -1209,7 +1209,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v414';
+var SFSBUILD='v416';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1705,7 +1705,16 @@ var pool=VAULTS.filter(function(x){ if(x.id===v.id) return false;
    +'&tc='+encodeURIComponent(v.sp.t||'')+'&yr='+encodeURIComponent(v.sp.yr||'')+'&fit='+(v.sp.fit?1:0); } return u; }
 function pickVault(id){ var v=byId(id); if(!v) return; openVault(id); }
 function vkSel(el){ var p=el.parentNode; var ms=p.querySelectorAll('.vkmode'); for(var i=0;i<ms.length;i++) ms[i].classList.remove('sel'); el.classList.add('sel'); }
-var ARTCOLOR={st_theatre:['#E8C56A','232,197,106'],
+var ARTCOLOR={
+ /* The five Legends vaults were absent here, so artistColor() fell through to colorOf(),
+    which hashes the id into the fun palette. Music Legends drew cyan -- next to a purple
+    poster, and cyan is the nav colour. --artist drives the border, the icons, the rule
+    under the kind line and the PLAY button, and --tint feeds the sheet gradient, so one
+    wrong lookup mis-coloured the whole sheet. These are keyed to the posters. */
+ musiclegends:['#A974E8','169,116,232'], poplegends:['#E85BB0','232,91,176'],
+ countrylegends:['#E3A341','227,163,65'], rocklegends:['#E0533A','224,83,58'],
+ hiphoplegends:['#E0A32A','224,163,42'],
+ st_theatre:['#E8C56A','232,197,106'],
  ow_legends:['#F7A63C','247,166,60'], sc_legends:['#E8804A','232,128,74'], mm_legends:['#6F4E35','111,78,53'], gf_legends:['#C59B3C','197,155,60'], so_legends:['#EFC559','239,197,89'], bx_legends:['#F3CA91','243,202,145'], te_legends:['#A59B6D','165,155,109'],  /* seven sports plates had no entry, so the sheet fell back to the default cyan while the fan wore the plate's own gold - seeded from each one's CARDART colour */  /* the gold CARDART and ART_TYPE already use - without it this vault fell back to its maroon tile gradient and the sheet disagreed with the card */
  fam_valentine:['#E8456F','232,69,111'], fam_stpatrick:['#3FAE5A','63,174,90'], fam_spring:['#7FC95A','127,201,90'], fam_thanksgiving:['#D97B2B','217,123,43'],
  fam_popquiz:['#E9AA6D','233,170,109'], fam_letters:['#E8B33C','232,179,60'], fam_school:['#4FB08A','79,176,138'], fam_grade1:['#E0503A','224,80,58'], fam_grade2:['#E88A2E','232,138,46'], fam_grade3:['#5FB35F','95,179,95'], fam_grade4:['#4FA9DB','79,169,219'], fam_grade5:['#9B7FE0','155,127,224'], fam_grade6:['#DB6BAA','219,107,170'], fam_animals:['#8CC44F','140,196,79'], fam_food:['#E8703C','232,112,60'], fam_nursery:['#CE8FDB','206,143,219'],  fam_instruments:['#D46B94','212,107,148'], fam_sportswords:['#E0AE33','224,174,51'], fam_abbrev:['#E5A62E','229,166,46'], fam_jobs:['#57A8D4','87,168,212'], fam_geography:['#5FC0A3','95,192,163'], fam_presidents:['#D46150','212,97,80'], fam_characters:['#EC7FB4','236,127,180'], fam_videogames:['#8B9CEC','139,156,236'], fam_halloween:['#F0821E','240,130,30'], fam_holiday:['#E04A4A','224,74,74'], /* Party Vault accents. Without an entry here these fall through colorOf() to the
@@ -1922,6 +1931,11 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeZoom(
    Adele, Nirvana, CCR, every Family grade and every Legends vault. */
 var HASDLX={"tv_action":1,"tv_crime":1,"tv_sitcom":1,"tv_drama":1,"tv_growingup":1,"tv_gameshow":1,"fam_abbrev":1,"fam_valentine":1,"fam_stpatrick":1,"fam_spring":1,"fam_thanksgiving":1,"fam_school":1,"fam_presidents":1,"fam_nursery":1,"fam_videogames":1,"fam_geography":1,"fam_instruments":1,"fam_jobs":1,"fam_popquiz":1,"kidstoybox":1,"fam_animals":1,"fam_food":1,"fam_sportswords":1,"summerbeach":1,"fam_halloween":1,"fam_holiday":1,"arianagrande":1,"ate":1,"ba-atlanta-hawks":1,"ba-boston-celtics":1,"ba-charlotte-hornets":1,"ba-chicago-bulls":1,"ba-cleveland-cavaliers":1,"ba-dallas-mavericks":1,"ba-denver-nuggets":1,"ba-detroit-pistons":1,"ba-houston-rockets":1,"ba-indianapolis-pacers":1,"ba-los-angeles-clippers":1,"ba-los-angeles-lakers":1,"ba-memphis-grizzlies":1,"ba-miami-heat":1,"ba-milwaukee-bucks":1,"ba-minnesota-timberwolves":1,"ba-new-orleans-pelicans":1,"ba-new-york-knicks":1,"ba-new-york-nets":1,"ba-oklahoma-city-thunder":1,"ba-orlando-magic":1,"ba-philadelphia-76ers":1,"ba-phoenix-suns":1,"ba-portland-trail-blazers":1,"ba-sacramento-kings":1,"ba-salt-lake-city-jazz":1,"ba-san-antonio-spurs":1,"ba-san-francisco-golden-state-warriors":1,"ba-toronto-raptors":1,"ba-washington-wizards":1,"beatles":1,"beyonce":1,"biggie":1,"billyjoel":1,"bonjovi":1,"bowie":1,"carrieunderwood":1,"codyjohnson":1,"coldplay":1,"dmb":1,"eagles":1,"edsheeran":1,"eminem":1,"faithhill":1,"fleetwoodmac":1,"fo-arizona-cardinals":1,"fo-atlanta-falcons":1,"fo-baltimore-ravens":1,"fo-buffalo-bills":1,"fo-carolina-panthers":1,"fo-chicago-bears":1,"fo-cincinnati-bengals":1,"fo-cleveland-browns":1,"fo-dallas-cowboys":1,"fo-denver-broncos":1,"fo-detroit-lions":1,"fo-green-bay-packers":1,"fo-houston-texans":1,"fo-indianapolis-colts":1,"fo-jacksonville-jaguars":1,"fo-kansas-city-chiefs":1,"fo-las-vegas-raiders":1,"fo-los-angeles-chargers":1,"fo-los-angeles-rams":1,"fo-miami-dolphins":1,"fo-minnesota-vikings":1,"fo-nashville-titans":1,"fo-new-england-patriots":1,"fo-new-orleans-saints":1,"fo-new-york-giants":1,"fo-new-york-jets":1,"fo-philadelphia-eagles":1,"fo-pittsburgh-steelers":1,"fo-san-francisco-49ers":1,"fo-seattle-seahawks":1,"fo-tampa-bay-buccaneers":1,"fo-washington-commanders":1,"foo":1,"fthc":1,"gratefuldead":1,"greenday":1,"grunge90s":1,"hendrix":1,"ho-anaheim-ducks":1,"ho-boston-bruins":1,"ho-buffalo-sabres":1,"ho-calgary-flames":1,"ho-carolina-hurricanes":1,"ho-chicago-blackhawks":1,"ho-columbus-blue-jackets":1,"ho-dallas-stars":1,"ho-denver-avalanche":1,"ho-detroit-red-wings":1,"ho-edmonton-oilers":1,"ho-fl-panthers":1,"ho-las-vegas-golden-knights":1,"ho-los-angeles-kings":1,"ho-minnesota-wild":1,"ho-montreal-canadiens":1,"ho-nashville-predators":1,"ho-new-york-islanders":1,"ho-new-york-rangers":1,"ho-nj-devils":1,"ho-ottawa-senators":1,"ho-philadelphia-flyers":1,"ho-pittsburgh-penguins":1,"ho-salt-lake-city-utah-mammoth":1,"ho-san-jose-sharks":1,"ho-seattle-kraken":1,"ho-st-louis-blues":1,"ho-tampa-bay-lightning":1,"ho-toronto-maple-leafs":1,"ho-vancouver-canucks":1,"ho-washington-capitals":1,"ho-winnipeg-jets":1,"jasonaldean":1,"jellyroll":1,"justintimberlake":1,"katyperry":1,"kennychesney":1,"ladygaga":1,"laineywilson":1,"ledzeppelin":1,"lukebryan":1,"lukecombs":1,"metallica":1,"morganwallen":1,"mv_animated":1,"mv_comedy":1,"mv_fantasy":1,"mv_horror":1,"mv_sports":1,"mv_superhero":1,"newpopqueens":1,"oasis":1,"onedirection":1,"pearljam":1,"postmalone":1,"queen":1,"rhcp":1,"rihanna":1,"selenagomez":1,"smashingpumpkins":1,"springsteen":1,"st_theatre":1,"stones":1,"stp":1,"taylorswift":1,"thewho":1,"timmcgraw":1,"tompetty":1,"u2":1,"zachbryan":1,"mv_action":1,"mv_crime":1,"mv_drama":1,"mv_romance":1,"mv_scifi":1,"mv_war":1};
 var LEGDATA={
+ musiclegends:{b:'Every genre, every era \u2014 the acts that built popular music, in one shuffle. You name the artist, not the song.',l1:'\ud83c\udfa4 Solo Artist',p1:'B.B. King',l2:'\ud83c\udfb8 Band',p2:'Spice Girls',l3:'\ud83d\udc8e Deep Cut',c1:'Expose'},
+ poplegends:{b:'Six decades of pop in one shuffle \u2014 crooners, girl groups, boy bands, divas and whoever is on the radio this morning.',l1:'\ud83c\udfa4 Solo Artist',p1:'ABBA',l2:'\ud83c\udfb8 Group',p2:'James Taylor',l3:'\ud83d\udc8e Deep Cut',c1:'The Fray'},
+ countrylegends:{b:'From the Opry to the stadium \u2014 outlaws, honky tonk, Nashville and everything that came after.',l1:'\ud83c\udfa4 Solo Artist',p1:'Alabama',l2:'\ud83c\udfb8 Band',p2:'Kane Brown',l3:'\ud83d\udc8e Deep Cut',c1:'George Morgan'},
+ rocklegends:{b:'Rock and roll end to end \u2014 the 50s pioneers, the British Invasion, arena, metal, punk, grunge and everything still plugged in.',l1:'\ud83c\udfb8 Band',p1:'Linkin Park',l2:'\ud83c\udfa4 Solo Artist',p2:'3 Doors Down',l3:'\ud83d\udc8e Deep Cut',c1:'The Flying Burrito Brothers'},
+ hiphoplegends:{b:'Every era of hip hop in one shuffle \u2014 the pioneers, the crews, the solo acts and the ones running it now.',l1:'\ud83c\udfa4 MC',p1:'Run-D.M.C.',l2:'\ud83c\udfa7 Crew',p2:'2Pac',l3:'\ud83d\udc8e Deep Cut',c1:'Rakim'},
  fo_legends:{b:'The people who built the game \u2014 from leather helmets to the modern quarterback. Backs, receivers, linemen, linebackers and the secondary.',p1:'Jim Brown',p2:'Jerry Rice',c1:'Vince Lombardi'},
  ba_legends:{b:'Every era of the game in one shuffle \u2014 the big men, the forwards who carried it, and the guards who changed it.',p1:'Bill Russell',p2:'Magic Johnson',c1:'Phil Jackson'},
  bs_legends:{b:'A century and a half of the game \u2014 the hitters, the arms and the Negro Leagues greats.',p1:'Willie Mays',p2:'Satchel Paige',c1:'Casey Stengel'},
@@ -1943,7 +1957,11 @@ function openVault(id){
                         : '<div class="v5poster v5noart"><span>'+vTitle(v).toUpperCase()+'</span></div>';
  var isFilm=(v.edition==='filmtv'); V5FILM=isFilm;
  var isFam=(v.edition==='family');
- var isLeg=(v.edition==='sports' && !v.sp);
+ /* Was sports-only, so the five music Legends decks fell through to the artist branch
+    and advertised songs, albums, lore, deep cuts and B-sides. A name-the-artist deck has
+    none of those -- it is a list of acts. Same template, different card labels. */
+ var MUSIC_LEG={musiclegends:1,poplegends:1,countrylegends:1,rocklegends:1,hiphoplegends:1};
+ var isLeg=((v.edition==='sports' && !v.sp) || !!MUSIC_LEG[v.id]);
  var lg=LEGDATA[v.id]||LEGDEF;
  var fam=FAMDATA[v.id]||FAMDEF;
  var fdata=FILMDATA[v.id]||{blurb:'One shuffle of the moments only true fans remember \u2014 the ones you replay, argue about, and never forget.',std:'The essentials everyone knows and loves.',dlx:'Deeper cuts and forgotten favorites.'};
@@ -1971,9 +1989,9 @@ function openVault(id){
  } else if(isLeg){
    var _cl=CARDART[v.id];
    fan='<div class="vkfan'+(_cl&&_cl.l?' lightfan':'')+'"'+(_cl?' style="--scfill:url(\''+'card-'+v.id+'.jpg?v='+SFSBUILD+'\') center/cover;--scout:'+artistColor(v).acc+'"':'')+'>'
-     +'<div class="vksamp vs1"><div class="typ">\ud83c\udfc5 Player</div><div class="q">'+lg.p1+'</div><div class="smp">Sample</div></div>'
-     +'<div class="vksamp vs2"><div class="typ">\ud83c\udfc5 Player</div><div class="q">'+lg.p2+'</div><div class="smp">Sample</div></div>'
-     +'<div class="vksamp vs3"><div class="typ">\ud83d\udccb Coach</div><div class="q">'+lg.c1+'</div><div class="smp">Sample</div></div>'
+     +'<div class="vksamp vs1"><div class="typ">'+(lg.l1||'\ud83c\udfc5 Player')+'</div><div class="q">'+lg.p1+'</div><div class="smp">Sample</div></div>'
+     +'<div class="vksamp vs2"><div class="typ">'+(lg.l2||'\ud83c\udfc5 Player')+'</div><div class="q">'+lg.p2+'</div><div class="smp">Sample</div></div>'
+     +'<div class="vksamp vs3"><div class="typ">'+(lg.l3||'\ud83d\udccb Coach')+'</div><div class="q">'+lg.c1+'</div><div class="smp">Sample</div></div>'
      +'</div>';
    blurbHTML='<p class="v5blurb">'+lg.b+'</p>';
    catsHTML='';
@@ -2093,13 +2111,22 @@ try{var _io=new URLSearchParams(location.search).get('open');if(_io){var _iv=byI
 /* Play-screen edition flick: swipe left/right cycles Music <-> Movies&TV <-> Sports */
 (function(){
   var app=document.getElementById('app'); if(!app) return;
-  var x0=0,y0=0,track=false,hs=false;
+  var x0=0,y0=0,track=false,hs=null,sl0=0;
   function overlay(){ if(document.getElementById('splash')) return true; var ov=document.getElementById('introOv'); if(ov&&ov.classList.contains('on')) return true; var sh=document.getElementById('sheet'); if(sh&&sh.childElementCount>0) return true; return false; }
-  function isH(el){ while(el&&el!==document.body){ try{var st=getComputedStyle(el);}catch(e){return false;} if((st.overflowX==='auto'||st.overflowX==='scroll')&&el.scrollWidth>el.clientWidth+6) return true; el=el.parentElement; } return false; }
+  /* Returns the scroller itself, not a boolean, so touchend can ask whether it actually
+     moved. The old version vetoed the edition swipe whenever the finger started on
+     anything horizontally scrollable -- which, once every genre section grew a second
+     row, is almost the whole page. The gesture only ever worked on the few pixels that
+     were not a tile. */
+  function hScroller(el){ while(el&&el!==document.body){ try{var st=getComputedStyle(el);}catch(e){return null;} if((st.overflowX==='auto'||st.overflowX==='scroll')&&el.scrollWidth>el.clientWidth+6) return el; el=el.parentElement; } return null; }
   function vis(){ return (typeof EDITIONS!=='undefined')?EDITIONS.filter(editionVisible):[]; }
   function go(dir){ var a=vis(); if(a.length<2) return; var i=0; for(var k=0;k<a.length;k++){ if(a[k].id===curEdition){i=k;break;} } var n=(i+dir+a.length)%a.length; if(a[n].id!==curEdition) setEdition(a[n].id); }
-  app.addEventListener('touchstart',function(e){ if(e.touches.length!==1||!document.body.classList.contains('view-play')||overlay()){track=false;return;} var t=e.touches[0]; x0=t.clientX; y0=t.clientY; hs=isH(e.target); track=true; },{passive:true});
-  app.addEventListener('touchend',function(e){ if(!track) return; track=false; if(hs) return; var t=e.changedTouches[0]; var dx=t.clientX-x0, dy=t.clientY-y0; if(Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.8){ go(dx<0?1:-1); } },{passive:true});
+  app.addEventListener('touchstart',function(e){ if(e.touches.length!==1||!document.body.classList.contains('view-play')||overlay()){track=false;return;} var t=e.touches[0]; x0=t.clientX; y0=t.clientY; hs=hScroller(e.target); sl0=hs?hs.scrollLeft:0; track=true; },{passive:true});
+  app.addEventListener('touchend',function(e){ if(!track) return; track=false;
+    /* The row gets first refusal. If it scrolled, it consumed the gesture and we stay put.
+       If it did not move, it was already at an end and the swipe belongs to the edition
+       switcher. Comparing scrollLeft handles both ends with no threshold to tune. */
+    if(hs && hs.scrollLeft!==sl0) return; var t=e.changedTouches[0]; var dx=t.clientX-x0, dy=t.clientY-y0; if(Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.8){ go(dx<0?1:-1); } },{passive:true});
 })();
 brandBarState();
 </script>
