@@ -491,23 +491,8 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .spLit.flick{animation:sflick .5s steps(1,end) forwards}
 @keyframes sflick{0%{opacity:0}9%{opacity:.85}16%{opacity:0}28%{opacity:.92}35%{opacity:.12}50%{opacity:1}58%{opacity:.4}72%{opacity:1}84%{opacity:.65}100%{opacity:1}}
 .spLogo.lit .spUnlit{opacity:0}
-.triWrap{position:absolute;inset:0;opacity:0;transition:opacity .2s ease}
-.triWrap.on{opacity:1}
-.triP{position:absolute;left:0;right:0;height:33.34%;overflow:hidden}
-.triP.p1{top:0}.triP.p2{top:33.33%}.triP.p3{top:66.66%}
-.triBg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .16s ease}
-.triBg.in{opacity:1}
-.triP.p1 .triBg{background-image:url('intro-tri1.jpg?v=2')}
-.triP.p2 .triBg{background-image:url('intro-tri2.jpg?v=1')}
-.triP.p3 .triBg{background-image:url('intro-tri3.jpg?v=1')}
-.triTxt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--disp);font-size:clamp(20px,6.6vw,34px);letter-spacing:2px;text-transform:uppercase;padding:0 5vw;line-height:1.05;opacity:0;transform:scale(.95);transition:opacity .22s ease,transform .22s ease;z-index:2}
-.triTxt.in{opacity:1;transform:scale(1)}
-.triP.p1 .triTxt{color:#3EDBFF;text-shadow:0 0 14px rgba(62,219,255,.9),0 0 30px rgba(62,219,255,.5)}
-.triP.p2 .triTxt{color:#F2C14E;text-shadow:0 0 14px rgba(242,193,78,.9),0 0 30px rgba(242,193,78,.5)}
-.triP.p3 .triTxt{color:#FF8A2A;text-shadow:0 0 14px rgba(255,138,42,.9),0 0 30px rgba(255,138,42,.5)}
-.descP{position:absolute;inset:0;opacity:0;transition:opacity .3s ease}
-.descP.on{opacity:1}
-.descP img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+/* .triWrap / .triP / .descP removed with the pitch panels they styled - the splash
+   draws the two logo frames and nothing else. */
 .spSkip{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:16px;z-index:6;font-family:var(--disp);font-size:12px;letter-spacing:1.5px;color:rgba(255,255,255,.55);text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none}
 .spSkip.on{opacity:1}
 </style>
@@ -522,12 +507,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 <div class="rotate-gate" aria-hidden="true"><div><div class="rg-icon">↻</div><div class="rg-txt">Rotate your phone<br>to portrait</div></div></div>
 <div id="splash">
   <div class="spLogo" id="spLogo"><img class="spUnlit" src="sfs-unlit.png?v=1" alt=""><img class="spLit" id="spLit" src="sfs-lit.png?v=1" alt="SuperFan Shuffle"></div>
-  <div class="triWrap" id="triWrap">
-    <div class="triP p1"><div class="triBg"></div><div class="triTxt">Face the Music</div></div>
-    <div class="triP p2"><div class="triBg"></div><div class="triTxt">Lights, Camera, Action</div></div>
-    <div class="triP p3"><div class="triBg"></div><div class="triTxt">Settle the Score</div></div>
-  </div>
-  <div class="descP" id="descP"><img src="intro-desc.jpg?v=5" alt="Everyone's a superfan of something"></div>
+
   <!-- Skip affordance removed with v410: the repeat open is now 1.65s of brand bug,
        which is too short to skip, and the full open is a pitch that is not skippable
        by design. The .spSkip CSS is left in place so it is one line to bring back. -->
@@ -535,11 +515,73 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 <div id="bgfx"></div>
 <!-- FULL-SCREEN INTRO (shows every app open: brand card -> how-to-play -> store) -->
 <div id="introOv" aria-label="Welcome to SuperFan Shuffle">
-  <div class="introSlide idesc" id="introDesc"><img src="intro-desc.jpg?v=5" alt="Everyone&rsquo;s a superfan of something"><div class="idescHint">TAP TO CONTINUE <span>&#9654;</span></div></div>
+  <div class="qsHd"><div class="qsTitle">Quick Start</div><button class="qsSkip" id="qsSkip" type="button">Skip</button></div>
+  <div class="qsDots" id="qsDots"><i></i><i></i><i></i></div>
+  <div class="qsStage" id="qsStage">
+    <section class="qsP cur" data-p="1">
+      <div class="qsArt"><img src="qs-1.jpg" alt=""></div>
+      <h2 class="qsH">Hold the phone on your forehead and let your friends give the clues.</h2>
+    </section>
+    <section class="qsP" data-p="2">
+      <div class="qsArt"><img src="qs-2.jpg" alt="Tilt down for correct, tilt up to skip"></div>
+      <p class="qsSub">No sensor? Just tap the screen &mdash; it switches over by itself.</p>
+    </section>
+    <section class="qsP" data-p="3">
+      <div class="qsArt"><img src="qs-3.jpg" alt=""></div>
+      <div class="qsLines" id="qsLines"></div>
+      <h2 class="qsH qsH3">Everyone&rsquo;s a Superfan of Something.</h2>
+      <p class="qsSub">You don&rsquo;t need to know every title &mdash; just describe what you do know.
+        Talk it out, this isn&rsquo;t traditional charades.</p>
+    </section>
   </div>
+  <div class="qsNav">
+    <button class="qsBtn back" id="qsBack" type="button">Back</button>
+    <button class="qsBtn next" id="qsNext" type="button">Next</button>
+  </div>
+</div>
 <style>
 #introOv{position:fixed;inset:0;z-index:100000;background:#0b0714;display:none}
 #introOv.on{display:block}
+/* Quick Start. One scale unit again - the carousel has to hold a 3:4 illustration, a
+   headline, a sub-line and two buttons on everything from a 320x520 phone to a tablet,
+   which is the same problem the unlock wall had. --u is min of a width step and a
+   height step so the whole panel grows and shrinks as one piece. */
+#introOv{--u:clamp(2.2px, min(1.05vw, 0.5vh), 5.6px);
+  display:none;flex-direction:column;padding:calc(3*var(--u)) calc(4*var(--u)) calc(4*var(--u))}
+#introOv.on{display:flex}
+.qsHd{display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+.qsTitle{font-family:var(--disp);font-size:calc(7*var(--u));letter-spacing:.5px;color:#fff}
+.qsSkip{background:none;border:0;color:rgba(255,255,255,.72);font-family:var(--body);
+  font-size:calc(4*var(--u));font-weight:800;cursor:pointer;padding:calc(1.5*var(--u)) calc(2*var(--u))}
+.qsDots{display:flex;gap:calc(2*var(--u));margin:calc(2*var(--u)) 0 calc(2.4*var(--u));flex:0 0 auto}
+.qsDots i{flex:1 1 0;height:calc(1.1*var(--u));border-radius:999px;background:rgba(255,255,255,.18)}
+.qsDots i.on{background:linear-gradient(90deg,#ffd36a,#ff9f1c)}
+.qsStage{position:relative;flex:1 1 auto;min-height:0}
+.qsP{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:flex-start;gap:calc(1.6*var(--u))}
+.qsP.cur{display:flex}
+.qsArt{flex:0 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;width:100%}
+.qsArt img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:calc(3*var(--u));display:block}
+.qsH{font-family:var(--disp);font-size:calc(6.4*var(--u));line-height:1.06;color:#fff;
+  text-align:center;margin:0;padding:0 calc(2*var(--u));text-wrap:balance}
+.qsH3{font-size:calc(7*var(--u))}
+.qsSub{font-family:var(--body);font-size:calc(3.7*var(--u));line-height:1.35;color:rgba(255,255,255,.82);
+  text-align:center;margin:0;padding:0 calc(3*var(--u))}
+/* The four edition lines land one at a time, then the headline resolves under them.
+   Every line is rendered up front and only its opacity animates, so a reduced-motion
+   setting or a dropped frame leaves the panel complete rather than blank. */
+.qsLines{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(1.4*var(--u)) calc(2.6*var(--u));
+  padding:0 calc(2*var(--u));flex:0 0 auto}
+.qsLine{font-family:var(--disp);font-size:calc(4.4*var(--u));letter-spacing:.4px;color:#ffd36a;
+  opacity:0;transform:translateY(calc(1.4*var(--u)));transition:opacity .28s ease,transform .28s ease}
+.qsLine.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.qsLine{transition:none}}
+.qsNav{display:flex;gap:calc(3*var(--u));margin-top:calc(2.4*var(--u));flex:0 0 auto}
+.qsBtn{flex:1 1 0;border-radius:calc(3.4*var(--u));padding:calc(3.2*var(--u)) 0;cursor:pointer;
+  font-family:var(--disp);font-size:calc(5*var(--u));letter-spacing:.6px}
+.qsBtn.back{background:transparent;border:1px solid rgba(255,255,255,.34);color:rgba(255,255,255,.8)}
+.qsBtn.back[disabled]{opacity:.32}
+.qsBtn.next{border:0;background:linear-gradient(90deg,#ff2eb0,#b06aff);color:#fff;
+  box-shadow:0 0 calc(4*var(--u)) rgba(255,46,176,.5)}
 .hpTwo .hpHd{display:flex;align-items:flex-start;gap:10px;padding-left:0}
 .hpTwo .hpHd .hpIc{position:static;top:auto;transform:none;flex:0 0 38px}
 .hpTwo .hpStack>p{padding-left:48px}
@@ -648,18 +690,53 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 </style>
 <script>
 (function(){
-  var ov=document.getElementById('introOv'),idesc=document.getElementById('introDesc'),s2=document.getElementById('introS2');
-  var descTimer=null;
-  function fitS2(){ if(!s2)return; var inner=s2.querySelector('.h2pInner'); if(!inner||!s2.classList.contains('cur')) return; inner.style.transform='none'; var avail=s2.clientHeight-72, need=inner.scrollHeight; var sc=Math.min(1, avail/need); inner.style.transform=sc<1?'scale('+sc+')':'none'; }
-  function showDesc(auto){ ov.classList.add('on'); if(s2)s2.classList.remove('cur'); if(idesc)idesc.classList.add('cur'); clearTimeout(descTimer); if(auto){ descTimer=setTimeout(function(){ done(); },4000); } }
-  function showHowTo(){ clearTimeout(descTimer); if(idesc)idesc.classList.remove('cur'); s2.classList.add('cur'); ov.classList.add('on'); requestAnimationFrame(fitS2); setTimeout(fitS2,60); }
-  function done(){ ov.classList.remove('on'); }
-  window.__startIntro=function(){ showDesc(true); };
-  window.__startHowTo=function(){ showHowTo(); };
-  if(idesc) idesc.addEventListener('click',function(){ done(); });
-  if(s2) s2.addEventListener('click',function(e){ done(); });
-  window.addEventListener('resize',fitS2);
-  window.addEventListener('orientationchange',function(){ setTimeout(fitS2,220); });
+  var ov=document.getElementById('introOv');
+  if(!ov) return;
+  var stage=document.getElementById('qsStage'), dots=document.getElementById('qsDots'),
+      back=document.getElementById('qsBack'), next=document.getElementById('qsNext'),
+      skip=document.getElementById('qsSkip'), lines=document.getElementById('qsLines');
+  var panels=[].slice.call(stage.querySelectorAll('.qsP')), i=0, lineTOs=[];
+
+  /* Mirrors EDCOPY.hero in play.html, which is where these lines are authoritative -
+     the ready screen prints the same four. They were also written a third time as the
+     splash overlay (Face the Music / Lights, Camera, Action / Settle the Score), which
+     predated the Family edition and so promised three editions on a product that ships
+     four. That copy is gone; this is the only place the set lives outside play.html. */
+  var QS_LINES=['Face the Music','Lights, Camera, Guess!','Game Time!','Who Knows Best?'];
+  lines.innerHTML=QS_LINES.map(function(t){ return '<span class="qsLine">'+t+'</span>'; }).join('');
+
+  function revealLines(animate){
+    var els=lines.querySelectorAll('.qsLine');
+    lineTOs.forEach(clearTimeout); lineTOs=[];
+    if(!animate){ [].forEach.call(els,function(e){ e.classList.add('in'); }); return; }
+    [].forEach.call(els,function(e){ e.classList.remove('in'); });
+    [].forEach.call(els,function(e,n){ lineTOs.push(setTimeout(function(){ e.classList.add('in'); }, 120+n*430)); });
+  }
+  /* Anyone who taps through mid-sequence gets the finished panel, not a half-played
+     animation - and the timers are cleared so a late one cannot fire over the next panel. */
+  function settleLines(){ lineTOs.forEach(clearTimeout); lineTOs=[];
+    [].forEach.call(lines.querySelectorAll('.qsLine'),function(e){ e.classList.add('in'); }); }
+
+  function show(n){
+    i=Math.max(0,Math.min(panels.length-1,n));
+    panels.forEach(function(p,k){ p.classList.toggle('cur',k===i); });
+    [].forEach.call(dots.children,function(d,k){ d.classList.toggle('on',k===i); });
+    back.disabled = (i===0);
+    next.textContent = (i===panels.length-1) ? 'Start Playing' : 'Next';
+    if(i===2) revealLines(!matchMedia('(prefers-reduced-motion: reduce)').matches);
+    else settleLines();
+  }
+  function done(){ settleLines(); ov.classList.remove('on'); }
+
+  next.onclick=function(){ if(i===panels.length-1){ done(); return; } show(i+1); };
+  back.onclick=function(){ show(i-1); };
+  skip.onclick=done;
+  /* The overlay used to dismiss on any tap, which was right for a single image and wrong
+     here: a tap meant to hit Next would close the whole thing from anywhere on screen. */
+  ov.addEventListener('click',function(e){ if(e.target===ov) done(); });
+
+  window.__startIntro=function(){ show(0); ov.classList.add('on'); };
+  window.__startHowTo=function(){ show(0); ov.classList.add('on'); };
 })();
 </script>
 <div id="floorbg"><div class="floorL" id="floor0"></div><div class="floorL" id="floor1"></div></div>
@@ -1212,7 +1289,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v427';
+var SFSBUILD='v428';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -2223,18 +2300,19 @@ brandBarState();
    at(150, function(){ $('#spLogo').classList.add('on'); });
    at(260, function(){ $('#spLit').classList.add('flick'); });
    at(700, function(){ $('#spLogo').classList.add('lit'); });
-   /* Repeat open: the bug lights, holds a beat, and hands over. ~1.65s, not ~8.9s. */
-   if(!full){ at(1650, endIntro); return; }
-   at(1650, function(){ $('#spLogo').style.opacity='0'; $('#triWrap').classList.add('on'); });
-   function panel(sel,t){ at(t,function(){ var e=sp.querySelector(sel+' .triTxt'); if(e)e.classList.add('in'); }); at(t+230,function(){ var e=sp.querySelector(sel+' .triBg'); if(e)e.classList.add('in'); }); }
-   panel('.p1',1650); panel('.p2',2550); panel('.p3',3450);
-   at(4550, function(){ $('#triWrap').style.opacity='0'; });
-   at(4850, endIntro);
+   /* The bug lights, holds a beat, and hands over - every open, first or fiftieth.
+      The three pitch panels that used to follow on a first open are gone: they ran 8.9s
+      at the user, promised three editions on a four-edition product, and said it a third
+      time in copy that had already drifted from EDCOPY. The pitch is now panel 3 of the
+      Quick Start, which is self-paced, skippable and reads its lines from one place. */
+   at(1650, endIntro);
  }
  /* A repeat open waits on the two logo frames only. Preloading four panels it will
     never draw is what made a cold launch sit on a black screen. */
- var srcs=full?['sfs-unlit.png?v=1','sfs-lit.png?v=1','intro-tri1.jpg?v=2','intro-tri2.jpg?v=1','intro-tri3.jpg?v=1','intro-desc.jpg?v=5']
-              :['sfs-unlit.png?v=1','sfs-lit.png?v=1'];
+ /* Only the two logo frames are drawn now; the Quick Start loads its own art when it
+    opens. Preloading panels the splash will never draw is what made a cold launch sit
+    on a black screen, so this list stays exactly as short as what run() uses. */
+ var srcs=['sfs-unlit.png?v=1','sfs-lit.png?v=1'];
  var left=srcs.length, started=false;
  function go(){ if(started)return; started=true; run(); }
  srcs.forEach(function(u){ var i=new Image(); i.onload=i.onerror=function(){ if(--left<=0) go(); }; i.src=u; });
