@@ -426,18 +426,39 @@
     the art and the back link at the bottom. Scroll it, and start at the top rather
     than centred: a centred flex child that overflows is unreachable in either
     direction, which is the bug that hid the link. */
-#sWall{justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 0 26px;gap:9px}
-.wallArt{width:38vw;max-width:178px;aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:none;flex:0 0 auto;
+#sWall{justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 0 16px;gap:7px}
+/* Sized against 652px of USABLE height, not the 844 a phone advertises: the URL bar,
+   the gesture bar and the safe-area inset take ~150px that a desktop viewport does
+   not. Measured at 390x700 the stack was 99px over, so the art, the eyebrow and the
+   button each came down a step rather than any one of them being halved. */
+#sWall .wallTaste{font-size:4.6vw;line-height:1.1}
+#sWall .btn.buy{font-size:4.9vw;padding:11px 18px}
+#sWall .sub{font-size:3.9vw;line-height:1.32}
+/* The shortest real target is a small Android whose chrome leaves ~550px: everything
+   above fits from an iPhone 13 upward, and this closes the last 19px there rather
+   than shrinking the type on every phone to suit the worst one. */
+@media (max-height:620px){
+  #sWall{gap:5px;padding:8px 0 12px}
+  #sWall .wallHead{font-size:9.4vw}
+  #sWall .wallTaste{font-size:4.2vw}
+  #sWall .wallChip{font-size:2.9vw;padding:5px 10px}
+  #sWall .wallChips{margin:3px 0 0;gap:6px}
+}
+/* Sized off vh as well as vw: the binding constraint on this screen is height, and a
+   width-only rule put a 146px poster on a 600px-tall phone the same as a 844px one.
+   17vh of width is ~23vh of poster at 3:4, which leaves the stack room on the
+   shortest phone and still fills out on a full-screen PWA. */
+.wallArt{width:min(30vw,146px,17vh);aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:none;flex:0 0 auto;
   border:2px solid rgba(255,255,255,.22);box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 26px rgba(255,92,240,.22);margin-bottom:10px}
 .wallArt.on{display:block}
 /* Two chips for a genre vault, up to three for an artist - each one is built only when
    the deck actually has that content, so the bar never promises an empty tier. */
-.wallChips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0 2px;padding:0 4px}
+.wallChips{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:5px 0 1px;padding:0 4px}
 .wallChip{font-family:var(--body);font-size:3.2vw;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
   color:#f0e9ff;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,92,240,.5);
   background:rgba(255,92,240,.10);white-space:nowrap}
 .wallChip b{color:var(--cyan);font-weight:800}
-.wallOnce{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;
+.wallOnce{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:6px;
   font-family:var(--body);font-size:3.5vw;font-style:italic;color:rgba(255,255,255,.82)}
 .wallTick{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;
   border:1.5px solid #35E27F;color:#35E27F;font-size:11px;font-style:normal;flex:0 0 auto}
@@ -1100,7 +1121,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
     <button class="btn buy" id="wallBuy">Unlock Full Vault</button>
     <div class="wallOnce"><span class="wallTick">✓</span> One-time purchase. Replay anytime.</div>
     <div class="wallRow">
-      <a class="wlink" id="wallBack">‹ Explore Other Vaults</a>
+      <a class="wlink" id="wallBack">‹ Back to Home Screen</a>
     </div>
   </div>
   <!-- REPORT CARD (end of a full, owned round — owner-only) -->
@@ -1176,7 +1197,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v423';
+var SFSBUILD='v424';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
