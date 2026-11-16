@@ -421,7 +421,21 @@
  .wallTaste{font-family:var(--disp);font-size:6.4vw;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;opacity:.92;text-shadow:0 0 14px rgba(87,230,255,.6)}
  .wallHead{font-family:var(--disp);font-size:11vw;line-height:.9;letter-spacing:1px;text-transform:uppercase;color:var(--mag);text-shadow:0 0 20px rgba(255,92,240,.75),2px 3px 0 rgba(0,0,0,.4)}
  .btn.buy{border-color:var(--mag);background:linear-gradient(90deg,rgba(87,230,255,.16),rgba(255,92,240,.24));box-shadow:0 0 22px rgba(255,92,240,.55),inset 0 0 16px rgba(255,92,240,.25);color:#fff;font-size:6.2vw;text-shadow:0 0 10px rgba(255,92,240,.6)}
- .wallRow{display:flex;gap:26px;margin-top:4px}
+ .wallArt{width:46vw;max-width:220px;aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:none;
+  border:2px solid rgba(255,255,255,.22);box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 26px rgba(255,92,240,.22);margin-bottom:10px}
+.wallArt.on{display:block}
+/* Two chips for a genre vault, up to three for an artist - each one is built only when
+   the deck actually has that content, so the bar never promises an empty tier. */
+.wallChips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0 2px;padding:0 4px}
+.wallChip{font-family:var(--body);font-size:3.2vw;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  color:#f0e9ff;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,92,240,.5);
+  background:rgba(255,92,240,.10);white-space:nowrap}
+.wallChip b{color:var(--cyan);font-weight:800}
+.wallOnce{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;
+  font-family:var(--body);font-size:3.5vw;font-style:italic;color:rgba(255,255,255,.82)}
+.wallTick{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;
+  border:1.5px solid #35E27F;color:#35E27F;font-size:11px;font-style:normal;flex:0 0 auto}
+.wallRow{display:flex;gap:26px;margin-top:4px}
  .wlink{color:rgba(255,255,255,.78);font-size:3.9vw;font-weight:700;text-decoration:none;cursor:pointer;letter-spacing:.3px}
  .wlink:active{color:#fff}
  /* REPORT CARD */
@@ -1072,13 +1086,15 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div>
   <!-- UNLOCK WALL (end of the 5-question preview — never reaches the report card) -->
   <div class="screen" id="sWall">
-    <div class="wallTaste">That’s the taste</div>
-    <div class="wallHead">Unlock the Vault</div>
-    <div class="sub">You’ve played the first <b>5</b> of <b id="wallName">this vault</b>. The full shuffle — <span id="wallMix">songs, albums &amp; lore</span> — keeps going.</div>
-    <button class="btn buy" id="wallBuy">Unlock full vault</button>
+    <img class="wallArt" id="wallArt" alt="">
+    <div class="wallTaste">Free Trial Round Complete!</div>
+    <div class="wallHead">Unlock the Full Vault</div>
+    <div class="sub">You’ve played <b>5</b> cards from <b id="wallName">this vault</b>. The full shuffle keeps going with <span id="wallMix">more songs, albums &amp; lore</span>.</div>
+    <div class="wallChips" id="wallChips"></div>
+    <button class="btn buy" id="wallBuy">Unlock Full Vault</button>
+    <div class="wallOnce"><span class="wallTick">✓</span> One-time purchase. Replay anytime.</div>
     <div class="wallRow">
-      <a class="wlink" id="wallBack">‹ Back to store</a>
-      <a class="wlink" id="wallDemo">See the full round ›</a>
+      <a class="wlink" id="wallBack">‹ Explore Other Vaults</a>
     </div>
   </div>
   <!-- REPORT CARD (end of a full, owned round — owner-only) -->
@@ -1943,8 +1959,48 @@ function endPreview(){
   app.classList.remove('st-correct','st-pass','st-timeup','flyIn');
   document.body.classList.remove('lock-ls'); tryPortrait();
   document.getElementById('wallName').textContent=VAULT_NAME;
+  buildWall();
   sndFanfare();
   show('sWall');
+}
+/* Round a card count DOWN to a band. Two reasons it is banded rather than exact:
+   "600+" reads stronger than "603", and it survives the deck growing - an exact
+   number has to be re-typed every time a deck is touched, which is how the mock-up
+   ended up advertising "150+" for a 603-card vault. Under 100 the steps are coarse
+   enough to undersell (50 would print as "40+"), so small decks print exact. */
+function bandCount(n){
+  if(n<100) return String(n);
+  var b=Math.floor(n/50)*50;
+  if(b===n) b-=50;
+  return b+'+';
+}
+/* The chips are built from the deck itself, never typed, and each one appears only
+   when the array behind it has cards - eleven artist vaults ship with an empty Deluxe
+   tier, so a blanket "includes Deluxe" would be a promise the deck cannot keep.
+   Artist vaults (the ones carrying albums or lore) sell catalogue depth; genre and
+   party vaults sell size, because that is the axis each one actually wins on. */
+function buildWall(){
+  var art=document.getElementById('wallArt');
+  if(art){ art.classList.remove('on');
+    if(VAULT_ID){ art.onload=function(){ art.classList.add('on'); };
+      art.onerror=function(){ art.classList.remove('on'); };
+      art.src='art-'+VAULT_ID+'.jpg?v='+(window.SFSBUILD||'1'); } }
+  var box=document.getElementById('wallChips'); if(!box) return;
+  var d=(DECKS&&DECKS[VAULT_ID])||null, chips=[];
+  if(d){
+    var albums=(d.stdAlbums||[]).length;
+    var lore=(d.stdLore||[]).length+(d.dlxLore||[]).length;
+    if(albums||lore){
+      chips.push('Deep Catalog &amp; Collaborations');
+      if(albums) chips.push('Albums');
+      if(lore)   chips.push('Lore');
+    } else {
+      var n=(d.standard||[]).length+(d.deluxe||[]).length;
+      if(n) chips.push('<b>'+bandCount(n)+'</b> Cards');
+      if((d.deluxe||[]).length) chips.push('Includes Deluxe Cards');
+    }
+  }
+  box.innerHTML=chips.map(function(c){ return '<div class="wallChip">'+c+'</div>'; }).join('');
 }
 /* Abandon the round from the answer card: flip, then home. Not a confirm dialog -
    the flip IS the feedback, and it is long enough (780ms) to read as intentional.
@@ -2442,10 +2498,11 @@ if(Q.get('preview')==='results'){
 }
 if(Q.get('resume')){ try{ var _st=JSON.parse(sessionStorage.getItem('sfs_resume')||'null'); if(_st){ score=_st.score||0; results=_st.results||[]; ED=_st.ED||'music'; VAULT_ID=_st.vault||''; VAULT_NAME=_st.n||'this vault'; REDITION=_st.edition||'Standard'; RXS=_st.xs||''; RXSL=_st.xsl||''; RXSN=_st.xsn||''; RXSE=_st.xse||''; showReport(); } }catch(e){} }
 /* unlock wall */
-try{document.getElementById('wallBuy').textContent='Unlock full vault · '+SFSPRICE;}catch(e){}
+try{document.getElementById('wallBuy').textContent='Unlock Full Vault — '+SFSPRICE;}catch(e){}
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · '+SFSPRICE+' — payments not wired yet'); };
 document.getElementById('wallBack').onclick=function(){ location.href='/?ed='+encodeURIComponent(ED)+'&nointro=1'; };
-document.getElementById('wallDemo').onclick=function(){ location.href='/play.html?mode=full'+(VAULT_ID?'&vault='+encodeURIComponent(VAULT_ID):'')+(VAULT_NAME!=='this vault'?'&n='+encodeURIComponent(VAULT_NAME):''); };
+/* 'See the full round' was removed with the wall redesign: it linked to
+   ?mode=full, which walked straight past the paywall it was sitting on. */
 /* report card */
 document.getElementById('shareBtn').onclick=doShare;
 document.getElementById('backBtn').onclick=function(){ location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1'; };
