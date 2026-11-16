@@ -421,7 +421,13 @@
  .wallTaste{font-family:var(--disp);font-size:6.4vw;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;opacity:.92;text-shadow:0 0 14px rgba(87,230,255,.6)}
  .wallHead{font-family:var(--disp);font-size:11vw;line-height:.9;letter-spacing:1px;text-transform:uppercase;color:var(--mag);text-shadow:0 0 20px rgba(255,92,240,.75),2px 3px 0 rgba(0,0,0,.4)}
  .btn.buy{border-color:var(--mag);background:linear-gradient(90deg,rgba(87,230,255,.16),rgba(255,92,240,.24));box-shadow:0 0 22px rgba(255,92,240,.55),inset 0 0 16px rgba(255,92,240,.25);color:#fff;font-size:6.2vw;text-shadow:0 0 10px rgba(255,92,240,.6)}
- .wallArt{width:46vw;max-width:220px;aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:none;
+  /* .screen is a centred flex column at height:100% with no overflow, so once the
+    poster made the wall taller than the viewport it clipped at BOTH ends - the top of
+    the art and the back link at the bottom. Scroll it, and start at the top rather
+    than centred: a centred flex child that overflows is unreachable in either
+    direction, which is the bug that hid the link. */
+#sWall{justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 0 26px;gap:9px}
+.wallArt{width:38vw;max-width:178px;aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:none;flex:0 0 auto;
   border:2px solid rgba(255,255,255,.22);box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 26px rgba(255,92,240,.22);margin-bottom:10px}
 .wallArt.on{display:block}
 /* Two chips for a genre vault, up to three for an artist - each one is built only when
@@ -1170,7 +1176,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v422';
+var SFSBUILD='v423';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
