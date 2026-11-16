@@ -84,6 +84,12 @@
    colour change is the most detectable signal available in that situation, so the whole
    overlay now carries the outcome and the glyph rides on top of it. */
 #fb{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1vmin;background:rgba(4,6,12,.66);z-index:6;transition:background-color .08s linear}
+/* #fb is absolute inside #app, which carries 24px of padding - so the flood stopped
+   short of the card's own edge. Padding goes during feedback and the colour fills the
+   card right up to the white border. The border stays: it is the game's frame, and a
+   white edge around a saturated field reads as deliberate rather than as the screen
+   having glitched. Full-bleed was tried and gains ~15% more colour for the loss of it. */
+#app.fbon{padding:0!important}
 #fb.fbCorrect{background:#1FB45C}
 #fb.fbPass{background:#E07A1B}
 #fb.fbTimeup{background:#F2F3F7}
@@ -1215,7 +1221,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v426';
+var SFSBUILD='v427';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
