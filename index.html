@@ -462,6 +462,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
    ~180px column beside the poster cannot sit in one row without breaking mid-word, so
    family gets 2x2. */
 .v5cats.fam4{display:grid;grid-template-columns:1fr 1fr;gap:9px 6px}
+.v5try{display:block;width:100%;margin:8px 0 0;padding:10px 12px;border-radius:14px;border:1px solid rgba(var(--tint),.5);background:transparent;color:#ded6f0;font-family:var(--body);font-size:12.5px;font-weight:800;letter-spacing:.5px;cursor:pointer}
 .v5play{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;margin:14px 0 0;padding:13px;border-radius:16px;border:2px solid var(--artist);background:rgba(var(--tint),.14);box-shadow:0 0 20px var(--artist-glow);cursor:pointer}
 .v5big{font-family:var(--disp);font-size:30px;letter-spacing:2px;color:#fff;line-height:.9}
 .v5sub{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--artist);text-transform:uppercase}
@@ -1210,7 +1211,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v421';
+var SFSBUILD='v422';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
@@ -1703,7 +1704,15 @@ var pool=VAULTS.filter(function(x){ if(x.id===v.id) return false;
      browse and search all honour it; this list did not, so a vault switched off
      everywhere else could still be offered at the end of a round. */
   if(!vaultLive(x)) return false;
-  if(v.edition==='sports') return !!x.sp && x.cat===v.cat;
+  if(v.edition==='sports'){
+    /* A Legends deck carries no .sp, and its cat is "Team Sports" / "Individual" /
+       "Automotive" while every team vault is "Football", "Basketball", "Baseball" or
+       "Hockey" - so the team filter below matched nothing and all eleven Legends decks
+       ended a round with no cross-promotion at all. A Legends deck promotes the other
+       Legends decks; a team promotes its own league. */
+    if(!v.sp) return !x.sp;
+    return !!x.sp && x.cat===v.cat;
+  }
   return true; }); if(pool.length){ var _p=pool.slice(),_pk=[]; for(var _i=0;_i<3&&_p.length;_i++){ _pk.push(_p.splice(Math.floor(Math.random()*_p.length),1)[0]); } var _xsl=_pk.map(function(x){return {id:x.id,name:vTitle(x),cat:x.cat||VAULT_KIND,c:x.c||null,ct:(x.sp&&x.sp.city)||'',tm:(x.sp&&x.sp.team)||'',p:(x.sp&&x.sp.p)||'',s:(x.sp&&x.sp.s)||'',t:(x.sp&&x.sp.t)||'',yr:(x.sp&&x.sp.yr)||'',ft:(x.sp&&x.sp.fit)?1:0};}); u+='&xsl='+encodeURIComponent(JSON.stringify(_xsl))+'&xs='+encodeURIComponent(_pk[0].id)+'&xsn='+encodeURIComponent(vTitle(_pk[0]))+'&xse='+encodeURIComponent(_pk[0].cat||VAULT_KIND); } }catch(e){} if(v.sp){ u+='&p1='+encodeURIComponent(v.sp.p||(v.c&&v.c[0])||'')+'&p2='+encodeURIComponent(v.sp.s||(v.c&&v.c[1])||'')+'&city='+encodeURIComponent(v.sp.city||'')+'&team='+encodeURIComponent(v.sp.team||v.name)
    /* The results screen was rebuilding the shelf tile from p1/p2 alone and getting a
       lookalike. It needs the same three the shelf uses: the text colour, the founding
@@ -2065,7 +2074,7 @@ function openVault(id){
      +'<div class="v5head"><div class="v5title">'+vTitle(v)+'</div><div class="v5tier">'+VAULT_KIND+'</div>'
      +blurbHTML+catsHTML
      +'</div></div>'
-   +'<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">▶ PLAY</span><span class="v5sub" id="v5sub">'+subTxt+'</span></button>'
+   +ctaHTML(v,subTxt)
    +(custLbl?'<div class="v5custrow">'+(custPre?'<span class="v5dare">'+custPre+'</span>':'')+'<button class="v5custbtn" onclick="toggleCust()">'+custLbl+' <span id="v5carat">▾</span></button></div>':'')
    +drawer
    +'</div>';
@@ -2095,6 +2104,18 @@ function closeOv(){ if(/[?&]ret=results/.test(location.search)){ location.replac
    handing out the 5-question paywall preview, because badge and ownership were
    unrelated flags. The badge is the promise; ownership has to honour it. */
 function isOwned(id){ var v=byId(id); return OWNED.indexOf(id)>=0 || !!(v && v.badge==='free'); }
+/* The sheet offered PLAY to everyone, owned or not: the only thing that told you a vault
+   was not yours was the paywall at question six, after you had already started. Owned
+   vaults play; the rest lead with the price and keep the trial as the quieter second
+   option. tryFree() already appends &mode=full when isOwned(), so the trial path and
+   the unlock wall it ends on both need no change. */
+function ctaHTML(v,subTxt){
+  var sub='<span class="v5sub" id="v5sub">'+subTxt+'</span>';
+  if(isOwned(v.id))
+    return '<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">\u25b6 PLAY</span>'+sub+'</button>';
+  return '<button class="v5play" onclick="buy(\''+v.id+'\')"><span class="v5big">UNLOCK \u00b7 '+SFSPRICE+'</span>'+sub+'</button>'
+       + '<button class="v5try" onclick="tryFree(\''+v.id+'\')">Try 5 free questions \u203a</button>';
+}
 function tryFree(id){ var v=byId(id); if(!v) return; try{var _lp=JSON.parse(localStorage.getItem('sfs_lp')||'{}');_lp[id]=Date.now();localStorage.setItem('sfs_lp',JSON.stringify(_lp));}catch(e){} var u=launchURL(v); if(isOwned(id)) u+='&mode=full'; location.href=u; }
 function buy(id){ var v=byId(id); toast('Checkout: '+(v?v.name:'vault')+' · '+SFSPRICE+' — payments not wired yet'); }
 var tHandle;
