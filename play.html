@@ -17,8 +17,8 @@
  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
  html,body{height:100%;overflow:hidden;font-family:var(--body);background:#000;color:#eafcff;user-select:none;-webkit-user-select:none}
  #app{position:absolute;top:calc(16px + env(safe-area-inset-top));right:calc(16px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));left:calc(16px + env(safe-area-inset-left));border-radius:40px;overflow:hidden;border:8px solid rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background-color:var(--purple);background-image:radial-gradient(130% 95% at 50% 18%,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 42%,rgba(0,0,0,.34) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.045) 0 1px,transparent 1px 6px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 1px,transparent 1px 6px);box-shadow:0 0 28px rgba(87,230,255,.5),inset 0 0 26px rgba(87,230,255,.3);transition:background-color .14s,box-shadow .14s,border-color .14s}
- #app.st-correct{background-color:var(--green);border-color:#fff;box-shadow:0 0 48px rgba(255,255,255,.7),inset 0 0 72px rgba(255,255,255,.5)}
- #app.st-pass{background-color:var(--orange);box-shadow:0 0 26px rgba(255,255,255,.35),inset 0 0 42px rgba(255,255,255,.28)}
+ 
+ 
  #app.st-timeup{background-color:#e01e4a;box-shadow:0 0 28px rgba(255,0,80,.5),inset 0 0 42px rgba(255,0,80,.4)}
 /* Sports and Movies & TV share ONE lettering treatment - white fill plus a
    -webkit-text-stroke outline - so they can never drift apart. Only the source
@@ -77,13 +77,29 @@
  78%{transform:rotateY(-150deg) scale(.86);opacity:1}
  100%{transform:rotateY(-180deg) scale(.70);opacity:0}}
 @media (prefers-reduced-motion:reduce){#app.quitting{animation:none;opacity:0;transition:opacity .2s}}
-#fb{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1vmin;background:rgba(4,6,12,.66);z-index:6}
+/* The overlay used to paint rgba(4,6,12,.66) for ALL THREE outcomes, so what the room
+   saw was "the screen went dark" either way - the colour only reached the glyph, about
+   a third of the pixels, behind 66% black. Nobody is looking at this screen: it is on
+   someone's forehead, read edge-on from several feet, in peripheral vision. A full-field
+   colour change is the most detectable signal available in that situation, so the whole
+   overlay now carries the outcome and the glyph rides on top of it. */
+#fb{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1vmin;background:rgba(4,6,12,.66);z-index:6;transition:background-color .08s linear}
+#fb.fbCorrect{background:#1FB45C}
+#fb.fbPass{background:#E07A1B}
+#fb.fbTimeup{background:#F2F3F7}
 #fb.on{display:flex}
 /* Was a text character at font-size:36vmin. Measured: the box was 148px but the tick
    the display face actually draws is 33x34px - a fifth of the space it was given, and
    it landed on top of the still-opaque answer word. Drawn as SVG the mark fills the box
    it is given, at any size, in any font. */
-.fbGlyph{width:30vmin;height:30vmin;color:#fff;display:flex;align-items:center;justify-content:center}
+.fbGlyph{width:30vmin;height:30vmin;color:#fff;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 .5vmin 1vmin rgba(0,0,0,.35))}
+/* On a saturated field the old tinted glyph (green tick on green) vanished - white on
+   the flood, with the dark outcome colour reserved for the time-up case where the
+   field itself is light. */
+#fb.fbCorrect .fbGlyph,#fb.fbPass .fbGlyph{color:#fff}
+#fb.fbTimeup .fbGlyph{color:#11131A}
+#fb.fbCorrect .fbWord,#fb.fbPass .fbWord{color:#fff;text-shadow:0 .4vmin 0 rgba(0,0,0,.28)}
+#fb.fbTimeup .fbWord{color:#11131A;text-shadow:0 .3vmin 0 rgba(255,255,255,.5)}
 .fbGlyph svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 14px rgba(0,0,0,.55))}
 /* the answer is not the message any more - the verdict is */
 #app.fbon #card{opacity:.12;transition:opacity .12s ease}
@@ -1199,7 +1215,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div></div>
 <script>
 /* mirrors SFSBUILD in index.html - keep in step */
-var SFSBUILD='v425';
+var SFSBUILD='v426';
 window.SFSBUILD=SFSBUILD;
 
 /* Mirror of SFSPRICE in index.html. Keep the two in step. */
@@ -1905,11 +1921,15 @@ var FBMARK={
  pass   :'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round"><path d="M26 26 L74 74M74 26L26 74"/></svg>',
  timeup :'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="55" r="33"/><path d="M50 36v20l13 9M38 10h24M50 10v12"/></svg>'
 };
+var FBFLOOD={correct:'fbCorrect',pass:'fbPass',timeup:'fbTimeup'};
 function showFb(kind,glyph,word){ var f=document.getElementById('fb'),g=document.getElementById('fbGlyph'),w=document.getElementById('fbWord'); if(!f)return;
   g.className='fbGlyph '+kind; g.innerHTML=FBMARK[kind]||''; w.textContent=word;
   try{ app.classList.add('fbon'); }catch(e){}
+  f.classList.remove('fbCorrect','fbPass','fbTimeup');
+  if(FBFLOOD[kind]) f.classList.add(FBFLOOD[kind]);
   f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
-function hideFb(){ var f=document.getElementById('fb'); if(f) f.classList.remove('on');
+function hideFb(){ var f=document.getElementById('fb');
+  if(f){ f.classList.remove('on','fbCorrect','fbPass','fbTimeup'); }
   try{ app.classList.remove('fbon'); }catch(e){} }
 function flash(good,label){
   var cd=document.getElementById('card');
@@ -1927,13 +1947,9 @@ function flash(good,label){
     setTimeout(function(){ if(!playing) return; hideFb(); if(last){ endPreview(); return; } current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }, good?620:550);
     return;
   }
-  app.classList.remove('st-correct','st-pass'); app.classList.add(good?'st-correct':'st-pass');
-  cd.textContent=label; cd.classList.remove('zoomIn','flyIn','heroPop');
-  var last2 = last;
-  setTimeout(function(){ if(!playing) return;
-    if(last2){ endPreview(); return; }
-    app.classList.remove('st-correct','st-pass'); current=newCard(); cd.classList.remove('zoomIn','flyIn','heroPop'); app.classList.remove('flyIn'); void app.offsetWidth; app.classList.add('flyIn'); }, good?620:550);
-}
+  /* unreachable: the overlay branch above always returns. Kept out rather than kept
+     around - the #app.st-correct / .st-pass rules it drove are gone too, since the flood
+     now lives on #fb where no vault plate can paint over it. */
 var _startWait=0;
 function startGame(){
   /* The deck file is fetched async. Tapping PLAY before it lands used to deal the
