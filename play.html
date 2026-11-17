@@ -179,6 +179,19 @@
   background:linear-gradient(90deg,#ff2eb0,#b06aff);box-shadow:0 0 calc(4*var(--u)) rgba(255,46,176,.45)}
 .bsBtn.ghost{background:none;border:1.5px solid rgba(255,255,255,.3);color:rgba(255,255,255,.82);box-shadow:none}
 .bsBtn.team{background:var(--tc);color:#120a18;box-shadow:0 0 calc(4*var(--u)) -.5px var(--tc)}
+/* The winner's jouster, lance up. Optional in exactly the way the setup art is: the
+   slot collapses when bt-win-<key>.jpg is absent, so the screen is correct before the
+   four pictures exist and better after. flex:0 1 auto with min-height:0 lets it be the
+   thing that shrinks when four teams and two buttons want the room. */
+.bsWin{display:none;flex:0 1 auto;min-height:0;justify-content:center;width:100%;
+  margin-bottom:calc(-1*var(--u))}
+.bsWin.on{display:flex}
+.bsWin img{width:auto;max-width:calc(58*var(--u));max-height:calc(46*var(--u));
+  height:100%;object-fit:contain;display:block;
+  filter:drop-shadow(0 0 calc(3.4*var(--u)) var(--tc,#fff))}
+/* The winning team's name wears its own colour. It was white, which made the one screen
+   in the mode that belongs to a single team look like every other screen. */
+.bsWinName{color:var(--tc,#fff);text-shadow:0 0 calc(2.6*var(--u)) var(--tc,#fff)}
 .fbGlyph.correct{color:#35E27F}.fbGlyph.pass{color:#FF9D2E}.fbGlyph.timeup{color:#fff}
 .fbWord{font-family:var(--disp);font-size:16vmin;letter-spacing:4px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45)}
 @keyframes fbpop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.14);opacity:1}100%{transform:scale(1)}}
@@ -1222,6 +1235,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   <!-- TEAM BATTLE scoreboard. Stands between every turn and at the end, so a battle
        never leaves the game screen until it is over. -->
   <div class="screen" id="sBattle">
+    <div class="bsWin" id="bsWin"><img id="bsWinImg" alt=""></div>
     <div class="bsHd" id="bsHd"></div>
     <div class="bsSub" id="bsSub"></div>
     <div class="bsList" id="bsList"></div>
@@ -1663,6 +1677,26 @@ function btTurnEnd(){
   }
   btSave(); btBoard();
 }
+/* Shows the winning team's jouster, or hides the slot. Keyed on the team's own key, so
+   a fifth colour would only need a fifth file. Hidden on a draw: a draw has no winner to
+   put on a horse. */
+function btWinArt(team){
+  var box=document.getElementById('bsWin'), im=document.getElementById('bsWinImg');
+  if(!box||!im) return;
+  box.classList.remove('on');
+  if(!team){ im.removeAttribute('src'); return; }
+  box.style.setProperty('--tc',team.c);
+  /* Edition first, then the plain colour, then nothing. The lance is the joke - a guitar
+     in Music, a hockey stick in Sports - so the art is per world as well as per team,
+     which is sixteen files if every world ships one. This chain means a world can land
+     whenever its four are drawn, with no code change, and a world that never gets its
+     own falls back to the generic set rather than to a blank screen. */
+  var _b=(document.querySelector('meta[name=sfs-build]')||{}).content||'1';
+  var cands=['bt-win-'+ED+'-'+team.key+'.jpg','bt-win-'+team.key+'.jpg'], ci=0;
+  im.onload=function(){ box.classList.add('on'); };
+  im.onerror=function(){ ci++; if(ci<cands.length){ im.src=cands[ci]+'?v='+_b; return; } box.classList.remove('on'); };
+  im.src=cands[0]+'?v='+_b;
+}
 function btRow(i,opt){
   var t=BATTLE.teams[i], cls='bsRow'+(opt&&opt.lead?' lead':'')+(opt&&opt.up?' up':'');
   var tag=opt&&opt.tag ? '<em>'+opt.tag+'</em>' : '';
@@ -1677,6 +1711,7 @@ function btBoard(){
      plate is drawn to sit behind one word in huge type; standings rows and a paragraph
      of copy fight it. startGame() re-applies all of this through applyCardArt(), so
      clearing it here costs the round nothing. */
+  btWinArt(null);   /* every board clears it; only the win branch below asks for one */
   app.classList.remove('battle','hasart','inked','lightart','qpgapp','sportcard','filmcard');
   app.style.removeProperty('background-image');
   app.style.removeProperty('--cardoutline');
@@ -1721,7 +1756,8 @@ function btBoard(){
       return;
     }
     var w=BATTLE.teams[leaders[0]];
-    hd.innerHTML=w.name+'<br>Wins';
+    btWinArt(w);
+    hd.innerHTML='<span class="bsWinName" style="--tc:'+w.c+'">'+w.name+'</span><br>Wins';
     /* A sudden-death winner is level on the scoreboard it is standing over, so saying
        "final score 4" above two teams on 4 reads like a mistake. Name what decided it. */
     sub.textContent = sdWin

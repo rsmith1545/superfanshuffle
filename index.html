@@ -2453,9 +2453,14 @@ function openBattle(id){
     +'Think you\u2019re the biggest SuperFan here? Time to prove it.';
   var art=document.getElementById('btArt'), aim=document.getElementById('btArtImg');
   if(art&&aim){ art.classList.remove('on');
+    /* Edition art first, generic second. The lance is edition-specific - a guitar in
+       Music, a boom mic in Stage & Screen - so a world gets its own joust whenever its
+       picture is drawn, and anything without one still has a sheet with art on it. */
+    var _ed=(v.playAs||v.edition||'music');
+    var cands=['bt-joust-'+_ed+'.jpg','bt-joust.jpg'], ci=0;
     aim.onload=function(){ art.classList.add('on'); };
-    aim.onerror=function(){ art.classList.remove('on'); };
-    aim.src='bt-joust.jpg?v='+SFSBUILD; }
+    aim.onerror=function(){ ci++; if(ci<cands.length){ aim.src=cands[ci]+'?v='+SFSBUILD; return; } art.classList.remove('on'); };
+    aim.src=cands[0]+'?v='+SFSBUILD; }
   btSync();
   var ov=document.getElementById('btOv'); if(!ov) return;
   document.getElementById('btCancel').onclick=closeBattle;
