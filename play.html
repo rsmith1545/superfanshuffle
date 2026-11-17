@@ -133,9 +133,29 @@
 #btPill i{width:2.1vmin;height:2.1vmin;border-radius:50%;background:var(--btc,#fff);flex:0 0 auto}
 #app.battle #btPill{display:flex}
 #app.fbon #btPill{opacity:0;transition:opacity .12s ease}
+/* The board stands in the same arena the setup sheet does. Blurred at BUILD time into
+   bt-bg.jpg rather than with a runtime filter, for the reasons the res-music note below
+   spells out - a pseudo-element failed twice there and a pre-blurred file has neither
+   problem. 13KB.
+   Stretched to portrait rather than cropped: a centre crop of a 3:2 picture on a phone
+   shows the middle 30%, which here is arena floor, and throws away the magenta on the
+   left and the cyan on the right - the only two colours that make it read as a joust.
+   At this blur radius the vertical scale is invisible and the colour spread survives.
+   Heavy blur, low brightness on purpose: measured worst-case contrast against white is
+   10.9:1, because this is a scoreboard and the picture is there to give it somewhere to
+   stand, not to be looked at. ?v=1 is safe only while the file is never replaced - a new
+   one needs a new query, since sw.js caches art cache-first and never revalidates. */
 #sBattle{--u:clamp(2.3px, min(1.05vw, 0.5vh), 5.9px);
+  background:#0b0714 url('bt-bg.jpg?v=1') center/cover no-repeat;
+  /* #app carries 24px of padding and .screen sits inside it, so a background on this
+     element stopped 24px short of the card on all four sides and left a frame of the
+     app's own diagonal purple around the arena. Bleeding over that padding puts the
+     picture edge to edge; #app is overflow:hidden with a 40px radius, so the spill
+     clips to the card exactly. The padding below takes those 24px back as inset. */
+  margin:-24px;width:calc(100% + 48px);height:calc(100% + 48px);
   justify-content:safe center;overflow-y:auto;-webkit-overflow-scrolling:touch;gap:calc(2*var(--u));
-  padding:calc(4*var(--u)) calc(4*var(--u)) calc(4*var(--u) + env(safe-area-inset-bottom,0px))}
+  padding:calc(4*var(--u) + 24px) calc(4*var(--u) + 24px)
+          calc(4*var(--u) + 24px + env(safe-area-inset-bottom,0px))}
 #sBattle .bsHd{font-family:var(--disp);font-size:calc(10.5*var(--u));line-height:.95;color:#fff;text-align:center}
 #sBattle .bsSub{font-family:var(--body);font-size:calc(3.9*var(--u));line-height:1.35;
   color:rgba(255,255,255,.62);text-align:center;max-width:calc(84*var(--u))}
