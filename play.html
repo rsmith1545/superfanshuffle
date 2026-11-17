@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SuperFan Shuffle">
 <meta name="theme-color" content="#000000">
-<meta name="sfs-build" content="v394"><!-- play.html had NO version marker; you could not tell which build a phone was running -->
+<meta name="sfs-build" content="v431"><!-- keep in step with SFSBUILD below: applyCardArt() keys every card plate on THIS tag, and sw.js caches art cache-first, so a stale marker means a replaced plate never reaches a phone that already has one -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon-v2.png">
 <title>SuperFan Shuffle — Tilt Test</title>
@@ -1652,7 +1652,15 @@ function btRow(i,opt){
 function btBoard(){
   var hd=document.getElementById('bsHd'), sub=document.getElementById('bsSub'),
       list=document.getElementById('bsList'), act=document.getElementById('bsActions');
-  app.classList.remove('battle');
+  /* The board inherits #app from whatever ran last, and at boot that is the Quick Play
+     Guide, which leaves qpgapp plus the vault's CARD plate behind hasart/inked. A card
+     plate is drawn to sit behind one word in huge type; standings rows and a paragraph
+     of copy fight it. startGame() re-applies all of this through applyCardArt(), so
+     clearing it here costs the round nothing. */
+  app.classList.remove('battle','hasart','inked','lightart','qpgapp','sportcard','filmcard');
+  app.style.removeProperty('background-image');
+  app.style.removeProperty('--cardoutline');
+  app.style.removeProperty('--cardink');
   show('sBattle');
   var leaders=btLeaders();
   /* --- sudden death in progress --- */
@@ -1947,6 +1955,12 @@ function applyCardArt(){
   var url='card-'+VAULT_ID+'.jpg?v='+encodeURIComponent(_b);
   var im=new Image();
   im.onload=function(){
+    /* The battle board can own the screen by the time this lands: the Quick Play Guide
+       starts this preload at boot and the decode finishes after btBoard() has run. A
+       card plate is drawn to sit behind one word in huge type and fights a scoreboard.
+       startGame() calls applyCardArt() again for the round, so skipping costs nothing. */
+    var _bb=document.getElementById('sBattle');
+    if(_bb && _bb.classList.contains('on')) return;
     app.style.backgroundImage='url("'+url+'")';
     app.classList.add('hasart');
     var t=ART_TYPE[VAULT_ID]||{};
@@ -2926,7 +2940,9 @@ function renderQPG(){
     re-add 'on' unconditionally, leaving the Quick Play Guide live underneath the
     scoreboard - invisible, but a second screen holding the start button. */
  st.className='screen'+(BATTLE?'':' on')+' qpgmode';
- try{ document.getElementById('app').classList.add('qpgapp'); }catch(e){}
+ /* Same reason as the className above: a battle never shows the guide, and qpgapp
+    restyles #app underneath the board. */
+ try{ if(!BATTLE) document.getElementById('app').classList.add('qpgapp'); }catch(e){}
  try{ st.style.setProperty('--qglow', hexA(acc,.20)); }catch(e){}
  st.innerHTML='<div class="qpg '+(CFG.cls||'')+'" style="--qo:'+acc+';--qink:'+qpgInk(acc)+';--qb:'+qpgSecond()+'">'
   +'<div class="qpgBack" id="qpgBack" role="button" aria-label="Back">&#8249;</div>'
