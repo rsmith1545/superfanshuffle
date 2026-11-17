@@ -640,8 +640,16 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
               0 calc(.5*var(--u)) 0 rgba(0,0,0,.35)}
 .btX{background:none;border:0;color:rgba(255,255,255,.6);font-size:calc(5*var(--u));
   cursor:pointer;padding:calc(1.5*var(--u)) calc(2*var(--u));line-height:1}
-.btVault{font-family:var(--body);font-size:calc(3.9*var(--u));font-weight:700;
-  color:rgba(255,255,255,.62);text-align:center;flex:0 0 auto}
+/* The vault is what the room is actually fighting over, so it carries the display
+   face at a size that reads from the second rank - below TEAM BATTLE, well above the
+   deck tier, which is a qualifier and stays a qualifier. */
+.btVault{text-align:center;flex:0 0 auto;margin-top:calc(.4*var(--u))}
+.btVault b{display:block;font-family:var(--disp);font-size:calc(6.4*var(--u));font-weight:400;
+  letter-spacing:.4px;line-height:1.02;color:#fff;
+  text-shadow:0 0 calc(2.4*var(--u)) rgba(176,106,255,.45)}
+.btVault span{display:block;font-family:var(--body);font-size:calc(3.2*var(--u));font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);
+  margin-top:calc(.7*var(--u))}
 /* Top-aligned, not centred. This is a form, and a centred form on a tall phone
    leaves the controls floating in the middle with the title stranded above them.
    Quick Start centres because it is a picture and a sentence; this reads top-down. */
@@ -665,7 +673,10 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 24%,#000 88%,transparent 100%);
           mask-image:linear-gradient(180deg,transparent 0,#000 24%,#000 88%,transparent 100%)}
 .btArt.on{display:flex}
-.btArt img{width:100%;max-width:none;max-height:calc(58*var(--u));
+/* 52, not 58: the vault name's own line and its tier added about forty pixels of
+   content, and the art is the only element that can give that back without a control
+   shrinking. A 430x932 and a 360x800 both ran 12px over at 58. */
+.btArt img{width:100%;max-width:none;max-height:calc(52*var(--u));
   height:auto;object-fit:cover;display:block}
 .btSeg{display:flex;gap:calc(1.8*var(--u))}
 /* Rounds is a stepper rather than five buttons: it is the control people already know
@@ -699,6 +710,14 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
   background:var(--tc);flex:0 0 auto;box-shadow:0 0 calc(2.4*var(--u)) var(--tc)}
 .btTeam span{font-family:var(--disp);font-size:calc(4*var(--u));letter-spacing:.4px;
   color:#fff;line-height:1.05}
+/* Short screens only. The bigger vault line pushed a 4-team sheet 13px past the box
+   on a 320x568, and the art is the thing that can give that back without any control
+   getting smaller. Everything above 640px tall is untouched. */
+@media (max-height:640px){
+  .btArt img{max-height:calc(48*var(--u))}
+  .btVault b{font-size:calc(5.8*var(--u))}
+  .btPitch{margin-top:calc(.4*var(--u))}
+}
 .btNote{font-family:var(--body);font-size:calc(3.4*var(--u));line-height:1.4;
   color:rgba(255,255,255,.55);text-align:center;margin:calc(2.6*var(--u)) 0 0}
 .btGo{flex:0 0 auto;margin-top:calc(2.4*var(--u));border:0;border-radius:calc(3.4*var(--u));
@@ -2424,7 +2443,8 @@ function openBattle(id){
   if(!isOwned(id)){ toast('Team Battle needs the full vault'); return; }
   BT_VID=id; BT_N=2; BT_R=3;
   var hv=document.getElementById('btVault');
-  if(hv) hv.textContent=vTitle(v)+' · '+(HASDLX[v.id]?(V5ED||'Standard')+' deck':'Full deck');
+  if(hv) hv.innerHTML='<b>'+vTitle(v)+'</b><span>'
+    +(HASDLX[v.id]?(V5ED||'Standard')+' deck':'Full deck')+'</span>';
   /* vTitle() carries the shelf suffix ("Taylor Swift Trivia"), which reads wrong inside
      a sentence - the room is a superfan OF Taylor Swift, not of a trivia deck. */
   var subj=vTitle(v).replace(/\s+Trivia$/i,'');
