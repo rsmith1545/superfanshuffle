@@ -2922,7 +2922,10 @@ function renderQPG(){
  var clues=''; for(var i=0;i<CL.length;i++){ if(i)clues+='<div class="qcdiv"></div>';
   clues+='<div class="qclue"><div class="qci qb">'+qpgIco(CL[i][0])+'</div><b>'+CL[i][1]+'</b></div>'; }
  var acc=qpgAccent();
- st.className='screen on qpgmode';
+ /* A battle boots straight onto its own board. renderQPG runs after that and used to
+    re-add 'on' unconditionally, leaving the Quick Play Guide live underneath the
+    scoreboard - invisible, but a second screen holding the start button. */
+ st.className='screen'+(BATTLE?'':' on')+' qpgmode';
  try{ document.getElementById('app').classList.add('qpgapp'); }catch(e){}
  try{ st.style.setProperty('--qglow', hexA(acc,.20)); }catch(e){}
  st.innerHTML='<div class="qpg '+(CFG.cls||'')+'" style="--qo:'+acc+';--qink:'+qpgInk(acc)+';--qb:'+qpgSecond()+'">'
