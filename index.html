@@ -647,7 +647,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .btArt{display:none;flex:0 1 auto;min-height:0;justify-content:center;width:100%;
   margin-top:calc(2*var(--u))}
 .btArt.on{display:flex}
-.btArt img{width:100%;max-width:calc(80*var(--u));max-height:calc(42*var(--u));
+.btArt img{width:100%;max-width:calc(80*var(--u));max-height:calc(52*var(--u));
   height:auto;object-fit:contain;border-radius:calc(2.8*var(--u));display:block}
 .btSeg{display:flex;gap:calc(1.8*var(--u))}
 /* Rounds is a stepper rather than five buttons: it is the control people already know
@@ -1440,7 +1440,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v430';
+var SFSBUILD='v431';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
