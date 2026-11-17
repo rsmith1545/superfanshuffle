@@ -188,7 +188,13 @@
 .bsWin.on{display:flex}
 .bsWin img{width:auto;max-width:calc(58*var(--u));max-height:calc(46*var(--u));
   height:100%;object-fit:contain;display:block;
-  filter:drop-shadow(0 0 calc(3.4*var(--u)) var(--tc,#fff))}
+  /* The plate's own arena and the board's blurred arena are the same place, so a hard
+     rectangle between them reads as a photo pasted on a screen - the same thing that
+     was wrong with the setup art before its edges were dissolved. The ellipse is set
+     wide and high enough to leave the rider and the raised weapon untouched; only the
+     corners and the plate's own edges go. */
+  -webkit-mask-image:radial-gradient(ellipse 84% 64% at 50% 50%,#000 46%,rgba(0,0,0,0) 100%);
+          mask-image:radial-gradient(ellipse 84% 64% at 50% 50%,#000 46%,rgba(0,0,0,0) 100%)}
 /* The winning team's name wears its own colour. It was white, which made the one screen
    in the mode that belongs to a single team look like every other screen. */
 .bsWinName{color:var(--tc,#fff);text-shadow:0 0 calc(2.6*var(--u)) var(--tc,#fff)}
