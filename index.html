@@ -721,6 +721,9 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
   /* Built on first view of panel 3, not at init: this script runs well above the
      EDITIONS table, so at init the var is hoisted but still undefined and the grid
      came out empty. Deferring also means a world toggled off after load is honoured. */
+  /* A replay opened from the footer ends on "Got it", not "Start Playing": the player
+     is already standing in the store, so there is nothing for that button to start. */
+  var replay=false;
   var edsBuilt=false;
   function buildEds(){
     if(edsBuilt) return;
@@ -754,7 +757,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
     panels.forEach(function(p,k){ p.classList.toggle('cur',k===i); });
     [].forEach.call(dots.children,function(d,k){ d.classList.toggle('on',k===i); });
     back.disabled = (i===0);
-    next.textContent = (i===panels.length-1) ? 'Start Playing' : 'Next';
+    next.textContent = (i===panels.length-1) ? (replay?'Got it':'Start Playing') : 'Next';
     if(i===2) revealLines(!matchMedia('(prefers-reduced-motion: reduce)').matches);
     else settleLines();
   }
@@ -767,8 +770,8 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
      here: a tap meant to hit Next would close the whole thing from anywhere on screen. */
   ov.addEventListener('click',function(e){ if(e.target===ov) done(); });
 
-  window.__startIntro=function(){ show(0); ov.classList.add('on'); };
-  window.__startHowTo=function(){ show(0); ov.classList.add('on'); };
+  window.__startIntro=function(){ replay=false; show(0); ov.classList.add('on'); };
+  window.__startHowTo=function(){ replay=true;  show(0); ov.classList.add('on'); };
 })();
 </script>
 <div id="floorbg"><div class="floorL" id="floor0"></div><div class="floorL" id="floor1"></div></div>
@@ -1448,9 +1451,15 @@ function renderMiniTabs(){
  var el=document.getElementById('miniTabs'); if(!el) return;
  el.innerHTML=EDITIONS.filter(editionVisible).map(function(e){return '<button class="'+(e.id===curEdition?'on':'')+'" onclick="setEditionFromBar(\''+e.id+'\')">'+e.label+'</button>';}).join('');
 }
+/* The Quick Start replay entry. window.__startHowTo has existed since the carousel
+   landed but nothing ever called it, so a player who skipped Quick Start on day one -
+   or anyone whose browser already had sfs_seenIntro set before the carousel shipped -
+   had no way back to it at all. The footer is where people look for help, and the
+   button is already styled by .legal-footer button. */
+function howToPlay(){ if(window.__startHowTo) window.__startHowTo(); }
 function legalFooterHTML(){
  return '<footer class="legal-footer">SuperFan Shuffle is an independent fan-trivia game and is not affiliated with or endorsed by any featured artist, label, studio, league or rights holder.'
-  +'<span class="links">© 2026 SuperFan Shuffle · <button onclick="openLegal()">Legal &amp; Credits</button></span></footer>';
+  +'<span class="links">© 2026 SuperFan Shuffle · <button onclick="howToPlay()">How to Play</button> · <button onclick="openLegal()">Legal &amp; Credits</button></span></footer>';
 }
 /* Legal & Credits.
    openLegal() is referenced from the footer and from the legal line on both vault
