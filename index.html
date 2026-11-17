@@ -543,10 +543,10 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
      5-question trial has nothing to give four teams. -->
 <div id="btOv" aria-label="Team Battle setup">
   <div class="btHd"><div class="btTitle">Team Battle</div><button class="btX" id="btCancel" type="button" aria-label="Cancel">&#10005;</button></div>
-  <div class="btVault" id="btVault"></div>
+  <div class="btArt" id="btArt"><img id="btArtImg" alt=""></div>
   <div class="btBody">
+    <div class="btVault" id="btVault"></div>
     <p class="btPitch" id="btPitch"></p>
-    <div class="btArt" id="btArt"><img id="btArtImg" alt=""></div>
     <div class="btLab">Teams</div>
     <div class="btSeg" id="btTeams"></div>
     <div class="btLab">Rounds per team</div>
@@ -618,37 +618,55 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
    Same scale-unit trick as Quick Start and the unlock wall: every size is a multiple
    of --u, so the sheet grows and shrinks as one piece instead of font sizes answering
    to width while the binding constraint is height. */
-#btOv{position:fixed;inset:0;z-index:100001;background:#0b0714;display:none;
+/* The sheet is lit by its own picture. These three stops are measured off
+   bt-joust.jpg - the arena behind the jousters is #863DB5, its top-left corner #661C73
+   and its top-right #3D207B - darkened until the controls still read against them. The
+   haze is strongest at the top, where the title and the art sit, and gone by the time
+   it reaches Start. */
+#btOv{position:fixed;inset:0;z-index:100001;display:none;
+  background:
+    radial-gradient(125% 62% at 50% 4%, rgba(134,61,181,.58) 0%, rgba(102,28,115,.26) 42%, rgba(11,7,20,0) 74%),
+    linear-gradient(180deg, #2B1240 0%, #1C0D2D 44%, #0B0714 100%);
   --u:clamp(2.2px, min(1.05vw, 0.5vh), 5.6px);
   flex-direction:column;
   padding:calc(3*var(--u) + env(safe-area-inset-top,0px)) calc(4.5*var(--u))
           calc(4*var(--u) + env(safe-area-inset-bottom,0px))}
 #btOv.on{display:flex}
 .btHd{display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
-.btTitle{font-family:var(--disp);font-size:calc(8*var(--u));letter-spacing:.5px;color:#fff}
+/* Arena signage, not a page heading: the same magenta the banners in the picture
+   are lit with, so the words read as part of the scene standing just above it. */
+.btTitle{font-family:var(--disp);font-size:calc(8.6*var(--u));letter-spacing:.5px;color:#fff;
+  text-shadow:0 0 calc(2*var(--u)) rgba(255,46,176,.8), 0 0 calc(5.5*var(--u)) rgba(176,106,255,.55),
+              0 calc(.5*var(--u)) 0 rgba(0,0,0,.35)}
 .btX{background:none;border:0;color:rgba(255,255,255,.6);font-size:calc(5*var(--u));
   cursor:pointer;padding:calc(1.5*var(--u)) calc(2*var(--u));line-height:1}
 .btVault{font-family:var(--body);font-size:calc(3.9*var(--u));font-weight:700;
-  color:rgba(255,255,255,.62);margin-top:calc(.4*var(--u));flex:0 0 auto}
+  color:rgba(255,255,255,.62);text-align:center;flex:0 0 auto}
 /* Top-aligned, not centred. This is a form, and a centred form on a tall phone
    leaves the controls floating in the middle with the title stranded above them.
    Quick Start centres because it is a picture and a sentence; this reads top-down. */
 .btBody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
   justify-content:flex-start;gap:calc(1.4*var(--u));
-  padding-top:calc(3.5*var(--u));overflow-y:auto;-webkit-overflow-scrolling:touch}
+  padding-top:calc(.6*var(--u));overflow-y:auto;-webkit-overflow-scrolling:touch}
 .btLab{font-family:var(--disp);font-size:calc(4.4*var(--u));letter-spacing:.14em;
   text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:calc(2*var(--u))}
 .btPitch{font-family:var(--body);font-size:calc(3.9*var(--u));line-height:1.4;
-  color:rgba(255,255,255,.80);text-align:center;margin:calc(1.4*var(--u)) 0 0;
+  color:rgba(255,255,255,.80);text-align:center;margin:calc(1*var(--u)) 0 0;
   padding:0 calc(1*var(--u))}
 .btPitch b{color:#fff}
 /* The art is optional: the slot stays empty and collapses if bt-joust.jpg is not
    there, so the sheet is correct before the picture exists and better after. */
-.btArt{display:none;flex:0 1 auto;min-height:0;justify-content:center;width:100%;
-  margin-top:calc(2*var(--u))}
+/* Full bleed, with both edges masked away. A hard rectangle sitting on the gradient
+   reads as a picture pasted onto a screen; dissolving the top into the same haze the
+   title is standing in is what makes the two look like one thing. The negative margin
+   cancels the overlay's own side padding. */
+.btArt{display:none;flex:0 1 auto;min-height:0;justify-content:center;
+  width:calc(100% + 9*var(--u));margin:calc(.4*var(--u)) calc(-4.5*var(--u)) 0;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 24%,#000 88%,transparent 100%);
+          mask-image:linear-gradient(180deg,transparent 0,#000 24%,#000 88%,transparent 100%)}
 .btArt.on{display:flex}
-.btArt img{width:100%;max-width:calc(80*var(--u));max-height:calc(52*var(--u));
-  height:auto;object-fit:contain;border-radius:calc(2.8*var(--u));display:block}
+.btArt img{width:100%;max-width:none;max-height:calc(58*var(--u));
+  height:auto;object-fit:cover;display:block}
 .btSeg{display:flex;gap:calc(1.8*var(--u))}
 /* Rounds is a stepper rather than five buttons: it is the control people already know
    from this kind of game, and it keeps its footprint when the range grows. */
