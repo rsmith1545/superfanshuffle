@@ -539,6 +539,21 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
     <button class="qsBtn next" id="qsNext" type="button">Next</button>
   </div>
 </div>
+<!-- TEAM BATTLE setup. Owned vaults only: a battle needs a real pool, and the
+     5-question trial has nothing to give four teams. -->
+<div id="btOv" aria-label="Team Battle setup">
+  <div class="btHd"><div class="btTitle">Team Battle</div><button class="btX" id="btCancel" type="button" aria-label="Cancel">&#10005;</button></div>
+  <div class="btVault" id="btVault"></div>
+  <div class="btBody">
+    <div class="btLab">Teams</div>
+    <div class="btSeg" id="btTeams"></div>
+    <div class="btLab">Rounds each</div>
+    <div class="btSeg" id="btRounds"></div>
+    <div class="btRoster" id="btRoster"></div>
+    <p class="btNote" id="btNote"></p>
+  </div>
+  <button class="btGo" id="btGo" type="button">Start Battle</button>
+</div>
 <style>
 #introOv{position:fixed;inset:0;z-index:100000;background:#0b0714;display:none}
 #introOv.on{display:block}
@@ -597,6 +612,60 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .qsBtn.back[disabled]{opacity:.32}
 .qsBtn.next{border:0;background:linear-gradient(90deg,#ff2eb0,#b06aff);color:#fff;
   box-shadow:0 0 calc(4*var(--u)) rgba(255,46,176,.5)}
+/* ===== Team Battle setup =====
+   Same scale-unit trick as Quick Start and the unlock wall: every size is a multiple
+   of --u, so the sheet grows and shrinks as one piece instead of font sizes answering
+   to width while the binding constraint is height. */
+#btOv{position:fixed;inset:0;z-index:100001;background:#0b0714;display:none;
+  --u:clamp(2.2px, min(1.05vw, 0.5vh), 5.6px);
+  flex-direction:column;
+  padding:calc(3*var(--u) + env(safe-area-inset-top,0px)) calc(4.5*var(--u))
+          calc(4*var(--u) + env(safe-area-inset-bottom,0px))}
+#btOv.on{display:flex}
+.btHd{display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+.btTitle{font-family:var(--disp);font-size:calc(8*var(--u));letter-spacing:.5px;color:#fff}
+.btX{background:none;border:0;color:rgba(255,255,255,.6);font-size:calc(5*var(--u));
+  cursor:pointer;padding:calc(1.5*var(--u)) calc(2*var(--u));line-height:1}
+.btVault{font-family:var(--body);font-size:calc(3.9*var(--u));font-weight:700;
+  color:rgba(255,255,255,.62);margin-top:calc(.4*var(--u));flex:0 0 auto}
+/* Top-aligned, not centred. This is a form, and a centred form on a tall phone
+   leaves the controls floating in the middle with the title stranded above them.
+   Quick Start centres because it is a picture and a sentence; this reads top-down. */
+.btBody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
+  justify-content:flex-start;gap:calc(1.4*var(--u));
+  padding-top:calc(3.5*var(--u));overflow-y:auto;-webkit-overflow-scrolling:touch}
+.btLab{font-family:var(--disp);font-size:calc(4.4*var(--u));letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:calc(2*var(--u))}
+.btSeg{display:flex;gap:calc(1.8*var(--u))}
+.btSeg button{flex:1 1 0;font-family:var(--disp);font-size:calc(5.4*var(--u));
+  padding:calc(2.6*var(--u)) 0;border-radius:calc(2.6*var(--u));cursor:pointer;
+  color:rgba(255,255,255,.72);background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(255,255,255,.17);transition:border-color .15s,color .15s,background .15s}
+.btSeg button.on{color:#fff;background:rgba(255,255,255,.1);border-color:#FF2EB0;
+  box-shadow:0 0 calc(3*var(--u)) rgba(255,46,176,.45)}
+/* The roster is the answer to "who am I playing as" before anyone commits, and it is
+   the only place the four colours appear together - so it doubles as the check that
+   none of them reads as an edition tag. */
+.btRoster{display:grid;grid-template-columns:1fr 1fr;gap:calc(1.6*var(--u));
+  margin-top:calc(2.4*var(--u))}
+.btTeam{display:flex;align-items:center;gap:calc(1.8*var(--u));
+  border:1px solid var(--tc);border-radius:calc(2.6*var(--u));
+  padding:calc(2*var(--u)) calc(2.2*var(--u));background:rgba(255,255,255,.04)}
+.btDot{width:calc(3.4*var(--u));height:calc(3.4*var(--u));border-radius:50%;
+  background:var(--tc);flex:0 0 auto;box-shadow:0 0 calc(2.4*var(--u)) var(--tc)}
+.btTeam span{font-family:var(--disp);font-size:calc(4*var(--u));letter-spacing:.4px;
+  color:#fff;line-height:1.05}
+.btNote{font-family:var(--body);font-size:calc(3.4*var(--u));line-height:1.4;
+  color:rgba(255,255,255,.55);text-align:center;margin:calc(2.6*var(--u)) 0 0}
+.btGo{flex:0 0 auto;margin-top:calc(2.4*var(--u));border:0;border-radius:calc(3.4*var(--u));
+  padding:calc(3.4*var(--u)) 0;cursor:pointer;font-family:var(--disp);
+  font-size:calc(5.4*var(--u));letter-spacing:.6px;color:#fff;
+  background:linear-gradient(90deg,#ff2eb0,#b06aff);
+  box-shadow:0 0 calc(4*var(--u)) rgba(255,46,176,.5)}
+/* The battle entry on the vault sheet. Owned vaults only - see ctaHTML. */
+.v5battle{display:block;width:100%;margin-top:9px;border-radius:14px;cursor:pointer;
+  font-family:var(--disp);font-size:15px;letter-spacing:.7px;padding:11px 0;
+  color:#ffd9ec;background:rgba(255,46,176,.10);border:1.5px solid rgba(255,46,176,.55)}
 .hpTwo .hpHd{display:flex;align-items:flex-start;gap:10px;padding-left:0}
 .hpTwo .hpHd .hpIc{position:static;top:auto;transform:none;flex:0 0 38px}
 .hpTwo .hpStack>p{padding-left:48px}
@@ -2256,12 +2325,77 @@ function ctaHTML(v,subTxt){
      someone opens the drawer. */
   if(isOwned(v.id))
     return '<button class="v5play" onclick="tryFree(\''+v.id+'\')"><span class="v5big">\u25b6 PLAY</span>'+sub+'</button>'
+         + '<button class="v5battle" onclick="openBattle(\''+v.id+'\')">\u2694 TEAM BATTLE</button>'
          + '<div class="v5owned">\u2713 Already owned</div>';
   return '<button class="v5play" onclick="buy(\''+v.id+'\')"><span class="v5big">UNLOCK \u00b7 '+SFSPRICE+'</span>'+sub+'</button>'
        + '<button class="v5try" onclick="tryFree(\''+v.id+'\')">Try 5 free questions \u203a</button>';
 }
 function tryFree(id){ var v=byId(id); if(!v) return; try{var _lp=JSON.parse(localStorage.getItem('sfs_lp')||'{}');_lp[id]=Date.now();localStorage.setItem('sfs_lp',JSON.stringify(_lp));}catch(e){} var u=launchURL(v); if(isOwned(id)) u+='&mode=full'; location.href=u; }
 function buy(id){ var v=byId(id); toast('Checkout: '+(v?v.name:'vault')+' · '+SFSPRICE+' — payments not wired yet'); }
+
+/* ===== TEAM BATTLE setup =====
+   Pass-the-phone, one device, no network - the teams are in the same room. Entry is
+   from the vault sheet, so the deck and the tier are already chosen and this screen
+   never asks again: two controls, both pre-answered, Start reachable without a tap.
+
+   Colours are deliberately more saturated than the four edition accents (music
+   #3EDBFF, film #F2C14E, sports #FF8A2A, family #3DD68C) so a team pill in the HUD
+   can never be mistaken for an edition tag - the nearest pair is Yellow against film
+   gold, and #FFD400 against #F2C14E is pure against muted. */
+var BT_TEAMS=[
+ {key:'red',    name:'Red SuperFan',    c:'#FF3B4E'},
+ {key:'blue',   name:'Blue SuperFan',   c:'#3B82F6'},
+ {key:'yellow', name:'Yellow SuperFan', c:'#FFD400'},
+ {key:'green',  name:'Green SuperFan',  c:'#00C853'}
+];
+var BT_N=2, BT_R=3, BT_VID='';
+function btSetTeams(n){ BT_N=n; btSync(); }
+function btSetRounds(n){ BT_R=n; btSync(); }
+function btSync(){
+  var seg=function(id,vals,cur,fn){
+    var el=document.getElementById(id); if(!el) return;
+    el.innerHTML=vals.map(function(n){
+      return '<button type="button" class="'+(n===cur?'on':'')+'" onclick="'+fn+'('+n+')">'+n+'</button>';
+    }).join('');
+  };
+  seg('btTeams',[2,3,4],BT_N,'btSetTeams');
+  seg('btRounds',[1,2,3,4,5],BT_R,'btSetRounds');
+  var r=document.getElementById('btRoster');
+  if(r) r.innerHTML=BT_TEAMS.slice(0,BT_N).map(function(t){
+    return '<div class="btTeam" style="--tc:'+t.c+'"><i class="btDot"></i><span>'+t.name+'</span></div>';
+  }).join('');
+  var turns=BT_N*BT_R, note=document.getElementById('btNote');
+  /* A turn is one 60-second round plus the handoff, which lands near 75s in practice.
+     Stated as a range rather than a figure because the handoff is a room, not a timer. */
+  if(note) note.innerHTML=turns+' turns · roughly '+Math.max(2,Math.round(turns*1.1))+'–'
+    +Math.round(turns*1.5)+' minutes.<br>One shuffled deck for the whole battle, so no card comes back.';
+}
+function openBattle(id){
+  var v=byId(id); if(!v) return;
+  if(!isOwned(id)){ toast('Team Battle needs the full vault'); return; }
+  BT_VID=id; BT_N=2; BT_R=3;
+  var hv=document.getElementById('btVault');
+  if(hv) hv.textContent=vTitle(v)+' · '+(HASDLX[v.id]?(V5ED||'Standard')+' deck':'Full deck');
+  btSync();
+  var ov=document.getElementById('btOv'); if(!ov) return;
+  document.getElementById('btCancel').onclick=closeBattle;
+  document.getElementById('btGo').onclick=startBattle;
+  ov.classList.add('on');
+}
+function closeBattle(){ var ov=document.getElementById('btOv'); if(ov) ov.classList.remove('on'); }
+function startBattle(){
+  var v=byId(BT_VID); if(!v) return;
+  /* order and cursor are filled in by play.html on the first turn: the deck lives
+     there, and building the pool twice is how two teams end up seeing one card. */
+  var st={ v:1, vault:v.id, n:vTitle(v), ed:(v.playAs||v.edition||'music'),
+           edition:(V5ED||'Standard'), rounds:BT_R, turn:0, cursor:0, order:null, sd:0,
+           teams:BT_TEAMS.slice(0,BT_N).map(function(t){
+             return {key:t.key,name:t.name,c:t.c,score:0}; }) };
+  try{ sessionStorage.setItem('sfs_battle',JSON.stringify(st)); }
+  catch(e){ toast('This browser will not keep the battle — try without private mode'); return; }
+  closeBattle();
+  location.href=launchURL(v)+'&mode=full&battle=1';
+}
 var tHandle;
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(tHandle);tHandle=setTimeout(function(){t.classList.remove('on');},2400);}
 /* Was: close only when the tap landed exactly on #ov. But .flipwrap is ~120px taller

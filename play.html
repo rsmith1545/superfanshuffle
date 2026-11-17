@@ -110,6 +110,45 @@
 /* the answer is not the message any more - the verdict is */
 #app.fbon #card{opacity:.12;transition:opacity .12s ease}
 #app.fbon #cardType{opacity:0;transition:opacity .12s ease}
+/* ===== Team Battle =====
+   The pill answers "who am I playing for" to a person holding the phone against their
+   forehead, so it sits bottom-centre under the timer rather than in a corner where the
+   hand covers it. It carries its own dark ground for the same reason #cardType does:
+   it has to survive 118 card plates, some pale and some near-black. */
+#btPill{position:absolute;left:50%;bottom:3.2vmin;transform:translateX(-50%);display:none;
+  align-items:center;gap:1.6vmin;font-family:var(--disp);font-size:3.3vmin;letter-spacing:.12em;
+  text-transform:uppercase;color:#fff;background:rgba(6,4,12,.74);white-space:nowrap;z-index:5;
+  border:1.5px solid var(--btc,#fff);border-radius:999px;padding:.9vmin 2.6vmin .7vmin;
+  box-shadow:0 0 2.6vmin -.8vmin var(--btc,#fff)}
+#btPill i{width:2.1vmin;height:2.1vmin;border-radius:50%;background:var(--btc,#fff);flex:0 0 auto}
+#app.battle #btPill{display:flex}
+#app.fbon #btPill{opacity:0;transition:opacity .12s ease}
+#sBattle{--u:clamp(2.3px, min(1.05vw, 0.5vh), 5.9px);
+  justify-content:safe center;overflow-y:auto;-webkit-overflow-scrolling:touch;gap:calc(2*var(--u));
+  padding:calc(4*var(--u)) calc(4*var(--u)) calc(4*var(--u) + env(safe-area-inset-bottom,0px))}
+#sBattle .bsHd{font-family:var(--disp);font-size:calc(10.5*var(--u));line-height:.95;color:#fff;text-align:center}
+#sBattle .bsSub{font-family:var(--body);font-size:calc(3.9*var(--u));line-height:1.35;
+  color:rgba(255,255,255,.62);text-align:center;max-width:calc(84*var(--u))}
+#sBattle .bsList{display:flex;flex-direction:column;gap:calc(1.5*var(--u));width:100%;
+  max-width:calc(86*var(--u));margin-top:calc(1.4*var(--u))}
+.bsRow{display:flex;align-items:center;gap:calc(2*var(--u));
+  border:1.5px solid var(--tc);border-radius:calc(2.8*var(--u));
+  padding:calc(2.1*var(--u)) calc(2.6*var(--u));background:rgba(255,255,255,.04)}
+.bsRow.lead{background:color-mix(in srgb,var(--tc) 17%,transparent)}
+.bsRow.up{box-shadow:0 0 calc(3.4*var(--u)) -.6px var(--tc)}
+.bsRow i{width:calc(3.2*var(--u));height:calc(3.2*var(--u));border-radius:50%;background:var(--tc);flex:0 0 auto}
+.bsRow b{font-family:var(--disp);font-size:calc(4.4*var(--u));letter-spacing:.4px;color:#fff;
+  font-weight:400;flex:1 1 auto;text-align:left;line-height:1.05}
+.bsRow u{font-family:var(--disp);font-size:calc(6.4*var(--u));color:#fff;text-decoration:none;flex:0 0 auto}
+.bsRow em{font-family:var(--body);font-size:calc(3.1*var(--u));font-style:normal;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--tc);flex:0 0 auto}
+#sBattle .bsActions{display:flex;flex-direction:column;gap:calc(1.8*var(--u));width:100%;
+  max-width:calc(86*var(--u));margin-top:calc(2.4*var(--u))}
+.bsBtn{border:0;border-radius:calc(3.2*var(--u));padding:calc(3.3*var(--u)) calc(3*var(--u));cursor:pointer;
+  font-family:var(--disp);font-size:calc(5.2*var(--u));letter-spacing:.6px;color:#fff;
+  background:linear-gradient(90deg,#ff2eb0,#b06aff);box-shadow:0 0 calc(4*var(--u)) rgba(255,46,176,.45)}
+.bsBtn.ghost{background:none;border:1.5px solid rgba(255,255,255,.3);color:rgba(255,255,255,.82);box-shadow:none}
+.bsBtn.team{background:var(--tc);color:#120a18;box-shadow:0 0 calc(4*var(--u)) -.5px var(--tc)}
 .fbGlyph.correct{color:#35E27F}.fbGlyph.pass{color:#FF9D2E}.fbGlyph.timeup{color:#fff}
 .fbWord{font-family:var(--disp);font-size:16vmin;letter-spacing:4px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45)}
 @keyframes fbpop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.14);opacity:1}100%{transform:scale(1)}}
@@ -1131,6 +1170,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
     <div id="score">0</div>
     <div id="card">—</div>
     <div id="timer">1:00</div>
+    <div id="btPill" aria-hidden="true"></div>
     <div id="fb"><div class="fbGlyph" id="fbGlyph"></div><div class="fbWord" id="fbWord"></div></div>
   </div>
   <div id="quitBack" aria-hidden="true"><div class="qbBolt"><svg viewBox="0 0 48 76" width="100%" height="100%" aria-hidden="true"><defs><linearGradient id="qbG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#57E6FF"/><stop offset="55%" stop-color="#B06AFF"/><stop offset="100%" stop-color="#FF2EB0"/></linearGradient></defs><path d="M28 2 L8 42 h13 l-5 32 L40 30 H26 z" fill="url(#qbG)"/></svg></div><div class="qbTxt">SUPERFAN SHUFFLE</div>
@@ -1147,6 +1187,14 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
     <div class="wallRow">
       <a class="wlink" id="wallBack">‹ Back to Home Screen</a>
     </div>
+  </div>
+  <!-- TEAM BATTLE scoreboard. Stands between every turn and at the end, so a battle
+       never leaves the game screen until it is over. -->
+  <div class="screen" id="sBattle">
+    <div class="bsHd" id="bsHd"></div>
+    <div class="bsSub" id="bsSub"></div>
+    <div class="bsList" id="bsList"></div>
+    <div class="bsActions" id="bsActions"></div>
   </div>
   <!-- REPORT CARD (end of a full, owned round — owner-only) -->
 
@@ -1534,6 +1582,142 @@ function seenCount(ed){ try{ return Object.keys(JSON.parse(localStorage.getItem(
 var PREVIEW=Q.get('mode')!=='full';   // default = 5-question preview; ?mode=full = owned round → report card
 var MAX_Q=5;
 
+/* ===== TEAM BATTLE =====
+   One device passed around a room. Setup happens in index.html, which writes the whole
+   battle to sessionStorage; this file runs the turns. The pool is the part that has to
+   be right: it is shuffled ONCE and carried across every turn by a cursor, so no team
+   can be handed a card another team already acted out. Rebuilding the order per turn is
+   exactly how that guarantee is lost, which is why startGame() branches below. */
+var BATTLE=null;
+try{ if(Q.get('battle')==='1') BATTLE=JSON.parse(sessionStorage.getItem('sfs_battle')||'null'); }catch(e){ BATTLE=null; }
+if(BATTLE && (!BATTLE.teams || !BATTLE.teams.length)) BATTLE=null;
+function btSave(){ try{ sessionStorage.setItem('sfs_battle',JSON.stringify(BATTLE)); }catch(e){} }
+function btTotal(){ return BATTLE.teams.length*BATTLE.rounds; }
+function btRoundNo(){ return Math.floor(BATTLE.turn/BATTLE.teams.length)+1; }
+/* During sudden death only the tied teams play, so the turn pointer moves through
+   sdTeams instead of the full roster. */
+function btTeamIx(){ return BATTLE.sd ? BATTLE.sdTeams[BATTLE.sdIx] : (BATTLE.turn%BATTLE.teams.length); }
+function btTeam(){ return BATTLE.teams[btTeamIx()]; }
+function btLeaders(){
+  var best=-1, out=[];
+  BATTLE.teams.forEach(function(t,i){ var sc=t.score||0;
+    if(sc>best){ best=sc; out=[i]; } else if(sc===best){ out.push(i); } });
+  return out;
+}
+function btPill(){
+  var el=document.getElementById('btPill'); if(!el) return;
+  if(!BATTLE){ app.classList.remove('battle'); return; }
+  var t=btTeam();
+  el.style.setProperty('--btc',t.c);
+  el.innerHTML='<i></i>'+t.name.replace(/ SuperFan$/,'')+(BATTLE.sd?' \u00b7 SUDDEN DEATH':'');
+  app.classList.add('battle');
+}
+/* A turn has just ended. Sudden-death scores are kept apart from the running total:
+   they decide the tie, they do not rewrite what the teams scored in the battle. */
+function btTurnEnd(){
+  BATTLE.cursor=idx;
+  if(BATTLE.sd){
+    BATTLE.sdScore[btTeamIx()]=score;
+    BATTLE.sdIx++;
+    if(BATTLE.sdIx>=BATTLE.sdTeams.length){
+      var best=-1, win=[];
+      BATTLE.sdTeams.forEach(function(ti){ var sc=BATTLE.sdScore[ti]||0;
+        if(sc>best){ best=sc; win=[ti]; } else if(sc===best){ win.push(ti); } });
+      if(win.length===1){ BATTLE.sd=0; BATTLE.winner=win[0]; }
+      else { BATTLE.sd++; BATTLE.sdTeams=win; BATTLE.sdIx=0; BATTLE.sdScore={}; }
+    }
+  } else {
+    var t=btTeam(); t.score=(t.score||0)+score;
+    BATTLE.turn++;
+  }
+  btSave(); btBoard();
+}
+function btRow(i,opt){
+  var t=BATTLE.teams[i], cls='bsRow'+(opt&&opt.lead?' lead':'')+(opt&&opt.up?' up':'');
+  var tag=opt&&opt.tag ? '<em>'+opt.tag+'</em>' : '';
+  var val=(opt&&opt.val!=null) ? opt.val : (t.score||0);
+  return '<div class="'+cls+'" style="--tc:'+t.c+'"><i></i><b>'+t.name+'</b>'+tag+'<u>'+val+'</u></div>';
+}
+function btBoard(){
+  var hd=document.getElementById('bsHd'), sub=document.getElementById('bsSub'),
+      list=document.getElementById('bsList'), act=document.getElementById('bsActions');
+  app.classList.remove('battle');
+  show('sBattle');
+  var leaders=btLeaders();
+  /* --- sudden death in progress --- */
+  if(BATTLE.sd){
+    var nx=btTeam();
+    hd.textContent='Sudden Death';
+    sub.innerHTML='Thirty seconds each. Highest score takes it \u2014 still level and we go again.';
+    list.innerHTML=BATTLE.sdTeams.map(function(ti){
+      var done=BATTLE.sdScore[ti]!=null;
+      return btRow(ti,{val: done?BATTLE.sdScore[ti]:'\u2013', up: ti===btTeamIx(),
+                       tag: done?'':(ti===btTeamIx()?'up next':'waiting')});
+    }).join('');
+    act.innerHTML='<button class="bsBtn team" style="--tc:'+nx.c+'" onclick="btGo()">Pass to '+nx.name+'</button>';
+    return;
+  }
+  /* --- battle over --- */
+  if(BATTLE.turn>=btTotal()){
+    var sdWin=(BATTLE.winner!=null);
+    if(sdWin) leaders=[BATTLE.winner];
+    var endAct='<button class="bsBtn" onclick="btRematch()">Rematch</button>'
+              +'<button class="bsBtn ghost" onclick="btHome()">Back to Home Screen</button>';
+    /* Level, and nobody has chosen yet. Once they call it a draw the room has decided,
+       so this branch must not catch it again - that is what BATTLE.draw guards. */
+    if(leaders.length>1 && !BATTLE.draw){
+      hd.textContent='Tie!';
+      sub.textContent='Level on '+(BATTLE.teams[leaders[0]].score||0)+'. Settle it, or call it.';
+      list.innerHTML=BATTLE.teams.map(function(t,i){ return btRow(i,{lead:leaders.indexOf(i)>=0}); }).join('');
+      act.innerHTML='<button class="bsBtn" onclick="btSudden()">Sudden Death</button>'
+                   +'<button class="bsBtn ghost" onclick="btDraw()">Call It A Draw</button>';
+      return;
+    }
+    if(BATTLE.draw){
+      hd.textContent='A Draw';
+      sub.textContent='Nobody is giving that one up.';
+      list.innerHTML=BATTLE.teams.map(function(t,i){ return btRow(i,{lead:leaders.indexOf(i)>=0}); }).join('');
+      act.innerHTML=endAct;
+      return;
+    }
+    var w=BATTLE.teams[leaders[0]];
+    hd.innerHTML=w.name+'<br>Wins';
+    /* A sudden-death winner is level on the scoreboard it is standing over, so saying
+       "final score 4" above two teams on 4 reads like a mistake. Name what decided it. */
+    sub.textContent = sdWin
+      ? 'Level at '+(w.score||0)+' \u2014 taken in sudden death.'
+      : 'Final score '+(w.score||0)+' from '+BATTLE.rounds+' round'+(BATTLE.rounds===1?'':'s')+' each.';
+    list.innerHTML=BATTLE.teams.map(function(t,i){ return btRow(i,{lead:leaders.indexOf(i)>=0}); }).join('');
+    act.innerHTML=endAct;
+    return;
+  }
+  /* --- between turns --- */
+  var nxt=btTeam();
+  hd.textContent='Round '+btRoundNo()+' of '+BATTLE.rounds;
+  sub.textContent=BATTLE.turn===0 ? 'Hand the phone to '+nxt.name+'.'
+    : 'Pass it on \u2014 '+nxt.name+' is up.';
+  list.innerHTML=BATTLE.teams.map(function(t,i){
+    return btRow(i,{lead:leaders.indexOf(i)>=0 && (t.score||0)>0, up:i===btTeamIx(),
+                    tag:i===btTeamIx()?'up next':''});
+  }).join('');
+  act.innerHTML='<button class="bsBtn team" style="--tc:'+nxt.c+'" onclick="btGo()">Pass to '+nxt.name+'</button>';
+}
+function btGo(){ btPill(); ready(); }
+function btSudden(){
+  BATTLE.sd=1; BATTLE.sdTeams=btLeaders(); BATTLE.sdIx=0; BATTLE.sdScore={};
+  btSave(); btBoard();
+}
+function btDraw(){ BATTLE.draw=1; btSave(); btBoard(); }
+function btRematch(){
+  /* A fresh shuffle, not a fresh deck: dealOrder() puts unseen cards first, so a
+     rematch keeps moving through the vault instead of replaying the same battle. */
+  BATTLE.teams.forEach(function(t){ t.score=0; });
+  BATTLE.turn=0; BATTLE.order=null; BATTLE.cursor=0;
+  BATTLE.sd=0; BATTLE.draw=0; BATTLE.winner=null;
+  btSave(); btBoard();
+}
+function btHome(){ location.href='https://superfanshuffle.com/?ed='+encodeURIComponent(ED)+'&nointro=1'; }
+
 /* ---------- screens ---------- */
 var app=document.getElementById('app');
 /* team card vars applied once, up front — so the forehead screen, the 3-2-1 and
@@ -1762,7 +1946,7 @@ function applySportCard(){
  _stageVars(_sc.b,_sc.o);
  app.style.setProperty('--olw','0.16em'); app.classList.add('sportcard'); return true; }
 
-function show(id){['sStart','sReady','sGame','sWall','sReport','sReportFilm'].forEach(function(s){var _e=document.getElementById(s); if(_e) _e.classList.toggle('on',s===id);}); document.body.classList.toggle('report-on', id==='sReport'||id==='sReportFilm'); if(id==='sStart'||id==='sWall'||id==='sReport'||id==='sReportFilm'){ document.body.classList.remove('lock-ls'); tryPortrait(); } }
+function show(id){['sStart','sReady','sGame','sWall','sBattle','sReport','sReportFilm'].forEach(function(s){var _e=document.getElementById(s); if(_e) _e.classList.toggle('on',s===id);}); document.body.classList.toggle('report-on', id==='sReport'||id==='sReportFilm'); if(id==='sStart'||id==='sWall'||id==='sBattle'||id==='sReport'||id==='sReportFilm'){ document.body.classList.remove('lock-ls'); tryPortrait(); } }
 var tHandle2=null;
 function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(tHandle2); tHandle2=setTimeout(function(){ t.classList.remove('on'); }, 2600); }
 
@@ -1911,7 +2095,11 @@ function fitCard(){
     c.style.fontSize=fs+'px';
   }
 }
-function newCard(){ if(idx>=order.length){ order=dealOrder(); if(PREVIEW) order=hoistPreview(order); idx=0; } var w=order[idx++]; recordSeen(w); setCardText(w); stampCardType(w); return w; }
+function newCard(){ if(idx>=order.length){ order=dealOrder(); if(PREVIEW) order=hoistPreview(order); idx=0;
+    /* Only reachable once the whole vault has been consumed by one battle - small
+       vaults going long. Reshuffling beats stopping, and the battle's copy has to
+       follow or the next turn resumes into the old array. */
+    if(BATTLE){ BATTLE.order=order; BATTLE.cursor=0; btSave(); } } var w=order[idx++]; recordSeen(w); setCardText(w); stampCardType(w); return w; }
 var current='';
 function mark(good){
   results.push({w:current,good:good});
@@ -1969,7 +2157,19 @@ function startGame(){
      400-card deck never exhausts the order - so every taste served a random
      five and the curated openers never fired once. Hoist on the deal that
      actually gets played. */
-  order=dealOrder(); if(PREVIEW) order=hoistPreview(order); idx=0; results=[]; score=0; qCount=0; ended=false; timeLeft=60; armed=true; playing=true;
+  /* A battle deals ONCE, on its first turn, and every later turn resumes the same
+     order from the saved cursor. Re-dealing here would hand team two cards team one
+     has already seen, which is the one thing that makes a battle result meaningless. */
+  if(BATTLE){
+    if(!BATTLE.order || !BATTLE.order.length){ BATTLE.order=dealOrder(); BATTLE.cursor=0; }
+    order=BATTLE.order; idx=BATTLE.cursor||0; btSave();
+  } else {
+    order=dealOrder(); if(PREVIEW) order=hoistPreview(order); idx=0;
+  }
+  results=[]; score=0; qCount=0; ended=false;
+  timeLeft=(BATTLE&&BATTLE.sd)?30:60;
+  armed=true; playing=true;
+  if(BATTLE) btPill();
   document.getElementById('score').textContent='0';
   show('sGame'); app.classList.remove('st-correct','st-pass','st-timeup');
   applySportCard(); if(!spCard()) { app.classList.remove('sportcard'); app.style.removeProperty('--cardbg'); app.style.removeProperty('--cardoutline'); }
@@ -2120,7 +2320,9 @@ function endGame(){
   app.classList.remove('st-correct','st-pass');
   showFb('timeup','\u23F1',"TIME'S UP");   /* same reasoning as flash() - see the note there */
   buzz([0,240,90,240,90,360]);
-  setTimeout(function(){ app.classList.remove('st-timeup'); hideFb(); document.body.classList.remove('lock-ls'); tryPortrait(); showReport(); }, 1800);
+  setTimeout(function(){ app.classList.remove('st-timeup'); hideFb(); document.body.classList.remove('lock-ls'); tryPortrait();
+    if(BATTLE){ btTurnEnd(); return; }    /* a battle has no per-turn report card - see btBoard */
+    showReport(); }, 1800);
 }
 /* tier verdict = the payoff (hero); score is support */
 var ED=(Q.get('ed')||'music');
@@ -2561,6 +2763,9 @@ document.getElementById('backBtn').onclick=function(){ location.href='https://su
 
 /* ---------- debug ---------- */
 var dbgOn=false;
+/* A battle opens on its own board, not the tilt-test start screen: the first thing
+   the room should see is who is up. */
+if(BATTLE){ try{ btBoard(); }catch(e){ BATTLE=null; } }
 var DBGMODE=!!(Q.get('debug'));
 if(DBGMODE){ try{ document.getElementById('dbgBtn').style.display='block'; }catch(e){} }
 document.getElementById('dbgBtn').onclick=function(){ dbgOn=!dbgOn; document.getElementById('dbg').style.display=dbgOn?'block':'none'; };
