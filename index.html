@@ -545,10 +545,12 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
   <div class="btHd"><div class="btTitle">Team Battle</div><button class="btX" id="btCancel" type="button" aria-label="Cancel">&#10005;</button></div>
   <div class="btVault" id="btVault"></div>
   <div class="btBody">
+    <p class="btPitch" id="btPitch"></p>
+    <div class="btArt" id="btArt"><img id="btArtImg" alt=""></div>
     <div class="btLab">Teams</div>
     <div class="btSeg" id="btTeams"></div>
-    <div class="btLab">Rounds each</div>
-    <div class="btSeg" id="btRounds"></div>
+    <div class="btLab">Rounds per team</div>
+    <div class="btStep" id="btRounds"></div>
     <div class="btRoster" id="btRoster"></div>
     <p class="btNote" id="btNote"></p>
   </div>
@@ -636,7 +638,31 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
   padding-top:calc(3.5*var(--u));overflow-y:auto;-webkit-overflow-scrolling:touch}
 .btLab{font-family:var(--disp);font-size:calc(4.4*var(--u));letter-spacing:.14em;
   text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:calc(2*var(--u))}
+.btPitch{font-family:var(--body);font-size:calc(3.9*var(--u));line-height:1.4;
+  color:rgba(255,255,255,.80);text-align:center;margin:calc(1.4*var(--u)) 0 0;
+  padding:0 calc(1*var(--u))}
+.btPitch b{color:#fff}
+/* The art is optional: the slot stays empty and collapses if bt-joust.jpg is not
+   there, so the sheet is correct before the picture exists and better after. */
+.btArt{display:none;flex:0 1 auto;min-height:0;justify-content:center;width:100%;
+  margin-top:calc(2*var(--u))}
+.btArt.on{display:flex}
+.btArt img{width:100%;max-width:calc(80*var(--u));max-height:calc(42*var(--u));
+  height:auto;object-fit:contain;border-radius:calc(2.8*var(--u));display:block}
 .btSeg{display:flex;gap:calc(1.8*var(--u))}
+/* Rounds is a stepper rather than five buttons: it is the control people already know
+   from this kind of game, and it keeps its footprint when the range grows. */
+.btStep{display:flex;align-items:stretch;gap:calc(1.8*var(--u))}
+.btPM{flex:0 0 calc(15*var(--u));border-radius:calc(2.6*var(--u));cursor:pointer;
+  font-family:var(--disp);font-size:calc(7*var(--u));line-height:1;color:#fff;
+  background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.2)}
+.btPM[disabled]{opacity:.28;cursor:default}
+.btNum{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-radius:calc(2.6*var(--u));background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(255,46,176,.55);padding:calc(1.4*var(--u)) 0}
+.btNum u{font-family:var(--disp);font-size:calc(7.4*var(--u));line-height:1;color:#fff;text-decoration:none}
+.btNum span{font-family:var(--body);font-size:calc(3*var(--u));font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:calc(.5*var(--u))}
 .btSeg button{flex:1 1 0;font-family:var(--disp);font-size:calc(5.4*var(--u));
   padding:calc(2.6*var(--u)) 0;border-radius:calc(2.6*var(--u));cursor:pointer;
   color:rgba(255,255,255,.72);background:rgba(255,255,255,.05);
@@ -2350,7 +2376,7 @@ var BT_TEAMS=[
 ];
 var BT_N=2, BT_R=3, BT_VID='';
 function btSetTeams(n){ BT_N=n; btSync(); }
-function btSetRounds(n){ BT_R=n; btSync(); }
+function btSetRounds(n){ BT_R=Math.max(1,Math.min(5,n)); btSync(); }
 function btSync(){
   var seg=function(id,vals,cur,fn){
     var el=document.getElementById(id); if(!el) return;
@@ -2359,16 +2385,21 @@ function btSync(){
     }).join('');
   };
   seg('btTeams',[2,3,4],BT_N,'btSetTeams');
-  seg('btRounds',[1,2,3,4,5],BT_R,'btSetRounds');
+  var rr=document.getElementById('btRounds');
+  if(rr) rr.innerHTML=
+      '<button type="button" class="btPM" onclick="btSetRounds('+(BT_R-1)+')"'+(BT_R<=1?' disabled':'')+'>\u2212</button>'
+    + '<div class="btNum"><u>'+BT_R+'</u><span>round'+(BT_R===1?'':'s')+' each</span></div>'
+    + '<button type="button" class="btPM" onclick="btSetRounds('+(BT_R+1)+')"'+(BT_R>=5?' disabled':'')+'>+</button>';
   var r=document.getElementById('btRoster');
   if(r) r.innerHTML=BT_TEAMS.slice(0,BT_N).map(function(t){
     return '<div class="btTeam" style="--tc:'+t.c+'"><i class="btDot"></i><span>'+t.name+'</span></div>';
   }).join('');
   var turns=BT_N*BT_R, note=document.getElementById('btNote');
-  /* A turn is one 60-second round plus the handoff, which lands near 75s in practice.
-     Stated as a range rather than a figure because the handoff is a room, not a timer. */
-  if(note) note.innerHTML=turns+' turns · roughly '+Math.max(2,Math.round(turns*1.1))+'–'
-    +Math.round(turns*1.5)+' minutes.<br>One shuffled deck for the whole battle, so no card comes back.';
+  /* No minute estimate: how long a battle takes is mostly how long the room takes to
+     pass the phone, and a number the app cannot keep is worse than no number. The
+     round length is the honest unit, and it is the same 60 seconds as solo. */
+  if(note) note.innerHTML=turns+' turns · standard 60-second rounds.'
+    +'<br>One shuffled deck for the whole battle, so no card comes back.';
 }
 function openBattle(id){
   var v=byId(id); if(!v) return;
@@ -2376,6 +2407,17 @@ function openBattle(id){
   BT_VID=id; BT_N=2; BT_R=3;
   var hv=document.getElementById('btVault');
   if(hv) hv.textContent=vTitle(v)+' · '+(HASDLX[v.id]?(V5ED||'Standard')+' deck':'Full deck');
+  /* vTitle() carries the shelf suffix ("Taylor Swift Trivia"), which reads wrong inside
+     a sentence - the room is a superfan OF Taylor Swift, not of a trivia deck. */
+  var subj=vTitle(v).replace(/\s+Trivia$/i,'');
+  var pit=document.getElementById('btPitch');
+  if(pit) pit.innerHTML='Battle the room to see who the TRUE SuperFan of <b>'+subj+'</b> is. '
+    +'Think you\u2019re the biggest SuperFan here? Time to prove it.';
+  var art=document.getElementById('btArt'), aim=document.getElementById('btArtImg');
+  if(art&&aim){ art.classList.remove('on');
+    aim.onload=function(){ art.classList.add('on'); };
+    aim.onerror=function(){ art.classList.remove('on'); };
+    aim.src='bt-joust.jpg?v='+SFSBUILD; }
   btSync();
   var ov=document.getElementById('btOv'); if(!ov) return;
   document.getElementById('btCancel').onclick=closeBattle;
