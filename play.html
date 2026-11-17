@@ -115,6 +115,16 @@
    forehead, so it sits bottom-centre under the timer rather than in a corner where the
    hand covers it. It carries its own dark ground for the same reason #cardType does:
    it has to survive 118 card plates, some pale and some near-black. */
+/* The only screen in the game with no way out: once PLAY was tapped the room was
+   committed to a 60-second round it may have started by accident. A visible control is
+   right HERE and wrong during the round - mid-round the phone is on a forehead, where
+   nobody can see a button and a tap near the edge is already how you answer. That is
+   why the round keeps its swipe gesture and this screen gets a button. */
+#sReady{position:relative}
+.rdyBack{position:absolute;top:2.6vmin;left:3vmin;z-index:6;cursor:pointer;
+  background:rgba(6,4,12,.62);border:1.5px solid rgba(255,255,255,.26);border-radius:999px;
+  color:rgba(255,255,255,.85);font-family:var(--disp);font-size:3.4vmin;letter-spacing:.1em;
+  padding:1vmin 2.8vmin .8vmin}
 #btPill{position:absolute;left:50%;bottom:3.2vmin;transform:translateX(-50%);display:none;
   align-items:center;gap:1.6vmin;font-family:var(--disp);font-size:3.3vmin;letter-spacing:.12em;
   text-transform:uppercase;color:#fff;background:rgba(6,4,12,.74);white-space:nowrap;z-index:5;
@@ -1159,6 +1169,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
   </div>
   <!-- READY (countdown) -->
   <div class="screen" id="sReady">
+    <button class="rdyBack" id="rdyBack" type="button">&lsaquo; Back</button>
     <div id="rotateMsg"><div class="fhText">Place on your forehead<span class="fhHint">↻ turn phone sideways</span></div></div>
     <div id="getReady">Time to Face the Music</div>
     <div id="hrTip"></div>
@@ -1654,7 +1665,8 @@ function btBoard(){
       return btRow(ti,{val: done?BATTLE.sdScore[ti]:'\u2013', up: ti===btTeamIx(),
                        tag: done?'':(ti===btTeamIx()?'up next':'waiting')});
     }).join('');
-    act.innerHTML='<button class="bsBtn team" style="--tc:'+nx.c+'" onclick="btGo()">Pass to '+nx.name+'</button>';
+    act.innerHTML='<button class="bsBtn team" style="--tc:'+nx.c+'" onclick="btGo()">Pass to '+nx.name+'</button>'
+                 +'<button class="bsBtn ghost" onclick="btAbandon(this)">Abandon Battle</button>';
     return;
   }
   /* --- battle over --- */
@@ -1700,9 +1712,26 @@ function btBoard(){
     return btRow(i,{lead:leaders.indexOf(i)>=0 && (t.score||0)>0, up:i===btTeamIx(),
                     tag:i===btTeamIx()?'up next':''});
   }).join('');
-  act.innerHTML='<button class="bsBtn team" style="--tc:'+nxt.c+'" onclick="btGo()">Pass to '+nxt.name+'</button>';
+  act.innerHTML='<button class="bsBtn team" style="--tc:'+nxt.c+'" onclick="btGo()">Pass to '+nxt.name+'</button>'
+               +'<button class="bsBtn ghost" onclick="btAbandon(this)">Abandon Battle</button>';
 }
 function btGo(){ btPill(); ready(); }
+/* Two-step, not a modal: a mis-tap in a loud room should not throw away eleven turns,
+   and a confirm dialog is a heavy thing to put between people and a party game. */
+var _abTO=null;
+function btAbandon(btn){
+  if(btn && btn.getAttribute('data-armed')!=='1'){
+    btn.setAttribute('data-armed','1'); btn.textContent='Tap again to abandon';
+    clearTimeout(_abTO);
+    _abTO=setTimeout(function(){ try{ btn.removeAttribute('data-armed'); btn.textContent='Abandon Battle'; }catch(e){} },4000);
+    return;
+  }
+  clearTimeout(_abTO);
+  /* Clear the saved battle, or a later ?battle=1 resumes a game nobody is playing. */
+  try{ sessionStorage.removeItem('sfs_battle'); }catch(e){}
+  BATTLE=null; app.classList.remove('battle');
+  btHome();
+}
 function btSudden(){
   BATTLE.sd=1; BATTLE.sdTeams=btLeaders(); BATTLE.sdIx=0; BATTLE.sdScore={};
   btSave(); btBoard();
@@ -2632,6 +2661,21 @@ function houseRule(){
   if(!played) return '';                                   /* first time through: just play */
   return 'Played this one already? <b>House rule: '+cfg.sup.join(' ').trim()+'</b>';
 }
+var _cdIv=null,_cdTO=null;
+/* Backing out of the ready screen. Everything the countdown armed has to be undone or
+   a round starts over the screen the player just left: the 20s landscape fallback, the
+   beat before 3-2-1, and the 3-2-1 interval itself. */
+function readyExit(){
+  awaitingLandscape=false; counting=false;
+  try{ clearTimeout(_readyTO); }catch(e){}
+  try{ clearTimeout(_cdTO); _cdTO=null; }catch(e){}
+  try{ clearInterval(_cdIv); _cdIv=null; }catch(e){}
+  try{ var g=document.getElementById('getReady'); g.style.display='none'; g.classList.remove('pulsing'); }catch(e){}
+  try{ document.getElementById('big').style.display='none'; }catch(e){}
+  document.body.classList.remove('lock-ls'); tryPortrait();
+  if(BATTLE){ btBoard(); return; }        /* a battle goes back to its own board, not the store */
+  location.href='/?ed='+encodeURIComponent(ED)+'&nointro=1';
+}
 function startCountdown(){
   if(counting) return; counting=true; clearTimeout(_readyTO);
   document.body.classList.add('lock-ls'); tryLockLandscape();   // fake-landscape the Face-the-Music + 3-2-1 screens (iOS)
@@ -2645,12 +2689,12 @@ function startCountdown(){
   var rule=houseRule();
   if(rule){ tip.innerHTML=rule; tip.style.display='block'; beat=2100; }  /* readable beat, not a flash */
   else { tip.style.display='none'; }
-  setTimeout(function(){
+  _cdTO=setTimeout(function(){
     gr.classList.remove('pulsing'); gr.style.display='none'; tip.style.display='none';
     big.style.display=''; var n=3; big.textContent=n; popEl(big); sndBeep(); buzz([0,80]);
-    var iv=setInterval(function(){
+    var iv=_cdIv=setInterval(function(){
       n--;
-      if(n<=0){ clearInterval(iv); startGame(); }
+      if(n<=0){ clearInterval(iv); _cdIv=null; startGame(); }
       else { big.textContent=n; popEl(big); sndBeep(); buzz([0,80]); }
     }, 700);
   }, beat);
@@ -2755,6 +2799,7 @@ if(Q.get('resume')){ try{ var _st=JSON.parse(sessionStorage.getItem('sfs_resume'
 try{document.getElementById('wallBuy').textContent='Unlock Full Vault — '+SFSPRICE;}catch(e){}
 document.getElementById('wallBuy').onclick=function(){ toast('Checkout · '+SFSPRICE+' — payments not wired yet'); };
 document.getElementById('wallBack').onclick=function(){ location.href='/?ed='+encodeURIComponent(ED)+'&nointro=1'; };
+try{ document.getElementById('rdyBack').onclick=readyExit; }catch(e){}
 /* 'See the full round' was removed with the wall redesign: it linked to
    ?mode=full, which walked straight past the paywall it was sitting on. */
 /* report card */
