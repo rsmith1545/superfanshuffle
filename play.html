@@ -2215,13 +2215,29 @@ function fitCard(){
      symmetric - measure the collision and keep shrinking until it is gone.
      Measured over 240 cards across 8 badge-bearing vaults at 844x390: 67 were
      overlapped before, 0 after, and the median card did not change size. */
-  var ct=document.getElementById('cardType');
-  function hitsType(){
-    if(!ct || getComputedStyle(ct).display==='none') return false;
-    var a=c.getBoundingClientRect(), b=ct.getBoundingClientRect();
-    return !(a.right<b.left || a.left>b.right || a.bottom<b.top || a.top>b.bottom);
+  /* Generalised from #cardType alone to every chip in the HUD. #score sits top-right
+     and #btPill bottom-centre, and both are absolutely positioned too, so neither was
+     ever exerting layout pressure either: a wide title grew out level with the score
+     and a tall one grew down into the team pill, and the budget above knew about
+     neither. The pill is new with Team Battle, so that collision did not exist before
+     and would only ever have shown up mid-round.
+     PAD inflates each chip before testing. The complaint is not that the title hits
+     the score - it is that it arrives close enough to look like it is about to, which
+     a strict rectangle test cannot see. Shrinking costs a little type size and buys a
+     gutter; there is room below for the extra line it wraps to. */
+  var HUD=['cardType','score','btPill'].map(function(id){ return document.getElementById(id); });
+  var PAD=10;
+  function hitsHUD(){
+    var a=c.getBoundingClientRect();
+    for(var i=0;i<HUD.length;i++){
+      var e=HUD[i];
+      if(!e || !e.offsetParent || getComputedStyle(e).display==='none') continue;
+      var b=e.getBoundingClientRect();
+      if(!(a.right<b.left-PAD || a.left>b.right+PAD || a.bottom<b.top-PAD || a.top>b.bottom+PAD)) return true;
+    }
+    return false;
   }
-  while(n++<40 && fs>20 && (c.offsetHeight>availH || c.scrollWidth>availW+1 || hitsType())){
+  while(n++<40 && fs>20 && (c.offsetHeight>availH || c.scrollWidth>availW+1 || hitsHUD())){
     fs=Math.max(20, Math.round(fs*0.93));
     c.style.fontSize=fs+'px';
   }
