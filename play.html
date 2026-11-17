@@ -2886,6 +2886,38 @@ document.getElementById('backBtn').onclick=function(){ location.href='https://su
 var dbgOn=false;
 /* A battle opens on its own board, not the tilt-test start screen: the first thing
    the room should see is who is up. */
+/* ===== battle board preview =====
+   Every battle board, without playing a battle. Same spirit as ?demo and
+   ?preview=results above: a URL that stands up the state and renders it.
+     ?btpreview=turn   between turns, mid-battle
+     ?btpreview=win    the victory board
+     ?btpreview=tie    level, offering Sudden Death or a draw
+     ?btpreview=sd     sudden death in progress
+     ?btpreview=draw   called a draw
+   &teams=2..4 sets the roster, &team=red|blue|yellow|green picks the winner,
+   &vault= and &ed= choose whose deck and which world's art is tried first.
+   It leaves no sfs_battle behind, so a preview cannot be mistaken for a real
+   battle by the next launch - but Pass and Rematch do work from here. */
+(function(){
+  var m=Q.get('btpreview'); if(!m) return;
+  var n=Math.max(2,Math.min(4,parseInt(Q.get('teams'),10)||2));
+  var T=[['red','Red SuperFan','#FF3B4E'],['blue','Blue SuperFan','#3B82F6'],
+         ['yellow','Yellow SuperFan','#FFD400'],['green','Green SuperFan','#00C853']].slice(0,n);
+  var wi=0, wk=Q.get('team'); if(wk) T.forEach(function(t,i){ if(t[0]===wk) wi=i; });
+  BATTLE={ v:1, vault:VAULT_ID||'taylorswift', n:VAULT_NAME, ed:ED, edition:REDITION,
+           rounds:3, turn:0, cursor:0, order:[], sd:0,
+           teams:T.map(function(t,i){ return {key:t[0],name:t[1],c:t[2],score:[7,4,9,2][i]}; }) };
+  var END=n*BATTLE.rounds, level=function(){ BATTLE.teams.forEach(function(t){ t.score=8; }); };
+  if(m==='turn'){ BATTLE.turn=n; }
+  else if(m==='win'){ BATTLE.turn=END;
+    BATTLE.teams.forEach(function(t,i){ t.score=(i===wi)?12:(4+i); }); }
+  else if(m==='tie'){ BATTLE.turn=END; level(); }
+  else if(m==='draw'){ BATTLE.turn=END; level(); BATTLE.draw=1; }
+  else if(m==='sd'){ BATTLE.turn=END; level();
+    BATTLE.sd=1; BATTLE.sdIx=0; BATTLE.sdScore={};
+    BATTLE.sdTeams=BATTLE.teams.map(function(_,i){ return i; }); }
+  else { BATTLE.turn=n; }
+})();
 if(BATTLE){ try{ btBoard(); }catch(e){ BATTLE=null; } }
 var DBGMODE=!!(Q.get('debug'));
 if(DBGMODE){ try{ document.getElementById('dbgBtn').style.display='block'; }catch(e){} }
