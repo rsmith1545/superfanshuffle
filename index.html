@@ -526,10 +526,10 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
       <div class="qsArt"><img src="qs-2.jpg" alt="Tilt down for correct, tilt up to skip"></div>
       <p class="qsSub">No sensor? Just tap the screen &mdash; it switches over by itself.</p>
     </section>
-    <section class="qsP" data-p="3">
-      <div class="qsArt"><img src="qs-3.jpg" alt=""></div>
-      <div class="qsLines" id="qsLines"></div>
+    <section class="qsP p3" data-p="3">
+      <div class="qsBanner"><img src="qs-3.jpg" alt=""></div>
       <h2 class="qsH qsH3">Everyone&rsquo;s a Superfan of Something.</h2>
+      <div class="qsEds" id="qsEds"></div>
       <p class="qsSub">You don&rsquo;t need to know every title &mdash; just describe what you do know.
         Talk it out, this isn&rsquo;t traditional charades.</p>
     </section>
@@ -569,11 +569,23 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 /* The four edition lines land one at a time, then the headline resolves under them.
    Every line is rendered up front and only its opacity animates, so a reduced-motion
    setting or a dropped frame leaves the panel complete rather than blank. */
-.qsLines{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(1.4*var(--u)) calc(2.6*var(--u));
-  padding:0 calc(2*var(--u));flex:0 0 auto}
-.qsLine{font-family:var(--disp);font-size:calc(4.4*var(--u));letter-spacing:.4px;color:#ffd36a;
+/* Panel 3 names the four worlds rather than only quoting their taglines - it is the
+   panel that answers "what did I just get", and four slogans never said Music, Sports,
+   Stage & Screen or Family out loud. Label and colour both come from EDITIONS, so this
+   is the store's own palette and a fifth world would appear here on its own. */
+.qsBanner{flex:0 0 auto;width:100%;display:flex;justify-content:center}
+.qsBanner img{width:100%;max-width:calc(118*var(--u));height:auto;display:block;
+  border-radius:calc(3*var(--u))}
+.qsEds{display:grid;grid-template-columns:1fr 1fr;gap:calc(1.8*var(--u));width:100%;
+  padding:0 calc(1*var(--u));flex:0 0 auto}
+.qsEd{border:1px solid var(--ec);border-radius:calc(2.8*var(--u));
+  padding:calc(2*var(--u)) calc(2.2*var(--u));background:rgba(255,255,255,.04);
   opacity:0;transform:translateY(calc(1.4*var(--u)));transition:opacity .28s ease,transform .28s ease}
-.qsLine.in{opacity:1;transform:none}
+.qsEd.in{opacity:1;transform:none}
+.qsEdN{font-family:var(--disp);font-size:calc(4.2*var(--u));letter-spacing:.5px;color:var(--ec);line-height:1.05}
+.qsEdT{font-family:var(--body);font-size:calc(3.1*var(--u));font-weight:700;color:rgba(255,255,255,.76);
+  line-height:1.2;margin-top:calc(.6*var(--u))}
+@media (prefers-reduced-motion:reduce){.qsEd{transition:none}}
 @media (prefers-reduced-motion:reduce){.qsLine{transition:none}}
 .qsNav{display:flex;gap:calc(3*var(--u));margin-top:calc(2.4*var(--u));flex:0 0 auto}
 .qsBtn{flex:1 1 0;border-radius:calc(3.4*var(--u));padding:calc(3.2*var(--u)) 0;cursor:pointer;
@@ -694,28 +706,48 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
   if(!ov) return;
   var stage=document.getElementById('qsStage'), dots=document.getElementById('qsDots'),
       back=document.getElementById('qsBack'), next=document.getElementById('qsNext'),
-      skip=document.getElementById('qsSkip'), lines=document.getElementById('qsLines');
+      skip=document.getElementById('qsSkip');
   var panels=[].slice.call(stage.querySelectorAll('.qsP')), i=0, lineTOs=[];
+  var eds=document.getElementById('qsEds');
 
-  /* Mirrors EDCOPY.hero in play.html, which is where these lines are authoritative -
-     the ready screen prints the same four. They were also written a third time as the
-     splash overlay (Face the Music / Lights, Camera, Action / Settle the Score), which
-     predated the Family edition and so promised three editions on a product that ships
-     four. That copy is gone; this is the only place the set lives outside play.html. */
-  var QS_LINES=['Face the Music','Lights, Camera, Guess!','Game Time!','Who Knows Best?'];
-  lines.innerHTML=QS_LINES.map(function(t){ return '<span class="qsLine">'+t+'</span>'; }).join('');
+  /* Tagline per edition, keyed rather than positional so it cannot silently pair the
+     wrong slogan to the wrong world if EDITIONS is reordered. These mirror EDCOPY.hero
+     in play.html, which is where they are authoritative - the ready screen prints the
+     same four. The splash used to state the set a third time, in copy that had drifted
+     (Settle the Score vs Game Time!) and had no Family line at all; that is now gone. */
+  var QS_TAG={music:'Face the Music', filmtv:'Lights, Camera, Guess!',
+              sports:'Game Time!',    family:'Who Knows Best?'};
+
+  /* Built on first view of panel 3, not at init: this script runs well above the
+     EDITIONS table, so at init the var is hoisted but still undefined and the grid
+     came out empty. Deferring also means a world toggled off after load is honoured. */
+  var edsBuilt=false;
+  function buildEds(){
+    if(edsBuilt) return;
+    var list=(typeof EDITIONS!=='undefined' && EDITIONS)
+      ? EDITIONS.filter(function(e){ try{ return editionVisible(e); }catch(err){ return e.enabled!==false; } })
+      : [];
+    eds.innerHTML=list.map(function(e){
+      return '<div class="qsEd" style="--ec:'+e.accent+'">'
+           +   '<div class="qsEdN">'+e.label+'</div>'
+           +   '<div class="qsEdT">'+(QS_TAG[e.id]||'')+'</div>'
+           + '</div>';
+    }).join('');
+    if(list.length) edsBuilt=true;
+  }
 
   function revealLines(animate){
-    var els=lines.querySelectorAll('.qsLine');
+    buildEds();
+    var els=eds.querySelectorAll('.qsEd');
     lineTOs.forEach(clearTimeout); lineTOs=[];
     if(!animate){ [].forEach.call(els,function(e){ e.classList.add('in'); }); return; }
     [].forEach.call(els,function(e){ e.classList.remove('in'); });
-    [].forEach.call(els,function(e,n){ lineTOs.push(setTimeout(function(){ e.classList.add('in'); }, 120+n*430)); });
+    [].forEach.call(els,function(e,n){ lineTOs.push(setTimeout(function(){ e.classList.add('in'); }, 120+n*380)); });
   }
   /* Anyone who taps through mid-sequence gets the finished panel, not a half-played
      animation - and the timers are cleared so a late one cannot fire over the next panel. */
-  function settleLines(){ lineTOs.forEach(clearTimeout); lineTOs=[];
-    [].forEach.call(lines.querySelectorAll('.qsLine'),function(e){ e.classList.add('in'); }); }
+  function settleLines(){ buildEds(); lineTOs.forEach(clearTimeout); lineTOs=[];
+    [].forEach.call(eds.querySelectorAll('.qsEd'),function(e){ e.classList.add('in'); }); }
 
   function show(n){
     i=Math.max(0,Math.min(panels.length-1,n));
@@ -1289,7 +1321,7 @@ function eraOf(v){ return ERA[v.id]||'neon'; }
    nothing else needs touching: it cache-busts card-*.jpg and art-*.jpg, and it renders
    the buildtag in the corner. It sat at v258 for 22 releases because it was one of three
    separate hardcoded tokens - the tag showed v258, the card plates served v258 bytes. */
-var SFSBUILD='v428';
+var SFSBUILD='v429';
 /* SINGLE SOURCE OF TRUTH for the unlock price. It was hardcoded in four places across
    two files, so changing it by hand meant the shelf and the paywall could disagree.
    play.html carries its own copy of this line - keep the two in step. Must match an
