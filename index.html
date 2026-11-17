@@ -547,7 +547,9 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
    which is the same problem the unlock wall had. --u is min of a width step and a
    height step so the whole panel grows and shrinks as one piece. */
 #introOv{--u:clamp(2.2px, min(1.05vw, 0.5vh), 5.6px);
-  display:none;flex-direction:column;padding:calc(3*var(--u)) calc(4*var(--u)) calc(4*var(--u))}
+  display:none;flex-direction:column;
+  padding:calc(3*var(--u) + env(safe-area-inset-top,0px)) calc(4*var(--u))
+          calc(4*var(--u) + env(safe-area-inset-bottom,0px))}
 #introOv.on{display:flex}
 .qsHd{display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
 .qsTitle{font-family:var(--disp);font-size:calc(7*var(--u));letter-spacing:.5px;color:#fff}
@@ -557,14 +559,15 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .qsDots i{flex:1 1 0;height:calc(1.1*var(--u));border-radius:999px;background:rgba(255,255,255,.18)}
 .qsDots i.on{background:linear-gradient(90deg,#ffd36a,#ff9f1c)}
 .qsStage{position:relative;flex:1 1 auto;min-height:0}
-.qsP{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:flex-start;gap:calc(1.6*var(--u))}
+.qsP{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+  justify-content:center;gap:calc(2.6*var(--u))}
 .qsP.cur{display:flex}
 .qsArt{flex:0 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;width:100%}
 .qsArt img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:calc(3*var(--u));display:block}
-.qsH{font-family:var(--disp);font-size:calc(6.4*var(--u));line-height:1.06;color:#fff;
+.qsH{font-family:var(--disp);font-size:calc(7.1*var(--u));line-height:1.06;color:#fff;
   text-align:center;margin:0;padding:0 calc(2*var(--u));text-wrap:balance}
-.qsH3{font-size:calc(7*var(--u))}
-.qsSub{font-family:var(--body);font-size:calc(3.7*var(--u));line-height:1.35;color:rgba(255,255,255,.82);
+.qsH3{font-size:calc(7.6*var(--u))}
+.qsSub{font-family:var(--body);font-size:calc(4.1*var(--u));line-height:1.35;color:rgba(255,255,255,.82);
   text-align:center;margin:0;padding:0 calc(3*var(--u))}
 /* The four edition lines land one at a time, then the headline resolves under them.
    Every line is rendered up front and only its opacity animates, so a reduced-motion
@@ -576,14 +579,14 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 .qsBanner{flex:0 0 auto;width:100%;display:flex;justify-content:center}
 .qsBanner img{width:100%;max-width:calc(118*var(--u));height:auto;display:block;
   border-radius:calc(3*var(--u))}
-.qsEds{display:grid;grid-template-columns:1fr 1fr;gap:calc(1.8*var(--u));width:100%;
+.qsEds{display:grid;grid-template-columns:1fr 1fr;gap:calc(2.2*var(--u));width:100%;
   padding:0 calc(1*var(--u));flex:0 0 auto}
 .qsEd{border:1px solid var(--ec);border-radius:calc(2.8*var(--u));
-  padding:calc(2*var(--u)) calc(2.2*var(--u));background:rgba(255,255,255,.04);
+  padding:calc(2.5*var(--u)) calc(2.4*var(--u));background:rgba(255,255,255,.04);
   opacity:0;transform:translateY(calc(1.4*var(--u)));transition:opacity .28s ease,transform .28s ease}
 .qsEd.in{opacity:1;transform:none}
-.qsEdN{font-family:var(--disp);font-size:calc(4.2*var(--u));letter-spacing:.5px;color:var(--ec);line-height:1.05}
-.qsEdT{font-family:var(--body);font-size:calc(3.1*var(--u));font-weight:700;color:rgba(255,255,255,.76);
+.qsEdN{font-family:var(--disp);font-size:calc(4.6*var(--u));letter-spacing:.5px;color:var(--ec);line-height:1.05}
+.qsEdT{font-family:var(--body);font-size:calc(3.4*var(--u));font-weight:700;color:rgba(255,255,255,.76);
   line-height:1.2;margin-top:calc(.6*var(--u))}
 @media (prefers-reduced-motion:reduce){.qsEd{transition:none}}
 @media (prefers-reduced-motion:reduce){.qsLine{transition:none}}
@@ -762,6 +765,24 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
     else settleLines();
   }
   function done(){ settleLines(); ov.classList.remove('on'); }
+
+  /* Swipe to advance. A carousel on a phone is expected to answer to the thumb, and on
+     a tall screen Next is a long reach from where the hand already is. Horizontal intent
+     only: a drag that travels further vertically is a scroll and is left alone, and a
+     two-finger gesture is a pinch. show() clamps, so a swipe past either end is a no-op
+     rather than a dismissal - leaving the last panel is the button's job. */
+  var sx=0, sy=0, swiping=false;
+  stage.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1){ swiping=false; return; }
+    swiping=true; sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+  },{passive:true});
+  stage.addEventListener('touchend',function(e){
+    if(!swiping) return; swiping=false;
+    var t=e.changedTouches&&e.changedTouches[0]; if(!t) return;
+    var dx=t.clientX-sx, dy=t.clientY-sy;
+    if(Math.abs(dx)<40 || Math.abs(dx)<Math.abs(dy)*1.4) return;
+    show(dx<0 ? i+1 : i-1);
+  },{passive:true});
 
   next.onclick=function(){ if(i===panels.length-1){ done(); return; } show(i+1); };
   back.onclick=function(){ show(i-1); };
