@@ -1785,7 +1785,33 @@ function btBoard(){
   act.innerHTML='<button class="bsBtn team" style="--tc:'+nxt.c+'" onclick="btGo()">Pass to '+nxt.name+'</button>'
                +'<button class="bsBtn ghost" onclick="btAbandon(this)">Abandon Battle</button>';
 }
-function btGo(){ btPill(); ready(); }
+/* THE gesture gate - the identical bundle startBtn and qpgGo run. This called ready()
+   straight and skipped all four, which is one bug wearing three hats:
+
+   - no goFullscreen(), so screen.orientation.lock('landscape') is refused on Android
+     and the ready screen sat out its whole 20-second landscape fallback before every
+     single turn - the "it took 30 seconds to start"
+   - no requestPerm(), which is what calls attach() and wires devicemotion at all, so
+     TILT NEVER WORKED in a battle, and attachTapFallback() was missing too, so the
+     fallback that exists precisely to cover that was not there either
+   - no unlockAudio(), so no beeps, fanfare or buzzer
+   - no syncInputHint(), so the how-to line could describe the wrong input
+
+   The tap that lands here is the first gesture in this document - the one on the vault
+   card happened back in index.html and gesture context does not survive a navigation -
+   so this is exactly where the bundle belongs.
+
+   applyCardArt() after ready(): btBoard() deliberately clears the plate so the
+   scoreboard is not fighting a card background, which left the round's own ready
+   screen on flat purple. The round should look like a round. */
+function btGo(){
+  btPill();
+  goFullscreen(); buzz(35); unlockAudio();
+  requestPerm(function(ok){
+    attachTapFallback(); syncInputHint(); setTimeout(syncInputHint,500);
+    ready(); applyCardArt();
+  });
+}
 /* Two-step, not a modal: a mis-tap in a loud room should not throw away eleven turns,
    and a confirm dialog is a heavy thing to put between people and a party game. */
 var _abTO=null;
