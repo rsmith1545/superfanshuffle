@@ -263,8 +263,23 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 #floorbg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,11,22,.32) 0%,rgba(14,11,22,0) 22%,rgba(14,11,22,0) 66%,rgba(14,11,22,.5) 100%)}
 .hdrbg{position:absolute;inset:0;z-index:0;background-repeat:no-repeat;background-position:center 35%;background-size:cover;opacity:0;transition:opacity .4s ease}
 .hdrscrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 46% 36% at 50% 45%,rgba(0,0,0,.30) 0%,rgba(0,0,0,.30) 40%,rgba(0,0,0,0) 74%);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);-webkit-mask-image:radial-gradient(ellipse 50% 40% at 50% 45%,#000 0%,#000 44%,rgba(0,0,0,0) 78%);mask-image:radial-gradient(ellipse 50% 40% at 50% 45%,#000 0%,#000 44%,rgba(0,0,0,0) 78%)}
-.mlogo{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-50% - 20px));width:88%;max-width:406px;max-height:75%;height:auto;object-fit:contain;mix-blend-mode:screen;z-index:3;opacity:0;transition:opacity .4s ease}
+.mlogo{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-50% - 10px));width:88%;max-width:406px;max-height:64%;height:auto;object-fit:contain;mix-blend-mode:screen;z-index:3;opacity:0;transition:opacity .4s ease}
 .mlogo.pulse{animation:logopulse .4s ease-out}
+/* The store said what it SOLD and never what it WAS: a grid of posters reads as a
+   shop, and the only place the word forehead appeared was inside the first-run Quick
+   Start, which nobody sees twice. This line is the one persistent answer to "what do I
+   do with this" - above the mark, like a marquee header over a neon sign.
+   It costs the logo the room it needs: the mark filled the header to within 6px top and
+   4px bottom, so max-height drops 75% to 64% and the upward nudge halves to make a band
+   that was not there. The safe-area inset is added because #topbar's height includes it,
+   so a fixed top would sit under the notch. Hidden in My Vaults, whose header is already
+   compressed to 140px and which is not a first impression. */
+.hdrTag{position:absolute;left:0;right:0;z-index:3;pointer-events:none;
+  top:calc(9px + env(safe-area-inset-top,0px) + var(--fullscreen-top,0px));
+  font-family:var(--disp);font-size:clamp(10.5px,3.2vw,15px);letter-spacing:.17em;
+  text-transform:uppercase;color:rgba(255,255,255,.72);
+  text-shadow:0 0 10px rgba(0,0,0,.85),0 1px 0 rgba(0,0,0,.5)}
+body.view-vaults .hdrTag{display:none}
 @keyframes logopulse{0%{filter:brightness(1.7) saturate(1.15)}100%{filter:none}}
 #app.edin{animation:edin .4s ease-out}
 @keyframes edin{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
@@ -932,6 +947,7 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
   <div class="hdrbg" id="hdr0"></div>
   <div class="hdrbg" id="hdr1"></div>
   <div class="hdrscrim"></div>
+  <div class="hdrTag" id="hdrTag">The Forehead Charades Party Game</div>
   <img class="mlogo" id="logo0" alt="SuperFan Shuffle — Face the Music.">
   <img class="mlogo" id="logo1" alt="" aria-hidden="true">
   <div class="edtabs" id="edtabs"></div>
