@@ -186,7 +186,7 @@
 .bsWin{display:none;flex:0 1 auto;min-height:0;justify-content:center;width:100%;
   margin-bottom:calc(-1*var(--u))}
 .bsWin.on{display:flex}
-.bsWin img{width:auto;max-width:calc(58*var(--u));max-height:calc(46*var(--u));
+.bsWin img{width:auto;max-width:calc(72*var(--u));max-height:calc(78*var(--u));
   height:100%;object-fit:contain;display:block;
   /* The plate's own arena and the board's blurred arena are the same place, so a hard
      rectangle between them reads as a photo pasted on a screen - the same thing that
@@ -198,6 +198,27 @@
 /* The winning team's name wears its own colour. It was white, which made the one screen
    in the mode that belongs to a single team look like every other screen. */
 .bsWinName{color:var(--tc,#fff);text-shadow:0 0 calc(2.6*var(--u)) var(--tc,#fff)}
+/* The arrival. The plate and the name land a beat apart so the screen reads as an
+   event rather than a layout - the same reason the round-end flood is a moment and
+   not a tick. Reduced motion gets the finished screen with no movement at all. */
+@keyframes bsPop{0%{opacity:0;transform:scale(.72)}62%{opacity:1;transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes bsRise{0%{opacity:0;transform:translateY(calc(2.4*var(--u)))}100%{opacity:1;transform:none}}
+.bsWin.on img{animation:bsPop .52s cubic-bezier(.22,1.2,.36,1) both}
+#sBattle.celebrate .bsHd{animation:bsRise .42s ease-out .22s both}
+#sBattle.celebrate .bsSub{animation:bsRise .42s ease-out .34s both}
+/* Confetti lives in #app, not in #sBattle: the board scrolls and #app is the thing
+   with overflow:hidden and the 40px radius, so the pieces clip to the card. */
+#bsConf{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:7;display:none}
+#bsConf.on{display:block}
+#bsConf i{position:absolute;top:-8%;border-radius:1px;opacity:0;
+  animation-name:bsFall;animation-timing-function:linear;animation-fill-mode:forwards}
+@keyframes bsFall{
+  0%{opacity:0;transform:translate3d(0,0,0) rotate(0deg)}
+  7%{opacity:1}
+  100%{opacity:.85;transform:translate3d(var(--dx,0px),115vh,0) rotate(var(--rot,720deg))}}
+@media (prefers-reduced-motion:reduce){
+  #bsConf{display:none!important}
+  .bsWin.on img,#sBattle.celebrate .bsHd,#sBattle.celebrate .bsSub{animation:none}}
 .fbGlyph.correct{color:#35E27F}.fbGlyph.pass{color:#FF9D2E}.fbGlyph.timeup{color:#fff}
 .fbWord{font-family:var(--disp);font-size:16vmin;letter-spacing:4px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45)}
 @keyframes fbpop{0%{transform:scale(.3);opacity:0}55%{transform:scale(1.14);opacity:1}100%{transform:scale(1)}}
@@ -1238,6 +1259,7 @@ body.hud-on .rcCard{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 84px)}
       <a class="wlink" id="wallBack">‹ Back to Home Screen</a>
     </div>
   </div>
+  <div id="bsConf" aria-hidden="true"></div>
   <!-- TEAM BATTLE scoreboard. Stands between every turn and at the end, so a battle
        never leaves the game screen until it is over. -->
   <div class="screen" id="sBattle">
@@ -1703,6 +1725,42 @@ function btWinArt(team){
   im.onerror=function(){ ci++; if(ci<cands.length){ im.src=cands[ci]+'?v='+_b; return; } box.classList.remove('on'); };
   im.src=cands[0]+'?v='+_b;
 }
+/* Fires once when a battle ends. _celebrated keeps a re-render of the same final board
+   from re-triggering it; rematch, sudden death and a called draw all reset it, because
+   each of those is a new ending. */
+var _celebrated=false, _confTO=null;
+function btCelebrate(team){
+  var box=document.getElementById('bsConf'), bd=document.getElementById('sBattle');
+  if(bd) bd.classList.add('celebrate');
+  try{ sndVictory(); }catch(e){}
+  try{ buzz([0,70,60,70,60,220]); }catch(e){}
+  if(!box) return;
+  try{ if(matchMedia('(prefers-reduced-motion: reduce)').matches) return; }catch(e){}
+  /* The winner's colour leads, the house pink and purple fill in, gold and white
+     sparkle. Enough pieces to read as a burst, few enough to stay cheap on a phone. */
+  var pal=[team&&team.c||'#FF2EB0','#FF2EB0','#B06AFF','#57E6FF','#FFD400','#FFFFFF'], h='';
+  for(var i=0;i<46;i++){
+    var c=pal[i%pal.length];
+    h+='<i style="left:'+(Math.random()*100).toFixed(1)+'%'
+     +';width:'+(4+Math.random()*5).toFixed(0)+'px'
+     +';height:'+(7+Math.random()*8).toFixed(0)+'px'
+     +';background:'+c
+     +';--dx:'+((Math.random()*120-60)|0)+'px'
+     +';--rot:'+((Math.random()*900+360)|0)+'deg'
+     +';animation-duration:'+(2.2+Math.random()*1.7).toFixed(2)+'s'
+     +';animation-delay:'+(Math.random()*0.65).toFixed(2)+'s"></i>';
+  }
+  box.innerHTML=h; box.classList.add('on');
+  clearTimeout(_confTO);
+  _confTO=setTimeout(function(){ box.classList.remove('on'); box.innerHTML=''; },4600);
+}
+function btCelebrateOff(){
+  _celebrated=false;
+  var box=document.getElementById('bsConf'), bd=document.getElementById('sBattle');
+  clearTimeout(_confTO);
+  if(box){ box.classList.remove('on'); box.innerHTML=''; }
+  if(bd) bd.classList.remove('celebrate');
+}
 function btRow(i,opt){
   var t=BATTLE.teams[i], cls='bsRow'+(opt&&opt.lead?' lead':'')+(opt&&opt.up?' up':'');
   var tag=opt&&opt.tag ? '<em>'+opt.tag+'</em>' : '';
@@ -1718,6 +1776,8 @@ function btBoard(){
      of copy fight it. startGame() re-applies all of this through applyCardArt(), so
      clearing it here costs the round nothing. */
   btWinArt(null);   /* every board clears it; only the win branch below asks for one */
+  var _wasCeleb=_celebrated;
+  btCelebrateOff(); _celebrated=_wasCeleb;   /* keep the once-only flag across a re-render */
   app.classList.remove('battle','hasart','inked','lightart','qpgapp','sportcard','filmcard');
   app.style.removeProperty('background-image');
   app.style.removeProperty('--cardoutline');
@@ -1764,6 +1824,8 @@ function btBoard(){
     var w=BATTLE.teams[leaders[0]];
     btWinArt(w);
     hd.innerHTML='<span class="bsWinName" style="--tc:'+w.c+'">'+w.name+'</span><br>Wins';
+    if(!_celebrated){ _celebrated=true; btCelebrate(w); }
+    else { var _bd=document.getElementById('sBattle'); if(_bd) _bd.classList.add('celebrate'); }
     /* A sudden-death winner is level on the scoreboard it is standing over, so saying
        "final score 4" above two teams on 4 reads like a mistake. Name what decided it. */
     sub.textContent = sdWin
@@ -1829,13 +1891,15 @@ function btAbandon(btn){
   btHome();
 }
 function btSudden(){
+  btCelebrateOff();
   BATTLE.sd=1; BATTLE.sdTeams=btLeaders(); BATTLE.sdIx=0; BATTLE.sdScore={};
   btSave(); btBoard();
 }
-function btDraw(){ BATTLE.draw=1; btSave(); btBoard(); }
+function btDraw(){ btCelebrateOff(); BATTLE.draw=1; btSave(); btBoard(); }
 function btRematch(){
   /* A fresh shuffle, not a fresh deck: dealOrder() puts unseen cards first, so a
      rematch keeps moving through the vault instead of replaying the same battle. */
+  btCelebrateOff();
   BATTLE.teams.forEach(function(t){ t.score=0; });
   BATTLE.turn=0; BATTLE.order=null; BATTLE.cursor=0;
   BATTLE.sd=0; BATTLE.draw=0; BATTLE.winner=null;
@@ -2173,6 +2237,13 @@ function sndBeep(){ initAudio(); tone(600,0.10,'square',0.26,0); }
 function sndFanfare(){ initAudio(); [523,659,784,1047].forEach(function(fr,i){ tone(fr,0.20,'triangle',0.26,i*0.10); }); }
 function sndClock(hi){ initAudio(); tone(hi?1500:1040,0.04,'square',0.30,0); }
 function sndGo(){ initAudio(); tone(700,0.10,'square',0.3,0); tone(1050,0.16,'square',0.3,0.09); }
+/* A bigger sndFanfare: same triangle voice, one note higher at the top, with a held
+   major triad under it so the screen lands instead of just chiming. */
+function sndVictory(){ initAudio(); if(!AC) return;
+  [523,659,784,1047,1319].forEach(function(f,i){ tone(f,0.18,'triangle',0.26,i*0.085); });
+  [523,659,784].forEach(function(f){ tone(f,1.30,'triangle',0.12,0.46); });
+  tone(1047,1.50,'sine',0.09,0.46);
+}
 function sndBuzzer(){ initAudio(); tone(160,0.6,'sawtooth',0.36,0); tone(168,0.6,'square',0.18,0); }
 
 /* ---------- game loop ---------- */
