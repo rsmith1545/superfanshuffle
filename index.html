@@ -263,15 +263,19 @@ body.view-browse #topbar{display:none}body.view-browse #brandBar{display:none}.b
 #floorbg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,11,22,.32) 0%,rgba(14,11,22,0) 22%,rgba(14,11,22,0) 66%,rgba(14,11,22,.5) 100%)}
 .hdrbg{position:absolute;inset:0;z-index:0;background-repeat:no-repeat;background-position:center 35%;background-size:cover;opacity:0;transition:opacity .4s ease}
 .hdrscrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 46% 36% at 50% 45%,rgba(0,0,0,.30) 0%,rgba(0,0,0,.30) 40%,rgba(0,0,0,0) 74%);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);-webkit-mask-image:radial-gradient(ellipse 50% 40% at 50% 45%,#000 0%,#000 44%,rgba(0,0,0,0) 78%);mask-image:radial-gradient(ellipse 50% 40% at 50% 45%,#000 0%,#000 44%,rgba(0,0,0,0) 78%)}
-.mlogo{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-50% - 10px));width:88%;max-width:406px;max-height:64%;height:auto;object-fit:contain;mix-blend-mode:screen;z-index:3;opacity:0;transition:opacity .4s ease}
+.mlogo{position:absolute;left:50%;top:50%;transform:translate(-50%,calc(-50% - 8px));width:88%;max-width:406px;max-height:82%;height:auto;object-fit:contain;mix-blend-mode:screen;z-index:3;opacity:0;transition:opacity .4s ease}
 .mlogo.pulse{animation:logopulse .4s ease-out}
 /* The store said what it SOLD and never what it WAS: a grid of posters reads as a
    shop, and the only place the word forehead appeared was inside the first-run Quick
    Start, which nobody sees twice. This line is the one persistent answer to "what do I
    do with this" - above the mark, like a marquee header over a neon sign.
-   It costs the logo the room it needs: the mark filled the header to within 6px top and
-   4px bottom, so max-height drops 75% to 64% and the upward nudge halves to make a band
-   that was not there. The safe-area inset is added because #topbar's height includes it,
+   It costs the logo nothing, because the room was already there and invisible. The PNG
+   carries 16.5% dead rows at the top and 14.8% at the bottom - dark pixels that vanish
+   under mix-blend-mode:screen - so the element box was within 6px of the header edge
+   while the neon itself was 25px short of it. Measuring the element said 'no space';
+   measuring the luminance said a third of the box is empty. max-height goes UP, 75% to
+   82%, which fills the band the tagline needs AND closes the gap above the edition tabs
+   that the dead rows were opening. The safe-area inset is added because #topbar's height includes it,
    so a fixed top would sit under the notch. Hidden in My Vaults, whose header is already
    compressed to 140px and which is not a first impression. */
 .hdrTag{position:absolute;left:0;right:0;z-index:3;pointer-events:none;
